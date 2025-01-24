@@ -1,7 +1,7 @@
 import whisper_timestamped as whisper
 from typing import Tuple
 
-avaliable_models = ["tiny", "base", "small", "medium", "large-v3"]
+avaliable_models = ["tiny", "base", "small", "medium", "large-v3-turbo", "large-v3"]
 
 
 def transcribe(local_file_path: str, model: str = "tiny", device: str = "cpu") -> Tuple[str, dict]:
