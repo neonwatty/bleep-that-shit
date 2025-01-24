@@ -43,11 +43,7 @@ with tab1:
             )
         with col2:
             model_selection = st.selectbox(
-                label="whisper model",
-                placeholder="choose whisper model",
-                index=1,
-                options=avaliable_models,
-                key="model-selection-local"
+                label="whisper model", placeholder="choose whisper model", index=1, options=avaliable_models, key="model-selection-local"
             )
         with col3:
             col4 = st.empty()
@@ -139,12 +135,7 @@ with tab2:
                 value="treetz, ice, cream, chocolate, syrup, cookie, hooked, threats, treats, trees",
             )
         with col2:
-            model_selection = st.selectbox(
-                label="whisper model (base only in HF space)",
-                index=1,
-                options=avaliable_models,
-                key="model-selection-yt"
-            )
+            model_selection = st.selectbox(label="whisper model (base only in HF space)", index=1, options=avaliable_models, key="model-selection-yt")
         with col3:
             col4 = st.empty()
             with col4:
