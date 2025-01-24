@@ -74,7 +74,7 @@ Once you have the app up and running and have navigated to ``http://localhost:85
 A quick walkthrough of both local video and youtube processing is shown below.
 
 <p align="center">
-<img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/bleep-that-sht-full.webp" height="325">
+<img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/bleep-that-sht-full.webp" height="350">
 </p>
 
 ## Tech walkthrough
