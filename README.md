@@ -57,7 +57,7 @@ Then activate the app server by typing the following at your terminal
 streamlit run /home/bleep_that_sht/app.py --server.port=8501 --server.address=0.0.0.0
 ```
 
-Then navigate to `http://localhost:8501/` to use the app.
+Then navigate to `http://localhost:8501/` to use the app in any browser.
 
 **Note:** you will need [ffmpeg](https://www.ffmpeg.org/download.html) installed on your machine as well.
 
@@ -70,6 +70,8 @@ Once you have the app up and running and have navigated to ``http://localhost:85
 **The second tab** allows for youtube url download and processing.
 
 **The third tab** has handy "about" information for convenience.
+
+The app may take longer than usual during the initial processing of local videos or YouTube content because it needs to download the transcription model.
 
 A quick walkthrough of both local video and youtube processing is shown below.
 
