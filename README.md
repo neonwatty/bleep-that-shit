@@ -14,9 +14,8 @@ All processing is performed locally.
 
 - [Examples](#examples)
 - [Installation](#installation)
-  - [For local videos](#for-local-videos)
-  - [For Youtube videos](#for-youtube-videos)
-- [Walkthrough](#walkthrough)
+- [App walkthrough](#app-walkthrough)
+- [Tech walkthrough](#tech-walkthrough)
 
 ## Examples
 
@@ -34,42 +33,52 @@ https://github.com/neonwatty/bleep_that_sht/assets/16326421/63ebd7a0-46f6-4efd-8
 
 ## Installation
 
-### For local videos
+### Using docker
 
-To get setup to run the notebook / bleep your own videos / run the strealit demo first install the requirements for this project by pasting the below in your terminal.
-
-```python
-pip install -r requirements.streamlit
-```
-
-To install requirements for the gradio demo use this install
-
-```python
-pip install -r requirements.gradio
-```
-
-You will need [ffmpeg](https://www.ffmpeg.org/download.html) installed on your machine as well.
-
-### For Youtube videos
-
-Start this streamlit demo locally that lets you enter in a youtube / shorts url to a video you wish to bleep
-
-```python
-python -m streamlit run bleep_that_sht/app_url_download.py
-```
-
-Alternatively you can start a gradio server with the same functionality
-
-```python
-python -m bleep_that_sht/gradio_app_url_download.py
-```
-
-You can also use docker compose
+Use docker to quickly to spin up the app in an isolated container by typing the following at your terminal
 
 ```bash
 docker compose up
 ```
 
-## Walkthrough
+Then navigate to `http://localhost:8501/` to use the app.
+
+### Using python
+
+To get setup to run the notebook / bleep your own videos / run the strealit demo first install the requirements for this project by pasting the below in your terminal.
+
+```bash
+pip install -r requirements.txt
+```
+
+Then activate the app server by typing the following at your terminal
+
+```bash
+streamlit run /home/bleep_that_sht/app.py --server.port=8501 --server.address=0.0.0.0
+```
+
+Then navigate to `http://localhost:8501/` to use the app in any browser.
+
+**Note:** you will need [ffmpeg](https://www.ffmpeg.org/download.html) installed on your machine as well.
+
+## App walkthrough
+
+Once you have the app up and running and have navigated to ``http://localhost:8501/`, there are three tabs you can choose from
+
+**The first tab** allows for local video upload and processing.
+
+**The second tab** allows for youtube url download and processing.
+
+**The third tab** has handy "about" information for convenience.
+
+The app may take longer than usual during the initial processing of local videos or YouTube content because it needs to download the transcription model.
+
+A quick walkthrough of both local video and youtube processing is shown below.
+
+<p align="center">
+<img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/bleep-that-sht-full.webp" height="350">
+</p>
+
+## Tech walkthrough
 
 See `beep_that_sht_walkthrough.ipynb`) to play / see nitty gritty details.
