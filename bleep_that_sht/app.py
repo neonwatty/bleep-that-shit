@@ -56,7 +56,7 @@ with tab1:
             col6 = st.container()
             with col6:
                 bleep_button_val = st.button(label="transcribe & bleep", type="primary", key="transcribe-bleep-local")
-    
+
     a, col0, b = st.columns([1, 20, 1])
     colo1, colo2 = st.columns([3, 3])
 
@@ -67,7 +67,7 @@ with tab1:
 
         if trans_button_val:
             extract_audio(temporary_video_location, temporary_audio_location)
-            
+
             # Run transcription
             transcript, timestamped_transcript = transcribe(local_file_path=temporary_audio_location, model=model_selection)
 
@@ -80,7 +80,7 @@ with tab1:
 
         if bleep_button_val:
             extract_audio(temporary_video_location, temporary_audio_location)
-            
+
             # Run transcription
             transcript, timestamped_transcript = transcribe(local_file_path=temporary_audio_location, model=model_selection)
 
@@ -180,7 +180,7 @@ with tab2:
                 out.close()
 
             extract_audio(temporary_video_location, temporary_audio_location)
-            
+
             # Run transcription
             transcript, timestamped_transcript = transcribe(local_file_path=temporary_audio_location, model=model_selection)
 
@@ -204,7 +204,7 @@ with tab2:
                 out.close()
 
             extract_audio(temporary_video_location, temporary_audio_location)
-            
+
             # Run transcription
             transcript, timestamped_transcript = transcribe(local_file_path=temporary_audio_location, model=model_selection)
 
