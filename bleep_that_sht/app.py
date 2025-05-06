@@ -1,7 +1,7 @@
 import streamlit as st
 from bleep_that_sht.transcribe import avaliable_models
-from bleep_that_sht import main_dir
 from bleep_that_sht.transcribe import transcribe
+from bleep_that_sht import main_dir
 from bleep_that_sht.audio_extractor import extract_audio
 from bleep_that_sht.create import bleep_replace
 from bleep_that_sht.yt_download import download_video
@@ -56,7 +56,7 @@ with tab1:
             col6 = st.container()
             with col6:
                 bleep_button_val = st.button(label="transcribe & bleep", type="primary", key="transcribe-bleep-local")
-
+    
     a, col0, b = st.columns([1, 20, 1])
     colo1, colo2 = st.columns([3, 3])
 
@@ -67,7 +67,10 @@ with tab1:
 
         if trans_button_val:
             extract_audio(temporary_video_location, temporary_audio_location)
+            
+            # Run transcription
             transcript, timestamped_transcript = transcribe(local_file_path=temporary_audio_location, model=model_selection)
+
             with col0.container(border=True):
                 st.text_area(
                     value=transcript.strip(),
@@ -77,6 +80,8 @@ with tab1:
 
         if bleep_button_val:
             extract_audio(temporary_video_location, temporary_audio_location)
+            
+            # Run transcription
             transcript, timestamped_transcript = transcribe(local_file_path=temporary_audio_location, model=model_selection)
 
             with col0.container(border=True):
@@ -99,6 +104,7 @@ with tab1:
                 st.caption("bleeped video")
                 st.video(bleep_video_output)
 
+    # Rest of the tab1 code
     default_file = main_dir + "/data/input/bleep_test_1.mp4"
     if uploaded_file is not None:
         byte_file = io.BytesIO(uploaded_file.read())
@@ -174,6 +180,8 @@ with tab2:
                 out.close()
 
             extract_audio(temporary_video_location, temporary_audio_location)
+            
+            # Run transcription
             transcript, timestamped_transcript = transcribe(local_file_path=temporary_audio_location, model=model_selection)
 
             with col0.container(border=True):
@@ -196,6 +204,8 @@ with tab2:
                 out.close()
 
             extract_audio(temporary_video_location, temporary_audio_location)
+            
+            # Run transcription
             transcript, timestamped_transcript = transcribe(local_file_path=temporary_audio_location, model=model_selection)
 
             with col0.container(border=True):
@@ -218,6 +228,7 @@ with tab2:
                 st.caption("bleeped video")
                 st.video(bleep_video_output)
 
+    # Rest of the YouTube tab code
     with tempfile.TemporaryDirectory() as tmpdirname:
         temporary_video_location = tmpdirname + "/original_" + str(uuid.uuid4()) + ".mp4"
         bleep_word_list = bleep_words.split(",")

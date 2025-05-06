@@ -51,10 +51,16 @@ To get setup to run the notebook / bleep your own videos / run the strealit demo
 pip install -r requirements.txt
 ```
 
-Then activate the app server by typing the following at your terminal
+Then activate the app cd into the repo directory and type the following at your terminal
 
 ```bash
-streamlit run /home/bleep_that_sht/app.py --server.port=8501 --server.address=0.0.0.0
+streamlit run ./bleep_that_sht/app.py --server.port=8501 --server.address=0.0.0.0
+```
+
+Note: you may need to update your python path to include the repo directory so that the app can find the modules it needs to run. You can do this by typing the following at your terminal
+
+```bash
+export PYTHONPATH=.
 ```
 
 Then navigate to `http://localhost:8501/` to use the app in any browser.
