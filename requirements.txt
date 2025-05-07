@@ -1,13 +1,15 @@
+# Numpy
+numpy==1.24.0
+
 # Core application
 streamlit>=1.25.0
 
 # Audio/Video processing
-moviepy>=1.0.3
+moviepy==1.0.3
 pydub>=0.25.1
 
 # Transcription
 whisper-timestamped>=1.15.0
-numpy>=1.23.0
 torch>=2.0.0
 
 # YouTube download
