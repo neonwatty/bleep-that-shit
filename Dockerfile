@@ -1,23 +1,72 @@
-FROM python:3.10-slim
+# syntax=docker/dockerfile:1
+# check=error=true
 
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    software-properties-common \
-    ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
+# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
+# docker build -t frame_miner .
+# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name frame_miner frame_miner
 
-WORKDIR /home
+# For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
-ENV PYTHONPATH=.
+# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
+ARG RUBY_VERSION=3.4.2
+FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
-COPY requirements.txt /home/requirements.txt
-COPY .streamlit /home/.streamlit
-RUN pip3 install --no-cache-dir -r /home/requirements.txt
-COPY bleep_that_sht /home/bleep_that_sht
-COPY data /home/data
+# Rails app lives here
+WORKDIR /rails
 
-EXPOSE 8501
+# Install base packages
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
+# Set production environment
+ENV RAILS_ENV="production" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    BUNDLE_WITHOUT="development"
 
-ENTRYPOINT ["streamlit", "run", "/home/bleep_that_sht/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Throw-away build stage to reduce size of final image
+FROM base AS build
+
+# Install packages needed to build gems
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Install application gems
+COPY Gemfile Gemfile.lock ./
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    bundle exec bootsnap precompile --gemfile
+
+# Copy application code
+COPY . .
+
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile app/ lib/
+
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+
+
+
+
+# Final stage for app image
+FROM base
+
+# Copy built artifacts: gems, application
+COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
+COPY --from=build /rails /rails
+
+# Run and own only the runtime files as a non-root user for security
+RUN groupadd --system --gid 1000 rails && \
+    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
+    chown -R rails:rails db log storage tmp
+USER 1000:1000
+
+# Entrypoint prepares the database.
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+
+# Start server via Thruster by default, this can be overwritten at runtime
+EXPOSE 80
+CMD ["./bin/thrust", "./bin/rails", "server"]

@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  audio_job: one
+  retention_period: 2025-06-16 14:11:02
+
+two:
+  audio_job: two
+  retention_period: 2025-06-16 14:11:02

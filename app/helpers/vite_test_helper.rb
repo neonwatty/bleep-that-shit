@@ -1,0 +1,2 @@
+module ViteTestHelper
+end

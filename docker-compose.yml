@@ -1,6 +1,0 @@
-services:
-  bleep_that_sht:
-    image: ghcr.io/neonwatty/bleep_that_sht:latest
-    container_name: bleep_that_sht
-    ports:
-      - 8501:8501

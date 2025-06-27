@@ -1,0 +1,21 @@
+<h1 class="font-bold text-2xl mb-4">Log In</h1>
+
+<% if flash[:alert] %>
+  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 mb-4 rounded">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+
+<%= form_with url: sessions_path, local: true, class: "space-y-4" do |f| %>
+  <div>
+    <%= f.label :email, class: "block font-semibold" %>
+    <%= f.email_field :email, name: 'session[email]', class: "border rounded px-2 py-1 w-full" %>
+  </div>
+  <div>
+    <%= f.label :password, class: "block font-semibold" %>
+    <%= f.password_field :password, name: 'session[password]', class: "border rounded px-2 py-1 w-full" %>
+  </div>
+  <div>
+    <%= f.submit "Log In", class: "bg-blue-600 text-white px-4 py-2 rounded" %>
+  </div>
+<% end %>
