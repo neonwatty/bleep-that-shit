@@ -12,6 +12,9 @@
     "vitest": "^1.4.0"
   },
   "dependencies": {
+    "@ffmpeg/core": "^0.12.6",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@huggingface/transformers": "^3.5.2",
     "@rails/activestorage": "^8.0.200",
     "dexie": "^4.0.11",

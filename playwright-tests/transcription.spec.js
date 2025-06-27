@@ -17,8 +17,28 @@ test("user can upload mp3 and get transcription", async ({ page }) => {
   // Click the transcribe button
   await page.click("#transcribeButton");
 
-  // Wait for the results to appear (up to 60s for model load/transcription)
-  await page.waitForSelector("#results:not(.hidden)", { timeout: 60000 });
+  // Wait for the results to appear (up to 30s for model load/transcription)
+  await page.waitForSelector("#results:not(.hidden)", { timeout: 30000 });
+
+  // Assert that some transcript text is present
+  const resultsText = await page.textContent("#results");
+  expect(resultsText).toContain("Transcript"); // or another expected keyword
+});
+
+test("user can upload mp4 and get transcription", async ({ page }) => {
+  // Go to the transcription test page on the custom subdomain
+  await page.goto("http://bleep-that-sht.localhost:3000/transcription-test");
+
+  // Upload the mp4 file
+  const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp4");
+  const fileInput = await page.$("#fileInput");
+  await fileInput.setInputFiles(filePath);
+
+  // Click the transcribe button
+  await page.click("#transcribeButton");
+
+  // Wait for the results to appear (up to 30s for model load/transcription)
+  await page.waitForSelector("#results:not(.hidden)", { timeout: 30000 });
 
   // Assert that some transcript text is present
   const resultsText = await page.textContent("#results");

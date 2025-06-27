@@ -1,4 +1,6 @@
 import { pipeline, AutoTokenizer } from "@huggingface/transformers";
+import { fetchFile } from "@ffmpeg/util";
+import { FFmpeg } from "@ffmpeg/ffmpeg";
 
 // Transcription handling
 export function initializeTranscription() {
@@ -51,21 +53,82 @@ export function initializeTranscription() {
     resultsContainer.innerHTML = ""; // Clear previous results
 
     try {
+      console.log(
+        "[Transcription] Starting transcription for file",
+        selectedFile
+      );
       const language = languageSelect.value;
       const model = document.querySelector('input[name="model"]:checked').value;
       const modelName = `Xenova/whisper-${model}`;
+      console.log(
+        "[Transcription] Selected language:",
+        language,
+        "model:",
+        modelName
+      );
+
+      let audioBuffer;
+      let fileToDecode = selectedFile;
+      console.log("[Transcription] File type:", selectedFile.type);
+
+      // If the file is a video/mp4, extract audio using ffmpeg.wasm
+      if (selectedFile.type === "video/mp4") {
+        console.log("[Transcription] FFmpeg module loaded");
+        updateProgress(5, "Extracting audio from video...");
+        const ffmpeg = new FFmpeg({ log: true, corePath: "/ffmpeg-core.js" });
+        console.log("[Transcription] FFmpeg instance created", ffmpeg);
+        if (!ffmpeg.loaded) {
+          console.log("[Transcription] Loading ffmpeg core...");
+          await ffmpeg.load();
+          console.log("[Transcription] ffmpeg core loaded");
+        }
+        const fileData = await fetchFile(selectedFile);
+        console.log("[Transcription] Writing input.mp4 to ffmpeg FS", fileData);
+        await ffmpeg.writeFile("input.mp4", fileData);
+        console.log("[Transcription] Starting ffmpeg audio extraction...");
+        await ffmpeg.exec([
+          "-i",
+          "input.mp4",
+          "-vn",
+          "-acodec",
+          "pcm_s16le",
+          "-ar",
+          "16000",
+          "-ac",
+          "1",
+          "output.wav",
+        ]);
+        console.log(
+          "[Transcription] Audio extraction complete, reading output.wav"
+        );
+        const audioData = await ffmpeg.readFile("output.wav");
+        console.log("[Transcription] output.wav fileData:", audioData);
+        fileToDecode = new File([audioData.buffer], "output.wav", {
+          type: "audio/wav",
+        });
+        console.log(
+          "[Transcription] Audio file ready for decoding",
+          fileToDecode
+        );
+      }
 
       // 1. Read the audio file into a buffer
-      const audioBuffer = await selectedFile.arrayBuffer();
+      console.log("[Transcription] Reading file to arrayBuffer");
+      audioBuffer = await fileToDecode.arrayBuffer();
+      console.log("[Transcription] Got audioBuffer:", audioBuffer);
 
       // 2. Create an AudioContext and decode the audio data
       const audioContext = new AudioContext({
         sampleRate: 16000, // Whisper models expect 16kHz audio
       });
+      console.log("[Transcription] Created AudioContext");
       const decodedAudio = await audioContext.decodeAudioData(audioBuffer);
+      console.log("[Transcription] Decoded audio:", decodedAudio);
       const audioData = decodedAudio.getChannelData(0);
+      console.log("[Transcription] Got channel data for transcription");
 
       // 3. Initialize the transcription pipeline
+      console.log("[Transcription] Initializing pipeline");
       const transcriber = await pipeline(
         "automatic-speech-recognition",
         modelName,
@@ -90,12 +153,18 @@ export function initializeTranscription() {
                 statusText = data.status.replace(/_/g, " ");
                 updateProgress(data.progress, statusText);
             }
+            console.log(
+              "[Transcription] Pipeline progress:",
+              data.status,
+              data.progress
+            );
           },
         }
       );
 
       // 4. Transcribe the audio
       updateProgress(80, "Model loaded. Transcribing...");
+      console.log("[Transcription] Calling transcriber");
       const output = await transcriber(audioData, {
         language: language,
         task: "transcribe",
@@ -103,12 +172,12 @@ export function initializeTranscription() {
         stride_length_s: 5,
         return_timestamps: "word", // Request word-level timestamps
       });
+      console.log("[Transcription] Transcription output:", output);
 
       // 5. Display the results
-      console.log("Transcription Output:", output); // Log the full output
       showResults(output);
     } catch (error) {
-      console.error("Transcription error:", error);
+      console.error("[Transcription] ERROR:", error, error.stack);
       let errorMessage = `An unexpected error occurred: ${error.message}`;
       if (error.message.includes("Failed to fetch")) {
         errorMessage =
@@ -148,6 +217,8 @@ export function initializeTranscription() {
       "audio/flac",
       "audio/ogg",
       "audio/x-m4a",
+      // Add video/mp4 for video files
+      "video/mp4",
     ];
 
     if (file && validAudioTypes.includes(file.type)) {
@@ -161,7 +232,7 @@ export function initializeTranscription() {
         "Drag and drop your audio file here or click to browse";
       transcribeButton.disabled = true;
       showError(
-        `Invalid file type: ${file.type}. Please upload a valid audio file.`
+        `Invalid file type: ${file.type}. Please upload a valid audio or video file.`
       );
     }
   }
