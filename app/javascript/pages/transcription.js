@@ -59,7 +59,14 @@ export function initializeTranscription() {
       );
       const language = languageSelect.value;
       const model = document.querySelector('input[name="model"]:checked').value;
-      const modelName = `Xenova/whisper-${model}`;
+      let modelName;
+      if (model === "base") {
+        modelName = "onnx-community/whisper-base_timestamped";
+      } else if (model === "large") {
+        modelName = "onnx-community/whisper-large-v3-turbo_timestamped";
+      } else {
+        modelName = "onnx-community/whisper-base_timestamped"; // fallback
+      }
       console.log(
         "[Transcription] Selected language:",
         language,
