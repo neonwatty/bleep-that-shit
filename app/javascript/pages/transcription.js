@@ -41,6 +41,32 @@ export function initializeTranscription() {
   dropzone.addEventListener("click", () => fileInput.click());
   fileInput.addEventListener("change", (e) => handleFiles(e.target.files));
 
+  // Add Cancel button to the UI
+  let cancelButton = document.getElementById("cancelTranscriptionButton");
+  if (!cancelButton) {
+    cancelButton = document.createElement("button");
+    cancelButton.id = "cancelTranscriptionButton";
+    cancelButton.textContent = "Cancel";
+    cancelButton.className =
+      "ml-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 hidden";
+    transcribeButton.parentNode.insertBefore(
+      cancelButton,
+      transcribeButton.nextSibling
+    );
+  }
+
+  let worker = null;
+
+  cancelButton.addEventListener("click", () => {
+    if (worker) {
+      worker.terminate();
+      worker = null;
+      cancelButton.classList.add("hidden");
+      updateProgress(0, "Transcription cancelled.");
+      transcribeButton.disabled = false;
+    }
+  });
+
   transcribeButton.addEventListener("click", async () => {
     if (!selectedFile) {
       showError("Please select a file first.");
@@ -51,152 +77,119 @@ export function initializeTranscription() {
     updateProgress(0, "Initializing...");
     transcribeButton.disabled = true;
     resultsContainer.innerHTML = ""; // Clear previous results
+    cancelButton.classList.add("hidden");
 
-    try {
-      console.log(
-        "[Transcription] Starting transcription for file",
-        selectedFile
-      );
-      const language = languageSelect.value;
-      const model = document.querySelector('input[name="model"]:checked').value;
-      let modelName;
-      if (model === "base") {
-        modelName = "onnx-community/whisper-base_timestamped";
-      } else if (model === "large") {
-        modelName = "onnx-community/whisper-large-v3-turbo_timestamped";
-      } else {
-        modelName = "onnx-community/whisper-base_timestamped"; // fallback
+    // Prepare file data
+    const language = languageSelect.value;
+    const model = document.querySelector('input[name="model"]:checked').value;
+    let modelName;
+    if (model === "base") {
+      modelName = "onnx-community/whisper-base_timestamped";
+    } else if (model === "large") {
+      modelName = "onnx-community/whisper-large-v3-turbo_timestamped";
+    } else {
+      modelName = "onnx-community/whisper-base_timestamped"; // fallback
+    }
+    const fileBuffer = await selectedFile.arrayBuffer();
+    const fileType = selectedFile.type;
+
+    worker = new Worker(
+      new URL("../workers/transcriptionWorker.js", import.meta.url),
+      { type: "module" }
+    );
+
+    worker.onmessage = async (event) => {
+      const {
+        progress,
+        status,
+        result,
+        error,
+        debug,
+        type: msgType,
+        audioBuffer,
+      } = event.data;
+      if (debug) {
+        console.log("[Worker Debug]", debug);
       }
-      console.log(
-        "[Transcription] Selected language:",
+      if (progress !== undefined) {
+        updateProgress(progress, status || "");
+        if (status === "Transcribing...") {
+          cancelButton.classList.remove("hidden");
+        }
+      }
+      if (msgType === "extracted" && audioBuffer) {
+        // Decode the extracted audio buffer to Float32Array
+        try {
+          const audioContext = new AudioContext({ sampleRate: 16000 });
+          const decodedAudio = await audioContext.decodeAudioData(audioBuffer);
+          const float32Audio = decodedAudio.getChannelData(0);
+          console.log(
+            "[Main] Decoded extracted audio to Float32Array, length:",
+            float32Audio.length
+          );
+          worker.postMessage({
+            type: "transcribe",
+            audioData: float32Audio,
+            fileType: "audio/wav",
+            model: modelName,
+            language,
+          });
+        } catch (err) {
+          console.error("[Main] Audio decoding failed after extraction", err);
+          showError("Audio decoding failed after extraction");
+          transcribeButton.disabled = false;
+          cancelButton.classList.add("hidden");
+          worker.terminate();
+          worker = null;
+        }
+        return;
+      }
+      if (result) {
+        console.log("[Main] Received result from worker", result);
+        showResults(result);
+        transcribeButton.disabled = false;
+        cancelButton.classList.add("hidden");
+        worker.terminate();
+        worker = null;
+      }
+      if (error) {
+        console.error("[Main] Worker error:", error);
+        showError(error);
+        transcribeButton.disabled = false;
+        cancelButton.classList.add("hidden");
+        worker.terminate();
+        worker = null;
+      }
+    };
+
+    if (fileType === "video/mp4") {
+      worker.postMessage({ type: "extract", fileBuffer, fileType });
+    } else {
+      // Decode audio to Float32Array in main thread
+      let audioDataToSend = fileBuffer;
+      if (fileType.startsWith("audio/")) {
+        try {
+          const audioContext = new AudioContext({ sampleRate: 16000 });
+          const decodedAudio = await audioContext.decodeAudioData(fileBuffer);
+          audioDataToSend = decodedAudio.getChannelData(0);
+          console.log(
+            "[Main] Decoded audio to Float32Array, length:",
+            audioDataToSend.length
+          );
+        } catch (err) {
+          console.error(
+            "[Main] Audio decoding failed, sending raw buffer",
+            err
+          );
+        }
+      }
+      worker.postMessage({
+        type: "transcribe",
+        audioData: audioDataToSend,
+        fileType,
+        model: modelName,
         language,
-        "model:",
-        modelName
-      );
-
-      let audioBuffer;
-      let fileToDecode = selectedFile;
-      console.log("[Transcription] File type:", selectedFile.type);
-
-      // If the file is a video/mp4, extract audio using ffmpeg.wasm
-      if (selectedFile.type === "video/mp4") {
-        console.log("[Transcription] FFmpeg module loaded");
-        updateProgress(5, "Extracting audio from video...");
-        const ffmpeg = new FFmpeg({ log: true, corePath: "/ffmpeg-core.js" });
-        console.log("[Transcription] FFmpeg instance created", ffmpeg);
-        if (!ffmpeg.loaded) {
-          console.log("[Transcription] Loading ffmpeg core...");
-          await ffmpeg.load();
-          console.log("[Transcription] ffmpeg core loaded");
-        }
-        const fileData = await fetchFile(selectedFile);
-        console.log("[Transcription] Writing input.mp4 to ffmpeg FS", fileData);
-        await ffmpeg.writeFile("input.mp4", fileData);
-        console.log("[Transcription] Starting ffmpeg audio extraction...");
-        await ffmpeg.exec([
-          "-i",
-          "input.mp4",
-          "-vn",
-          "-acodec",
-          "pcm_s16le",
-          "-ar",
-          "16000",
-          "-ac",
-          "1",
-          "output.wav",
-        ]);
-        console.log(
-          "[Transcription] Audio extraction complete, reading output.wav"
-        );
-        const audioData = await ffmpeg.readFile("output.wav");
-        console.log("[Transcription] output.wav fileData:", audioData);
-        fileToDecode = new File([audioData.buffer], "output.wav", {
-          type: "audio/wav",
-        });
-        console.log(
-          "[Transcription] Audio file ready for decoding",
-          fileToDecode
-        );
-      }
-
-      // 1. Read the audio file into a buffer
-      console.log("[Transcription] Reading file to arrayBuffer");
-      audioBuffer = await fileToDecode.arrayBuffer();
-      console.log("[Transcription] Got audioBuffer:", audioBuffer);
-
-      // 2. Create an AudioContext and decode the audio data
-      const audioContext = new AudioContext({
-        sampleRate: 16000, // Whisper models expect 16kHz audio
       });
-      console.log("[Transcription] Created AudioContext");
-      const decodedAudio = await audioContext.decodeAudioData(audioBuffer);
-      console.log("[Transcription] Decoded audio:", decodedAudio);
-      const audioData = decodedAudio.getChannelData(0);
-      console.log("[Transcription] Got channel data for transcription");
-
-      // 3. Initialize the transcription pipeline
-      console.log("[Transcription] Initializing pipeline");
-      const transcriber = await pipeline(
-        "automatic-speech-recognition",
-        modelName,
-        {
-          progress_callback: (data) => {
-            const progress = (data.progress || 0).toFixed(2);
-            let statusText = "";
-            switch (data.status) {
-              case "download":
-                statusText = `Downloading model: ${progress}%`;
-                updateProgress(progress * 0.8, statusText); // Downloading is 80% of the loading phase
-                break;
-              case "progress":
-                statusText = `Transcribing: ${progress}%`;
-                updateProgress(80 + progress * 0.2, statusText); // Transcription is the final 20%
-                break;
-              case "done":
-                statusText = "Finalizing...";
-                updateProgress(100, statusText);
-                break;
-              default:
-                statusText = data.status.replace(/_/g, " ");
-                updateProgress(data.progress, statusText);
-            }
-            console.log(
-              "[Transcription] Pipeline progress:",
-              data.status,
-              data.progress
-            );
-          },
-        }
-      );
-
-      // 4. Transcribe the audio
-      updateProgress(80, "Model loaded. Transcribing...");
-      console.log("[Transcription] Calling transcriber");
-      const output = await transcriber(audioData, {
-        language: language,
-        task: "transcribe",
-        chunk_length_s: 30,
-        stride_length_s: 5,
-        return_timestamps: "word", // Request word-level timestamps
-      });
-      console.log("[Transcription] Transcription output:", output);
-
-      // 5. Display the results
-      showResults(output);
-    } catch (error) {
-      console.error("[Transcription] ERROR:", error, error.stack);
-      let errorMessage = `An unexpected error occurred: ${error.message}`;
-      if (error.message.includes("Failed to fetch")) {
-        errorMessage =
-          "Failed to download the transcription model. Please check your internet connection.";
-      } else if (error.message.includes("decodeAudioData")) {
-        errorMessage =
-          "The audio file appears to be corrupted or in an unsupported format.";
-      }
-      showError(errorMessage);
-    } finally {
-      transcribeButton.disabled = false;
-      // The final state is handled in showResults or showError
     }
   });
 

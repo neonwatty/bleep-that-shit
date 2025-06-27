@@ -44,3 +44,33 @@ test("user can upload mp4 and get transcription", async ({ page }) => {
   const resultsText = await page.textContent("#results");
   expect(resultsText).toContain("Transcript"); // or another expected keyword
 });
+
+test("user can cancel transcription", async ({ page }) => {
+  // Go to the transcription test page
+  await page.goto("http://bleep-that-sht.localhost:3000/transcription-test");
+
+  // Upload the mp3 file
+  const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp3");
+  const fileInput = await page.$("#fileInput");
+  await fileInput.setInputFiles(filePath);
+
+  // Click the transcribe button
+  await page.click("#transcribeButton");
+
+  // Wait for the Cancel button to appear (transcription in progress)
+  await page.waitForSelector("#cancelTranscriptionButton:not(.hidden)", {
+    timeout: 10000,
+  });
+
+  // Click the Cancel button
+  await page.click("#cancelTranscriptionButton");
+
+  // Wait for the progress text to show 'Transcription cancelled.'
+  await page.waitForSelector("text=Transcription cancelled.", {
+    timeout: 10000,
+  });
+
+  // Ensure no results are displayed
+  const resultsText = await page.textContent("#results");
+  expect(resultsText).not.toContain("Transcript");
+});
