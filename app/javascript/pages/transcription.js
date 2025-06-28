@@ -1,6 +1,7 @@
 import { pipeline, AutoTokenizer } from "@huggingface/transformers";
 import { fetchFile } from "@ffmpeg/util";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
+import { getBleepSounds, findBleepSound } from "../assets/bleeps/index.js";
 
 // Transcription handling
 export function initializeTranscription() {
@@ -12,7 +13,11 @@ export function initializeTranscription() {
   const resultsContainer = document.getElementById("results");
   const errorContainer = document.getElementById("error");
   const transcribeButton = document.getElementById("transcribeButton");
+  const bleepSoundSelect = document.getElementById("bleepSound");
+  const bleepPreviewButton = document.getElementById("bleepPreviewButton");
+  const bleepSoundName = document.getElementById("bleepSoundName");
   let selectedFile = null;
+  let selectedBleep = null;
 
   if (!dropzone) return;
 
@@ -297,5 +302,29 @@ export function initializeTranscription() {
 
     resultsContainer.classList.remove("hidden");
     updateProgress(100, "Complete");
+  }
+
+  // Populate bleep sound dropdown
+  if (bleepSoundSelect) {
+    const sounds = getBleepSounds();
+    sounds.forEach((sound) => {
+      const opt = document.createElement("option");
+      opt.value = sound.filename;
+      opt.textContent = sound.name;
+      bleepSoundSelect.appendChild(opt);
+    });
+    bleepSoundSelect.addEventListener("change", (e) => {
+      selectedBleep = sounds.find((s) => s.filename === e.target.value);
+      bleepSoundName.textContent = selectedBleep ? selectedBleep.name : "";
+    });
+  }
+
+  // Preview button logic
+  if (bleepPreviewButton) {
+    bleepPreviewButton.addEventListener("click", () => {
+      if (!selectedBleep) return;
+      const audio = new Audio(selectedBleep.url);
+      audio.play();
+    });
   }
 }
