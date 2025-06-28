@@ -24,6 +24,10 @@ export function initializeBleepView() {
   const matchExactCheckbox = document.getElementById("matchExact");
   const matchPartialCheckbox = document.getElementById("matchPartial");
   const matchFuzzyCheckbox = document.getElementById("matchFuzzy");
+  const fuzzyDistanceInput = document.getElementById("fuzzyDistance");
+  const fuzzyDistanceContainer = document.getElementById(
+    "fuzzyDistanceContainer"
+  );
   const runMatchingButton = document.getElementById("runMatchingButton");
   const matchResultsContainer = document.getElementById("bleepMatchResults");
   const fileWarningContainer = document.getElementById("bleepFileWarning");
@@ -379,12 +383,47 @@ export function initializeBleepView() {
     });
   }
 
+  // Show/hide fuzzy distance input
+  if (matchFuzzyCheckbox && fuzzyDistanceContainer) {
+    matchFuzzyCheckbox.addEventListener("change", () => {
+      if (matchFuzzyCheckbox.checked) {
+        fuzzyDistanceContainer.classList.remove("hidden");
+      } else {
+        fuzzyDistanceContainer.classList.add("hidden");
+      }
+    });
+  }
+
+  // Levenshtein distance for fuzzy matching
+  function levenshtein(a, b) {
+    const matrix = Array.from({ length: a.length + 1 }, () => []);
+    for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+    for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+    for (let i = 1; i <= a.length; i++) {
+      for (let j = 1; j <= b.length; j++) {
+        if (a[i - 1] === b[j - 1]) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j - 1] + 1
+          );
+        }
+      }
+    }
+    return matrix[a.length][b.length];
+  }
+
   // Example function to get selected matching modes
   function getSelectedMatchingModes() {
     return {
       exact: matchExactCheckbox && matchExactCheckbox.checked,
       partial: matchPartialCheckbox && matchPartialCheckbox.checked,
       fuzzy: matchFuzzyCheckbox && matchFuzzyCheckbox.checked,
+      fuzzyDistance: fuzzyDistanceInput
+        ? parseInt(fuzzyDistanceInput.value, 10)
+        : 1,
     };
   }
 
@@ -397,10 +436,18 @@ export function initializeBleepView() {
   function isCensorMatch(transcriptWord, censorWord, modes) {
     transcriptWord = normalizeWord(transcriptWord);
     censorWord = normalizeWord(censorWord);
-    if (modes.exact) {
-      return transcriptWord === censorWord;
+    if (modes.exact && transcriptWord === censorWord) {
+      return true;
     }
-    // Partial/fuzzy logic can be added here later
+    if (modes.partial && transcriptWord.includes(censorWord)) {
+      return true;
+    }
+    if (
+      modes.fuzzy &&
+      levenshtein(transcriptWord, censorWord) <= (modes.fuzzyDistance || 1)
+    ) {
+      return true;
+    }
     return false;
   }
 
