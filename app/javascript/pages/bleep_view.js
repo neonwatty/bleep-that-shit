@@ -5,6 +5,9 @@ import { fetchFile } from "@ffmpeg/util";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { getBleepSounds, findBleepSound } from "../assets/bleeps/index.js";
 import { fileTypeFromBuffer } from "file-type";
+import { initCensoredAudioPlayer } from "../components/CensoredAudioPlayer";
+import Plyr from "plyr";
+import "plyr/dist/plyr.css";
 
 // Apply bleep sound to audio at matched intervals
 function applyBleepsToAudio(originalBuffer, bleepBuffer, intervals) {
@@ -42,6 +45,12 @@ function applyBleepsToAudio(originalBuffer, bleepBuffer, intervals) {
 
   return output;
 }
+
+// Video player container and related state (declare once at top-level)
+let censoredVideoPlayerContainer = null;
+let censoredVideoDownloadButton = null;
+let remuxWorker = null;
+let censoredVideoUrl = null;
 
 // Transcription handling
 export function initializeBleepView() {
@@ -446,6 +455,13 @@ export function initializeBleepView() {
       opt.textContent = sound.name;
       bleepSoundSelect.appendChild(opt);
     });
+    // Set default to Classic Bleep if available
+    const defaultBleep = sounds.find((s) => s.name === "Classic Bleep");
+    if (defaultBleep) {
+      bleepSoundSelect.value = defaultBleep.filename;
+      selectedBleep = defaultBleep;
+      if (bleepSoundName) bleepSoundName.textContent = defaultBleep.name;
+    }
     bleepSoundSelect.addEventListener("change", (e) => {
       selectedBleep = sounds.find((s) => s.filename === e.target.value);
       bleepSoundName.textContent = selectedBleep ? selectedBleep.name : "";
@@ -546,6 +562,77 @@ export function initializeBleepView() {
     return matches;
   }
 
+  // --- Censored Audio Player integration ---
+  const censoredAudioPlayerContainer = document.getElementById(
+    "censoredAudioPlayerContainer"
+  );
+  function showCensoredAudioPlayer(audioBuffer, matches) {
+    if (!censoredAudioPlayerContainer) return;
+    // Convert AudioBuffer to WAV Blob and URL
+    const wavBlob = audioBufferToWavBlob(audioBuffer);
+    const audioUrl = URL.createObjectURL(wavBlob);
+    // Prepare markers: { time, label }
+    const markers = (matches || []).map((m) => ({
+      time: m.timestamp[0],
+      label: m.word,
+    }));
+    console.log("[Debug] showCensoredAudioPlayer called", {
+      audioUrl,
+      markers,
+    });
+    censoredAudioPlayerContainer.classList.remove("hidden");
+    console.log("[Debug] Showing censoredAudioPlayerContainer");
+    initCensoredAudioPlayer(censoredAudioPlayerContainer, audioUrl, markers);
+    // Hide preview button (optional)
+    if (previewCensoredAudioButton)
+      previewCensoredAudioButton.classList.add("hidden");
+  }
+
+  function showCensoredVideoPlayer(mp4Buffer) {
+    if (!censoredVideoPlayerContainer) return;
+    // Clean up previous
+    censoredVideoPlayerContainer.innerHTML = "";
+    if (censoredVideoUrl) URL.revokeObjectURL(censoredVideoUrl);
+    censoredVideoUrl = URL.createObjectURL(
+      new Blob([mp4Buffer], { type: "video/mp4" })
+    );
+    // Create video element
+    const video = document.createElement("video");
+    video.setAttribute("controls", "");
+    video.setAttribute("preload", "auto");
+    video.src = censoredVideoUrl;
+    censoredVideoPlayerContainer.appendChild(video);
+    censoredVideoPlayerContainer.classList.remove("hidden");
+    // Init Plyr
+    new Plyr(video, {
+      controls: [
+        "play",
+        "progress",
+        "current-time",
+        "duration",
+        "mute",
+        "volume",
+        "download",
+        "fullscreen",
+      ],
+    });
+    // Show download button
+    if (censoredVideoDownloadButton) {
+      censoredVideoDownloadButton.classList.remove("hidden");
+      censoredVideoDownloadButton.onclick = () => {
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = censoredVideoUrl;
+        a.download = "censored_video.mp4";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+        }, 100);
+      };
+    }
+  }
+
   // Add handler for Run Matching button
   if (runMatchingButton) {
     runMatchingButton.addEventListener("click", async () => {
@@ -564,11 +651,27 @@ export function initializeBleepView() {
         censorWords,
         modes
       );
+      console.log("[Debug] matches after findCensoredWords:", matches);
       // Display results
       if (matches.length === 0) {
         matchResultsContainer.innerHTML =
           '<div class="text-yellow-600">No matches found.</div>';
         censoredAudioBuffer = null;
+        if (censoredAudioPlayerContainer) {
+          censoredAudioPlayerContainer.classList.add("hidden");
+          censoredAudioPlayerContainer.innerHTML = "";
+          console.log(
+            "[Debug] Hiding censoredAudioPlayerContainer (no matches)"
+          );
+        }
+        if (previewCensoredAudioButton)
+          previewCensoredAudioButton.classList.remove("hidden");
+        if (censoredVideoPlayerContainer) {
+          censoredVideoPlayerContainer.classList.add("hidden");
+          censoredVideoPlayerContainer.innerHTML = "";
+        }
+        if (censoredVideoDownloadButton)
+          censoredVideoDownloadButton.classList.add("hidden");
       } else {
         matchResultsContainer.innerHTML =
           `<div class="mb-2 text-green-700 font-semibold">${matches.length} match(es) found:</div>` +
@@ -586,6 +689,11 @@ export function initializeBleepView() {
           "</ul>";
         // Generate censored audio buffer
         if (originalAudioBuffer && selectedBleep) {
+          console.log("[Debug] About to generate censored audio buffer", {
+            originalAudioBuffer,
+            selectedBleep,
+            matches,
+          });
           try {
             // Load bleep sound as AudioBuffer
             const audioContext = new AudioContext();
@@ -605,15 +713,100 @@ export function initializeBleepView() {
               bleepBuffer,
               intervals
             );
+            console.log(
+              "[Debug] censoredAudioBuffer generated:",
+              censoredAudioBuffer
+            );
+            // If original file is video/mp4, remux
+            if (selectedFile && selectedFile.type === "video/mp4") {
+              console.log("[Debug] Starting remuxing for MP4");
+              // Hide audio player
+              if (censoredAudioPlayerContainer) {
+                censoredAudioPlayerContainer.classList.add("hidden");
+                censoredAudioPlayerContainer.innerHTML = "";
+              }
+              // Show progress (reuse matchResultsContainer for now)
+              matchResultsContainer.innerHTML +=
+                '<div id="remuxProgress" class="mt-2 text-blue-700">Muxing censored audio with video...</div>';
+              // Prepare buffers
+              const videoBuffer = await selectedFile.arrayBuffer();
+              // Convert censoredAudioBuffer to WAV
+              const wavBlob = audioBufferToWavBlob(censoredAudioBuffer);
+              const wavBuffer = await wavBlob.arrayBuffer();
+              console.log("[Debug] Posting to remuxWorker", {
+                videoBuffer,
+                wavBuffer,
+              });
+              // Start worker
+              if (!remuxWorker)
+                remuxWorker = new Worker(
+                  new URL("../workers/remuxWorker.js", import.meta.url),
+                  { type: "module" }
+                );
+              remuxWorker.onmessage = (e) => {
+                console.log("[Debug] remuxWorker message", e.data);
+                if (e.data.progress !== undefined) {
+                  const progressDiv = document.getElementById("remuxProgress");
+                  if (progressDiv)
+                    progressDiv.textContent =
+                      e.data.status +
+                      (e.data.progress < 100 ? ` (${e.data.progress}%)` : "");
+                }
+                if (e.data.result) {
+                  // Hide progress
+                  const progressDiv = document.getElementById("remuxProgress");
+                  if (progressDiv) progressDiv.remove();
+                  console.log(
+                    "[Debug] remuxWorker result received, showing video player"
+                  );
+                  showCensoredVideoPlayer(e.data.result);
+                }
+                if (e.data.error) {
+                  const progressDiv = document.getElementById("remuxProgress");
+                  if (progressDiv)
+                    progressDiv.textContent = "Muxing error: " + e.data.error;
+                }
+              };
+              remuxWorker.postMessage({
+                videoBuffer,
+                audioBuffer: wavBuffer,
+                audioExt: "wav",
+              });
+            } else {
+              console.log("[Debug] Not an MP4, showing audio player");
+              // Show the Plyr-based audio player with markers
+              showCensoredAudioPlayer(censoredAudioBuffer, matches);
+              if (censoredVideoPlayerContainer) {
+                censoredVideoPlayerContainer.classList.add("hidden");
+                censoredVideoPlayerContainer.innerHTML = "";
+              }
+              if (censoredVideoDownloadButton)
+                censoredVideoDownloadButton.classList.add("hidden");
+            }
           } catch (err) {
             console.error(
-              "[BleepView] Error generating censored audio buffer",
+              "[Debug] Error generating censored audio buffer",
               err
             );
             censoredAudioBuffer = null;
+            if (censoredAudioPlayerContainer) {
+              censoredAudioPlayerContainer.classList.add("hidden");
+              censoredAudioPlayerContainer.innerHTML = "";
+            }
+            if (previewCensoredAudioButton)
+              previewCensoredAudioButton.classList.remove("hidden");
           }
         } else {
           censoredAudioBuffer = null;
+          if (censoredAudioPlayerContainer) {
+            censoredAudioPlayerContainer.classList.add("hidden");
+            censoredAudioPlayerContainer.innerHTML = "";
+            console.log(
+              "[Debug] Hiding censoredAudioPlayerContainer (no buffer)"
+            );
+          }
+          if (previewCensoredAudioButton)
+            previewCensoredAudioButton.classList.remove("hidden");
         }
       }
       updateCensoredButtons();
@@ -676,71 +869,25 @@ export function initializeBleepView() {
     return new Blob([buffer], { type: "audio/wav" });
   }
 
-  // --- Preview censored audio ---
-  if (previewCensoredAudioButton) {
-    previewCensoredAudioButton.addEventListener("click", async () => {
-      console.log("[Debug] Preview Censored Audio button clicked");
-      if (!censoredAudioBuffer) {
-        console.log("[Debug] No censoredAudioBuffer available");
-        return;
-      }
-      try {
-        // Stop previous playback if any
-        if (censoredAudioSource && previewAudioContext) {
-          censoredAudioSource.stop();
-          censoredAudioSource.disconnect();
-          censoredAudioSource = null;
-        }
-        previewAudioContext = new AudioContext();
-        censoredAudioSource = previewAudioContext.createBufferSource();
-        censoredAudioSource.buffer = censoredAudioBuffer;
-        censoredAudioSource.connect(previewAudioContext.destination);
-        censoredAudioSource.start();
-        censoredAudioSource.onended = () => {
-          censoredAudioSource.disconnect();
-          censoredAudioSource = null;
-          previewAudioContext.close();
-          previewAudioContext = null;
-        };
-        console.log("[Debug] Playback started");
-      } catch (err) {
-        console.error("[Debug] Error during censored audio playback", err);
-      }
-    });
-  }
-
-  // --- Download censored audio ---
-  const downloadCensoredButton = document.getElementById(
-    "downloadCensoredAudioButton"
-  );
-  if (downloadCensoredButton) {
-    downloadCensoredButton.addEventListener("click", () => {
-      if (!censoredAudioBuffer) return;
-      const wavBlob = audioBufferToWavBlob(censoredAudioBuffer);
-      const url = URL.createObjectURL(wavBlob);
-      const a = document.createElement("a");
-      a.style.display = "none";
-      a.href = url;
-      a.download = "censored_audio.wav";
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => {
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }, 100);
-    });
-  }
-
   // --- Enable/disable preview/download buttons based on censoredAudioBuffer ---
   function updateCensoredButtons() {
     if (previewCensoredAudioButton)
       previewCensoredAudioButton.disabled = !censoredAudioBuffer;
-    if (downloadCensoredButton)
-      downloadCensoredButton.disabled = !censoredAudioBuffer;
+    if (downloadCensoredAudioButton)
+      downloadCensoredAudioButton.disabled = !censoredAudioBuffer;
   }
 
   // Also update buttons on file load/reset
-  if (downloadCensoredButton || previewCensoredAudioButton) {
+  if (downloadCensoredAudioButton || previewCensoredAudioButton) {
     updateCensoredButtons();
   }
+
+  censoredVideoPlayerContainer = document.getElementById(
+    "censoredVideoPlayerContainer"
+  );
+  censoredVideoDownloadButton = document.getElementById(
+    "downloadCensoredVideoButton"
+  );
+  if (censoredVideoDownloadButton)
+    censoredVideoDownloadButton.classList.add("hidden");
 }
