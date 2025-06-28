@@ -6,6 +6,43 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { getBleepSounds, findBleepSound } from "../assets/bleeps/index.js";
 import { fileTypeFromBuffer } from "file-type";
 
+// Apply bleep sound to audio at matched intervals
+function applyBleepsToAudio(originalBuffer, bleepBuffer, intervals) {
+  const sampleRate = originalBuffer.sampleRate;
+  const numChannels = originalBuffer.numberOfChannels;
+  const output = new AudioBuffer({
+    length: originalBuffer.length,
+    numberOfChannels: numChannels,
+    sampleRate: sampleRate,
+  });
+
+  // Copy original audio to output
+  for (let ch = 0; ch < numChannels; ch++) {
+    output.copyToChannel(originalBuffer.getChannelData(ch), ch);
+  }
+
+  // For each interval, overwrite with bleep
+  intervals.forEach(({ start, end }) => {
+    const startSample = Math.floor(start * sampleRate);
+    const endSample = Math.floor(end * sampleRate);
+    const bleepLength = bleepBuffer.length;
+
+    for (let ch = 0; ch < numChannels; ch++) {
+      const outData = output.getChannelData(ch);
+      const bleepData = bleepBuffer.getChannelData(
+        ch % bleepBuffer.numberOfChannels
+      );
+
+      for (let i = startSample; i < endSample && i < output.length; i++) {
+        // Loop bleep if needed
+        outData[i] = bleepData[(i - startSample) % bleepLength];
+      }
+    }
+  });
+
+  return output;
+}
+
 // Transcription handling
 export function initializeBleepView() {
   console.log("initializeBleepView called");
@@ -31,10 +68,20 @@ export function initializeBleepView() {
   const runMatchingButton = document.getElementById("runMatchingButton");
   const matchResultsContainer = document.getElementById("bleepMatchResults");
   const fileWarningContainer = document.getElementById("bleepFileWarning");
+  const previewCensoredAudioButton = document.getElementById(
+    "previewCensoredAudioButton"
+  );
+  const downloadCensoredAudioButton = document.getElementById(
+    "downloadCensoredAudioButton"
+  );
 
   let selectedFile = null;
   let selectedBleep = null;
   let lastTranscriptOutput = null;
+  let originalAudioBuffer = null;
+  let censoredAudioBuffer = null;
+  let censoredAudioSource = null;
+  let previewAudioContext = null;
 
   if (!dropzone) return;
 
@@ -133,39 +180,70 @@ export function initializeBleepView() {
     // Client-side file type check
     if (selectedFile) {
       const arrayBuffer = await selectedFile.arrayBuffer();
-      const detected = await fileTypeFromBuffer(new Uint8Array(arrayBuffer));
+      let detected;
+      try {
+        detected = await fileTypeFromBuffer(new Uint8Array(arrayBuffer));
+      } catch (err) {
+        console.warn("[BleepView] fileTypeFromBuffer error:", err);
+        detected = undefined;
+      }
       let ext = selectedFile.name.split(".").pop().toLowerCase();
       let mismatch = false;
-      if (detected && detected.ext && ext !== detected.ext) {
+      let badFormat = false;
+      if (!detected) {
+        badFormat = true;
+      } else if (detected.ext && ext !== detected.ext) {
         mismatch = true;
       }
       if (fileWarningContainer) {
-        if (mismatch) {
+        if (badFormat) {
+          fileWarningContainer.innerHTML = `<div class='text-red-600 font-semibold'>Warning: File format could not be recognized. Please upload a valid audio file.</div>`;
+          console.log("[Debug] Set bad format warning in fileWarningContainer");
+          transcribeButton.disabled = true;
+        } else if (mismatch) {
           fileWarningContainer.innerHTML = `<div class='text-red-600 font-semibold'>Warning: File extension .${ext} does not match detected type ${
             detected ? detected.ext.toUpperCase() : "unknown"
           } (${
             detected ? detected.mime : "unknown"
           }). Please upload a valid audio file.</div>`;
+          console.log("[Debug] Set mismatch warning in fileWarningContainer");
           transcribeButton.disabled = true;
-        } else {
-          fileWarningContainer.innerHTML = "";
         }
+      }
+      if (badFormat) {
+        dropzoneText.textContent = `Selected file: ${selectedFile.name} (unrecognized format)`;
+        transcribeButton.disabled = true;
+        return;
       }
       if (mismatch) {
         dropzoneText.textContent = `Selected file: ${selectedFile.name} (type mismatch)`;
         transcribeButton.disabled = true;
         return;
       }
+      // Only clear the warning if the file is valid
+      if (fileWarningContainer) {
+        fileWarningContainer.innerHTML = "";
+      }
     }
 
     if (selectedFile && validAudioTypes.includes(selectedFile.type)) {
       dropzoneText.textContent = `Selected file: ${selectedFile.name}`;
       transcribeButton.disabled = false;
+      // Decode and store the original audio buffer
+      try {
+        const arrayBuffer = await selectedFile.arrayBuffer();
+        const audioContext = new AudioContext();
+        originalAudioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      } catch (err) {
+        console.error("[BleepView] Error decoding original audio buffer", err);
+        originalAudioBuffer = null;
+      }
     } else {
       selectedFile = null;
       dropzoneText.textContent =
         "Drag and drop your audio file here or click to browse";
       transcribeButton.disabled = true;
+      originalAudioBuffer = null;
     }
   }
 
@@ -470,7 +548,7 @@ export function initializeBleepView() {
 
   // Add handler for Run Matching button
   if (runMatchingButton) {
-    runMatchingButton.addEventListener("click", () => {
+    runMatchingButton.addEventListener("click", async () => {
       if (!lastTranscriptOutput || !lastTranscriptOutput.chunks) {
         matchResultsContainer.innerHTML =
           '<div class="text-red-600">Please transcribe a file first.</div>';
@@ -490,6 +568,7 @@ export function initializeBleepView() {
       if (matches.length === 0) {
         matchResultsContainer.innerHTML =
           '<div class="text-yellow-600">No matches found.</div>';
+        censoredAudioBuffer = null;
       } else {
         matchResultsContainer.innerHTML =
           `<div class="mb-2 text-green-700 font-semibold">${matches.length} match(es) found:</div>` +
@@ -505,7 +584,163 @@ export function initializeBleepView() {
             )
             .join("") +
           "</ul>";
+        // Generate censored audio buffer
+        if (originalAudioBuffer && selectedBleep) {
+          try {
+            // Load bleep sound as AudioBuffer
+            const audioContext = new AudioContext();
+            const bleepArrayBuffer = await fetch(selectedBleep.url).then((r) =>
+              r.arrayBuffer()
+            );
+            const bleepBuffer = await audioContext.decodeAudioData(
+              bleepArrayBuffer
+            );
+            // Prepare intervals from matches
+            const intervals = matches.map((m) => ({
+              start: m.timestamp[0],
+              end: m.timestamp[1],
+            }));
+            censoredAudioBuffer = applyBleepsToAudio(
+              originalAudioBuffer,
+              bleepBuffer,
+              intervals
+            );
+          } catch (err) {
+            console.error(
+              "[BleepView] Error generating censored audio buffer",
+              err
+            );
+            censoredAudioBuffer = null;
+          }
+        } else {
+          censoredAudioBuffer = null;
+        }
+      }
+      updateCensoredButtons();
+    });
+  }
+
+  // Utility: Convert AudioBuffer to WAV Blob
+  function audioBufferToWavBlob(audioBuffer) {
+    // Helper adapted from npm wav-encoder or similar
+    const numChannels = audioBuffer.numberOfChannels;
+    const sampleRate = audioBuffer.sampleRate;
+    const format = 1; // PCM
+    const bitDepth = 16;
+    const numSamples = audioBuffer.length;
+    const blockAlign = (numChannels * bitDepth) / 8;
+    const byteRate = sampleRate * blockAlign;
+    const dataSize = numSamples * blockAlign;
+    const buffer = new ArrayBuffer(44 + dataSize);
+    const view = new DataView(buffer);
+    let offset = 0;
+    function writeString(s) {
+      for (let i = 0; i < s.length; i++)
+        view.setUint8(offset++, s.charCodeAt(i));
+    }
+    writeString("RIFF");
+    view.setUint32(offset, 36 + dataSize, true);
+    offset += 4;
+    writeString("WAVE");
+    writeString("fmt ");
+    view.setUint32(offset, 16, true);
+    offset += 4;
+    view.setUint16(offset, format, true);
+    offset += 2;
+    view.setUint16(offset, numChannels, true);
+    offset += 2;
+    view.setUint32(offset, sampleRate, true);
+    offset += 4;
+    view.setUint32(offset, byteRate, true);
+    offset += 4;
+    view.setUint16(offset, blockAlign, true);
+    offset += 2;
+    view.setUint16(offset, bitDepth, true);
+    offset += 2;
+    writeString("data");
+    view.setUint32(offset, dataSize, true);
+    offset += 4;
+    // Write PCM samples
+    for (let i = 0; i < numSamples; i++) {
+      for (let ch = 0; ch < numChannels; ch++) {
+        let sample = audioBuffer.getChannelData(ch)[i];
+        sample = Math.max(-1, Math.min(1, sample));
+        view.setInt16(
+          offset,
+          sample < 0 ? sample * 0x8000 : sample * 0x7fff,
+          true
+        );
+        offset += 2;
+      }
+    }
+    return new Blob([buffer], { type: "audio/wav" });
+  }
+
+  // --- Preview censored audio ---
+  if (previewCensoredAudioButton) {
+    previewCensoredAudioButton.addEventListener("click", async () => {
+      console.log("[Debug] Preview Censored Audio button clicked");
+      if (!censoredAudioBuffer) {
+        console.log("[Debug] No censoredAudioBuffer available");
+        return;
+      }
+      try {
+        // Stop previous playback if any
+        if (censoredAudioSource && previewAudioContext) {
+          censoredAudioSource.stop();
+          censoredAudioSource.disconnect();
+          censoredAudioSource = null;
+        }
+        previewAudioContext = new AudioContext();
+        censoredAudioSource = previewAudioContext.createBufferSource();
+        censoredAudioSource.buffer = censoredAudioBuffer;
+        censoredAudioSource.connect(previewAudioContext.destination);
+        censoredAudioSource.start();
+        censoredAudioSource.onended = () => {
+          censoredAudioSource.disconnect();
+          censoredAudioSource = null;
+          previewAudioContext.close();
+          previewAudioContext = null;
+        };
+        console.log("[Debug] Playback started");
+      } catch (err) {
+        console.error("[Debug] Error during censored audio playback", err);
       }
     });
+  }
+
+  // --- Download censored audio ---
+  const downloadCensoredButton = document.getElementById(
+    "downloadCensoredAudioButton"
+  );
+  if (downloadCensoredButton) {
+    downloadCensoredButton.addEventListener("click", () => {
+      if (!censoredAudioBuffer) return;
+      const wavBlob = audioBufferToWavBlob(censoredAudioBuffer);
+      const url = URL.createObjectURL(wavBlob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = "censored_audio.wav";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
+    });
+  }
+
+  // --- Enable/disable preview/download buttons based on censoredAudioBuffer ---
+  function updateCensoredButtons() {
+    if (previewCensoredAudioButton)
+      previewCensoredAudioButton.disabled = !censoredAudioBuffer;
+    if (downloadCensoredButton)
+      downloadCensoredButton.disabled = !censoredAudioBuffer;
+  }
+
+  // Also update buttons on file load/reset
+  if (downloadCensoredButton || previewCensoredAudioButton) {
+    updateCensoredButtons();
   }
 }
