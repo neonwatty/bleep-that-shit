@@ -40,6 +40,7 @@ import {
   resetCachedFetchSources,
   getCachedFetchSourcesSummary,
 } from "../utils/cachedFetch";
+import { initializeBleepView } from "../pages/bleep_view";
 
 Dropzone.autoDiscover = false;
 
@@ -217,6 +218,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (whisperModelSpinner) whisperModelSpinner.classList.add("hidden");
     });
+  }
+
+  if (document.getElementById("bleep-dropzone")) {
+    console.log("Initializing Bleep View");
+    initializeBleepView();
   }
 });
 
