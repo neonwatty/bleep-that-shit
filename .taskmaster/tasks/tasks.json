@@ -251,8 +251,8 @@
           43
         ],
         "priority": "high",
-        "details": "1. Set up Web Audio API context and nodes\n2. Implement audio buffer loading and decoding\n3. Create function to insert bleep sounds at specific timestamps\n4. Integrate with word-level timestamp transcription model to locate censored words\n5. Develop mechanism to match user-inputted words with transcription timestamps\n6. Implement UI for users to input list of words to censor\n7. Create workflow: upload audio/video → input censor words → match words to timestamps → apply bleeps\n8. Add padding adjustment based on user settings\n9. Implement volume normalization for consistent output\n10. Create waveform visualization of original and processed audio\n11. Implement real-time preview of bleeping effect\n12. Add error handling for audio processing failures\n13. Optimize for performance with large files\n14. Implement cleanup of audio resources",
-        "testStrategy": "Test bleeping with various audio files and word lists. Verify word matching accuracy with the transcription model. Test padding adjustment works correctly. Verify UI for word input functions properly. Test performance with large files and extensive word lists. Verify audio quality of processed output. Test error handling with edge cases including words not found in transcription.",
+        "details": "1. Set up Web Audio API context and nodes\n2. Implement audio buffer loading and decoding\n3. Create function to insert bleep sounds at specific timestamps\n4. Integrate with word-level timestamp transcription model to locate censored words\n5. Develop mechanism to match user-inputted words with transcription timestamps\n6. Implement UI for users to input list of words to censor\n7. Create workflow: upload audio/video → input censor words → match words to timestamps → apply bleeps\n8. Add padding adjustment based on user settings\n9. Implement volume normalization for consistent output\n10. Create waveform visualization of original and processed audio\n11. Implement real-time preview of bleeping effect\n12. Add error handling for audio processing failures\n13. Optimize for performance with large files\n14. Implement cleanup of audio resources\n15. Add 'Transcribe and Bleep' button to streamline the workflow",
+        "testStrategy": "Test bleeping with various audio files and word lists. Verify word matching accuracy with the transcription model. Test padding adjustment works correctly. Verify UI for word input functions properly. Test performance with large files and extensive word lists. Verify audio quality of processed output. Test error handling with edge cases including words not found in transcription. Test the 'Transcribe and Bleep' button with both audio and video files.",
         "subtasks": [
           {
             "id": 1,
@@ -312,6 +312,20 @@
             ],
             "details": "1. Create audio player controls for the processed audio\n2. Implement play, pause, seek functionality\n3. Add visual indication of where bleeps occur in the audio timeline\n4. Enable volume control for playback\n5. Add option to download the processed audio\n6. Ensure compatibility across browsers",
             "testStrategy": "Test playback controls function correctly. Verify seeking works properly with bleeps. Test download functionality produces valid audio files. Verify cross-browser compatibility."
+          },
+          {
+            "id": 7,
+            "title": "Implement 'Transcribe and Bleep' button in the UI",
+            "description": "Create a single-click solution that automates the entire transcription and bleeping process for the user",
+            "status": "pending",
+            "dependencies": [
+              1,
+              2,
+              3,
+              5
+            ],
+            "details": "1. Add a prominent 'Transcribe and Bleep' button to the UI\n2. Implement functionality to separate audio from video if the input is a video file\n3. Connect to the transcription service to generate word-level timestamps\n4. Automatically apply the bleeping process using the user-inputted censor words\n5. Display progress indicators during processing\n6. Handle errors gracefully with user-friendly messages\n7. Present the processed output ready for playback\n8. Allow users to select different bleep sounds before processing",
+            "testStrategy": "Test with both audio and video input files. Verify the audio extraction works correctly for video files. Test the end-to-end process with various censor word lists. Verify proper error handling when transcription fails. Test with different bleep sound options. Measure and optimize processing time for large files."
           }
         ]
       },

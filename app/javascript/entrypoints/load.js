@@ -4,9 +4,9 @@ import { initializeTranscription } from "../pages/transcription";
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM Content Loaded");
 
-  // Only initialize transcription on the transcription-test page
-  if (window.location.pathname === "/transcription-test") {
-    console.log("Initializing transcription on transcription-test page");
+  // Only initialize transcription on the transcription-view page
+  if (window.location.pathname === "/transcription-view") {
+    console.log("Initializing transcription on transcription-view page");
     initializeTranscription();
   }
 });

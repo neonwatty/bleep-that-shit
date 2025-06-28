@@ -26,8 +26,11 @@ Rails.application.routes.draw do
   # Override direct_uploads route to use custom controller with CSRF skip
   post "/rails/active_storage/direct_uploads", to: "active_storage_direct_uploads#create"
 
-  # Add the test route
-  get 'transcription-test', to: 'pages#transcription_test'
+  # Rename the test route
+  get 'transcription-view', to: 'pages#transcription_view'
+
+  # Add the bleep-view route
+  get 'bleep-view', to: 'pages#bleep_view'
 
   # All transcription is handled client-side; no backend routes needed.
 end

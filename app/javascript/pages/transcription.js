@@ -44,7 +44,10 @@ export function initializeTranscription() {
 
   // Handle file selection
   dropzone.addEventListener("click", () => fileInput.click());
-  fileInput.addEventListener("change", (e) => handleFiles(e.target.files));
+  fileInput.addEventListener("change", (e) => {
+    console.log("[Debug] File input changed", e.target.files);
+    handleFiles(e.target.files);
+  });
 
   // Add Cancel button to the UI
   let cancelButton = document.getElementById("cancelTranscriptionButton");
@@ -74,10 +77,12 @@ export function initializeTranscription() {
 
   transcribeButton.addEventListener("click", async () => {
     if (!selectedFile) {
+      console.log("[Debug] No file selected when transcribe clicked");
       showError("Please select a file first.");
       return;
     }
 
+    console.log("[Debug] Starting transcription for file", selectedFile);
     hideError();
     updateProgress(0, "Initializing...");
     transcribeButton.disabled = true;
@@ -97,11 +102,13 @@ export function initializeTranscription() {
     }
     const fileBuffer = await selectedFile.arrayBuffer();
     const fileType = selectedFile.type;
+    console.log("[Debug] File type:", fileType);
 
     worker = new Worker(
       new URL("../workers/transcriptionWorker.js", import.meta.url),
       { type: "module" }
     );
+    console.log("[Debug] Worker created");
 
     worker.onmessage = async (event) => {
       const {
@@ -117,12 +124,14 @@ export function initializeTranscription() {
         console.log("[Worker Debug]", debug);
       }
       if (progress !== undefined) {
+        console.log("[Debug] Progress update:", progress, status);
         updateProgress(progress, status || "");
         if (status === "Transcribing...") {
           cancelButton.classList.remove("hidden");
         }
       }
       if (msgType === "extracted" && audioBuffer) {
+        console.log("[Debug] Received extracted audio buffer from worker");
         // Decode the extracted audio buffer to Float32Array
         try {
           const audioContext = new AudioContext({ sampleRate: 16000 });
@@ -168,6 +177,7 @@ export function initializeTranscription() {
     };
 
     if (fileType === "video/mp4") {
+      console.log("[Debug] Sending extract message to worker for MP4");
       worker.postMessage({ type: "extract", fileBuffer, fileType });
     } else {
       // Decode audio to Float32Array in main thread
@@ -188,6 +198,7 @@ export function initializeTranscription() {
           );
         }
       }
+      console.log("[Debug] Sending transcribe message to worker");
       worker.postMessage({
         type: "transcribe",
         audioData: audioDataToSend,

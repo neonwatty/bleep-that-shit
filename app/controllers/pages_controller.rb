@@ -1,5 +1,8 @@
 class PagesController < ApplicationController
-  def transcription_test
-    render 'pages/transcription_test'
+  def transcription_view
+    render 'pages/transcription_view'
+  end
+
+  def bleep_view
   end
 end 
