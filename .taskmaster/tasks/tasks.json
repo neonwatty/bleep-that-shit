@@ -245,7 +245,7 @@
         "id": 44,
         "title": "Develop Web Audio API integration for audio manipulation",
         "description": "Implement client-side audio processing using Web Audio API to insert bleeps at specified timestamps based on user-inputted words to censor.",
-        "status": "pending",
+        "status": "in-progress",
         "dependencies": [
           40,
           43
@@ -258,7 +258,7 @@
             "id": 1,
             "title": "Integrate with word-level timestamp transcription model",
             "description": "Connect to the transcription model API to obtain word-level timestamps from uploaded audio/video",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "details": "",
             "testStrategy": ""
@@ -267,7 +267,7 @@
             "id": 2,
             "title": "Develop word matching algorithm",
             "description": "Create algorithm to match user-inputted censor words with transcription results, handling partial matches, case sensitivity, and similar words",
-            "status": "pending",
+            "status": "in-progress",
             "dependencies": [],
             "details": "",
             "testStrategy": ""
@@ -502,7 +502,7 @@
     ],
     "metadata": {
       "created": "2025-06-16T15:57:51.181Z",
-      "updated": "2025-06-27T23:29:15.164Z",
+      "updated": "2025-06-28T13:09:13.425Z",
       "description": "Tasks for master context"
     }
   }

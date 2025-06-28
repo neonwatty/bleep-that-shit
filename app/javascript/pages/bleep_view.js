@@ -20,9 +20,15 @@ export function initializeBleepView() {
   const bleepSoundName = document.getElementById("bleepSoundName");
   const progressBar = document.getElementById("bleepProgressBar");
   const progressText = document.getElementById("bleepProgressText");
+  const matchExactCheckbox = document.getElementById("matchExact");
+  const matchPartialCheckbox = document.getElementById("matchPartial");
+  const matchFuzzyCheckbox = document.getElementById("matchFuzzy");
+  const runMatchingButton = document.getElementById("runMatchingButton");
+  const matchResultsContainer = document.getElementById("bleepMatchResults");
 
   let selectedFile = null;
   let selectedBleep = null;
+  let lastTranscriptOutput = null;
 
   if (!dropzone) return;
 
@@ -313,6 +319,10 @@ export function initializeBleepView() {
 
     resultsContainer.classList.remove("hidden");
     updateProgress(100, "Complete");
+    // Store transcript output for matching
+    lastTranscriptOutput = output;
+    // Optionally clear previous match results
+    if (matchResultsContainer) matchResultsContainer.innerHTML = "";
   }
 
   // Populate bleep sound dropdown
@@ -336,6 +346,89 @@ export function initializeBleepView() {
       if (!selectedBleep) return;
       const audio = new Audio(selectedBleep.url);
       audio.play();
+    });
+  }
+
+  // Example function to get selected matching modes
+  function getSelectedMatchingModes() {
+    return {
+      exact: matchExactCheckbox && matchExactCheckbox.checked,
+      partial: matchPartialCheckbox && matchPartialCheckbox.checked,
+      fuzzy: matchFuzzyCheckbox && matchFuzzyCheckbox.checked,
+    };
+  }
+
+  // Helper to normalize words (lowercase, strip punctuation except apostrophes)
+  function normalizeWord(word) {
+    return word.toLowerCase().replace(/[^a-z0-9']/gi, "");
+  }
+
+  // Example function to match words (only exact for now)
+  function isCensorMatch(transcriptWord, censorWord, modes) {
+    transcriptWord = normalizeWord(transcriptWord);
+    censorWord = normalizeWord(censorWord);
+    if (modes.exact) {
+      return transcriptWord === censorWord;
+    }
+    // Partial/fuzzy logic can be added here later
+    return false;
+  }
+
+  // Example usage: finding matches after transcription
+  function findCensoredWords(transcriptChunks, censorWords, modes) {
+    // transcriptChunks: array of {text, timestamp}
+    // censorWords: array of words (strings)
+    // modes: {exact, partial, fuzzy}
+    const matches = [];
+    for (const chunk of transcriptChunks) {
+      for (const censorWord of censorWords) {
+        if (isCensorMatch(chunk.text, censorWord, modes)) {
+          matches.push({ word: chunk.text, timestamp: chunk.timestamp });
+          break; // Only need to match once per chunk
+        }
+      }
+    }
+    return matches;
+  }
+
+  // Add handler for Run Matching button
+  if (runMatchingButton) {
+    runMatchingButton.addEventListener("click", () => {
+      if (!lastTranscriptOutput || !lastTranscriptOutput.chunks) {
+        matchResultsContainer.innerHTML =
+          '<div class="text-red-600">Please transcribe a file first.</div>';
+        return;
+      }
+      const censorWords = document
+        .getElementById("bleepWords")
+        .value.split(/[ ,]+/)
+        .filter(Boolean);
+      const modes = getSelectedMatchingModes();
+      const matches = findCensoredWords(
+        lastTranscriptOutput.chunks,
+        censorWords,
+        modes
+      );
+      // Display results
+      if (matches.length === 0) {
+        matchResultsContainer.innerHTML =
+          '<div class="text-yellow-600">No matches found.</div>';
+      } else {
+        matchResultsContainer.innerHTML =
+          `<div class="mb-2 text-green-700 font-semibold">${matches.length} match(es) found:</div>` +
+          '<ul class="list-disc ml-6">' +
+          matches
+            .map(
+              (m) =>
+                `<li><span class="font-mono">${
+                  m.word
+                }</span> <span class="text-gray-500">[${m.timestamp[0].toFixed(
+                  2
+                )}s - ${m.timestamp[1].toFixed(2)}s]</span></li>`
+            )
+            .join("") +
+          "</ul>";
+      }
     });
   }
 }
