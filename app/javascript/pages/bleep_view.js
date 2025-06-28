@@ -4,6 +4,7 @@ import { pipeline } from "@huggingface/transformers";
 import { fetchFile } from "@ffmpeg/util";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { getBleepSounds, findBleepSound } from "../assets/bleeps/index.js";
+import { fileTypeFromBuffer } from "file-type";
 
 // Transcription handling
 export function initializeBleepView() {
@@ -25,6 +26,7 @@ export function initializeBleepView() {
   const matchFuzzyCheckbox = document.getElementById("matchFuzzy");
   const runMatchingButton = document.getElementById("runMatchingButton");
   const matchResultsContainer = document.getElementById("bleepMatchResults");
+  const fileWarningContainer = document.getElementById("bleepFileWarning");
 
   let selectedFile = null;
   let selectedBleep = null;
@@ -107,7 +109,7 @@ export function initializeBleepView() {
     dropzone.classList.remove("bg-blue-100", "border-blue-500");
   }
 
-  function handleFiles(files) {
+  async function handleFiles(files) {
     if (!files || !files.length) return;
     selectedFile = files[0];
     const dropzoneText = dropzone.querySelector("p");
@@ -123,6 +125,34 @@ export function initializeBleepView() {
       // Add video/mp4 for video files
       "video/mp4",
     ];
+
+    // Client-side file type check
+    if (selectedFile) {
+      const arrayBuffer = await selectedFile.arrayBuffer();
+      const detected = await fileTypeFromBuffer(new Uint8Array(arrayBuffer));
+      let ext = selectedFile.name.split(".").pop().toLowerCase();
+      let mismatch = false;
+      if (detected && detected.ext && ext !== detected.ext) {
+        mismatch = true;
+      }
+      if (fileWarningContainer) {
+        if (mismatch) {
+          fileWarningContainer.innerHTML = `<div class='text-red-600 font-semibold'>Warning: File extension .${ext} does not match detected type ${
+            detected ? detected.ext.toUpperCase() : "unknown"
+          } (${
+            detected ? detected.mime : "unknown"
+          }). Please upload a valid audio file.</div>`;
+          transcribeButton.disabled = true;
+        } else {
+          fileWarningContainer.innerHTML = "";
+        }
+      }
+      if (mismatch) {
+        dropzoneText.textContent = `Selected file: ${selectedFile.name} (type mismatch)`;
+        transcribeButton.disabled = true;
+        return;
+      }
+    }
 
     if (selectedFile && validAudioTypes.includes(selectedFile.type)) {
       dropzoneText.textContent = `Selected file: ${selectedFile.name}`;

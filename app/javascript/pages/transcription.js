@@ -2,6 +2,7 @@ import { pipeline, AutoTokenizer } from "@huggingface/transformers";
 import { fetchFile } from "@ffmpeg/util";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { getBleepSounds, findBleepSound } from "../assets/bleeps/index.js";
+import { fileTypeFromBuffer } from "file-type";
 
 // Transcription handling
 export function initializeTranscription() {
@@ -16,6 +17,9 @@ export function initializeTranscription() {
   const bleepSoundSelect = document.getElementById("bleepSound");
   const bleepPreviewButton = document.getElementById("bleepPreviewButton");
   const bleepSoundName = document.getElementById("bleepSoundName");
+  const fileWarningContainer = document.getElementById(
+    "transcriptionFileWarning"
+  );
   let selectedFile = null;
   let selectedBleep = null;
 
@@ -237,20 +241,50 @@ export function initializeTranscription() {
       "video/mp4",
     ];
 
-    if (file && validAudioTypes.includes(file.type)) {
-      selectedFile = file;
-      dropzoneText.textContent = `Selected file: ${file.name}`;
-      transcribeButton.disabled = false;
-      hideError();
-    } else {
-      selectedFile = null;
-      dropzoneText.textContent =
-        "Drag and drop your audio file here or click to browse";
-      transcribeButton.disabled = true;
-      showError(
-        `Invalid file type: ${file.type}. Please upload a valid audio or video file.`
-      );
-    }
+    // Client-side file type check
+    (async () => {
+      if (file) {
+        const arrayBuffer = await file.arrayBuffer();
+        const detected = await fileTypeFromBuffer(new Uint8Array(arrayBuffer));
+        let ext = file.name.split(".").pop().toLowerCase();
+        let mismatch = false;
+        if (detected && detected.ext && ext !== detected.ext) {
+          mismatch = true;
+        }
+        if (fileWarningContainer) {
+          if (mismatch) {
+            fileWarningContainer.innerHTML = `<div class='text-red-600 font-semibold'>Warning: File extension .${ext} does not match detected type ${
+              detected ? detected.ext.toUpperCase() : "unknown"
+            } (${
+              detected ? detected.mime : "unknown"
+            }). Please upload a valid audio file.</div>`;
+            transcribeButton.disabled = true;
+          } else {
+            fileWarningContainer.innerHTML = "";
+          }
+        }
+        if (mismatch) {
+          dropzoneText.textContent = `Selected file: ${file.name} (type mismatch)`;
+          transcribeButton.disabled = true;
+          return;
+        }
+      }
+
+      if (file && validAudioTypes.includes(file.type)) {
+        selectedFile = file;
+        dropzoneText.textContent = `Selected file: ${file.name}`;
+        transcribeButton.disabled = false;
+        hideError();
+      } else {
+        selectedFile = null;
+        dropzoneText.textContent =
+          "Drag and drop your audio file here or click to browse";
+        transcribeButton.disabled = true;
+        showError(
+          `Invalid file type: ${file.type}. Please upload a valid audio or video file.`
+        );
+      }
+    })();
   }
 
   function updateProgress(percentage, text) {
