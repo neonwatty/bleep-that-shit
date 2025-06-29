@@ -95,15 +95,7 @@ export function initializeTranscription() {
 
     // Prepare file data
     const language = languageSelect.value;
-    const model = document.querySelector('input[name="model"]:checked').value;
-    let modelName;
-    if (model === "base") {
-      modelName = "onnx-community/whisper-base_timestamped";
-    } else if (model === "large") {
-      modelName = "onnx-community/whisper-large-v3-turbo_timestamped";
-    } else {
-      modelName = "onnx-community/whisper-base_timestamped"; // fallback
-    }
+    const modelName = document.getElementById("model").value;
     const fileBuffer = await selectedFile.arrayBuffer();
     const fileType = selectedFile.type;
     console.log("[Debug] File type:", fileType);

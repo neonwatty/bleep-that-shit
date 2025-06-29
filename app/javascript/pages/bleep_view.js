@@ -272,12 +272,7 @@ export function initializeBleepView() {
     try {
       // Get language and model
       const language = languageSelect.value;
-      let model = "onnx-community/whisper-base_timestamped";
-      for (const radio of modelRadios) {
-        if (radio.checked && radio.value === "large") {
-          model = "onnx-community/whisper-large-v3-turbo_timestamped";
-        }
-      }
+      const model = document.getElementById("bleepModel").value;
       // Read file buffer
       const fileBuffer = await selectedFile.arrayBuffer();
       const fileType = selectedFile.type;
@@ -588,7 +583,7 @@ export function initializeBleepView() {
       previewCensoredAudioButton.classList.add("hidden");
   }
 
-  function showCensoredVideoPlayer(mp4Buffer) {
+  function showCensoredVideoPlayer(mp4Buffer, matches) {
     if (!censoredVideoPlayerContainer) return;
     // Clean up previous
     censoredVideoPlayerContainer.innerHTML = "";
@@ -603,7 +598,12 @@ export function initializeBleepView() {
     video.src = censoredVideoUrl;
     censoredVideoPlayerContainer.appendChild(video);
     censoredVideoPlayerContainer.classList.remove("hidden");
-    // Init Plyr
+    // Prepare markers
+    const markers = (matches || []).map((m) => ({
+      time: m.timestamp[0],
+      label: m.word,
+    }));
+    // Init Plyr with markers
     new Plyr(video, {
       controls: [
         "play",
@@ -615,6 +615,10 @@ export function initializeBleepView() {
         "download",
         "fullscreen",
       ],
+      markers: {
+        enabled: true,
+        points: markers,
+      },
     });
     // Show download button
     if (censoredVideoDownloadButton) {
@@ -688,6 +692,14 @@ export function initializeBleepView() {
             .join("") +
           "</ul>";
         // Generate censored audio buffer
+        console.log("[Debug] About to generate censored audio buffer", {
+          originalAudioBuffer,
+          originalAudioBufferType: originalAudioBuffer
+            ? originalAudioBuffer.constructor.name
+            : null,
+          selectedBleep,
+          matches,
+        });
         if (originalAudioBuffer && selectedBleep) {
           console.log("[Debug] About to generate censored audio buffer", {
             originalAudioBuffer,
@@ -715,7 +727,10 @@ export function initializeBleepView() {
             );
             console.log(
               "[Debug] censoredAudioBuffer generated:",
+              censoredAudioBuffer,
               censoredAudioBuffer
+                ? `length: ${censoredAudioBuffer.length}, sampleRate: ${censoredAudioBuffer.sampleRate}`
+                : "null or undefined"
             );
             // If original file is video/mp4, remux
             if (selectedFile && selectedFile.type === "video/mp4") {
@@ -759,7 +774,7 @@ export function initializeBleepView() {
                   console.log(
                     "[Debug] remuxWorker result received, showing video player"
                   );
-                  showCensoredVideoPlayer(e.data.result);
+                  showCensoredVideoPlayer(e.data.result, matches);
                 }
                 if (e.data.error) {
                   const progressDiv = document.getElementById("remuxProgress");
@@ -802,7 +817,8 @@ export function initializeBleepView() {
             censoredAudioPlayerContainer.classList.add("hidden");
             censoredAudioPlayerContainer.innerHTML = "";
             console.log(
-              "[Debug] Hiding censoredAudioPlayerContainer (no buffer)"
+              "[Debug] Hiding censoredAudioPlayerContainer (no buffer)",
+              censoredAudioBuffer
             );
           }
           if (previewCensoredAudioButton)
