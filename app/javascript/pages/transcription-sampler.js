@@ -309,19 +309,18 @@ export function initializeTranscriptionSampler() {
   }
 
   function showInputPreview(file) {
+    const section = document.getElementById("inputPreviewSection");
     const container = document.getElementById("inputPreviewContainer");
-    if (!container) return;
+    if (!section || !container) return;
     // Remove previous content and destroy Plyr instance if any
-    const closeBtn = document.getElementById("inputPreviewCloseBtn");
-    Array.from(container.children).forEach((child) => {
-      if (child !== closeBtn) container.removeChild(child);
-    });
+    container.innerHTML = "";
     if (inputPlyrInstance && inputPlyrInstance.destroy) {
       inputPlyrInstance.destroy();
       inputPlyrInstance = null;
     }
     if (!file) {
-      container.classList.add("hidden");
+      section.classList.add("hidden");
+      section.open = false;
       return;
     }
     const url = URL.createObjectURL(file);
@@ -339,7 +338,8 @@ export function initializeTranscriptionSampler() {
       mediaEl.setAttribute("playsinline", "");
       mediaEl.setAttribute("style", "max-width:100%;height:auto;");
     } else {
-      container.classList.add("hidden");
+      section.classList.add("hidden");
+      section.open = false;
       return;
     }
     container.appendChild(mediaEl);
@@ -354,27 +354,8 @@ export function initializeTranscriptionSampler() {
         "fullscreen",
       ],
     });
-    container.classList.remove("hidden");
-    // Bind close button
-    if (closeBtn) {
-      closeBtn.onclick = () => {
-        if (inputPlyrInstance && inputPlyrInstance.destroy) {
-          inputPlyrInstance.destroy();
-          inputPlyrInstance = null;
-        }
-        container.classList.add("hidden");
-        // Clear file input so user can re-upload same file
-        const fileInput = document.getElementById("fileInput");
-        if (fileInput) fileInput.value = "";
-        selectedFile = null;
-        transcribeButton.disabled = true;
-        // Optionally reset dropzone text
-        const dropzoneText = dropzone.querySelector("p");
-        if (dropzoneText)
-          dropzoneText.textContent =
-            "Drag and drop your audio or video file here or click to browse";
-      };
-    }
+    section.classList.remove("hidden");
+    section.open = true;
   }
 
   // Add a note for sampler duration feedback

@@ -40,22 +40,27 @@ test("bleep-view: exact matching finds words with punctuation", async ({
       timeout: 10000,
     });
     await page.click("#transcribeAndBleepButton");
-    await page.waitForSelector("#bleepResultsContainer .mb-6", {
+    await page.waitForSelector("#bleepTranscriptSection .mb-6", {
       timeout: 30000,
     });
-    // Enter censor words
     await page.fill("#bleepWords", "the");
-    // Ensure 'Exact' is checked
     const exactCheckbox = await page.$("#matchExact");
     if (!(await exactCheckbox.isChecked())) {
       await exactCheckbox.check();
     }
-    // Click Run Matching
     await page.click("#runMatchingButton");
-    // Wait for results
     await page.waitForSelector("#bleepMatchResults ul", { timeout: 10000 });
     const matchResults = await page.textContent("#bleepMatchResults");
     expect(matchResults.toLowerCase()).toContain("the");
+    const bleepSoundSelect = await page.$("#bleepSound");
+    const selectedBleep = await bleepSoundSelect.inputValue();
+    if (!selectedBleep) {
+      await page.selectOption("#bleepSound", { index: 1 });
+    }
+    await page.click("#bleepAudioButton");
+    await page.waitForSelector("#censoredAudioPlayerContainer .plyr", {
+      timeout: 10000,
+    });
   } catch (e) {
     await screenshotOnFailure(page, "bleep-view-matching-failure");
     throw e;

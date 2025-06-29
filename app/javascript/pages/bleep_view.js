@@ -92,6 +92,8 @@ export function initializeBleepView() {
   let censoredAudioBuffer = null;
   let censoredAudioSource = null;
   let previewAudioContext = null;
+  let lastCensorMatches = null;
+  const bleepAudioButton = document.getElementById("bleepAudioButton");
 
   if (!dropzone) return;
 
@@ -260,19 +262,18 @@ export function initializeBleepView() {
   }
 
   function showBleepInputPreview(file) {
+    const section = document.getElementById("bleepInputPreviewSection");
     const container = document.getElementById("bleepInputPreviewContainer");
-    if (!container) return;
+    if (!section || !container) return;
     // Remove previous content and destroy Plyr instance if any
-    const closeBtn = document.getElementById("bleepInputPreviewCloseBtn");
-    Array.from(container.children).forEach((child) => {
-      if (child !== closeBtn) container.removeChild(child);
-    });
+    container.innerHTML = "";
     if (bleepInputPlyrInstance && bleepInputPlyrInstance.destroy) {
       bleepInputPlyrInstance.destroy();
       bleepInputPlyrInstance = null;
     }
     if (!file) {
-      container.classList.add("hidden");
+      section.classList.add("hidden");
+      section.open = false;
       return;
     }
     const url = URL.createObjectURL(file);
@@ -290,7 +291,8 @@ export function initializeBleepView() {
       mediaEl.setAttribute("playsinline", "");
       mediaEl.setAttribute("style", "max-width:100%;height:auto;");
     } else {
-      container.classList.add("hidden");
+      section.classList.add("hidden");
+      section.open = false;
       return;
     }
     container.appendChild(mediaEl);
@@ -305,27 +307,8 @@ export function initializeBleepView() {
         "fullscreen",
       ],
     });
-    container.classList.remove("hidden");
-    // Bind close button
-    if (closeBtn) {
-      closeBtn.onclick = () => {
-        if (bleepInputPlyrInstance && bleepInputPlyrInstance.destroy) {
-          bleepInputPlyrInstance.destroy();
-          bleepInputPlyrInstance = null;
-        }
-        container.classList.add("hidden");
-        // Clear file input so user can re-upload same file
-        const fileInput = document.getElementById("bleepFileInput");
-        if (fileInput) fileInput.value = "";
-        selectedFile = null;
-        transcribeButton.disabled = true;
-        // Optionally reset dropzone text
-        const dropzoneText = dropzone.querySelector("p");
-        if (dropzoneText)
-          dropzoneText.textContent =
-            "Drag and drop your audio or video file here or click to browse";
-      };
-    }
+    section.classList.remove("hidden");
+    section.open = true;
   }
 
   transcribeButton.addEventListener("click", async () => {
@@ -469,43 +452,46 @@ export function initializeBleepView() {
 
   function showResults(output) {
     resultsContainer.innerHTML = ""; // Clear previous results
-
-    // Display the full transcript first
-    const fullTranscript = document.createElement("div");
-    fullTranscript.className = "mb-6";
-    fullTranscript.innerHTML = `
-      <h3 class="text-lg font-semibold mb-2">Full Transcript</h3>
-      <p class="text-gray-800 bg-gray-50 p-3 rounded-md">${output.text}</p>
-    `;
-    resultsContainer.appendChild(fullTranscript);
-
-    // Display word-level timestamps
-    if (output.chunks && output.chunks.length > 0) {
-      const segmentsContainer = document.createElement("div");
-      segmentsContainer.innerHTML =
-        '<h3 class="text-lg font-semibold mb-2">Word Timestamps</h3>';
-
-      const segmentsGrid = document.createElement("div");
-      segmentsGrid.className = "grid grid-cols-1 md:grid-cols-2 gap-4";
-
-      output.chunks.forEach((chunk) => {
-        const segmentEl = document.createElement("div");
-        segmentEl.className =
-          "flex items-center space-x-2 bg-gray-50 p-2 rounded-md";
-        segmentEl.innerHTML = `
-          <span class="font-mono text-sm text-gray-600 w-28">[${chunk.timestamp[0].toFixed(
-            2
-          )}s - ${chunk.timestamp[1].toFixed(2)}s]</span>
-          <span class="text-gray-800">${chunk.text}</span>
-        `;
-        segmentsGrid.appendChild(segmentEl);
-      });
-
-      segmentsContainer.appendChild(segmentsGrid);
-      resultsContainer.appendChild(segmentsContainer);
+    // Render transcript into collapsible section
+    const transcriptSection = document.getElementById("bleepTranscriptSection");
+    const transcriptContainer = document.getElementById(
+      "bleepTranscriptContainer"
+    );
+    if (transcriptSection && transcriptContainer) {
+      transcriptContainer.innerHTML = "";
+      // Full transcript
+      const fullTranscript = document.createElement("div");
+      fullTranscript.className = "mb-6";
+      fullTranscript.innerHTML = `
+        <h3 class="text-lg font-semibold mb-2">Full Transcript</h3>
+        <p class="text-gray-800 bg-gray-50 p-3 rounded-md">${output.text}</p>
+      `;
+      transcriptContainer.appendChild(fullTranscript);
+      // Word-level timestamps
+      if (output.chunks && output.chunks.length > 0) {
+        const segmentsContainer = document.createElement("div");
+        segmentsContainer.innerHTML =
+          '<h3 class="text-lg font-semibold mb-2">Word Timestamps</h3>';
+        const segmentsGrid = document.createElement("div");
+        segmentsGrid.className = "grid grid-cols-1 md:grid-cols-2 gap-4";
+        output.chunks.forEach((chunk) => {
+          const segmentEl = document.createElement("div");
+          segmentEl.className =
+            "flex items-center space-x-2 bg-gray-50 p-2 rounded-md";
+          segmentEl.innerHTML = `
+            <span class="font-mono text-sm text-gray-600 w-28">[${chunk.timestamp[0].toFixed(
+              2
+            )}s - ${chunk.timestamp[1].toFixed(2)}s]</span>
+            <span class="text-gray-800">${chunk.text}</span>
+          `;
+          segmentsGrid.appendChild(segmentEl);
+        });
+        segmentsContainer.appendChild(segmentsGrid);
+        transcriptContainer.appendChild(segmentsContainer);
+      }
+      transcriptSection.classList.remove("hidden");
+      transcriptSection.open = true;
     }
-
-    resultsContainer.classList.remove("hidden");
     updateProgress(100, "Complete");
     // Store transcript output for matching
     lastTranscriptOutput = output;
@@ -715,6 +701,7 @@ export function initializeBleepView() {
       if (!lastTranscriptOutput || !lastTranscriptOutput.chunks) {
         matchResultsContainer.innerHTML =
           '<div class="text-red-600">Please transcribe a file first.</div>';
+        if (bleepAudioButton) bleepAudioButton.disabled = true;
         return;
       }
       const censorWords = document
@@ -727,12 +714,14 @@ export function initializeBleepView() {
         censorWords,
         modes
       );
+      lastCensorMatches = matches;
       console.log("[Debug] matches after findCensoredWords:", matches);
       // Display results
       if (matches.length === 0) {
         matchResultsContainer.innerHTML =
           '<div class="text-yellow-600">No matches found.</div>';
         censoredAudioBuffer = null;
+        if (bleepAudioButton) bleepAudioButton.disabled = true;
         if (censoredAudioPlayerContainer) {
           censoredAudioPlayerContainer.classList.add("hidden");
           censoredAudioPlayerContainer.innerHTML = "";
@@ -763,139 +752,102 @@ export function initializeBleepView() {
             )
             .join("") +
           "</ul>";
-        // Generate censored audio buffer
-        console.log("[Debug] About to generate censored audio buffer", {
-          originalAudioBuffer,
-          originalAudioBufferType: originalAudioBuffer
-            ? originalAudioBuffer.constructor.name
-            : null,
-          selectedBleep,
-          matches,
-        });
-        if (originalAudioBuffer && selectedBleep) {
-          console.log("[Debug] About to generate censored audio buffer", {
+        if (bleepAudioButton) bleepAudioButton.disabled = false;
+      }
+    });
+  }
+
+  if (bleepAudioButton) {
+    bleepAudioButton.addEventListener("click", async () => {
+      if (!lastCensorMatches || lastCensorMatches.length === 0) return;
+      // --- Audio/video processing logic moved here ---
+      if (originalAudioBuffer && selectedBleep) {
+        try {
+          // Load bleep sound as AudioBuffer
+          const audioContext = new AudioContext();
+          const bleepArrayBuffer = await fetch(selectedBleep.url).then((r) =>
+            r.arrayBuffer()
+          );
+          const bleepBuffer = await audioContext.decodeAudioData(
+            bleepArrayBuffer
+          );
+          // Prepare intervals from matches
+          const intervals = lastCensorMatches.map((m) => ({
+            start: m.timestamp[0],
+            end: m.timestamp[1],
+          }));
+          censoredAudioBuffer = applyBleepsToAudio(
             originalAudioBuffer,
-            selectedBleep,
-            matches,
-          });
-          try {
-            // Load bleep sound as AudioBuffer
-            const audioContext = new AudioContext();
-            const bleepArrayBuffer = await fetch(selectedBleep.url).then((r) =>
-              r.arrayBuffer()
-            );
-            const bleepBuffer = await audioContext.decodeAudioData(
-              bleepArrayBuffer
-            );
-            // Prepare intervals from matches
-            const intervals = matches.map((m) => ({
-              start: m.timestamp[0],
-              end: m.timestamp[1],
-            }));
-            censoredAudioBuffer = applyBleepsToAudio(
-              originalAudioBuffer,
-              bleepBuffer,
-              intervals
-            );
-            console.log(
-              "[Debug] censoredAudioBuffer generated:",
-              censoredAudioBuffer,
-              censoredAudioBuffer
-                ? `length: ${censoredAudioBuffer.length}, sampleRate: ${censoredAudioBuffer.sampleRate}`
-                : "null or undefined"
-            );
-            // If original file is video/mp4, remux
-            if (selectedFile && selectedFile.type === "video/mp4") {
-              console.log("[Debug] Starting remuxing for MP4");
-              // Hide audio player
-              if (censoredAudioPlayerContainer) {
-                censoredAudioPlayerContainer.classList.add("hidden");
-                censoredAudioPlayerContainer.innerHTML = "";
-              }
-              // Show progress (reuse matchResultsContainer for now)
-              matchResultsContainer.innerHTML +=
-                '<div id="remuxProgress" class="mt-2 text-blue-700">Muxing censored audio with video...</div>';
-              // Prepare buffers
-              const videoBuffer = await selectedFile.arrayBuffer();
-              // Convert censoredAudioBuffer to WAV
-              const wavBlob = audioBufferToWavBlob(censoredAudioBuffer);
-              const wavBuffer = await wavBlob.arrayBuffer();
-              console.log("[Debug] Posting to remuxWorker", {
-                videoBuffer,
-                wavBuffer,
-              });
-              // Start worker
-              if (!remuxWorker)
-                remuxWorker = new Worker(
-                  new URL("../workers/remuxWorker.js", import.meta.url),
-                  { type: "module" }
-                );
-              remuxWorker.onmessage = (e) => {
-                console.log("[Debug] remuxWorker message", e.data);
-                if (e.data.progress !== undefined) {
-                  const progressDiv = document.getElementById("remuxProgress");
-                  if (progressDiv)
-                    progressDiv.textContent =
-                      e.data.status +
-                      (e.data.progress < 100 ? ` (${e.data.progress}%)` : "");
-                }
-                if (e.data.result) {
-                  // Hide progress
-                  const progressDiv = document.getElementById("remuxProgress");
-                  if (progressDiv) progressDiv.remove();
-                  console.log(
-                    "[Debug] remuxWorker result received, showing video player"
-                  );
-                  showCensoredVideoPlayer(e.data.result, matches);
-                }
-                if (e.data.error) {
-                  const progressDiv = document.getElementById("remuxProgress");
-                  if (progressDiv)
-                    progressDiv.textContent = "Muxing error: " + e.data.error;
-                }
-              };
-              remuxWorker.postMessage({
-                videoBuffer,
-                audioBuffer: wavBuffer,
-                audioExt: "wav",
-              });
-            } else {
-              console.log("[Debug] Not an MP4, showing audio player");
-              // Show the Plyr-based audio player with markers
-              showCensoredAudioPlayer(censoredAudioBuffer, matches);
-              if (censoredVideoPlayerContainer) {
-                censoredVideoPlayerContainer.classList.add("hidden");
-                censoredVideoPlayerContainer.innerHTML = "";
-              }
-              if (censoredVideoDownloadButton)
-                censoredVideoDownloadButton.classList.add("hidden");
-            }
-          } catch (err) {
-            console.error(
-              "[Debug] Error generating censored audio buffer",
-              err
-            );
-            censoredAudioBuffer = null;
+            bleepBuffer,
+            intervals
+          );
+          // If original file is video/mp4, remux
+          if (selectedFile && selectedFile.type === "video/mp4") {
             if (censoredAudioPlayerContainer) {
               censoredAudioPlayerContainer.classList.add("hidden");
               censoredAudioPlayerContainer.innerHTML = "";
             }
-            if (previewCensoredAudioButton)
-              previewCensoredAudioButton.classList.remove("hidden");
+            matchResultsContainer.innerHTML +=
+              '<div id="remuxProgress" class="mt-2 text-blue-700">Muxing censored audio with video...</div>';
+            const videoBuffer = await selectedFile.arrayBuffer();
+            const wavBlob = audioBufferToWavBlob(censoredAudioBuffer);
+            const wavBuffer = await wavBlob.arrayBuffer();
+            if (!remuxWorker)
+              remuxWorker = new Worker(
+                new URL("../workers/remuxWorker.js", import.meta.url),
+                { type: "module" }
+              );
+            remuxWorker.onmessage = (e) => {
+              if (e.data.progress !== undefined) {
+                const progressDiv = document.getElementById("remuxProgress");
+                if (progressDiv)
+                  progressDiv.textContent =
+                    e.data.status +
+                    (e.data.progress < 100 ? ` (${e.data.progress}%)` : "");
+              }
+              if (e.data.result) {
+                const progressDiv = document.getElementById("remuxProgress");
+                if (progressDiv) progressDiv.remove();
+                showCensoredVideoPlayer(e.data.result, lastCensorMatches);
+              }
+              if (e.data.error) {
+                const progressDiv = document.getElementById("remuxProgress");
+                if (progressDiv)
+                  progressDiv.textContent = "Muxing error: " + e.data.error;
+              }
+            };
+            remuxWorker.postMessage({
+              videoBuffer,
+              audioBuffer: wavBuffer,
+              audioExt: "wav",
+            });
+          } else {
+            showCensoredAudioPlayer(censoredAudioBuffer, lastCensorMatches);
+            if (censoredVideoPlayerContainer) {
+              censoredVideoPlayerContainer.classList.add("hidden");
+              censoredVideoPlayerContainer.innerHTML = "";
+            }
+            if (censoredVideoDownloadButton)
+              censoredVideoDownloadButton.classList.add("hidden");
           }
-        } else {
+        } catch (err) {
+          console.error("[Debug] Error generating censored audio buffer", err);
           censoredAudioBuffer = null;
           if (censoredAudioPlayerContainer) {
             censoredAudioPlayerContainer.classList.add("hidden");
             censoredAudioPlayerContainer.innerHTML = "";
-            console.log(
-              "[Debug] Hiding censoredAudioPlayerContainer (no buffer)",
-              censoredAudioBuffer
-            );
           }
           if (previewCensoredAudioButton)
             previewCensoredAudioButton.classList.remove("hidden");
         }
+      } else {
+        censoredAudioBuffer = null;
+        if (censoredAudioPlayerContainer) {
+          censoredAudioPlayerContainer.classList.add("hidden");
+          censoredAudioPlayerContainer.innerHTML = "";
+        }
+        if (previewCensoredAudioButton)
+          previewCensoredAudioButton.classList.remove("hidden");
       }
       updateCensoredButtons();
     });
