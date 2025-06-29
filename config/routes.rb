@@ -32,5 +32,8 @@ Rails.application.routes.draw do
   # Add the bleep-view route
   get 'bleep-view', to: 'pages#bleep_view'
 
+  # Add the transcription sampler view route
+  get '/transcription-sampler-view', to: 'pages#transcription_sampler_view'
+
   # All transcription is handled client-side; no backend routes needed.
 end

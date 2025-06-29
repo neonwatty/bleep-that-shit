@@ -51,6 +51,7 @@ let censoredVideoPlayerContainer = null;
 let censoredVideoDownloadButton = null;
 let remuxWorker = null;
 let censoredVideoUrl = null;
+let bleepInputPlyrInstance = null;
 
 // Transcription handling
 export function initializeBleepView() {
@@ -236,6 +237,7 @@ export function initializeBleepView() {
     }
 
     if (selectedFile && validAudioTypes.includes(selectedFile.type)) {
+      showBleepInputPreview(selectedFile);
       dropzoneText.textContent = `Selected file: ${selectedFile.name}`;
       transcribeButton.disabled = false;
       // Decode and store the original audio buffer
@@ -248,11 +250,81 @@ export function initializeBleepView() {
         originalAudioBuffer = null;
       }
     } else {
+      showBleepInputPreview(null);
       selectedFile = null;
       dropzoneText.textContent =
         "Drag and drop your audio file here or click to browse";
       transcribeButton.disabled = true;
       originalAudioBuffer = null;
+    }
+  }
+
+  function showBleepInputPreview(file) {
+    const container = document.getElementById("bleepInputPreviewContainer");
+    if (!container) return;
+    // Remove previous content and destroy Plyr instance if any
+    const closeBtn = document.getElementById("bleepInputPreviewCloseBtn");
+    Array.from(container.children).forEach((child) => {
+      if (child !== closeBtn) container.removeChild(child);
+    });
+    if (bleepInputPlyrInstance && bleepInputPlyrInstance.destroy) {
+      bleepInputPlyrInstance.destroy();
+      bleepInputPlyrInstance = null;
+    }
+    if (!file) {
+      container.classList.add("hidden");
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    let mediaEl;
+    if (file.type.startsWith("audio/")) {
+      mediaEl = document.createElement("audio");
+      mediaEl.setAttribute("controls", "");
+      mediaEl.setAttribute("id", "bleep-input-audio-player");
+      mediaEl.src = url;
+    } else if (file.type.startsWith("video/")) {
+      mediaEl = document.createElement("video");
+      mediaEl.setAttribute("controls", "");
+      mediaEl.setAttribute("id", "bleep-input-video-player");
+      mediaEl.src = url;
+      mediaEl.setAttribute("playsinline", "");
+      mediaEl.setAttribute("style", "max-width:100%;height:auto;");
+    } else {
+      container.classList.add("hidden");
+      return;
+    }
+    container.appendChild(mediaEl);
+    bleepInputPlyrInstance = new Plyr(mediaEl, {
+      controls: [
+        "play",
+        "progress",
+        "current-time",
+        "duration",
+        "mute",
+        "volume",
+        "fullscreen",
+      ],
+    });
+    container.classList.remove("hidden");
+    // Bind close button
+    if (closeBtn) {
+      closeBtn.onclick = () => {
+        if (bleepInputPlyrInstance && bleepInputPlyrInstance.destroy) {
+          bleepInputPlyrInstance.destroy();
+          bleepInputPlyrInstance = null;
+        }
+        container.classList.add("hidden");
+        // Clear file input so user can re-upload same file
+        const fileInput = document.getElementById("bleepFileInput");
+        if (fileInput) fileInput.value = "";
+        selectedFile = null;
+        transcribeButton.disabled = true;
+        // Optionally reset dropzone text
+        const dropzoneText = dropzone.querySelector("p");
+        if (dropzoneText)
+          dropzoneText.textContent =
+            "Drag and drop your audio or video file here or click to browse";
+      };
     }
   }
 

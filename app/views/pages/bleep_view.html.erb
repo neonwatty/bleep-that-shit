@@ -1,6 +1,38 @@
 <div class="container mx-auto px-4 py-8">
   <div class="max-w-2xl mx-auto">
-    <h1 class="text-3xl font-bold mb-8">Transcribe and Bleep</h1>
+    <!-- Purpose Banner -->
+    <div class="mb-6 p-4 bg-indigo-100 border-l-4 border-indigo-500 rounded shadow">
+      <div class="flex items-center">
+        <span class="text-2xl mr-3">🔊</span>
+        <div>
+          <h1 class="text-2xl font-bold mb-1">Transcribe and Bleep</h1>
+          <p class="text-indigo-800">
+            Process your <strong>entire audio or video file</strong>, censoring selected words with customizable matching and bleep sounds.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workflow Guidance -->
+    <ol class="mb-6 pl-6 list-decimal text-gray-700">
+      <li><span class="mr-1">🎵</span><strong>Upload your file</strong> (audio or video).</li>
+      <li><span class="mr-1">🗣️</span><strong>Select language and model</strong> for transcription.</li>
+      <li><span class="mr-1">🔊</span><strong>Choose bleep sound and words to censor.</strong></li>
+      <li><span class="mr-1">🧩</span><strong>Pick matching modes</strong> (exact, partial, fuzzy).</li>
+      <li><span class="mr-1">👀</span><strong>Transcribe and preview/download the censored result.</strong></li>
+    </ol>
+
+    <!-- Link to Sampler -->
+    <div class="mb-6 p-3 bg-blue-50 border border-blue-300 rounded flex items-center">
+      <span class="mr-2">💡</span>
+      <span>
+        Not sure which model to use? 
+        <a href="/transcription-sampler-view" class="text-blue-700 underline font-semibold hover:text-blue-900">Try the Transcription Sampler</a>
+        to compare models on a short snippet first.
+      </span>
+    </div>
+
+    <!-- Existing form and controls -->
     <div class="bg-white shadow-md rounded-lg p-6">
       <!-- File Upload Area -->
       <div id="bleep-dropzone" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 transition-colors">
@@ -44,6 +76,11 @@
         </select>
         <button id="bleepPreviewButton" type="button" class="mt-2 px-4 py-1 bg-gray-200 rounded hover:bg-gray-300">Preview</button>
         <span id="bleepSoundName" class="ml-2 text-sm text-gray-600"></span>
+      </div>
+      <!-- Input Preview Player (audio or video) -->
+      <div id="bleepInputPreviewContainer" class="mt-6 hidden relative">
+        <button id="bleepInputPreviewCloseBtn" type="button" aria-label="Close preview" class="absolute top-2 right-2 z-50 bg-white/80 rounded-full text-gray-700 hover:text-red-600 text-2xl font-bold focus:outline-none px-3 py-1 shadow">&times;</button>
+        <!-- Player will be injected here by JS -->
       </div>
       <!-- Transcribe Button -->
       <div class="mt-6">
@@ -91,10 +128,6 @@
       <button id="downloadCensoredVideoButton" class="hidden bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-2">Download Censored Video</button>
       <!-- Censored Audio Player -->
       <div class="mt-4 hidden" id="censoredAudioPlayerContainer"></div>
-      <div class="mt-4 flex space-x-4">
-        <button id="previewCensoredAudioButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Preview Censored Audio</button>
-        <button id="downloadCensoredAudioButton" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Censored Audio</button>
-      </div>
       <!-- Results Placeholder -->
       <div class="mt-6" id="bleepResultsContainer">
         <!-- Processed audio player and download link will be inserted here -->

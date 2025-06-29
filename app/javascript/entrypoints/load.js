@@ -1,19 +1,25 @@
 import { initializeTranscription } from "../pages/transcription";
 import { initializeBleepView } from "../pages/bleep_view";
+import { initializeTranscriptionSampler } from "../pages/transcription-sampler";
 
 // Initialize any global JavaScript functionality here
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM Content Loaded");
 
-  // Only initialize transcription on the transcription-view page
   if (window.location.pathname === "/transcription-view") {
     console.log("Initializing transcription on transcription-view page");
     initializeTranscription();
   }
 
-  // Only initialize transcription on the bleep-view page
   if (window.location.pathname === "/bleep-view") {
     console.log("Initializing transcription on bleep-view page");
     initializeBleepView();
+  }
+
+  if (window.location.pathname === "/transcription-sampler-view") {
+    console.log(
+      "Initializing transcription on transcription-sampler-view page"
+    );
+    initializeTranscriptionSampler();
   }
 });
