@@ -1,14 +1,11 @@
 <nav class="flex items-center justify-between py-4 mb-8 border-b">
   <div class="text-xl font-bold">
-    <%= link_to "Frame Miner", root_path, class: "hover:text-blue-600" %>
+    <%= link_to "Bleep That Sh*t!", root_path, class: "hover:text-blue-600" %>
   </div>
   <div class="space-x-4 flex items-center">
     <% if logged_in? %>
       <span class="text-gray-700 mr-2">Signed in as <%= current_user.email %></span>
       <%= button_to "Sign Out", session_path(current_user), method: :delete, class: "bg-red-600 text-white px-4 py-2 rounded" %>
-    <% else %>
-      <%= link_to "Sign Up", new_user_path, class: "bg-green-600 text-white px-4 py-2 rounded" %>
-      <%= link_to "Sign In", new_session_path, class: "bg-blue-600 text-white px-4 py-2 rounded" %>
     <% end %>
   </div>
   <div class="flex items-center space-x-4">
