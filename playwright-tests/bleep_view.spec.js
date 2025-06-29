@@ -118,7 +118,7 @@ test("bleep-view: partial matching finds substrings in transcript words", async 
       timeout: 10000,
     });
     await page.click("#transcribeAndBleepButton");
-    await page.waitForSelector("#bleepResultsContainer .mb-6", {
+    await page.waitForSelector("#bleepTranscriptSection .mb-6", {
       timeout: 30000,
     });
     // Enter censor word 'unite'
@@ -162,7 +162,7 @@ test("bleep-view: fuzzy matching finds similar words in transcript", async ({
       timeout: 10000,
     });
     await page.click("#transcribeAndBleepButton");
-    await page.waitForSelector("#bleepResultsContainer .mb-6", {
+    await page.waitForSelector("#bleepTranscriptSection .mb-6", {
       timeout: 30000,
     });
     // Enter censor word 'th'
@@ -209,7 +209,7 @@ test("bleep-view: fuzzy matching finds words with edit distance 2", async ({
       timeout: 10000,
     });
     await page.click("#transcribeAndBleepButton");
-    await page.waitForSelector("#bleepResultsContainer .mb-6", {
+    await page.waitForSelector("#bleepTranscriptSection .mb-6", {
       timeout: 30000,
     });
     // Enter censor word 'reuntd' (edit distance 2 from 'reunited')
@@ -271,13 +271,23 @@ test("bleep-view: audio player shows markers for mp3", async ({ page }) => {
       timeout: 10000,
     });
     await page.click("#transcribeAndBleepButton");
-    await page.waitForSelector("#bleepResultsContainer .mb-6", {
+    await page.waitForSelector("#bleepTranscriptSection .mb-6", {
       timeout: 30000,
     });
     // Enter a bleep word that is present in the transcript
     await page.fill("#bleepWords", "the");
     await page.click("#runMatchingButton");
-    // Wait for the Plyr audio player to appear (not the raw <audio> tag)
+    // Wait for match results to appear
+    await page.waitForSelector("#bleepMatchResults ul", { timeout: 10000 });
+    // Click the Bleep Audio! button to generate censored audio
+    await page.click("#bleepAudioButton");
+    // DEBUG: Print the inner HTML and URL before waiting
+    const debugHtml = await page.$eval(
+      "#censoredAudioPlayerContainer",
+      (el) => el.innerHTML
+    );
+    console.log("[DEBUG] #censoredAudioPlayerContainer.innerHTML:", debugHtml);
+    console.log("[DEBUG] page.url:", page.url());
     await page.waitForSelector("#censoredAudioPlayerContainer .plyr", {
       timeout: 10000,
     });
