@@ -1,15 +1,9 @@
 services:
   - type: web
     name: bleep-that-shit
-    runtime: ruby
     plan: free # or 'starter', 'standard', etc. as needed
-    buildCommand: |
-      bundle install
-      npm ci
-      npm run build
-      bundle exec rails assets:precompile
-    startCommand: |
-      bundle exec rails server -b 0.0.0.0 -p 10000
+    # runtime: docker  # Optional; Render will auto-detect Dockerfile if present
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: RAILS_ENV
         value: false
