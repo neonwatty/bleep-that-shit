@@ -178,14 +178,12 @@ test("bleep-view: fuzzy matching finds similar words in transcript", async ({
     await page.click("#runMatchingButton");
     // Wait for results
     await page.waitForSelector("#bleepMatchResults ul", { timeout: 10000 });
-    const matchResults = await page.textContent("#bleepMatchResults");
-    // Count the number of matches listed after the colon
-    const matchesList = matchResults.split(":")[1];
-    const matches = matchesList
-      ? matchesList.split(/\[.*?\]/).filter((s) => s.trim()).length
-      : 0;
-    console.log("Fuzzy matching (distance 1) matches:", matches);
-    expect(matches).toBe(2);
+    const matchCount = await page.$$eval(
+      "#bleepMatchResults ul li",
+      (els) => els.length
+    );
+    console.log("Fuzzy matching (distance 1) matches:", matchCount);
+    expect(matchCount).toBe(2);
   } catch (e) {
     await screenshotOnFailure(page, "bleep-view-fuzzy-matching-failure");
     throw e;
@@ -225,14 +223,12 @@ test("bleep-view: fuzzy matching finds words with edit distance 2", async ({
     await page.click("#runMatchingButton");
     // Wait for results
     await page.waitForSelector("#bleepMatchResults ul", { timeout: 10000 });
-    const matchResults = await page.textContent("#bleepMatchResults");
-    // Count the number of matches listed after the colon
-    const matchesList = matchResults.split(":")[1];
-    const matches = matchesList
-      ? matchesList.split(/\[.*?\]/).filter((s) => s.trim()).length
-      : 0;
-    console.log("Fuzzy matching (distance 2) matches:", matches);
-    expect(matches).toBe(5);
+    const matchCount = await page.$$eval(
+      "#bleepMatchResults ul li",
+      (els) => els.length
+    );
+    console.log("Fuzzy matching (distance 2) matches:", matchCount);
+    expect(matchCount).toBe(5);
   } catch (e) {
     await screenshotOnFailure(
       page,

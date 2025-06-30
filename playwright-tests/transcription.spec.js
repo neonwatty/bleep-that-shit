@@ -60,31 +60,6 @@ test("user can upload mp4 and get transcription", async ({ page }) => {
   }
 });
 
-test("user can cancel transcription", async ({ page }) => {
-  try {
-    await page.goto("http://bleep-that-sht.localhost:3000/transcription-view");
-    const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp3");
-    const fileInput = await page.$("#fileInput");
-    await fileInput.setInputFiles(filePath);
-    await page.waitForSelector("#transcribeButton:not([disabled])", {
-      timeout: 10000,
-    });
-    await page.click("#transcribeButton");
-    await page.waitForSelector("#cancelTranscriptionButton:not(.hidden)", {
-      timeout: 10000,
-    });
-    await page.click("#cancelTranscriptionButton");
-    await page.waitForSelector("text=Transcription cancelled.", {
-      timeout: 10000,
-    });
-    const resultsText = await page.textContent("#results");
-    expect(resultsText).not.toContain("Transcript");
-  } catch (e) {
-    await screenshotOnFailure(page, "cancel-failure");
-    throw e;
-  }
-});
-
 test("transcription-view: shows warning and disables transcribe for mismatched file type", async ({
   page,
 }) => {

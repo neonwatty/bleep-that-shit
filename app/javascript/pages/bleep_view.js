@@ -348,9 +348,20 @@ export function initializeBleepView() {
           debug,
           type: msgType,
           audioBuffer,
+          chunkProgress,
         } = event.data;
         if (debug) {
           console.log("[Worker Debug]", debug);
+        }
+        if (chunkProgress) {
+          const { currentChunk, totalChunks } = chunkProgress;
+          const percent = (currentChunk / totalChunks) * 100;
+          updateProgress(
+            percent,
+            `Processing chunk ${currentChunk} of ${totalChunks}`
+          );
+          renderChunkStepper(currentChunk, totalChunks);
+          return;
         }
         if (progress !== undefined) {
           console.log("[Debug] Progress update:", progress, status);
@@ -933,4 +944,72 @@ export function initializeBleepView() {
   );
   if (censoredVideoDownloadButton)
     censoredVideoDownloadButton.classList.add("hidden");
+
+  // Render chunk stepper (dots)
+  function renderChunkStepper(current, total) {
+    const stepper = document.getElementById("chunkStepper");
+    if (!stepper) return;
+    if (!total || total <= 1) {
+      stepper.innerHTML = "";
+      return;
+    }
+    stepper.innerHTML = "";
+
+    // Show all dots if <= 10
+    if (total <= 10) {
+      for (let i = 1; i <= total; i++) {
+        const dot = document.createElement("span");
+        dot.className = `inline-block w-3 h-3 rounded-full mx-0.5 border border-indigo-400 transition-colors duration-200 ${
+          i < current
+            ? "bg-indigo-400"
+            : i === current
+            ? "bg-indigo-600"
+            : "bg-gray-200"
+        }`;
+        stepper.appendChild(dot);
+      }
+      return;
+    }
+
+    // Condensed stepper for large totals
+    const addDot = (i) => {
+      const dot = document.createElement("span");
+      dot.className = `inline-block w-3 h-3 rounded-full mx-0.5 border border-indigo-400 transition-colors duration-200 ${
+        i < current
+          ? "bg-indigo-400"
+          : i === current
+          ? "bg-indigo-600"
+          : "bg-gray-200"
+      }`;
+      stepper.appendChild(dot);
+    };
+    const addEllipsis = () => {
+      const ellipsis = document.createElement("span");
+      ellipsis.textContent = "…";
+      ellipsis.className = "mx-1 text-gray-400";
+      stepper.appendChild(ellipsis);
+    };
+
+    // Always show first dot
+    addDot(1);
+
+    // Show ellipsis if current > 4
+    if (current > 4) addEllipsis();
+
+    // Show up to 2 before, current, and 2 after
+    for (
+      let i = Math.max(2, current - 2);
+      i <= Math.min(total - 1, current + 2);
+      i++
+    ) {
+      if (i === 1 || i === total) continue; // already shown
+      addDot(i);
+    }
+
+    // Show ellipsis if current < total - 3
+    if (current < total - 3) addEllipsis();
+
+    // Always show last dot
+    addDot(total);
+  }
 }
