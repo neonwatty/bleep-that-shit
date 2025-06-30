@@ -49,7 +49,8 @@ COPY --from=build /rails /rails
 # Create non-root user
 RUN groupadd --system --gid 1000 rails && \
     useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash rails && \
-    chown -R rails:rails /rails/{db,log,storage,tmp}
+    mkdir -p /rails/db /rails/log /rails/storage /rails/tmp && \
+    chown -R rails:rails /rails/db /rails/log /rails/storage /rails/tmp
 
 USER rails
 
