@@ -1,16 +1,16 @@
-<nav class="flex items-center justify-between py-4 mb-8 border-b">
-  <div class="text-xl font-bold">
-    <a href="/" class="text-gray-900 hover:underline">Bleep That Sh*t!</a>
+<nav class="mx-auto mb-8 w-full max-w-7xl border-2 border-violet-400 rounded-2xl bg-gradient-to-r from-indigo-500 via-violet-500 to-pink-400 bg-opacity-70 shadow-xl backdrop-blur-md px-8 py-4 flex items-center justify-between">
+  <div class="text-2xl font-extrabold">
+    <a href="/" class="text-white drop-shadow-lg hover:underline">Bleep That Sh*t!</a>
   </div>
   <div class="space-x-4 flex items-center">
     <% if logged_in? %>
-      <span class="text-gray-700 mr-2">Signed in as <%= current_user.email %></span>
-      <%= button_to "Sign Out", session_path(current_user), method: :delete, class: "bg-red-600 text-white px-4 py-2 rounded" %>
+      <span class="text-gray-100 mr-2 drop-shadow">Signed in as <%= current_user.email %></span>
+      <%= button_to "Sign Out", session_path(current_user), method: :delete, class: "bg-gradient-to-r from-red-500 via-pink-500 to-yellow-500 text-white font-extrabold px-4 py-2 rounded-xl shadow-lg hover:from-red-600 hover:to-yellow-400 transition-all border-2 border-white/70" %>
     <% end %>
   </div>
   <div class="flex items-center space-x-4">
-    <a href="/transcription-sampler-view" class="flashing-btn bg-gradient-to-r from-green-500 via-green-400 to-green-600 text-white px-4 py-2 rounded font-semibold shadow-lg transform transition-all duration-200 hover:scale-105 hover:from-green-400 hover:to-green-500 hover:animate-gradient-x">Transcription Sampler</a>
-    <a href="/bleep-view" class="flashing-btn bg-gradient-to-r from-violet-500 via-pink-500 to-violet-700 text-white px-4 py-2 rounded font-semibold ml-4 shadow-lg transform transition-all duration-200 hover:scale-105 hover:from-pink-500 hover:to-violet-500 hover:animate-gradient-x">Bleep Your Sh*t!</a>
+    <a href="/bleep-view" class="bg-gradient-to-r from-violet-500 via-indigo-500 to-blue-500 text-white font-extrabold px-4 py-2 rounded-xl shadow-lg hover:from-violet-600 hover:to-blue-400 transition-all border-2 border-white/70">Bleep Your Sh*t!</a>
+    <a href="/transcription-sampler-view" class="bg-gradient-to-r from-green-400 via-emerald-500 to-teal-400 text-white font-extrabold px-4 py-2 rounded-xl ml-4 shadow-lg hover:from-green-500 hover:to-teal-300 transition-all border-2 border-white/70">Transcription Sampler</a>
   </div>
 </nav>
 
