@@ -12,9 +12,9 @@ services:
       bundle exec rails server -b 0.0.0.0 -p 10000
     envVars:
       - key: RAILS_ENV
-        value: production
+        value: false
       - key: NODE_ENV
-        value: production
+        value: false
       - key: RAILS_MASTER_KEY
         sync: false # Set this in the Render dashboard or as a secret
     autoDeploy: true
