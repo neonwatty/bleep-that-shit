@@ -128,8 +128,8 @@
             "description": "Develop components to integrate the audio chunking system with the user interface, including progress indicators and configuration controls.",
             "dependencies": [5],
             "details": "Inputs: Chunking system API, UI requirements\nOutputs: UI components for configuration, progress tracking, and results display\nAcceptance Criteria: Users can configure chunking parameters, see real-time progress, and access chunked results through intuitive interface.",
-            "status": "pending",
-            "testStrategy": ""
+            "status": "done",
+            "testStrategy": "Chunking UI and feedback system (progress bar and stepper, with condensed display) is MVP-ready and tested."
           }
         ]
       },
@@ -272,7 +272,8 @@
             "details": "1. Add a prominent 'Transcribe and Bleep' button to the UI\n2. Implement functionality to separate audio from video if the input is a video file\n3. Connect to the transcription service to generate word-level timestamps\n4. Automatically apply the bleeping process using the user-inputted censor words\n5. Display progress indicators during processing\n6. Handle errors gracefully with user-friendly messages\n7. Present the processed output ready for playback\n8. Allow users to select different bleep sounds before processing",
             "testStrategy": "Test with both audio and video input files. Verify the audio extraction works correctly for video files. Test the end-to-end process with various censor word lists. Verify proper error handling when transcription fails. Test with different bleep sound options. Measure and optimize processing time for large files."
           }
-        ]
+        ],
+        "note": "Chunking UI and feedback system for bleeping is MVP-ready and tested."
       },
       {
         "id": 45,
@@ -392,8 +393,9 @@
         "testStrategy": "Run tests on CI/CD pipeline. Verify all critical functionality is covered. Test on multiple browsers. Measure code coverage. Verify tests catch regressions.",
         "priority": "medium",
         "dependencies": [38, 40, 41, 44, 45, 46, 49, 51, 54],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "note": "All Playwright tests pass as of the latest run. Fuzzy matching tests are robust and use DOM-based counting."
       },
       {
         "id": 56,

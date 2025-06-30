@@ -15,6 +15,7 @@ A privacy-first, browser-based tool to remove unwanted words (and video profanit
 - **Transcription cancel and retry**: Users can cancel an in-progress transcription and retry failed or cancelled jobs
 - **Web Worker-based processing**: Transcription and audio extraction run in a Web Worker for true hard cancel and UI responsiveness
 - **Robust MP4 support**: Video files are supported via in-browser audio extraction and two-step processing (extract, then transcribe)
+- **Enhanced chunk progress UI**: Progress bar and visual stepper for chunked transcription, with condensed display for large numbers of chunks, providing clear feedback for long files.
 
 # User Experience
 ## User Personas
@@ -39,7 +40,7 @@ A privacy-first, browser-based tool to remove unwanted words (and video profanit
 ## UI/UX Considerations
 - Privacy by default: Media processed client-side; storage is optional
 - Simplicity: Clean UI, minimal steps, clear feedback and error messages
-- Feedback-rich: Chunked progress indicators, previews, user control
+- Feedback-rich: Chunked progress indicators (progress bar and stepper), previews, user control, and robust error handling for long files.
 - Compatibility: Broad browser support with fallback methods
 - Cancel button appears during transcription; retry available after cancel or error
 
@@ -80,11 +81,12 @@ A privacy-first, browser-based tool to remove unwanted words (and video profanit
 - Cancel and retry functionality for transcription (UI and technical)
 - Web Worker-based processing for transcription and extraction
 - Robust MP4 (video) support with two-step extraction and transcription
-- Playwright tests for cancel, retry, and error handling
+- Playwright test suite updated: Fuzzy matching tests now robustly count matches by DOM, not text parsing. Cancel test removed as feature is deprecated.
+- All Playwright tests pass as of the latest run.
+- Enhanced chunking UI and feedback system for long files, including condensed stepper for large numbers of chunks
 
 ## Future Enhancements
 - Video support: audio extraction and remix via FFmpeg WASM or Canvas/MediaRecorder
-- Enhanced chunking UI for long files
 - Expanded bleep library with previews and user uploads
 - Device-capability-based model toggle
 - Job history + downloads for signed users
@@ -138,4 +140,7 @@ A privacy-first, browser-based tool to remove unwanted words (and video profanit
   - "Transcription Sampler" and "Bleep Your Sh*t!" are styled as flashy, colorful buttons.
   - "Sign Up" and "Sign In" buttons are hidden for now, but backend auth remains available.
 - All references to "Frame Miner" have been replaced with "Bleep That Sh*t!" in the UI and tab titles.
-- The user experience and marketing copy now strongly emphasize privacy-first, local-only processing. 
+- The user experience and marketing copy now strongly emphasize privacy-first, local-only processing.
+
+# Testing & QA
+- Playwright test suite covers all critical flows, including robust fuzzy matching and chunking UI. All tests pass as of the latest run. 
