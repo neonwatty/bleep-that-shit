@@ -6,9 +6,9 @@ services:
     dockerfilePath: ./Dockerfile
     envVars:
       - key: RAILS_ENV
-        value: false
+        value: "production"
       - key: NODE_ENV
-        value: false
+        value: "production"
       - key: RAILS_MASTER_KEY
         sync: false # Set this in the Render dashboard or as a secret
     autoDeploy: true
