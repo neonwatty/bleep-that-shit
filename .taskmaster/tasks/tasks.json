@@ -19,9 +19,7 @@
         "details": "1. Generate models using Rails generators:\n   - `rails g model AudioJob file_type:string status:string model:string padding:float opt_in:boolean user:references`\n   - `rails g model BleepConfig name:string bleep_sound:string padding:float user:references`\n   - `rails g model StoredMedia audio_job:references blob:references`\n2. Update migrations with appropriate constraints and indexes\n3. Set up model relationships:\n   - User has_many AudioJobs and BleepConfigs\n   - AudioJob belongs_to User (optional for guest users)\n   - BleepConfig belongs_to User\n   - StoredMedia belongs_to AudioJob\n4. Add validations for required fields\n5. Implement scopes for filtering jobs by status\n6. Run migrations: `rails db:migrate`",
         "testStrategy": "Write unit tests for model validations, relationships, and scopes. Test creating, updating, and querying records. Verify that optional relationships work correctly for guest users.",
         "priority": "high",
-        "dependencies": [
-          36
-        ],
+        "dependencies": [36],
         "status": "done",
         "subtasks": []
       },
@@ -32,9 +30,7 @@
         "details": "1. Create a file upload component using vanilla JS\n2. Implement drag-and-drop zone with visual feedback\n3. Add file type validation for audio (mp3, wav, ogg) and video (mp4, webm) formats\n4. Display file size and format information after selection\n5. Add progress indicator for upload process\n6. Implement file size limit checks (suggest 500MB initial limit)\n7. Add error handling for invalid files\n8. Style the component according to the app's design system\n9. Ensure accessibility compliance with proper ARIA attributes\n10. Implement responsive design for mobile compatibility",
         "testStrategy": "Test with various file types and sizes to verify validation. Check drag-and-drop functionality across browsers. Verify accessibility with screen readers. Test responsive behavior on different screen sizes.",
         "priority": "high",
-        "dependencies": [
-          36
-        ],
+        "dependencies": [36],
         "status": "done",
         "subtasks": []
       },
@@ -45,9 +41,7 @@
         "details": "1. Create a dedicated Web Worker file structure\n2. Set up message passing interface between main thread and worker\n3. Implement worker initialization and termination logic\n4. Create a worker pool manager for handling multiple concurrent tasks\n5. Add error handling and recovery mechanisms\n6. Implement progress reporting from worker to main thread\n7. Set up task cancellation capability\n8. Add retry logic for failed tasks\n9. Implement memory management best practices\n10. Add logging for debugging purposes",
         "testStrategy": "Test worker initialization, message passing, and termination. Verify that CPU-intensive mock tasks don't block the UI. Test cancellation and retry functionality. Measure performance impact and memory usage.",
         "priority": "high",
-        "dependencies": [
-          36
-        ],
+        "dependencies": [36],
         "status": "done",
         "subtasks": []
       },
@@ -58,9 +52,7 @@
         "details": "1. Add transformers.js library to the project\n2. Configure model loading from Hugging Face CDN\n3. Implement model caching strategy\n4. Set up pipeline for audio transcription\n5. Configure word-level timestamp extraction\n6. Implement model selection logic (base vs. large-v3)\n7. Add progress tracking for model loading and inference\n8. Implement error handling for failed model loading or inference\n9. Optimize memory usage during transcription\n10. Add fallback to smaller model if device constraints detected\n\nReference implementation: https://github.com/huggingface/transformers.js-examples/tree/main/whisper-word-timestamps",
         "testStrategy": "Test model loading and transcription with various audio samples. Verify timestamp accuracy. Measure memory usage and performance. Test fallback mechanisms. Verify behavior on different device capabilities.",
         "priority": "high",
-        "dependencies": [
-          39
-        ],
+        "dependencies": [39],
         "status": "done",
         "subtasks": []
       },
@@ -71,9 +63,7 @@
         "details": "1. Research and evaluate FFmpeg WASM vs. MediaRecorder approach\n2. Implement audio extraction using selected method\n3. For FFmpeg WASM:\n   - Add FFmpeg WASM library to the project\n   - Set up WASM loading and initialization\n   - Implement extraction function with progress tracking\n4. For MediaRecorder approach:\n   - Create video element and extract audio track\n   - Set up MediaRecorder to capture audio stream\n   - Configure audio format and quality settings\n5. Implement progress tracking during extraction\n6. Add error handling for failed extractions\n7. Optimize for memory usage with large files\n8. Implement cleanup of temporary files/buffers",
         "testStrategy": "Test extraction with various video formats and sizes. Verify audio quality after extraction. Measure memory usage and performance. Test error handling with corrupted files.",
         "priority": "high",
-        "dependencies": [
-          39
-        ],
+        "dependencies": [39],
         "status": "done",
         "subtasks": []
       },
@@ -84,10 +74,7 @@
         "details": "1. Implement audio file analysis to determine optimal chunk size\n2. Create chunking algorithm with configurable overlap\n3. Implement progress tracking for multi-chunk processing\n4. Develop timestamp adjustment for chunk reassembly\n5. Add logic to merge transcription results from multiple chunks\n6. Implement error handling for individual chunk failures\n7. Add retry logic for failed chunks\n8. Optimize memory usage during chunking process\n9. Implement cleanup of temporary chunks\n10. Add visualization of chunking progress in UI",
         "testStrategy": "Test with files of various lengths to verify chunking logic. Verify timestamp continuity across chunk boundaries. Test memory usage with very large files. Verify error handling and retry functionality for individual chunks.",
         "priority": "medium",
-        "dependencies": [
-          40,
-          41
-        ],
+        "dependencies": [40, 41],
         "status": "pending",
         "subtasks": [
           {
@@ -103,9 +90,7 @@
             "id": 2,
             "title": "Develop Core Chunking Algorithm",
             "description": "Implement the algorithm to divide audio files into chunks based on configurable parameters while maintaining audio integrity.",
-            "dependencies": [
-              1
-            ],
+            "dependencies": [1],
             "details": "Inputs: Audio file, chunk size parameters, overlap settings\nOutputs: Array of audio chunks with metadata\nAcceptance Criteria: Algorithm correctly divides files without data loss, handles various chunk size strategies (fixed duration, dynamic based on content).",
             "status": "pending",
             "testStrategy": ""
@@ -114,9 +99,7 @@
             "id": 3,
             "title": "Build Timestamp Management System",
             "description": "Create a system to track and maintain accurate timestamps across audio chunks for proper reconstruction and reference.",
-            "dependencies": [
-              2
-            ],
+            "dependencies": [2],
             "details": "Inputs: Original audio metadata, chunk boundaries\nOutputs: Timestamp mapping between chunks and original file\nAcceptance Criteria: System maintains millisecond accuracy, handles edge cases like silence detection, provides bidirectional mapping.",
             "status": "pending",
             "testStrategy": ""
@@ -125,10 +108,7 @@
             "id": 4,
             "title": "Implement Memory Optimization Techniques",
             "description": "Optimize the chunking system to handle large audio files efficiently without excessive memory usage.",
-            "dependencies": [
-              2,
-              3
-            ],
+            "dependencies": [2, 3],
             "details": "Inputs: Chunking configuration, memory constraints\nOutputs: Optimized chunking process with controlled memory usage\nAcceptance Criteria: System can process files larger than available RAM, implements streaming where appropriate, memory usage scales linearly not exponentially.",
             "status": "pending",
             "testStrategy": ""
@@ -137,11 +117,7 @@
             "id": 5,
             "title": "Develop Error Handling and Recovery System",
             "description": "Implement robust error handling for the chunking process to manage corrupted files, processing failures, and partial completions.",
-            "dependencies": [
-              2,
-              3,
-              4
-            ],
+            "dependencies": [2, 3, 4],
             "details": "Inputs: Chunking process state, error conditions\nOutputs: Error reports, partial results when possible, recovery options\nAcceptance Criteria: System gracefully handles corrupted audio, provides meaningful error messages, can resume interrupted processes.",
             "status": "pending",
             "testStrategy": ""
@@ -150,9 +126,7 @@
             "id": 6,
             "title": "Create UI Integration Components",
             "description": "Develop components to integrate the audio chunking system with the user interface, including progress indicators and configuration controls.",
-            "dependencies": [
-              5
-            ],
+            "dependencies": [5],
             "details": "Inputs: Chunking system API, UI requirements\nOutputs: UI components for configuration, progress tracking, and results display\nAcceptance Criteria: Users can configure chunking parameters, see real-time progress, and access chunked results through intuitive interface.",
             "status": "pending",
             "testStrategy": ""
@@ -166,9 +140,7 @@
         "details": "1. Collect and prepare multiple bleep sound options (standard bleep, tone, silence, etc.)\n2. Create audio preview functionality for each bleep option\n3. Implement bleep selection UI with visual indicators\n4. Add padding slider for adjusting pre/post word padding (0-500ms range)\n5. Implement real-time preview of padding effect\n6. Create bleep volume adjustment control\n7. Add local storage for remembering user preferences\n8. Implement responsive design for mobile compatibility\n9. Ensure accessibility compliance\n10. Add option to save configurations for logged-in users",
         "testStrategy": "Test bleep selection and preview functionality. Verify padding slider affects preview correctly. Test saving and loading preferences. Verify accessibility with screen readers. Test responsive behavior on different screen sizes.",
         "priority": "medium",
-        "dependencies": [
-          38
-        ],
+        "dependencies": [38],
         "status": "pending",
         "subtasks": [
           {
@@ -184,9 +156,7 @@
             "id": 2,
             "title": "Sound Selection UI Component",
             "description": "Design and implement the UI for browsing and selecting bleep sounds",
-            "dependencies": [
-              1
-            ],
+            "dependencies": [1],
             "details": "Create a responsive grid/list view of available sounds with visual indicators. Implement filtering/categorization options. Design and implement the sound preview functionality with play buttons for each option. Ensure keyboard navigation works properly throughout the selection interface.",
             "status": "pending",
             "testStrategy": ""
@@ -195,9 +165,7 @@
             "id": 3,
             "title": "Parameter Controls Implementation",
             "description": "Build UI controls for customizing sound parameters",
-            "dependencies": [
-              2
-            ],
+            "dependencies": [2],
             "details": "Implement sliders/inputs for volume control (0-100%). Create padding controls (pre/post padding in ms). Add pitch adjustment if applicable. Ensure all controls have appropriate labels, tooltips, and keyboard accessibility. Connect controls to the audio processing system for real-time preview.",
             "status": "pending",
             "testStrategy": ""
@@ -206,10 +174,7 @@
             "id": 4,
             "title": "Real-time Sound Preview System",
             "description": "Implement functionality to preview sounds with current parameter settings",
-            "dependencies": [
-              1,
-              3
-            ],
+            "dependencies": [1, 3],
             "details": "Create an audio processing module that applies selected parameters (volume, padding) in real-time. Implement play/stop controls for the preview. Add visual feedback during playback (waveform or animation). Ensure preview system handles rapid parameter changes gracefully.",
             "status": "pending",
             "testStrategy": ""
@@ -218,10 +183,7 @@
             "id": 5,
             "title": "User Preference Storage System",
             "description": "Develop system to save and retrieve user sound preferences",
-            "dependencies": [
-              3,
-              4
-            ],
+            "dependencies": [3, 4],
             "details": "Design data structure for storing sound preferences (selected sound, volume, padding). Implement local storage solution with appropriate fallbacks. Create functions to save preferences automatically or via explicit user action. Add ability to reset to defaults. Test persistence across sessions.",
             "status": "pending",
             "testStrategy": ""
@@ -230,11 +192,7 @@
             "id": 6,
             "title": "Accessibility and Responsive Design Refinement",
             "description": "Ensure the entire sound customization UI meets accessibility standards and works across devices",
-            "dependencies": [
-              2,
-              3,
-              5
-            ],
+            "dependencies": [2, 3, 5],
             "details": "Audit and implement proper ARIA attributes throughout the interface. Ensure color contrast meets WCAG standards. Test and optimize keyboard navigation flows. Implement responsive layouts for mobile, tablet, and desktop views. Add screen reader announcements for sound previews and parameter changes.",
             "status": "pending",
             "testStrategy": ""
@@ -246,10 +204,7 @@
         "title": "Develop Web Audio API integration for audio manipulation",
         "description": "Implement client-side audio processing using Web Audio API to insert bleeps at specified timestamps based on user-inputted words to censor.",
         "status": "in-progress",
-        "dependencies": [
-          40,
-          43
-        ],
+        "dependencies": [40, 43],
         "priority": "high",
         "details": "1. Set up Web Audio API context and nodes\n2. Implement audio buffer loading and decoding\n3. Create function to insert bleep sounds at specific timestamps\n4. Integrate with word-level timestamp transcription model to locate censored words\n5. Develop mechanism to match user-inputted words with transcription timestamps\n6. Implement UI for users to input list of words to censor\n7. Create workflow: upload audio/video → input censor words → match words to timestamps → apply bleeps\n8. Add padding adjustment based on user settings\n9. Implement volume normalization for consistent output\n10. Create waveform visualization of original and processed audio\n11. Implement real-time preview of bleeping effect\n12. Add error handling for audio processing failures\n13. Optimize for performance with large files\n14. Implement cleanup of audio resources\n15. Add 'Transcribe and Bleep' button to streamline the workflow",
         "testStrategy": "Test bleeping with various audio files and word lists. Verify word matching accuracy with the transcription model. Test padding adjustment works correctly. Verify UI for word input functions properly. Test performance with large files and extensive word lists. Verify audio quality of processed output. Test error handling with edge cases including words not found in transcription. Test the 'Transcribe and Bleep' button with both audio and video files.",
@@ -295,10 +250,7 @@
             "title": "Create bleeped audio output",
             "description": "Create a new version of the input audio with bleeps inserted by overwriting the audio between the word-level timestamps for each censored word",
             "status": "pending",
-            "dependencies": [
-              1,
-              2
-            ],
+            "dependencies": [1, 2],
             "details": "1. Use the Web Audio API to create a new audio buffer based on the original\n2. For each censored word, identify the start and end timestamps\n3. Generate appropriate bleep tone (frequency, amplitude)\n4. Replace the original audio content with the bleep tone between timestamps\n5. Ensure smooth transitions between original audio and bleeps\n6. Handle overlapping censored words appropriately",
             "testStrategy": "Test with various audio files containing different words to censor. Verify the bleeps are correctly inserted at the right timestamps. Check audio quality at transition points. Test with overlapping censored words."
           },
@@ -307,9 +259,7 @@
             "title": "Implement audio playback for processed output",
             "description": "Implement a way for users to listen to the processed/bleeped audio output in the UI",
             "status": "pending",
-            "dependencies": [
-              5
-            ],
+            "dependencies": [5],
             "details": "1. Create audio player controls for the processed audio\n2. Implement play, pause, seek functionality\n3. Add visual indication of where bleeps occur in the audio timeline\n4. Enable volume control for playback\n5. Add option to download the processed audio\n6. Ensure compatibility across browsers",
             "testStrategy": "Test playback controls function correctly. Verify seeking works properly with bleeps. Test download functionality produces valid audio files. Verify cross-browser compatibility."
           },
@@ -318,12 +268,7 @@
             "title": "Implement 'Transcribe and Bleep' button in the UI",
             "description": "Create a single-click solution that automates the entire transcription and bleeping process for the user",
             "status": "pending",
-            "dependencies": [
-              1,
-              2,
-              3,
-              5
-            ],
+            "dependencies": [1, 2, 3, 5],
             "details": "1. Add a prominent 'Transcribe and Bleep' button to the UI\n2. Implement functionality to separate audio from video if the input is a video file\n3. Connect to the transcription service to generate word-level timestamps\n4. Automatically apply the bleeping process using the user-inputted censor words\n5. Display progress indicators during processing\n6. Handle errors gracefully with user-friendly messages\n7. Present the processed output ready for playback\n8. Allow users to select different bleep sounds before processing",
             "testStrategy": "Test with both audio and video input files. Verify the audio extraction works correctly for video files. Test the end-to-end process with various censor word lists. Verify proper error handling when transcription fails. Test with different bleep sound options. Measure and optimize processing time for large files."
           }
@@ -336,10 +281,7 @@
         "details": "1. Add cancel button that appears during transcription\n2. Implement hard cancel functionality in Web Worker\n3. Create state management for tracking job status\n4. Add retry button for failed or cancelled jobs\n5. Implement retry logic that reuses previous settings\n6. Create progress indicator that shows cancellation in progress\n7. Add confirmation dialog for cancel action\n8. Implement cleanup of resources after cancellation\n9. Add error handling for failed cancellations\n10. Update UI state based on job status changes",
         "testStrategy": "Test cancellation at various stages of processing. Verify that resources are properly cleaned up after cancellation. Test retry functionality after cancellation and failures. Verify UI state correctly reflects job status.",
         "priority": "medium",
-        "dependencies": [
-          39,
-          40
-        ],
+        "dependencies": [39, 40],
         "status": "done",
         "subtasks": []
       },
@@ -350,10 +292,7 @@
         "details": "1. Research and evaluate FFmpeg WASM vs. Canvas+MediaRecorder approach\n2. Implement selected method for video remixing\n3. For FFmpeg WASM:\n   - Set up video and audio stream combination\n   - Configure output format and quality settings\n   - Implement progress tracking during remixing\n4. For Canvas+MediaRecorder:\n   - Create video element with muted original video\n   - Set up audio element with processed audio\n   - Use MediaRecorder to capture combined output\n5. Add synchronization logic to maintain A/V sync\n6. Implement error handling for remixing failures\n7. Add quality options for output video\n8. Optimize for performance and memory usage\n9. Implement cleanup of temporary resources",
         "testStrategy": "Test remixing with various video formats and lengths. Verify A/V synchronization in output. Measure performance and memory usage. Test error handling with edge cases. Verify output quality matches expectations.",
         "priority": "medium",
-        "dependencies": [
-          41,
-          44
-        ],
+        "dependencies": [41, 44],
         "status": "pending",
         "subtasks": []
       },
@@ -364,9 +303,7 @@
         "details": "1. Configure ActiveStorage with S3 backend\n2. Set up direct upload capability with presigned URLs\n3. Create opt-in checkbox in the UI\n4. Implement client-side logic for direct-to-S3 uploads\n5. Add progress tracking for uploads\n6. Create server-side validation of uploaded files\n7. Implement automatic deletion policy based on retention window\n8. Add error handling for failed uploads\n9. Create admin interface for managing stored files\n10. Implement access control for stored media",
         "testStrategy": "Test opt-in functionality and direct uploads to S3. Verify progress tracking during upload. Test automatic deletion after retention period. Verify access control prevents unauthorized access. Test error handling for network issues during upload.",
         "priority": "low",
-        "dependencies": [
-          37
-        ],
+        "dependencies": [37],
         "status": "pending",
         "subtasks": []
       },
@@ -377,10 +314,7 @@
         "details": "1. Create job history page with filtering and sorting options\n2. Implement media management interface for stored files\n3. Add download functionality for processed files\n4. Create delete functionality for stored media\n5. Implement pagination for large job histories\n6. Add search functionality for finding specific jobs\n7. Create detailed view for individual job information\n8. Implement job status indicators and filtering\n9. Add batch operations for multiple jobs/files\n10. Implement responsive design for mobile compatibility",
         "testStrategy": "Test job history display with various numbers of jobs. Verify filtering, sorting, and pagination. Test download and delete functionality. Verify search returns correct results. Test responsive behavior on different screen sizes.",
         "priority": "low",
-        "dependencies": [
-          37,
-          47
-        ],
+        "dependencies": [37, 47],
         "status": "pending",
         "subtasks": []
       },
@@ -391,13 +325,7 @@
         "details": "1. Design and implement multi-stage progress indicator\n2. Create progress visualization for model loading\n3. Implement chunking progress display for long files\n4. Add transcription progress indicator with word count\n5. Create processing stage indicators (extraction, transcription, bleeping, remixing)\n6. Implement error messages with actionable guidance\n7. Add success notifications with next steps\n8. Create warning system for potential issues (large files, unsupported features)\n9. Implement toast notifications for background processes\n10. Add accessibility support for all notifications",
         "testStrategy": "Test progress indicators with various processing stages. Verify accuracy of progress reporting. Test error messages and verify they provide useful guidance. Verify accessibility of notifications with screen readers. Test on different screen sizes.",
         "priority": "medium",
-        "dependencies": [
-          38,
-          40,
-          41,
-          44,
-          46
-        ],
+        "dependencies": [38, 40, 41, 44, 46],
         "status": "pending",
         "subtasks": []
       },
@@ -408,10 +336,7 @@
         "details": "1. Implement detection of available memory\n2. Create CPU/GPU capability detection\n3. Implement browser feature detection\n4. Add network speed estimation\n5. Create adaptive model selection based on device capabilities\n6. Implement chunking size adjustment based on available memory\n7. Add quality settings adaptation for video processing\n8. Create warning system for capability limitations\n9. Implement fallback options for unsupported features\n10. Add opt-in telemetry for capability reporting (privacy-focused)",
         "testStrategy": "Test on various devices with different capabilities. Verify model selection adapts correctly. Test chunking adaptation with memory constraints. Verify warnings appear for capability limitations. Test fallback mechanisms for unsupported features.",
         "priority": "low",
-        "dependencies": [
-          40,
-          42
-        ],
+        "dependencies": [40, 42],
         "status": "pending",
         "subtasks": []
       },
@@ -422,10 +347,7 @@
         "details": "1. Implement audio download in multiple formats (MP3, WAV)\n2. Create video download functionality with quality options\n3. Add transcription export (SRT, TXT formats)\n4. Implement batch download for multiple files\n5. Create download progress indicator\n6. Add metadata preservation for downloaded files\n7. Implement filename customization\n8. Create download history for logged-in users\n9. Add error handling for failed downloads\n10. Implement cleanup of temporary download files",
         "testStrategy": "Test downloads in various formats and sizes. Verify file integrity after download. Test batch downloads. Verify metadata is preserved. Test error handling for interrupted downloads.",
         "priority": "high",
-        "dependencies": [
-          44,
-          46
-        ],
+        "dependencies": [44, 46],
         "status": "pending",
         "subtasks": []
       },
@@ -436,10 +358,7 @@
         "details": "1. Create settings page with user preferences\n2. Implement default bleep sound selection\n3. Add default padding settings\n4. Create theme selection (light/dark mode)\n5. Implement language preferences\n6. Add notification preferences\n7. Create default quality settings for processing\n8. Implement storage preferences (opt-in by default or not)\n9. Add account settings for logged-in users\n10. Create export/import functionality for settings",
         "testStrategy": "Test saving and loading preferences. Verify preferences are applied correctly. Test theme switching. Verify language changes are applied. Test export/import of settings.",
         "priority": "low",
-        "dependencies": [
-          37,
-          43
-        ],
+        "dependencies": [37, 43],
         "status": "pending",
         "subtasks": []
       },
@@ -450,14 +369,7 @@
         "details": "1. Create browser detection system\n2. Implement feature detection for critical APIs\n3. Add fallbacks for unsupported features\n4. Create browser-specific CSS fixes\n5. Implement polyfills for missing functionality\n6. Add warning system for unsupported browsers\n7. Create comprehensive test matrix for browser testing\n8. Implement automated cross-browser testing with Playwright\n9. Add performance benchmarking across browsers\n10. Create documentation for browser support",
         "testStrategy": "Use Playwright to test on Chrome, Firefox, Safari, and Edge. Verify critical functionality works on all supported browsers. Test fallbacks for unsupported features. Measure performance across browsers. Verify warnings appear for unsupported browsers.",
         "priority": "medium",
-        "dependencies": [
-          36,
-          38,
-          40,
-          41,
-          44,
-          46
-        ],
+        "dependencies": [36, 38, 40, 41, 44, 46],
         "status": "pending",
         "subtasks": []
       },
@@ -468,13 +380,7 @@
         "details": "1. Implement global error boundary\n2. Create categorized error types (network, processing, permission, etc.)\n3. Implement user-friendly error messages\n4. Add recovery suggestions for common errors\n5. Create retry mechanisms for transient failures\n6. Implement logging for error tracking\n7. Add telemetry for error reporting (opt-in, privacy-focused)\n8. Create admin interface for error monitoring\n9. Implement automatic recovery for certain error types\n10. Add offline support and recovery",
         "testStrategy": "Test error handling with various error scenarios. Verify error messages are user-friendly. Test retry mechanisms. Verify logging captures necessary information. Test automatic recovery for supported error types.",
         "priority": "medium",
-        "dependencies": [
-          39,
-          40,
-          41,
-          44,
-          46
-        ],
+        "dependencies": [39, 40, 41, 44, 46],
         "status": "pending",
         "subtasks": []
       },
@@ -485,18 +391,63 @@
         "details": "1. Set up Playwright test environment\n2. Create test fixtures for common scenarios\n3. Implement tests for file upload and validation\n4. Add tests for transcription and processing\n5. Create tests for cancel and retry functionality\n6. Implement tests for download and export\n7. Add tests for user authentication and authorization\n8. Create tests for error handling and recovery\n9. Implement performance and memory usage tests\n10. Add accessibility tests for all UI components",
         "testStrategy": "Run tests on CI/CD pipeline. Verify all critical functionality is covered. Test on multiple browsers. Measure code coverage. Verify tests catch regressions.",
         "priority": "medium",
-        "dependencies": [
-          38,
-          40,
-          41,
-          44,
-          45,
-          46,
-          49,
-          51,
-          54
-        ],
+        "dependencies": [38, 40, 41, 44, 45, 46, 49, 51, 54],
         "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 56,
+        "title": "Create and style new home page with workflow, privacy, and tech highlights",
+        "description": "Design and implement a new home page as the root route, featuring branding, workflow overview, privacy messaging, technology highlights, and calls to action.",
+        "details": "1. Add hero section with logo, tagline, and short description\n2. Add step-by-step workflow overview with icons\n3. Add privacy and local processing section\n4. Add technology highlights section\n5. Add bottom call to action\n6. Style for modern, responsive look\n7. Emphasize privacy-first, local-only processing\n8. Add navigation link from navbar logo\n9. Set as root route",
+        "testStrategy": "Visit the root URL and verify the home page displays as described. Check all links and buttons. Confirm copy and branding match requirements.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 57,
+        "title": "Update navbar for new branding, navigation, and button styles",
+        "description": "Refactor the navbar: make 'Bleep That Sh*t!' a link to home, style 'Transcription Sampler' and 'Bleep Your Sh*t!' as flashy buttons, remove sign up/in buttons.",
+        "details": "1. Replace 'Frame Miner' with 'Bleep That Sh*t!'\n2. Make logo a link to home page, styled as bold text\n3. Style action links as colorful, animated buttons\n4. Remove sign up/in buttons from UI\n5. Ensure accessibility and responsive design",
+        "testStrategy": "Check navbar on all pages. Verify links, button styles, and absence of sign up/in buttons.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 58,
+        "title": "Refactor Transcription Sampler and Main Tool views for consistent, step-by-step UX",
+        "description": "Update both views to use colored, numbered sections, clear workflow guidance, collapsible transcript/results, and improved preview players.",
+        "details": "1. Use matching color schemes and icons for each step\n2. Add clear headings and concise instructions\n3. Move preview players and transcript/results into collapsible sections\n4. Ensure both views have consistent, modern UX",
+        "testStrategy": "Manually test both views for workflow clarity, visual consistency, and usability.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 59,
+        "title": "Update all branding from 'Frame Miner' to 'Bleep That Sh*t!'",
+        "description": "Replace all references to 'Frame Miner' in UI, tab titles, and documentation with 'Bleep That Sh*t!'.",
+        "details": "1. Update logo, tab title, and all visible text\n2. Check for any remaining references in code or docs",
+        "testStrategy": "Search codebase and UI for any remaining 'Frame Miner' references.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 60,
+        "title": "Set root route to home page",
+        "description": "Update Rails routes so the home page is served at '/'.",
+        "details": "1. Edit config/routes.rb to set root to pages#home\n2. Test navigation from navbar and direct URL",
+        "testStrategy": "Visit '/' and confirm the home page loads.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
         "subtasks": []
       }
     ],
