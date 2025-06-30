@@ -695,7 +695,47 @@ export function initializeBleepView() {
     }
   }
 
-  // Add handler for Run Matching button
+  // Add this function to render matches with delete buttons
+  function renderMatchResults(matches) {
+    if (!matchResultsContainer) return;
+    if (!matches || matches.length === 0) {
+      matchResultsContainer.innerHTML =
+        '<div class="text-yellow-600">No matches found.</div>';
+      if (bleepAudioButton) bleepAudioButton.disabled = true;
+      return;
+    }
+    matchResultsContainer.innerHTML =
+      `<div class="mb-2 text-green-700 font-semibold">${matches.length} match(es) found:</div>` +
+      '<ul class="list-disc ml-6">' +
+      matches
+        .map(
+          (m, i) =>
+            `<li class="flex items-center gap-2"><span class="font-mono">${
+              m.word
+            }</span> <span class="text-gray-500">[${m.timestamp[0].toFixed(
+              2
+            )}s - ${m.timestamp[1].toFixed(
+              2
+            )}s]</span> <button class="delete-match-btn text-red-500 hover:text-red-700 ml-2" data-index="${i}" title="Remove this match">🗑️</button></li>`
+        )
+        .join("") +
+      "</ul>";
+    if (bleepAudioButton) bleepAudioButton.disabled = false;
+    // Add event listeners for delete buttons
+    matchResultsContainer
+      .querySelectorAll(".delete-match-btn")
+      .forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const idx = parseInt(btn.getAttribute("data-index"), 10);
+          if (!isNaN(idx)) {
+            lastCensorMatches.splice(idx, 1);
+            renderMatchResults(lastCensorMatches);
+          }
+        });
+      });
+  }
+
+  // Update Run Matching handler to use renderMatchResults
   if (runMatchingButton) {
     runMatchingButton.addEventListener("click", async () => {
       if (!lastTranscriptOutput || !lastTranscriptOutput.chunks) {
@@ -716,44 +756,7 @@ export function initializeBleepView() {
       );
       lastCensorMatches = matches;
       console.log("[Debug] matches after findCensoredWords:", matches);
-      // Display results
-      if (matches.length === 0) {
-        matchResultsContainer.innerHTML =
-          '<div class="text-yellow-600">No matches found.</div>';
-        censoredAudioBuffer = null;
-        if (bleepAudioButton) bleepAudioButton.disabled = true;
-        if (censoredAudioPlayerContainer) {
-          censoredAudioPlayerContainer.classList.add("hidden");
-          censoredAudioPlayerContainer.innerHTML = "";
-          console.log(
-            "[Debug] Hiding censoredAudioPlayerContainer (no matches)"
-          );
-        }
-        if (previewCensoredAudioButton)
-          previewCensoredAudioButton.classList.remove("hidden");
-        if (censoredVideoPlayerContainer) {
-          censoredVideoPlayerContainer.classList.add("hidden");
-          censoredVideoPlayerContainer.innerHTML = "";
-        }
-        if (censoredVideoDownloadButton)
-          censoredVideoDownloadButton.classList.add("hidden");
-      } else {
-        matchResultsContainer.innerHTML =
-          `<div class="mb-2 text-green-700 font-semibold">${matches.length} match(es) found:</div>` +
-          '<ul class="list-disc ml-6">' +
-          matches
-            .map(
-              (m) =>
-                `<li><span class="font-mono">${
-                  m.word
-                }</span> <span class="text-gray-500">[${m.timestamp[0].toFixed(
-                  2
-                )}s - ${m.timestamp[1].toFixed(2)}s]</span></li>`
-            )
-            .join("") +
-          "</ul>";
-        if (bleepAudioButton) bleepAudioButton.disabled = false;
-      }
+      renderMatchResults(lastCensorMatches);
     });
   }
 
