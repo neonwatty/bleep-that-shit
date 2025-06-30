@@ -2,7 +2,6 @@ services:
   - type: web
     name: bleep-that-shit
     plan: free # or 'starter', 'standard', etc. as needed
-    # runtime: docker  # Optional; Render will auto-detect Dockerfile if present
     dockerfilePath: ./Dockerfile
     envVars:
       - key: RAILS_ENV
