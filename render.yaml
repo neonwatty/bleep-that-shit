@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: bleep-that-shit
+    runtime: ruby
+    plan: free # or 'starter', 'standard', etc. as needed
+    buildCommand: |
+      bundle install
+      npm ci
+      npm run build
+      bundle exec rails assets:precompile
+    startCommand: |
+      bundle exec rails server -b 0.0.0.0 -p 10000
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: NODE_ENV
+        value: production
+      - key: RAILS_MASTER_KEY
+        sync: false # Set this in the Render dashboard or as a secret
+    autoDeploy: true
+    branch: version-2-1
