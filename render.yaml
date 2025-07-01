@@ -11,5 +11,5 @@ services:
         value: "production"
       - key: RAILS_MASTER_KEY
         sync: false # Set this in the Render dashboard or as a secret
-    autoDeploy: true
+    autoDeploy: false
     branch: version-2-1
