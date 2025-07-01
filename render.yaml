@@ -12,4 +12,4 @@ services:
       - key: RAILS_MASTER_KEY
         sync: false # Set this in the Render dashboard or as a secret
     autoDeploy: true
-    branch: version-2-1
+    branch: main

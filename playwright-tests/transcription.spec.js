@@ -16,7 +16,7 @@ async function screenshotOnFailure(page, name) {
 
 test("user can upload mp3 and get transcription", async ({ page }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/transcription-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/transcription-view");
     const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp3");
     const fileInput = await page.$("#fileInput");
     await fileInput.setInputFiles(filePath);
@@ -39,7 +39,7 @@ test("user can upload mp3 and get transcription", async ({ page }) => {
 
 test("user can upload mp4 and get transcription", async ({ page }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/transcription-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/transcription-view");
     const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp4");
     const fileInput = await page.$("#fileInput");
     await fileInput.setInputFiles(filePath);
@@ -64,7 +64,7 @@ test("transcription-view: shows warning and disables transcribe for mismatched f
   page,
 }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/transcription-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/transcription-view");
     // Use test_wrong.mp3 (actually an mp4 audio file)
     const filePath = path.resolve(
       __dirname,
@@ -98,7 +98,7 @@ test("user can upload mp3 and get transcription with Tiny model", async ({
   page,
 }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/transcription-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/transcription-view");
     const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp3");
     const fileInput = await page.$("#fileInput");
     await fileInput.setInputFiles(filePath);
@@ -123,7 +123,7 @@ test("user can upload mp4 and get transcription with Tiny model", async ({
   page,
 }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/transcription-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/transcription-view");
     const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp4");
     const fileInput = await page.$("#fileInput");
     await fileInput.setInputFiles(filePath);
@@ -146,7 +146,7 @@ test("user can upload mp4 and get transcription with Tiny model", async ({
 
 test("user can cancel transcription with Tiny model", async ({ page }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/transcription-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/transcription-view");
     const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp3");
     const fileInput = await page.$("#fileInput");
     await fileInput.setInputFiles(filePath);
@@ -177,7 +177,7 @@ test("transcription-view: shows warning and disables transcribe for mismatched f
   page,
 }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/transcription-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/transcription-view");
     // Use test_wrong.mp3 (actually an mp4 audio file)
     const filePath = path.resolve(
       __dirname,
