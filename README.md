@@ -1,6 +1,4 @@
-<a href="https://huggingface.co/spaces/neonwatty/bleep_that_sht" target="_parent"><img src="https://img.shields.io/badge/🤗-HuggingFace%20Space-cyan.svg" alt="HuggingFace Space"/></a>
-<a href="https://colab.research.google.com/github/jermwatt/bleep_that_sht/blob/main/beep_that_sht_walkthrough.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a> <a href="https://www.youtube.com/watch?v=U8Ki9dD3HF0" target="_parent"><img src="https://badges.aleen42.com/src/youtube.svg" alt="Youtube"/></a>
-[![Python application](https://github.com/neonwatty/bleep_that_sht/actions/workflows/python-app.yml/badge.svg)](https://github.com/neonwatty/bleep_that_sht/actions/workflows/python-app.yml/python-app.yml) <a href="https://www.producthunt.com/posts/bleep-that-sh-t?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-bleep&#0045;that&#0045;sh&#0045;t" target="_parent"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=470378&theme=light" alt="Bleep&#0032;That&#0032;Sh&#0042;t&#0033; - A&#0032;whisper&#0032;app&#0032;that&#0032;bleeps&#0032;out&#0032;chosen&#0032;words&#0032;in&#0032;YouTube&#0032;videos | Product Hunt" style="width: 250px; height: 45px;" /></a>
+<a href="https://www.producthunt.com/posts/bleep-that-sh-t?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-bleep&#0045;that&#0045;sh&#0042;t" target="_parent"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=470378&theme=light" alt="Bleep&#0032;That&#0032;Sh&#0042;t&#0033; - A&#0032;whisper&#0032;app&#0032;that&#0032;bleeps&#0032;out&#0032;chosen&#0032;words&#0032;in&#0032;YouTube&#0032;videos | Product Hunt" style="width: 250px; height: 45px;" /></a>
 
 # Bleep That Sh\*t! — In-Browser Audio & Video Censorship Tool
 
@@ -73,5 +71,24 @@ The app guides you through:
 - Previewing and downloading the censored result
 
 The UI is modern, privacy-first, and works on desktop and mobile.
+
+---
+
+## Running Locally with Docker Compose
+
+You can run the app locally using Docker Compose. This will build and start the app in a containerized environment, making it easy to test or develop without installing dependencies directly on your machine.
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/neonwatty/bleep_that_sht.git
+   cd bleep_that_sht
+   ```
+2. Start the app with Docker Compose:
+   ```bash
+   docker compose up
+   ```
+3. Visit [http://localhost:3000](http://localhost:3000) in your browser.
+
+The app will be available at `localhost:3000` by default. You can stop the app with `Ctrl+C` and remove containers with `docker compose down`.
 
 ---
