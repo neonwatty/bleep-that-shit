@@ -84,6 +84,13 @@ export function initializeBleepView() {
   const downloadCensoredAudioButton = document.getElementById(
     "downloadCensoredAudioButton"
   );
+  const bleepStepProgressContainer = document.getElementById(
+    "bleepStepProgressContainer"
+  );
+  const bleepStepProgressBar = document.getElementById("bleepStepProgressBar");
+  const bleepStepProgressText = document.getElementById(
+    "bleepStepProgressText"
+  );
 
   let selectedFile = null;
   let selectedBleep = null;
@@ -708,15 +715,25 @@ export function initializeBleepView() {
 
   // Add this function to render matches with delete buttons
   function renderMatchResults(matches) {
+    const matchCountMessage = document.getElementById("bleepMatchCountMessage");
+    const matchDetails = document.getElementById("bleepMatchResultsDetails");
     if (!matchResultsContainer) return;
     if (!matches || matches.length === 0) {
       matchResultsContainer.innerHTML =
         '<div class="text-yellow-600">No matches found.</div>';
       if (bleepAudioButton) bleepAudioButton.disabled = true;
+      if (matchCountMessage) matchCountMessage.innerHTML = "";
+      if (matchDetails) matchDetails.classList.add("hidden");
       return;
     }
+    if (matchCountMessage) {
+      matchCountMessage.innerHTML = `<div class="mb-2 text-green-700 font-semibold">${matches.length} match(es) found:</div>`;
+    }
+    if (matchDetails) {
+      matchDetails.classList.remove("hidden");
+      matchDetails.open = true;
+    }
     matchResultsContainer.innerHTML =
-      `<div class="mb-2 text-green-700 font-semibold">${matches.length} match(es) found:</div>` +
       '<ul class="list-disc ml-6">' +
       matches
         .map(
@@ -773,7 +790,12 @@ export function initializeBleepView() {
 
   if (bleepAudioButton) {
     bleepAudioButton.addEventListener("click", async () => {
-      if (!lastCensorMatches || lastCensorMatches.length === 0) return;
+      showBleepStepProgress();
+      updateBleepStepProgress(0, "Starting bleeping...");
+      if (!lastCensorMatches || lastCensorMatches.length === 0) {
+        hideBleepStepProgress();
+        return;
+      }
       // --- Audio/video processing logic moved here ---
       if (originalAudioBuffer && selectedBleep) {
         try {
@@ -790,11 +812,14 @@ export function initializeBleepView() {
             start: m.timestamp[0],
             end: m.timestamp[1],
           }));
+          // Simulate progress for applying bleeps (since it's fast, just a quick step)
+          updateBleepStepProgress(20, "Applying bleeps...");
           censoredAudioBuffer = applyBleepsToAudio(
             originalAudioBuffer,
             bleepBuffer,
             intervals
           );
+          updateBleepStepProgress(60, "Bleeps applied");
           // If original file is video/mp4, remux
           if (selectedFile && selectedFile.type === "video/mp4") {
             if (censoredAudioPlayerContainer) {
@@ -813,6 +838,13 @@ export function initializeBleepView() {
               );
             remuxWorker.onmessage = (e) => {
               if (e.data.progress !== undefined) {
+                // Update progress bar with remux progress (from 60% to 100%)
+                const percent = 60 + Math.round((e.data.progress / 100) * 40);
+                updateBleepStepProgress(
+                  percent,
+                  e.data.status +
+                    (e.data.progress < 100 ? ` (${e.data.progress}%)` : "")
+                );
                 const progressDiv = document.getElementById("remuxProgress");
                 if (progressDiv)
                   progressDiv.textContent =
@@ -823,11 +855,15 @@ export function initializeBleepView() {
                 const progressDiv = document.getElementById("remuxProgress");
                 if (progressDiv) progressDiv.remove();
                 showCensoredVideoPlayer(e.data.result, lastCensorMatches);
+                updateBleepStepProgress(100, "Done!");
+                setTimeout(hideBleepStepProgress, 1200);
               }
               if (e.data.error) {
                 const progressDiv = document.getElementById("remuxProgress");
                 if (progressDiv)
                   progressDiv.textContent = "Muxing error: " + e.data.error;
+                updateBleepStepProgress(0, "Error: " + e.data.error);
+                setTimeout(hideBleepStepProgress, 1200);
               }
             };
             remuxWorker.postMessage({
@@ -843,6 +879,8 @@ export function initializeBleepView() {
             }
             if (censoredVideoDownloadButton)
               censoredVideoDownloadButton.classList.add("hidden");
+            updateBleepStepProgress(100, "Done!");
+            setTimeout(hideBleepStepProgress, 1200);
           }
         } catch (err) {
           console.error("[Debug] Error generating censored audio buffer", err);
@@ -853,6 +891,8 @@ export function initializeBleepView() {
           }
           if (previewCensoredAudioButton)
             previewCensoredAudioButton.classList.remove("hidden");
+          updateBleepStepProgress(0, "Error: " + err.message);
+          setTimeout(hideBleepStepProgress, 1200);
         }
       } else {
         censoredAudioBuffer = null;
@@ -862,6 +902,7 @@ export function initializeBleepView() {
         }
         if (previewCensoredAudioButton)
           previewCensoredAudioButton.classList.remove("hidden");
+        hideBleepStepProgress();
       }
       updateCensoredButtons();
     });
@@ -1011,5 +1052,21 @@ export function initializeBleepView() {
 
     // Always show last dot
     addDot(total);
+  }
+
+  function showBleepStepProgress() {
+    if (bleepStepProgressContainer)
+      bleepStepProgressContainer.classList.remove("hidden");
+  }
+  function hideBleepStepProgress() {
+    if (bleepStepProgressContainer)
+      bleepStepProgressContainer.classList.add("hidden");
+    if (bleepStepProgressBar) bleepStepProgressBar.style.width = "0%";
+    if (bleepStepProgressText) bleepStepProgressText.textContent = "0%";
+  }
+  function updateBleepStepProgress(percent, text) {
+    if (bleepStepProgressBar) bleepStepProgressBar.style.width = `${percent}%`;
+    if (bleepStepProgressText)
+      bleepStepProgressText.textContent = text || `${Math.round(percent)}%`;
   }
 }

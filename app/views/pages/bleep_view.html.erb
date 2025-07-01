@@ -4,7 +4,7 @@
       <div class="flex flex-col md:flex-row items-center">
         <span class="text-xl md:text-2xl mr-0 md:mr-3 mb-2 md:mb-0">🔊</span>
         <div>
-          <h1 class="text-xl md:text-2xl font-bold mb-1">Bleep Your Sh*t!</h1>
+          <h1 class="text-xl md:text-2xl font-bold mb-1">Bleep Your Shit!</h1>
           <p class="text-indigo-800 text-sm md:text-base">
             Process your <strong>entire audio or video file</strong>, censoring selected words with customizable matching and bleep sounds.
           </p>
@@ -21,7 +21,7 @@
       <li><span class="mr-1">🧩</span><strong>Enter words and matching modes</strong> (exact, partial, fuzzy).</li>
       <li><span class="mr-1">🔍</span><strong>Run matching</strong> to find words to censor.</li>
       <li><span class="mr-1">🔔</span><strong>Choose bleep sound</strong> for censorship.</li>
-      <li><span class="mr-1">👀</span><strong>Bleep That Sh*t! and preview/download the censored result.</strong></li>
+      <li><span class="mr-1">👀</span><strong>Bleep That Shit! and preview/download the censored result.</strong></li>
     </ol>
 
     <!-- Link to Sampler -->
@@ -152,7 +152,11 @@
         <h2 class="text-base md:text-lg font-semibold">Run Matching</h2>
       </div>
       <button id="runMatchingButton" class="w-full bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 text-xs md:text-base">Run Matching</button>
-      <div class="mt-2 md:mt-4" id="bleepMatchResults"></div>
+      <div id="bleepMatchCountMessage" class="mt-2 md:mt-4"></div>
+      <details id="bleepMatchResultsDetails" class="mt-2 md:mt-4 hidden" open>
+        <summary class="cursor-pointer text-base md:text-lg font-semibold text-pink-700 select-none">Discovered Matches</summary>
+        <div id="bleepMatchResults"></div>
+      </details>
     </section>
 
     <!-- Step 6: Choose Bleep Sound -->
@@ -169,13 +173,20 @@
       <span id="bleepSoundName" class="ml-2 text-xs md:text-sm text-gray-600"></span>
     </section>
 
-    <!-- Step 7: Bleep That Sh*t! -->
+    <!-- Step 7: Bleep That Shit! -->
     <section class="step mb-6 md:mb-8 p-3 md:p-6 border-l-4 border-violet-400 bg-violet-50 rounded-2xl shadow-xl border border-violet-100">
       <div class="flex items-center mb-2">
         <span class="step-number bg-violet-400 text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center mr-2 md:mr-3 font-bold text-sm md:text-base">7</span>
-        <h2 class="text-base md:text-lg font-semibold">Bleep That Sh*t!</h2>
+        <h2 class="text-base md:text-lg font-semibold">Bleep That Shit!</h2>
       </div>
-      <button id="bleepAudioButton" class="w-full bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700 text-xs md:text-base" disabled>Bleep That Sh*t!</button>
+      <button id="bleepAudioButton" class="w-full bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700 text-xs md:text-base" disabled>Bleep That Shit!</button>
+      <!-- Progress bar for Step 7: Bleep That Shit! -->
+      <div id="bleepStepProgressContainer" class="mt-4 hidden">
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div id="bleepStepProgressBar" class="bg-violet-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+        <div id="bleepStepProgressText" class="text-center text-xs text-gray-600 mt-2">0%</div>
+      </div>
       <!-- Censored Video Player -->
       <div class="mt-2 md:mt-4 hidden" id="censoredVideoPlayerContainer"></div>
       <button id="downloadCensoredVideoButton" class="hidden bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-2 text-xs md:text-base">Download Censored Video</button>

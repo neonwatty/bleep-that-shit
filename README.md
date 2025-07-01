@@ -87,7 +87,7 @@ You can run the app locally using Docker Compose. This will build and start the 
    ```bash
    docker compose up
    ```
-3. Visit [http://localhost:3000](http://localhost:3000) in your browser.
+3. Visit [](http://localhost:3000) in your browser.
 
 The app will be available at `localhost:3000` by default. You can stop the app with `Ctrl+C` and remove containers with `docker compose down`.
 
