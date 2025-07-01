@@ -4,7 +4,7 @@
 
 # Bleep That Sh\*t! — In-Browser Audio & Video Censorship Tool
 
-> **Note:** This README describes the latest version of Bleep That Sh\*t! — a 100% browser-based, privacy-first web app. For the legacy Python/Streamlit version, see the [Legacy Version](#legacy-version) section below.
+> **Note:** This README describes the latest version of Bleep That Sh\*t! — a 100% browser-based, privacy-first web app. For the legacy Python/Streamlit version, see the [Legacy Branch](https://github.com/neonwatty/bleep_that_sht/tree/legacy).
 
 Make someone sound naughty 😈 or make your content more Ad-friendly.
 
@@ -75,42 +75,3 @@ The app guides you through:
 The UI is modern, privacy-first, and works on desktop and mobile.
 
 ---
-
-## Legacy Version (Python/Streamlit)
-
-The original version of Bleep That Sh\*t! was a Python/Streamlit app that required local installation, Python, Docker, and ffmpeg. If you want to use or reference the legacy version:
-
-- See the [legacy branch](https://github.com/neonwatty/bleep-that-shit/tree/legacy-python) or the original [README](https://github.com/neonwatty/bleep-that-shit/blob/legacy-python/README.md)
-- Legacy install instructions (for reference):
-
-### Using docker
-
-```bash
-docker compose up
-```
-
-Then navigate to `http://localhost:8501/` to use the legacy app.
-
-### Using python
-
-```bash
-pip install -r requirements.txt
-```
-
-Then activate the app:
-
-```bash
-streamlit run ./bleep_that_sht/app.py --server.port=8501 --server.address=0.0.0.0
-```
-
-You may need to set your PYTHONPATH and have ffmpeg installed locally.
-
----
-
-## Tech walkthrough (legacy)
-
-See `beep_that_sht_walkthrough.ipynb` for details on the original Python pipeline.
-
----
-
-**For the latest, privacy-first, browser-based version, just use the web app — no install required!**
