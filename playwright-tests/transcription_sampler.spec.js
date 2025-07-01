@@ -17,7 +17,7 @@ async function screenshotOnFailure(page, name) {
 test("sampler: user can upload mp3 and get transcription", async ({ page }) => {
   try {
     await page.goto(
-      "http://bleep-that-sht.localhost:3000/transcription-sampler-view"
+      "http://bleep-that-shit.localhost:3000/transcription-sampler-view"
     );
     const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp3");
     const fileInput = await page.$("#fileInput");
@@ -42,7 +42,7 @@ test("sampler: user can upload mp3 and get transcription", async ({ page }) => {
 test("sampler: user can upload mp4 and get transcription", async ({ page }) => {
   try {
     await page.goto(
-      "http://bleep-that-sht.localhost:3000/transcription-sampler-view"
+      "http://bleep-that-shit.localhost:3000/transcription-sampler-view"
     );
     const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp4");
     const fileInput = await page.$("#fileInput");

@@ -27,7 +27,7 @@ test("bleep-view: exact matching finds words with punctuation", async ({
   page,
 }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/bleep-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/bleep-view");
     const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp3");
     const fileInput = await page.$("#bleepFileInput");
     await fileInput.setInputFiles(filePath);
@@ -71,7 +71,7 @@ test("bleep-view: shows warning and disables transcribe for mismatched file type
   page,
 }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/bleep-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/bleep-view");
     // Use test_wrong.mp3 (actually an mp4 audio file)
     const filePath = path.resolve(
       __dirname,
@@ -105,7 +105,7 @@ test("bleep-view: partial matching finds substrings in transcript words", async 
   page,
 }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/bleep-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/bleep-view");
     const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp3");
     const fileInput = await page.$("#bleepFileInput");
     await fileInput.setInputFiles(filePath);
@@ -149,7 +149,7 @@ test("bleep-view: fuzzy matching finds similar words in transcript", async ({
   page,
 }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/bleep-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/bleep-view");
     const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp3");
     const fileInput = await page.$("#bleepFileInput");
     await fileInput.setInputFiles(filePath);
@@ -194,7 +194,7 @@ test("bleep-view: fuzzy matching finds words with edit distance 2", async ({
   page,
 }) => {
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/bleep-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/bleep-view");
     const filePath = path.resolve(__dirname, "../test/fixtures/files/test.mp3");
     const fileInput = await page.$("#bleepFileInput");
     await fileInput.setInputFiles(filePath);
@@ -246,7 +246,7 @@ test("bleep-view: audio player shows markers for mp3", async ({ page }) => {
     }
   });
   try {
-    await page.goto("http://bleep-that-sht.localhost:3000/bleep-view");
+    await page.goto("http://bleep-that-shit.localhost:3000/bleep-view");
     // Wait for the model dropdown to be present
     await page.waitForSelector("#bleepModel", { timeout: 5000 });
     // Select the Tiny model for transcription
@@ -315,7 +315,7 @@ test("bleep-view: audio player shows markers for mp3", async ({ page }) => {
 //     }
 //   });
 //   try {
-//     await page.goto("http://bleep-that-sht.localhost:3000/bleep-view");
+//     await page.goto("http://bleep-that-shit.localhost:3000/bleep-view");
 //     await page.waitForSelector("#bleepModel", { timeout: 5000 });
 //     await page.selectOption(
 //       "#bleepModel",

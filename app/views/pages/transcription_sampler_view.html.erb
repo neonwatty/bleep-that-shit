@@ -1,12 +1,11 @@
-<div class="bg-gradient-to-br from-gray-100 via-indigo-50 to-pink-50 min-h-screen pb-16 rounded-2xl border border-gray-200 shadow-xl">
-  <div class="max-w-3xl mx-auto bg-white/80 rounded-2xl shadow-2xl p-8 mt-8 mb-16 border border-gray-200 backdrop-blur">
+  <div class="max-w-full md:max-w-3xl mx-auto bg-white/80 rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 mt-4 md:mt-8 mb-8 md:mb-16 border border-gray-200 backdrop-blur">
     <!-- Purpose Banner -->
-    <div class="mb-6 p-4 bg-blue-100 border-l-4 border-blue-500 rounded-2xl shadow">
-      <div class="flex items-center">
-        <span class="text-2xl mr-3">🎛️</span>
+    <div class="mb-4 md:mb-6 p-3 md:p-4 bg-blue-100 border-l-4 border-blue-500 rounded-2xl shadow">
+      <div class="flex flex-col md:flex-row items-center">
+        <span class="text-xl md:text-2xl mr-0 md:mr-3 mb-2 md:mb-0">🎛️</span>
         <div>
-          <h1 class="text-2xl font-bold mb-1">Transcription Sampler</h1>
-          <p class="text-blue-800">
+          <h1 class="text-xl md:text-2xl font-bold mb-1">Transcription Sampler</h1>
+          <p class="text-blue-800 text-sm md:text-base">
             Quickly test different transcription models on a short snippet (first <strong>5 seconds</strong>) of your audio or video.<br>
             Compare speed and accuracy before processing the full file.
           </p>
@@ -15,8 +14,8 @@
     </div>
 
     <!-- How it works -->
-    <div class="mb-2 text-sm font-semibold text-gray-700 uppercase tracking-wide">How it works</div>
-    <ol class="mb-6 pl-6 list-decimal text-gray-700">
+    <div class="mb-1 md:mb-2 text-xs md:text-sm font-semibold text-gray-700 uppercase tracking-wide">How it works</div>
+    <ol class="mb-4 md:mb-6 pl-4 md:pl-6 list-decimal text-gray-700 text-xs md:text-sm">
       <li><span class="mr-1">🎵</span><strong>Upload a file</strong> (audio or video, max 5 seconds will be used for preview).</li>
       <li><span class="mr-1">🗣️</span><strong>Select a model</strong> to see how it performs on the snippet.</li>
       <li><span class="mr-1">🔍</span><strong>Transcribe and review the transcript and timing.</strong></li>
@@ -24,19 +23,19 @@
     </ol>
 
     <!-- Step 1: Upload File -->
-    <section class="step mb-8 p-6 border-l-4 border-blue-400 bg-blue-50 rounded-2xl shadow-xl border border-blue-100">
+    <section class="step mb-6 md:mb-8 p-3 md:p-6 border-l-4 border-blue-400 bg-blue-50 rounded-2xl shadow-xl border border-blue-100">
       <div class="flex items-center mb-2">
-        <span class="step-number bg-blue-400 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold">1</span>
-        <h2 class="text-lg font-semibold">Upload Your File</h2>
+        <span class="step-number bg-blue-400 text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center mr-2 md:mr-3 font-bold text-sm md:text-base">1</span>
+        <h2 class="text-base md:text-lg font-semibold">Upload Your File</h2>
       </div>
-      <p class="mb-2 text-sm text-blue-900">Audio (MP3) or Video (MP4) supported. Only the first 5 seconds will be used for preview.</p>
-      <div id="dropzone" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 transition-colors">
-        <p class="text-gray-600">Drag and drop your audio or video file here or click to browse</p>
+      <p class="mb-2 text-xs md:text-sm text-blue-900">Audio (MP3) or Video (MP4) supported. Only the first 5 seconds will be used for preview.</p>
+      <div id="dropzone" class="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 text-center cursor-pointer hover:border-blue-500 transition-colors">
+        <p class="text-gray-600 text-xs md:text-base">Drag and drop your audio or video file here or click to browse</p>
         <input type="file" id="fileInput" accept="audio/*,video/mp4" class="hidden">
       </div>
       <div id="transcriptionFileWarning" class="mt-2"></div>
-      <details id="inputPreviewSection" class="mt-6 hidden">
-        <summary class="cursor-pointer text-lg font-semibold text-gray-700 select-none">Preview Input File (Audio/Video)</summary>
+      <details id="inputPreviewSection" class="mt-4 hidden">
+        <summary class="cursor-pointer text-base md:text-lg font-semibold text-gray-700 select-none">Preview Input File (Audio/Video)</summary>
         <div id="inputPreviewContainer" class="mt-4">
           <!-- Player will be injected here by JS -->
         </div>
@@ -44,15 +43,15 @@
     </section>
 
     <!-- Step 2: Select Language & Model -->
-    <section class="step mb-8 p-6 border-l-4 border-green-400 bg-green-50 rounded-2xl shadow-xl border border-green-100">
+    <section class="step mb-6 md:mb-8 p-3 md:p-6 border-l-4 border-green-400 bg-green-50 rounded-2xl shadow-xl border border-green-100">
       <div class="flex items-center mb-2">
-        <span class="step-number bg-green-400 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold">2</span>
-        <h2 class="text-lg font-semibold">Select Language & Model</h2>
+        <span class="step-number bg-green-400 text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center mr-2 md:mr-3 font-bold text-sm md:text-base">2</span>
+        <h2 class="text-base md:text-lg font-semibold">Select Language & Model</h2>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <div>
-          <label for="language" class="block text-sm font-medium text-gray-700 mb-2">Language</label>
-          <select id="language" class="w-full p-2 border border-gray-300 rounded-md">
+          <label for="language" class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Language</label>
+          <select id="language" class="w-full p-2 border border-gray-300 rounded-md text-xs md:text-base">
             <option value="en">English</option>
             <option value="es">Spanish</option>
             <option value="fr">French</option>
@@ -68,45 +67,43 @@
           </select>
         </div>
         <div>
-          <label for="model" class="block text-sm font-medium text-gray-700 mb-2">Model</label>
-          <select id="model" class="w-full p-2 border border-gray-300 rounded-md">
+          <label for="model" class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Model</label>
+          <select id="model" class="w-full p-2 border border-gray-300 rounded-md text-xs md:text-base">
             <option value="onnx-community/whisper-tiny_timestamped">Tiny (Smallest, fastest, least accurate)</option>
             <option value="onnx-community/whisper-base_timestamped">Base (Faster, less accurate)</option>
             <option value="onnx-community/whisper-small_timestamped" selected>Small (Balanced)</option>
             <option value="onnx-community/whisper-large-v3-turbo_timestamped">Large (Slowest, most accurate)</option>
           </select>
           <div class="text-xs text-gray-500 mt-1">
-            <span class="mr-2">⏱️ = speed</span>
-            <span class="mr-2">🎯 = accuracy</span>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Step 3: Transcribe -->
-    <section class="step mb-8 p-6 border-l-4 border-indigo-400 bg-indigo-50 rounded-2xl shadow-xl border border-indigo-100">
+    <section class="step mb-6 md:mb-8 p-3 md:p-6 border-l-4 border-indigo-400 bg-indigo-50 rounded-2xl shadow-xl border border-indigo-100">
       <div class="flex items-center mb-2">
-        <span class="step-number bg-indigo-400 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold">3</span>
-        <h2 class="text-lg font-semibold">Transcribe</h2>
+        <span class="step-number bg-indigo-400 text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center mr-2 md:mr-3 font-bold text-sm md:text-base">3</span>
+        <h2 class="text-base md:text-lg font-semibold">Transcribe</h2>
       </div>
-      <button id="transcribeButton" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Transcribe</button>
-      <div class="mt-6">
-        <div class="w-full bg-gray-200 rounded-full h-2.5">
-          <div id="progress" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+      <button id="transcribeButton" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-xs md:text-base">Transcribe</button>
+      <div class="mt-4 md:mt-6">
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div id="progress" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
         </div>
-        <div id="progressText" class="text-center text-sm text-gray-600 mt-2">0%</div>
+        <div id="progressText" class="text-center text-xs md:text-sm text-gray-600 mt-2">0%</div>
       </div>
-      <div id="error" class="mt-4 p-4 bg-red-100 text-red-700 rounded-md hidden"></div>
+      <div id="error" class="mt-4 p-4 bg-red-100 text-red-700 rounded-md hidden text-xs md:text-base"></div>
     </section>
 
     <!-- Step 4: Review Results -->
-    <section class="step mb-8 p-6 border-l-4 border-purple-400 bg-purple-50 rounded-2xl shadow-xl border border-purple-100">
+    <section class="step mb-6 md:mb-8 p-3 md:p-6 border-l-4 border-purple-400 bg-purple-50 rounded-2xl shadow-xl border border-purple-100">
       <div class="flex items-center mb-2">
-        <span class="step-number bg-purple-400 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold">4</span>
-        <h2 class="text-lg font-semibold">Review Transcription Results</h2>
+        <span class="step-number bg-purple-400 text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center mr-2 md:mr-3 font-bold text-sm md:text-base">4</span>
+        <h2 class="text-base md:text-lg font-semibold">Review Transcription Results</h2>
       </div>
       <details id="results" class="mt-2 hidden">
-        <summary class="cursor-pointer text-lg font-semibold text-gray-700 select-none">View Transcript & Word Timestamps</summary>
+        <summary class="cursor-pointer text-base md:text-lg font-semibold text-gray-700 select-none">View Transcript & Word Timestamps</summary>
         <div class="mt-4">
           <!-- Results will be inserted here by JavaScript -->
         </div>
@@ -114,8 +111,8 @@
     </section>
 
     <!-- Call to Action for Full Workflow -->
-    <div class="mt-8 text-center">
-      <div class="inline-block bg-green-50 border border-green-400 text-green-700 px-6 py-3 rounded shadow">
+    <div class="mt-6 md:mt-8 text-center">
+      <div class="inline-block bg-green-50 border border-green-400 text-green-700 px-4 md:px-6 py-2 md:py-3 rounded shadow text-xs md:text-base">
         <span class="mr-2">✅</span>
         <span>
           Ready to process the full file? 
@@ -124,4 +121,3 @@
       </div>
     </div>
   </div>
-</div> 
