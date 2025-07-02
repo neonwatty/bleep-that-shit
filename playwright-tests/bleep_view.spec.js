@@ -40,9 +40,12 @@ test("bleep-view: exact matching finds words with punctuation", async ({
       timeout: 10000,
     });
     await page.click("#transcribeAndBleepButton");
-    await page.waitForSelector("#bleepTranscriptSection .mb-6", {
-      timeout: 30000,
-    });
+    await page.waitForSelector(
+      "#bleepTranscriptSection:not(.hidden) #bleepTranscriptContainer",
+      {
+        timeout: 30000,
+      }
+    );
     await page.fill("#bleepWords", "the");
     const exactCheckbox = await page.$("#matchExact");
     if (!(await exactCheckbox.isChecked())) {
@@ -118,9 +121,12 @@ test("bleep-view: partial matching finds substrings in transcript words", async 
       timeout: 10000,
     });
     await page.click("#transcribeAndBleepButton");
-    await page.waitForSelector("#bleepTranscriptSection .mb-6", {
-      timeout: 30000,
-    });
+    await page.waitForSelector(
+      "#bleepTranscriptSection:not(.hidden) #bleepTranscriptContainer",
+      {
+        timeout: 30000,
+      }
+    );
     // Enter censor word 'unite'
     await page.fill("#bleepWords", "th");
     // Enable Partial matching
@@ -162,9 +168,12 @@ test("bleep-view: fuzzy matching finds similar words in transcript", async ({
       timeout: 10000,
     });
     await page.click("#transcribeAndBleepButton");
-    await page.waitForSelector("#bleepTranscriptSection .mb-6", {
-      timeout: 30000,
-    });
+    await page.waitForSelector(
+      "#bleepTranscriptSection:not(.hidden) #bleepTranscriptContainer",
+      {
+        timeout: 30000,
+      }
+    );
     // Enter censor word 'th'
     await page.fill("#bleepWords", "th");
     // Enable Fuzzy matching
@@ -207,9 +216,12 @@ test("bleep-view: fuzzy matching finds words with edit distance 2", async ({
       timeout: 10000,
     });
     await page.click("#transcribeAndBleepButton");
-    await page.waitForSelector("#bleepTranscriptSection .mb-6", {
-      timeout: 30000,
-    });
+    await page.waitForSelector(
+      "#bleepTranscriptSection:not(.hidden) #bleepTranscriptContainer",
+      {
+        timeout: 30000,
+      }
+    );
     // Enter censor word 'reuntd' (edit distance 2 from 'reunited')
     await page.fill("#bleepWords", "th");
     // Enable Fuzzy matching
@@ -267,9 +279,12 @@ test("bleep-view: audio player shows markers for mp3", async ({ page }) => {
       timeout: 10000,
     });
     await page.click("#transcribeAndBleepButton");
-    await page.waitForSelector("#bleepTranscriptSection .mb-6", {
-      timeout: 30000,
-    });
+    await page.waitForSelector(
+      "#bleepTranscriptSection:not(.hidden) #bleepTranscriptContainer",
+      {
+        timeout: 30000,
+      }
+    );
     // Enter a bleep word that is present in the transcript
     await page.fill("#bleepWords", "the");
     await page.click("#runMatchingButton");
