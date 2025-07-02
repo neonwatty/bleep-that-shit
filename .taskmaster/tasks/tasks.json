@@ -411,8 +411,8 @@
       {
         "id": 57,
         "title": "Update navbar for new branding, navigation, and button styles",
-        "description": "Refactor the navbar: make 'Bleep That Shit!' a link to home, style 'Transcription Sampler' and 'Bleep Your Shit!' as flashy buttons, remove sign up/in buttons.",
-        "details": "1. Replace 'Frame Miner' with 'Bleep That Shit!'\n2. Make logo a link to home page, styled as bold text\n3. Style action links as colorful, animated buttons\n4. Remove sign up/in buttons from UI\n5. Ensure accessibility and responsive design",
+        "description": "Refactor the navbar: make 'Bleep That Sh*t!' a link to home, style 'Transcription Sampler' and 'Bleep Your Sh*t!' as flashy buttons, remove sign up/in buttons.",
+        "details": "1. Replace 'Frame Miner' with 'Bleep That Sh*t!'\n2. Make logo a link to home page, styled as bold text\n3. Style action links as colorful, animated buttons\n4. Remove sign up/in buttons from UI\n5. Ensure accessibility and responsive design",
         "testStrategy": "Check navbar on all pages. Verify links, button styles, and absence of sign up/in buttons.",
         "priority": "high",
         "dependencies": [],
@@ -432,8 +432,8 @@
       },
       {
         "id": 59,
-        "title": "Update all branding from 'Frame Miner' to 'Bleep That Shit!'",
-        "description": "Replace all references to 'Frame Miner' in UI, tab titles, and documentation with 'Bleep That Shit!'.",
+        "title": "Update all branding from 'Frame Miner' to 'Bleep That Sh*t!'",
+        "description": "Replace all references to 'Frame Miner' in UI, tab titles, and documentation with 'Bleep That Sh*t!'.",
         "details": "1. Update logo, tab title, and all visible text\n2. Check for any remaining references in code or docs",
         "testStrategy": "Search codebase and UI for any remaining 'Frame Miner' references.",
         "priority": "high",

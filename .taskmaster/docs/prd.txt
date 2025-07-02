@@ -1,4 +1,4 @@
-**Note:** This PRD is for an updated version of the app located in this repository: [https://github.com/neonwatty/bleep-that-shit](https://github.com/neonwatty/bleep-that-shit)
+**Note:** This PRD is for an updated version of the app located in this repository: [https://github.com/neonwatty/bleep-that-sh*t](https://github.com/neonwatty/bleep-that-sh*t)
 
 **Implementation Note:** Basic Rails 8 authentication is already set up in this repository, so authentication does not need to be included as a development task in this PRD.
 
@@ -129,17 +129,17 @@ A privacy-first, browser-based tool to remove unwanted words (and video profanit
 # Home Page & Branding (2024-06 Update)
 - The app now features a dedicated home page as the root route, introducing users to the workflow, privacy guarantees, and the open-source technologies powering the app.
 - The home page includes:
-  - Bold branding: "Bleep That Shit!"
+  - Bold branding: "Bleep That Sh*t!"
   - Tagline: "Make someone sound naughty 😈 or make your content more Ad-friendly. Transcribe, censor, and bleep audio/video — all in your browser, 100% private."
   - Short description emphasizing local-only processing and privacy.
   - Step-by-step workflow overview with icons.
   - Technology highlights: huggingface.js, ffmpeg.wasm, Web Audio API, Plyr.
-  - Calls to action: "Bleep Your Shit!" and "Transcription Sampler" buttons.
+  - Calls to action: "Bleep Your Sh*t!" and "Transcription Sampler" buttons.
 - The navbar has been updated:
-  - "Bleep That Shit!" is now a link to the home page, styled as bold text.
-  - "Transcription Sampler" and "Bleep Your Shit!" are styled as flashy, colorful buttons.
+  - "Bleep That Sh*t!" is now a link to the home page, styled as bold text.
+  - "Transcription Sampler" and "Bleep Your Sh*t!" are styled as flashy, colorful buttons.
   - "Sign Up" and "Sign In" buttons are hidden for now, but backend auth remains available.
-- All references to "Frame Miner" have been replaced with "Bleep That Shit!" in the UI and tab titles.
+- All references to "Frame Miner" have been replaced with "Bleep That Sh*t!" in the UI and tab titles.
 - The user experience and marketing copy now strongly emphasize privacy-first, local-only processing.
 
 # Testing & QA
