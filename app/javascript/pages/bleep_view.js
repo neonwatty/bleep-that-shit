@@ -155,7 +155,12 @@ export function initializeBleepView() {
   function updateProgress(percentage, text) {
     if (progressBar && progressText) {
       progressBar.style.width = `${percentage}%`;
-      progressText.textContent = text || `${Math.round(percentage)}%`;
+      // Always show 'Loading model...' if status is loading
+      if (text && text.toLowerCase().includes("loading model")) {
+        progressText.textContent = "Loading model...";
+      } else {
+        progressText.textContent = text || `${Math.round(percentage)}%`;
+      }
     } else if (progressContainer) {
       progressContainer.textContent = text || `${Math.round(percentage)}%`;
     }
@@ -326,7 +331,7 @@ export function initializeBleepView() {
     }
 
     console.log("[Debug] Starting transcription for file", selectedFile);
-    updateProgress(0, "Initializing...");
+    updateProgress(0, "Loading model...");
     resultsContainer.innerHTML = "";
     cancelButton.classList.remove("hidden");
     transcribeButton.disabled = true;
@@ -372,7 +377,13 @@ export function initializeBleepView() {
         }
         if (progress !== undefined) {
           console.log("[Debug] Progress update:", progress, status);
-          updateProgress(progress, status || "");
+          if (status === "Loading model...") {
+            updateProgress(progress, "Loading model...");
+          } else if (status === "progress") {
+            updateProgress(progress, ""); // Just show percentage
+          } else {
+            updateProgress(progress, status || "");
+          }
           if (status === "Transcribing...") {
             cancelButton.classList.remove("hidden");
           }
@@ -493,13 +504,22 @@ export function initializeBleepView() {
         const segmentsGrid = document.createElement("div");
         segmentsGrid.className = "grid grid-cols-1 md:grid-cols-2 gap-4";
         output.chunks.forEach((chunk) => {
+          let timeLabel = "[Unknown]";
+          if (
+            Array.isArray(chunk.timestamp) &&
+            chunk.timestamp.length === 2 &&
+            typeof chunk.timestamp[0] === "number" &&
+            typeof chunk.timestamp[1] === "number"
+          ) {
+            timeLabel = `[${chunk.timestamp[0].toFixed(
+              2
+            )}s - ${chunk.timestamp[1].toFixed(2)}s]`;
+          }
           const segmentEl = document.createElement("div");
           segmentEl.className =
             "flex items-center space-x-2 bg-gray-50 p-2 rounded-md";
           segmentEl.innerHTML = `
-            <span class="font-mono text-sm text-gray-600 w-28">[${chunk.timestamp[0].toFixed(
-              2
-            )}s - ${chunk.timestamp[1].toFixed(2)}s]</span>
+            <span class="font-mono text-sm text-gray-600 w-28">${timeLabel}</span>
             <span class="text-gray-800">${chunk.text}</span>
           `;
           segmentsGrid.appendChild(segmentEl);

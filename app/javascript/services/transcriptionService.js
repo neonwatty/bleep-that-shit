@@ -109,70 +109,33 @@ export class TranscriptionService {
     if (!this.isInitialized) {
       await this.initialize(config);
     }
-
-    const {
-      chunkDuration = 30,
-      overlapDuration = 5,
-      maxMemoryMB = 1024,
-      onProgress = () => {},
-      onChunkComplete = () => {},
-      language = DEFAULT_LANGUAGE,
-    } = config;
+    const { language = DEFAULT_LANGUAGE } = config;
 
     if (!audioBuffer || audioBuffer.length === 0) {
       return [];
     }
 
-    let processedChunks = 0;
-    const totalChunks = Math.ceil(audioBuffer.length / (16000 * chunkDuration));
-
     try {
-      // Ensure initial progress callback
-      onProgress(0);
+      const durationSeconds = audioBuffer.length / 16000;
+      const result = await this.pipeline(audioBuffer, {
+        language,
+        return_timestamps: true,
+        chunk_length_s: durationSeconds,
+        stride_length_s: 0,
+      });
 
-      // Process audio in chunks
-      const results = await processAudioInChunks(
-        audioBuffer,
-        async (chunkInfo) => {
-          try {
-            const result = await this.#processChunk(chunkInfo, {
-              ...config,
-              language,
-            });
-            processedChunks++;
-
-            // Call progress callback with current progress
-            const progress = processedChunks / totalChunks;
-            onProgress(progress);
-
-            // Call chunk complete callback with result
-            onChunkComplete(result);
-
-            return result;
-          } catch (error) {
-            throw new Error(`Transcription failed: ${error.message}`);
-          }
-        },
-        {
-          chunkDuration,
-          overlapDuration,
-          maxMemoryMB,
-          onProgress: (progress) => {
-            // This is the chunk processing progress
-            const overallProgress = (processedChunks + progress) / totalChunks;
-            onProgress(Math.min(overallProgress, 1));
-          },
-        }
-      );
-
-      // Final progress callback
-      onProgress(1);
-
-      // Merge results from all chunks
-      return mergeChunkResults(results);
+      // Map to expected output format
+      console.log("results", result);
+      return result.chunks.map((item) => ({
+        text: item.text,
+        start: item.timestamp[0],
+        end: item.timestamp[1],
+        confidence: item.confidence || 0.9,
+        timestamp: item.timestamp,
+      }));
     } catch (error) {
       console.error("Transcription failed:", error);
-      throw error; // Preserve the original error
+      throw error;
     }
   }
 
