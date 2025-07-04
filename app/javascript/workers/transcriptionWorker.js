@@ -52,42 +52,19 @@ self.onmessage = async (event) => {
       self.postMessage({ progress: 60, status: "Transcribing..." });
       self.postMessage({ debug: `[Worker] About to call transcriber` });
 
-      // --- Chunking logic for progress reporting ---
-      // If audioData is a Float32Array, split into 30s chunks (480000 samples at 16kHz)
-      const sampleRate = 16000;
-      const chunkLengthS = 30;
-      const chunkSize = chunkLengthS * sampleRate;
-      const strideLengthS = 5;
-      const strideSize = strideLengthS * sampleRate;
-      const totalSamples = audioData.length;
-      const totalChunks =
-        Math.ceil((totalSamples - chunkSize) / (chunkSize - strideSize)) + 1;
-      let allResults = [];
-      let chunkIdx = 0;
-      for (
-        let start = 0;
-        start < totalSamples;
-        start += chunkSize - strideSize
-      ) {
-        const end = Math.min(start + chunkSize, totalSamples);
-        const chunk = audioData.slice(start, end);
-        // Transcribe this chunk
-        const output = await transcriber(chunk, {
-          language: language,
-          task: "transcribe",
-          return_timestamps: "word",
-        });
-        allResults.push(output);
-        chunkIdx++;
-        self.postMessage({
-          chunkProgress: { currentChunk: chunkIdx, totalChunks },
-        });
-      }
-      // Merge allResults into a single output (simple merge for now)
-      // You may want to implement smarter merging if needed
+      const durationSeconds = audioData.length / 16000;
+      const output = await transcriber(audioData, {
+        language: language,
+        task: "transcribe",
+        return_timestamps: "word",
+        chunk_length_s: 30,
+        stride_length_s: 0,
+      });
+
+      // Output structure should match what the UI expects
       const merged = {
-        text: allResults.map((r) => r.text).join(" "),
-        chunks: allResults.flatMap((r) => r.chunks || []),
+        text: output.text,
+        chunks: output.chunks || [],
       };
       self.postMessage({ debug: `[Worker] Transcription complete` });
       self.postMessage({ progress: 100, status: "Complete", result: merged });
