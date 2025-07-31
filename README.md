@@ -53,7 +53,7 @@ https://github.com/neonwatty/bleep_that_sht/assets/16326421/63ebd7a0-46f6-4efd-8
 
 Just open the app in any modern browser — **no installation or setup required**.
 
-- Go to [https://bleep-that-sh-t.app](https://bleep-that-sh-t.app) (or your self-hosted instance)
+- Go to [https://bleep-that-sh-t.app](https://bleep-that-shit-igpe.onrender.com) (or your self-hosted instance)
 - Upload your file, follow the step-by-step workflow, and download your censored result
 
 ---
