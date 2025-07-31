@@ -5,12 +5,12 @@ services:
     build:
       context: .
       target: build # use the build stage for dev tools
-    command: bash -lc "npm ci && npm run build && SECRET_KEY_BASE_DUMMY=1 bundle exec rails server -b 0.0.0.0 -p 3000"
+    command: bash -lc "npm ci && npm run build && bundle exec rails server -b 0.0.0.0 -p 3000"
     volumes:
       - .:/rails # mount your app code in
-      - ./config/master.key:/rails/config/master.key:ro
     ports:
       - "3000:3000"
     environment:
       RAILS_ENV: development
       NODE_ENV: development
+      SECRET_KEY_BASE: development_secret_key_123

@@ -41,14 +41,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_214636) do
 
   create_table "audio_jobs", force: :cascade do |t|
     t.integer "status", default: 0
+    t.string "language"
+    t.string "model"
+    t.float "progress"
+    t.text "result"
+    t.text "error"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "language"
-    t.string "model"
-    t.float "progress", default: 0.0
-    t.text "result"
-    t.text "error"
     t.index ["status"], name: "index_audio_jobs_on_status"
     t.index ["user_id"], name: "index_audio_jobs_on_user_id"
   end
