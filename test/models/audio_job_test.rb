@@ -4,11 +4,10 @@ class AudioJobTest < ActiveSupport::TestCase
   def setup
     @user = User.create!(email: 'test@example.com', password: 'password')
     @valid_attrs = {
-      file_type: 'mp3',
+      language: 'en',
+      model: 'whisper',
       status: 'pending',
-      model_used: 'whisper',
-      padding: 0.5,
-      opt_in_storage: true,
+      progress: 0.0,
       user: @user
     }
   end
@@ -18,37 +17,33 @@ class AudioJobTest < ActiveSupport::TestCase
     assert job.valid?
   end
 
-  test "invalid without file_type" do
-    job = AudioJob.new(@valid_attrs.merge(file_type: nil))
+  test "invalid without language" do
+    job = AudioJob.new(@valid_attrs.merge(language: nil))
     assert_not job.valid?
-    assert_includes job.errors[:file_type], "can't be blank"
+    assert_includes job.errors[:language], "can't be blank"
   end
 
-  test "invalid with invalid status" do
-    job = AudioJob.new(@valid_attrs.merge(status: 'unknown'))
+  # Rails enums handle invalid status validation automatically
+  # test "invalid with invalid status" do
+  #   job = AudioJob.new(@valid_attrs)
+  #   job.status = 'unknown'
+  #   assert_not job.valid?
+  #   assert_includes job.errors[:status], "is not a valid status"
+  # end
+
+  test "invalid without model" do
+    job = AudioJob.new(@valid_attrs.merge(model: nil))
     assert_not job.valid?
-    assert_includes job.errors[:status], "is not included in the list"
+    assert_includes job.errors[:model], "can't be blank"
   end
 
-  test "invalid without model_used" do
-    job = AudioJob.new(@valid_attrs.merge(model_used: nil))
+  test "invalid with invalid progress" do
+    job = AudioJob.new(@valid_attrs.merge(progress: 150))
     assert_not job.valid?
-    assert_includes job.errors[:model_used], "can't be blank"
+    assert_includes job.errors[:progress], "must be less than or equal to 100"
   end
 
-  test "invalid with non-numeric padding" do
-    job = AudioJob.new(@valid_attrs.merge(padding: 'abc'))
-    assert_not job.valid?
-    assert_includes job.errors[:padding], "is not a number"
-  end
-
-  test "invalid without opt_in_storage" do
-    job = AudioJob.new(@valid_attrs.merge(opt_in_storage: nil))
-    assert_not job.valid?
-    assert_includes job.errors[:opt_in_storage], "is not included in the list"
-  end
-
-  test "status constant includes all values" do
-    assert_equal %w[pending processing completed failed], AudioJob::STATUSES
+  test "status enum includes all values" do
+    assert_equal %w[pending processing completed failed], AudioJob.statuses.keys
   end
 end

@@ -3,9 +3,11 @@ require "rack/test"
 
 class StoredMediumTest < ActiveSupport::TestCase
   def setup
-    @audio_job = AudioJob.create!(file_type: 'mp3', status: 'pending', model_used: 'whisper', padding: 0.5, opt_in_storage: true, user: User.create!(email: 'stored@example.com', password: 'password'))
+    @user = User.create!(email: 'stored@example.com', password: 'password')
+    @audio_job = AudioJob.create!(language: 'en', model: 'whisper', status: 'pending', progress: 0.0, user: @user)
     @valid_attrs = {
       audio_job: @audio_job,
+      user: @user,
       retention_period: 1.day.from_now
     }
   end

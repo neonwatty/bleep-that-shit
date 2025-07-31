@@ -74,21 +74,71 @@ The UI is modern, privacy-first, and works on desktop and mobile.
 
 ---
 
-## Running Locally with Docker Compose
+## Running Locally
 
-You can run the app locally using Docker Compose. This will build and start the app in a containerized environment, making it easy to test or develop without installing dependencies directly on your machine.
+You can run the app locally in two ways:
+
+### Option 1: Docker Compose (Recommended)
+
+This is the easiest way to run the app without installing dependencies on your machine.
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/neonwatty/bleep_that_sht.git
    cd bleep_that_sht
    ```
+
 2. Start the app with Docker Compose:
+
    ```bash
    docker compose up
    ```
-3. Visit [](http://localhost:3000) in your browser.
 
-The app will be available at `localhost:3000` by default. You can stop the app with `Ctrl+C` and remove containers with `docker compose down`.
+3. Visit [http://localhost:3000](http://localhost:3000) in your browser.
+
+The app will be available at `localhost:3000`. You can stop the app with `Ctrl+C` and remove containers with `docker compose down`.
+
+### Option 2: Native Installation
+
+If you prefer to run the app directly on your machine:
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/neonwatty/bleep_that_sht.git
+   cd bleep_that_sht
+   ```
+
+2. Install Ruby dependencies:
+
+   ```bash
+   bundle install
+   ```
+
+3. Install Node.js dependencies:
+
+   ```bash
+   npm install
+   ```
+
+4. Set up the database:
+
+   ```bash
+   bin/rails db:create db:migrate
+   ```
+
+5. Start the Rails server:
+
+   ```bash
+   bin/rails server
+   ```
+
+6. Visit [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Prerequisites
+
+- **For Docker:** Docker and Docker Compose installed
+- **For Native:** Ruby 3.4+, Node.js 18+, and PostgreSQL
 
 ---
