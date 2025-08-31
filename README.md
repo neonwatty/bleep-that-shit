@@ -85,8 +85,8 @@ Visit the deployed app (coming soon) or run it locally.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/neonwatty/bleep_that_sht.git
-   cd bleep_that_sht/nextjs-app
+   git clone https://github.com/neonwatty/bleep-that-shit.git
+   cd bleep-that-shit
    ```
 
 2. Install dependencies:
