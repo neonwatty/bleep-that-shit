@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "fix-nextjs-transcription-and-bleep"]
   workflow_dispatch:
 
 permissions:

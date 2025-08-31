@@ -42,11 +42,14 @@ self.onmessage = async (event: MessageEvent) => {
     
     const result = await transcriber(audioData, transcriptionOptions);
     
+    // Handle both single result and array of results
+    const finalResult = Array.isArray(result) ? result[0] : result;
+    
     self.postMessage({
       type: "complete",
       result: {
-        text: result.text || '',
-        chunks: result.chunks || []
+        text: finalResult.text || '',
+        chunks: finalResult.chunks || []
       },
       progress: 100,
       status: "Transcription complete!"

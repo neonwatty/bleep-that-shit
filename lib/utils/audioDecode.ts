@@ -37,7 +37,9 @@ export async function decodeAudioToMono16kHzPCM(file: File | Blob): Promise<Floa
       16000
     );
     const buffer = offlineCtx.createBuffer(1, mono.length, decoded.sampleRate);
-    buffer.copyToChannel(mono, 0);
+    // Create a new Float32Array with regular ArrayBuffer to satisfy TypeScript
+    const monoData = new Float32Array(mono);
+    buffer.copyToChannel(monoData, 0);
     const source = offlineCtx.createBufferSource();
     source.buffer = buffer;
     source.connect(offlineCtx.destination);

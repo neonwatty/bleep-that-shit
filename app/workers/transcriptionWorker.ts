@@ -19,10 +19,7 @@ self.onmessage = async (event: MessageEvent) => {
       // Extract audio from video using FFmpeg
       self.postMessage({ debug: `[Worker] Extracting audio from video` });
       
-      const ffmpeg = new FFmpeg({ 
-        log: false, 
-        corePath: getPublicPath('/ffmpeg-core.js')
-      });
+      const ffmpeg = new FFmpeg();
       
       if (!ffmpeg.loaded) {
         await ffmpeg.load();
@@ -43,10 +40,24 @@ self.onmessage = async (event: MessageEvent) => {
         debug: `[Worker] Audio extracted, sending buffer to main thread`,
       });
       
-      self.postMessage(
-        { type: "extracted", audioBuffer: audioDataBuffer.buffer },
-        [audioDataBuffer.buffer]
-      );
+      // Handle both Uint8Array and string types
+      if (audioDataBuffer instanceof Uint8Array) {
+        // Type assertion to ensure we're passing a Transferable
+        const buffer = audioDataBuffer.buffer as ArrayBuffer;
+        (self as any).postMessage(
+          { type: "extracted", audioBuffer: buffer },
+          [buffer]
+        );
+      } else {
+        // Convert string to Uint8Array if necessary
+        const encoder = new TextEncoder();
+        const uint8Array = encoder.encode(audioDataBuffer as string);
+        const buffer = uint8Array.buffer as ArrayBuffer;
+        (self as any).postMessage(
+          { type: "extracted", audioBuffer: buffer },
+          [buffer]
+        );
+      }
       return;
     }
     
@@ -127,10 +138,13 @@ self.onmessage = async (event: MessageEvent) => {
       
       self.postMessage({ progress: 90, status: "Finalizing transcription..." });
       
+      // Handle both single result and array of results
+      const finalResult = Array.isArray(result) ? result[0] : result;
+      
       // Format the result
       const formattedResult = {
-        text: result.text || '',
-        chunks: result.chunks || []
+        text: finalResult.text || '',
+        chunks: finalResult.chunks || []
       };
       
       self.postMessage({

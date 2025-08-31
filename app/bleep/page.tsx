@@ -243,8 +243,8 @@ export default function BleepPage() {
         
         if (isMatch) {
           // Check the actual structure of timestamps
-          const start = chunk.timestamp ? chunk.timestamp[0] : (chunk.timestamps ? chunk.timestamps[0] : 0)
-          const end = chunk.timestamp ? chunk.timestamp[1] : (chunk.timestamps ? chunk.timestamps[1] : 0)
+          const start = chunk.timestamp ? chunk.timestamp[0] : 0
+          const end = chunk.timestamp ? chunk.timestamp[1] : 0
           
           console.log(`Match found: "${chunk.text}" at [${start}, ${end}]`)
           
