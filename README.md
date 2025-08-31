@@ -21,14 +21,16 @@ All processing is done locally in your browser using cutting-edge technologies. 
 
 ## Technology Highlights
 
-- **Next.js 15**: Modern React framework with App Router
-- **TypeScript**: Type-safe development
+- **Next.js 15**: Static site generation with App Router
+- **TypeScript**: Type-safe development throughout
 - **transformers.js + ONNX Whisper**: In-browser speech-to-text with word-level timestamps
 - **ffmpeg.wasm**: Audio/video extraction and muxing, all in-browser
 - **Web Audio API**: Precise audio editing and bleep insertion
+- **Web Workers**: Background processing to keep UI responsive
 - **Plyr**: Beautiful, interactive media playback
 - **Tailwind CSS**: Modern, responsive styling
-- **No Python, Docker, or ffmpeg install required**
+- **GitHub Pages**: Static hosting with GitHub Actions CI/CD
+- **No backend required** — 100% client-side processing
 - **No server/cloud processing** — privacy-first, local-only by design
 
 ---
@@ -54,7 +56,7 @@ https://github.com/neonwatty/bleep_that_sht/assets/16326421/63ebd7a0-46f6-4efd-8
 Just open the app in any modern browser — **no installation or setup required**.
 
 ### Live Demo
-Visit the deployed app (coming soon) or run it locally.
+Visit the deployed app at [https://neonwatty.github.io/bleep-that-shit/](https://neonwatty.github.io/bleep-that-shit/) or run it locally.
 
 ---
 
@@ -117,6 +119,13 @@ npm run test:ui     # Run tests with UI
 
 ## Deployment
 
+### GitHub Pages (Automatic)
+
+The app automatically deploys to GitHub Pages when changes are pushed to the main branch. The deployment workflow:
+1. Builds the Next.js app as a static site
+2. Exports all pages and assets
+3. Deploys to GitHub Pages
+
 ### Deploy to Vercel
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/neonwatty/bleep-that-shit)
@@ -128,7 +137,7 @@ npm run build
 npm run export
 ```
 
-The static files will be in the `out` directory.
+The static files will be in the `out` directory. The app is configured for static export with `next.config.ts` supporting base path deployment.
 
 ---
 
