@@ -1,9 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
+  workflow_dispatch:  # Allow manual triggering from GitHub Actions tab
   push:
-    branches: ["main", "fix-nextjs-transcription-and-bleep"]
-  workflow_dispatch:
+    branches: ["main"]
 
 permissions:
   contents: read
