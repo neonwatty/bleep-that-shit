@@ -9,6 +9,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read  # Required for Pages enablement
 
 concurrency:
   group: "pages"
@@ -31,6 +32,7 @@ jobs:
         uses: actions/configure-pages@v4
         with:
           static_site_generator: next
+          enablement: true  # Enable Pages if not already enabled
 
       - name: Restore cache
         uses: actions/cache@v3
