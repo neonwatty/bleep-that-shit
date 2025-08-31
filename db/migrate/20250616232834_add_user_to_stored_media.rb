@@ -1,5 +1,0 @@
-class AddUserToStoredMedia < ActiveRecord::Migration[8.0]
-  def change
-    add_reference :stored_media, :user, null: false, foreign_key: true
-  end
-end

@@ -2,8 +2,6 @@
 
 # Bleep That Sh\*t! — In-Browser Audio & Video Censorship Tool
 
-> **Note:** This README describes the latest version of Bleep That Sh\*t! — a 100% browser-based, privacy-first web app. For the legacy Python/Streamlit version, see the [Legacy Branch](https://github.com/neonwatty/bleep_that_sht/tree/legacy).
-
 Make someone sound naughty 😈 or make your content more Ad-friendly.
 
 **Bleep That Sh\*t!** lets you instantly transcribe and censor words in your audio or video files, with full control over what gets bleeped. No uploads, no servers, no installs — everything happens right in your browser.
@@ -17,19 +15,21 @@ Make someone sound naughty 😈 or make your content more Ad-friendly.
 3. **Censor**: Pick words to bleep (exact, partial, or fuzzy match).
 4. **Preview & Download**: Hear the result and save your censored file.
 
-All processing is done locally in your browser using cutting-edge technologies. Your media and transcripts stay private — nothing is sent to a server unless you opt in.
+All processing is done locally in your browser using cutting-edge technologies. Your media and transcripts stay private — nothing is sent to a server.
 
 ---
 
 ## Technology Highlights
 
-- **Rails 8 + Vite + Vanilla JS**: Modern, responsive web app with step-by-step UX
+- **Next.js 15**: Modern React framework with App Router
+- **TypeScript**: Type-safe development
 - **transformers.js + ONNX Whisper**: In-browser speech-to-text with word-level timestamps
 - **ffmpeg.wasm**: Audio/video extraction and muxing, all in-browser
 - **Web Audio API**: Precise audio editing and bleep insertion
 - **Plyr**: Beautiful, interactive media playback
+- **Tailwind CSS**: Modern, responsive styling
 - **No Python, Docker, or ffmpeg install required**
-- **No server/cloud processing by default** — privacy-first, local-only by design
+- **No server/cloud processing** — privacy-first, local-only by design
 
 ---
 
@@ -53,92 +53,123 @@ https://github.com/neonwatty/bleep_that_sht/assets/16326421/63ebd7a0-46f6-4efd-8
 
 Just open the app in any modern browser — **no installation or setup required**.
 
-- Go to [https://bleep-that-sh-t.app](https://bleep-that-shit-igpe.onrender.com) (or your self-hosted instance)
-- Upload your file, follow the step-by-step workflow, and download your censored result
+### Live Demo
+Visit the deployed app (coming soon) or run it locally.
 
 ---
 
-## App Walkthrough
+## App Features
 
-The app guides you through:
+### Main Workflow (`/bleep`)
+- Upload audio or video files
+- Select language and Whisper model
+- Transcribe to generate word-level timestamps
+- Enter words to censor with multiple matching modes (exact, partial, fuzzy)
+- Choose from different bleep sounds
+- Preview and download the censored result
 
-- Uploading audio or video
-- Selecting language and model
-- Transcribing to generate a word-level transcript
-- Entering words and matching modes (exact, partial, fuzzy)
-- Running matching to find words to censor
-- Choosing a bleep sound
-- Previewing and downloading the censored result
-
-The UI is modern, privacy-first, and works on desktop and mobile.
+### Model Comparison (`/sampler`)
+- Compare transcription accuracy across different Whisper models
+- Test processing speeds
+- Find the best model for your needs
 
 ---
 
 ## Running Locally
 
-You can run the app locally in two ways:
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
 
-### Option 1: Docker Compose (Recommended)
-
-This is the easiest way to run the app without installing dependencies on your machine.
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/neonwatty/bleep_that_sht.git
-   cd bleep_that_sht
-   ```
-
-2. Start the app with Docker Compose:
-
-   ```bash
-   docker compose up
-   ```
-
-3. Visit [http://localhost:3000](http://localhost:3000) in your browser.
-
-The app will be available at `localhost:3000`. You can stop the app with `Ctrl+C` and remove containers with `docker compose down`.
-
-### Option 2: Native Installation
-
-If you prefer to run the app directly on your machine:
+### Installation
 
 1. Clone the repository:
-
    ```bash
    git clone https://github.com/neonwatty/bleep_that_sht.git
-   cd bleep_that_sht
+   cd bleep_that_sht/nextjs-app
    ```
 
-2. Install Ruby dependencies:
-
-   ```bash
-   bundle install
-   ```
-
-3. Install Node.js dependencies:
-
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-4. Set up the database:
-
+3. Start the development server:
    ```bash
-   bin/rails db:create db:migrate
+   npm run dev
    ```
 
-5. Start the Rails server:
-
-   ```bash
-   bin/rails server
-   ```
-
-6. Visit [http://localhost:3000](http://localhost:3000) in your browser.
-
-### Prerequisites
-
-- **For Docker:** Docker and Docker Compose installed
-- **For Native:** Ruby 3.4+, Node.js 18+, and PostgreSQL
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ---
+
+## Available Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm test            # Run Playwright tests
+npm run test:ui     # Run tests with UI
+```
+
+---
+
+## Deployment
+
+### Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/neonwatty/bleep-that-shit)
+
+### Build for Static Hosting
+
+```bash
+npm run build
+npm run export
+```
+
+The static files will be in the `out` directory.
+
+---
+
+## Browser Requirements
+
+- Modern browser with WebAssembly support
+- Web Workers support
+- Sufficient RAM for model loading (varies by model size)
+
+---
+
+## Available Whisper Models
+
+- **Tiny** (39 MB): Fastest, good for quick processing
+- **Base** (74 MB): Better accuracy, still fast
+- **Small** (242 MB): Best accuracy, slower processing
+
+Both English-only and multilingual variants are available.
+
+---
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+---
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgments
+
+- [Transformers.js](https://github.com/xenova/transformers.js) for WebAssembly Whisper models
+- [FFmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm) for media processing
+- [OpenAI Whisper](https://github.com/openai/whisper) for the original models
+
+---
+
+## Support
+
+For issues and questions, please open an issue on [GitHub](https://github.com/neonwatty/bleep-that-shit/issues).
