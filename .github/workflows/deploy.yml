@@ -26,7 +26,6 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: ./nextjs-app/package-lock.json
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -37,25 +36,26 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            nextjs-app/.next/cache
+            .next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
       - name: Install dependencies
-        run: |
-          cd nextjs-app
-          npm ci
+        run: npm ci
 
       - name: Build with Next.js
-        run: |
-          cd nextjs-app
-          npm run build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /bleep-that-shit
+
+      - name: Export static files
+        run: npm run export
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./nextjs-app/out
+          path: ./out
 
   deploy:
     environment:
