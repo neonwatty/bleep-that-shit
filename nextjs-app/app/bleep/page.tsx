@@ -528,8 +528,7 @@ export default function BleepPage() {
       </section>
 
       {/* Step 4: Word Matching */}
-      {transcriptionResult && (
-        <section className="editorial-section border-l-4 border-purple-500 pl-4 mb-12">
+      <section className={`editorial-section border-l-4 border-purple-500 pl-4 mb-12 ${!transcriptionResult ? 'opacity-50' : ''}`}>
           <div className="flex items-center mb-2">
             <span className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold text-base">4</span>
             <h2 className="text-2xl font-extrabold uppercase text-black font-inter">Enter Words to Bleep</h2>
@@ -595,7 +594,8 @@ export default function BleepPage() {
 
           <button 
             onClick={handleMatch}
-            className="btn btn-secondary"
+            disabled={!transcriptionResult || !wordsToMatch}
+            className="btn btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Run Matching
           </button>
@@ -613,11 +613,9 @@ export default function BleepPage() {
             </div>
           )}
         </section>
-      )}
 
       {/* Step 5: Bleep Sound */}
-      {matchedWords.length > 0 && (
-        <section className="editorial-section border-l-4 border-yellow-500 pl-4 mb-12">
+      <section className={`editorial-section border-l-4 border-yellow-500 pl-4 mb-12 ${matchedWords.length === 0 ? 'opacity-50' : ''}`}>
           <div className="flex items-center mb-2">
             <span className="bg-yellow-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold text-base">5</span>
             <h2 className="text-2xl font-extrabold uppercase text-black font-inter">Choose Bleep Sound</h2>
@@ -632,11 +630,9 @@ export default function BleepPage() {
             <option value="brown">Brown Noise</option>
           </select>
         </section>
-      )}
 
       {/* Step 6: Bleep! */}
-      {matchedWords.length > 0 && (
-        <section className="editorial-section border-l-4 border-violet-500 pl-4 mb-12">
+      <section className={`editorial-section border-l-4 border-violet-500 pl-4 mb-12 ${matchedWords.length === 0 ? 'opacity-50' : ''}`}>
           <div className="flex items-center mb-2">
             <span className="bg-violet-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold text-base">6</span>
             <h2 className="text-2xl font-extrabold uppercase text-black font-inter">Bleep That Sh*t!</h2>
@@ -644,7 +640,8 @@ export default function BleepPage() {
           
           <button 
             onClick={handleBleep}
-            className="btn btn-pink"
+            disabled={!file || matchedWords.length === 0}
+            className="btn btn-pink disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Apply Bleeps!
           </button>
@@ -665,7 +662,6 @@ export default function BleepPage() {
             </div>
           )}
         </section>
-      )}
     </div>
   )
 }

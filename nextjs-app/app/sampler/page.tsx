@@ -110,17 +110,35 @@ export default function SamplerPage() {
             }
           }
 
-          // Extract sample from file
-          file.arrayBuffer().then(buffer => {
-            worker.postMessage({
-              type: 'sample',
-              fileBuffer: buffer,
-              fileType: file.type,
-              model: model.id,
-              language,
-              sampleStart,
-              sampleDuration
-            }, [buffer])
+          // Extract and decode sample from file
+          file.arrayBuffer().then(async buffer => {
+            try {
+              // Decode audio in main thread
+              const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 })
+              const decodedBuffer = await audioContext.decodeAudioData(buffer.slice(0))
+              
+              // Extract the sample based on start and duration
+              const startSample = Math.floor(sampleStart * 16000)
+              const durationSamples = Math.floor(sampleDuration * 16000)
+              const channelData = decodedBuffer.getChannelData(0)
+              
+              // Extract the sample
+              const sampleAudio = new Float32Array(durationSamples)
+              for (let i = 0; i < durationSamples && startSample + i < channelData.length; i++) {
+                sampleAudio[i] = channelData[startSample + i]
+              }
+              
+              // Send to worker
+              const sampleCopy = new Float32Array(sampleAudio)
+              worker.postMessage({
+                audioData: sampleCopy,
+                model: model.id,
+                language
+              }, [sampleCopy.buffer])
+            } catch (err) {
+              console.error('Error decoding audio:', err)
+              worker.postMessage({ error: 'Failed to decode audio' })
+            }
           })
         })
         

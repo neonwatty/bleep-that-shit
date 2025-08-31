@@ -4,6 +4,11 @@ self.onmessage = async (event: MessageEvent) => {
   const { audioData, model, language } = event.data;
   
   try {
+    if (!audioData) {
+      throw new Error('No audio data provided');
+    }
+    
+    console.log(`[Worker] Processing sample with model ${model}, audio length: ${audioData.length}`);
     self.postMessage({ progress: 10, status: `Loading ${model}...` });
     
     const transcriber = await pipeline(
