@@ -52,7 +52,12 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: /bleep-that-shit
 
       - name: Add .nojekyll file
-        run: touch out/.nojekyll
+        run: |
+          ls -la
+          mkdir -p out
+          touch out/.nojekyll
+          echo "Contents of out directory:"
+          ls -la out/ || echo "out directory not found"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
