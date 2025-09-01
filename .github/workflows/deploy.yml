@@ -29,9 +29,9 @@ jobs:
           cache: "npm"
 
       - name: Setup Pages
+        id: pages
         uses: actions/configure-pages@v4
         with:
-          static_site_generator: next
           enablement: true  # Enable Pages if not already enabled
 
       - name: Restore cache
@@ -46,13 +46,31 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build with Next.js
-        run: npm run build
+      - name: Build with Next.js  
+        run: |
+          echo "NODE_ENV: $NODE_ENV"
+          echo "Removing any injected config files..."
+          rm -f next.config.js next.config.mjs
+          echo "Using our next.config.ts:"
+          cat next.config.ts
+          echo "Building Next.js app..."
+          npm run build
+          echo "Build complete. Checking for output directories..."
+          ls -la
+          echo "Checking .next directory:"
+          ls -la .next/ | head -5 || echo ".next not found"
+          echo "Checking out directory:"
+          ls -la out/ | head -5 || echo "out not found"
         env:
           NEXT_PUBLIC_BASE_PATH: /bleep-that-shit
+          NODE_ENV: production
 
       - name: Add .nojekyll file
-        run: touch out/.nojekyll
+        run: |
+          mkdir -p out
+          touch out/.nojekyll
+          echo "Contents of out directory:"
+          ls -la out/ | head -10
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
