@@ -51,8 +51,8 @@ jobs:
         env:
           NEXT_PUBLIC_BASE_PATH: /bleep-that-shit
 
-      - name: Export static files
-        run: npm run export
+      - name: Add .nojekyll file
+        run: touch out/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
