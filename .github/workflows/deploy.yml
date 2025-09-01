@@ -29,9 +29,9 @@ jobs:
           cache: "npm"
 
       - name: Setup Pages
+        id: pages
         uses: actions/configure-pages@v4
         with:
-          static_site_generator: next
           enablement: true  # Enable Pages if not already enabled
 
       - name: Restore cache
@@ -46,9 +46,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build with Next.js
+      - name: Build with Next.js  
         run: |
           echo "NODE_ENV: $NODE_ENV"
+          echo "Removing any injected config files..."
+          rm -f next.config.js next.config.mjs
+          echo "Using our next.config.ts:"
+          cat next.config.ts
           echo "Building Next.js app..."
           npm run build
           echo "Build complete. Checking for output directories..."
