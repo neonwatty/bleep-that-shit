@@ -2,6 +2,8 @@
  * Audio processing utilities for applying bleeps/censoring
  */
 
+import { getPublicPath } from './paths'
+
 export interface BleepSegment {
   word: string
   start: number
@@ -40,7 +42,7 @@ export async function applyBleeps(
   gainNode.connect(offlineContext.destination)
   
   // Load bleep sound
-  const bleepResponse = await fetch(`/bleeps/${bleepSound}.mp3`)
+  const bleepResponse = await fetch(getPublicPath(`/bleeps/${bleepSound}.mp3`))
   const bleepArrayBuffer = await bleepResponse.arrayBuffer()
   const bleepBuffer = await audioContext.decodeAudioData(bleepArrayBuffer)
   
