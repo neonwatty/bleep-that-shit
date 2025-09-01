@@ -214,47 +214,60 @@ export default function BleepPage() {
     console.log('Starting matching with transcription result:', transcriptionResult)
     console.log('Words to match:', wordsToMatch)
     console.log('Match mode:', matchMode)
+    console.log('First 5 chunks:', transcriptionResult.chunks.slice(0, 5).map(c => c.text))
     
     const words = wordsToMatch.toLowerCase().split(',').map(w => w.trim()).filter(Boolean)
     const matched: Array<{word: string, start: number, end: number}> = []
+    const matchedChunkIndices = new Set<number>() // Track which chunks have been matched
 
     if (transcriptionResult.chunks && transcriptionResult.chunks.length > 0) {
       console.log('Sample chunk structure:', transcriptionResult.chunks[0])
     }
 
     transcriptionResult.chunks.forEach((chunk, index) => {
-      const chunkText = chunk.text.toLowerCase()
-      words.forEach(word => {
-        let isMatch = false
-        
-        if (matchMode.exact && chunkText === word) {
-          isMatch = true
+      const chunkText = chunk.text.toLowerCase().trim()
+      // Remove common punctuation for exact matching
+      const chunkTextClean = chunkText.replace(/[.,!?;:'"]/g, '')
+      let isMatch = false
+      
+      // Check all search words against this chunk
+      for (const word of words) {
+        if (matchMode.exact) {
+          // Try both with and without punctuation
+          if (chunkText === word || chunkTextClean === word) {
+            console.log(`Exact match: "${chunk.text}" matches "${word}"`)
+            isMatch = true
+            break
+          }
         }
         if (matchMode.partial && chunkText.includes(word)) {
           isMatch = true
+          break // Stop checking other words once we have a match
         }
         if (matchMode.fuzzy) {
           // Simple fuzzy matching (Levenshtein distance)
           const distance = levenshteinDistance(chunkText, word)
           if (distance <= fuzzyDistance) {
             isMatch = true
+            break // Stop checking other words once we have a match
           }
         }
+      }
+      
+      // Only add this chunk once, even if multiple search terms match it
+      if (isMatch && !matchedChunkIndices.has(index)) {
+        matchedChunkIndices.add(index)
+        const start = chunk.timestamp ? chunk.timestamp[0] : 0
+        const end = chunk.timestamp ? chunk.timestamp[1] : 0
         
-        if (isMatch) {
-          // Check the actual structure of timestamps
-          const start = chunk.timestamp ? chunk.timestamp[0] : 0
-          const end = chunk.timestamp ? chunk.timestamp[1] : 0
-          
-          console.log(`Match found: "${chunk.text}" at [${start}, ${end}]`)
-          
-          matched.push({
-            word: chunk.text,
-            start: start,
-            end: end
-          })
-        }
-      })
+        console.log(`Match found: "${chunk.text}" at [${start}, ${end}]`)
+        
+        matched.push({
+          word: chunk.text,
+          start: start,
+          end: end
+        })
+      }
     })
 
     console.log('Total matches found:', matched.length)
