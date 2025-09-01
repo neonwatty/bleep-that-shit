@@ -16,12 +16,15 @@ const merriweather = Merriweather({
   weight: ["400", "700"]
 });
 
+// Get base path for production
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 export const metadata: Metadata = {
   title: "Bleep That Sh*t!",
   description: "Effortlessly bleep out any words or phrases from your audio or video. 100% private in-browser processing.",
   icons: {
-    icon: "/icon.png",
-    apple: "/icon.png"
+    icon: `${basePath}/icon.png`,
+    apple: `${basePath}/icon.png`
   }
 };
 
