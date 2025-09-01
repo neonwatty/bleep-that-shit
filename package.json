@@ -8,9 +8,14 @@
     "start": "next start",
     "export": "next build && mkdir -p out && touch out/.nojekyll",
     "test": "playwright test",
-    "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug",
-    "test:report": "playwright show-report"
+    "test:unit": "vitest",
+    "test:unit:ui": "vitest --ui",
+    "test:unit:coverage": "vitest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:report": "playwright show-report",
+    "test:all": "npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.12.6",
@@ -32,7 +37,10 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/ui": "^3.2.4",
+    "happy-dom": "^18.0.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   }
 }
