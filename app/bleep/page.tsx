@@ -217,6 +217,7 @@ export default function BleepPage() {
     
     const words = wordsToMatch.toLowerCase().split(',').map(w => w.trim()).filter(Boolean)
     const matched: Array<{word: string, start: number, end: number}> = []
+    const matchedChunkIndices = new Set<number>() // Track which chunks have been matched
 
     if (transcriptionResult.chunks && transcriptionResult.chunks.length > 0) {
       console.log('Sample chunk structure:', transcriptionResult.chunks[0])
@@ -224,37 +225,42 @@ export default function BleepPage() {
 
     transcriptionResult.chunks.forEach((chunk, index) => {
       const chunkText = chunk.text.toLowerCase()
-      words.forEach(word => {
-        let isMatch = false
-        
+      let isMatch = false
+      
+      // Check all search words against this chunk
+      for (const word of words) {
         if (matchMode.exact && chunkText === word) {
           isMatch = true
+          break // Stop checking other words once we have a match
         }
         if (matchMode.partial && chunkText.includes(word)) {
           isMatch = true
+          break // Stop checking other words once we have a match
         }
         if (matchMode.fuzzy) {
           // Simple fuzzy matching (Levenshtein distance)
           const distance = levenshteinDistance(chunkText, word)
           if (distance <= fuzzyDistance) {
             isMatch = true
+            break // Stop checking other words once we have a match
           }
         }
+      }
+      
+      // Only add this chunk once, even if multiple search terms match it
+      if (isMatch && !matchedChunkIndices.has(index)) {
+        matchedChunkIndices.add(index)
+        const start = chunk.timestamp ? chunk.timestamp[0] : 0
+        const end = chunk.timestamp ? chunk.timestamp[1] : 0
         
-        if (isMatch) {
-          // Check the actual structure of timestamps
-          const start = chunk.timestamp ? chunk.timestamp[0] : 0
-          const end = chunk.timestamp ? chunk.timestamp[1] : 0
-          
-          console.log(`Match found: "${chunk.text}" at [${start}, ${end}]`)
-          
-          matched.push({
-            word: chunk.text,
-            start: start,
-            end: end
-          })
-        }
-      })
+        console.log(`Match found: "${chunk.text}" at [${start}, ${end}]`)
+        
+        matched.push({
+          word: chunk.text,
+          start: start,
+          end: end
+        })
+      }
     })
 
     console.log('Total matches found:', matched.length)
