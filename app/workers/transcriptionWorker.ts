@@ -14,28 +14,16 @@ let isCancelled = false;
 let currentProcessingChunk = 0;
 let lastProgressUpdate = 0;
 
-// Check if WebGPU is available in the current environment
-async function checkWebGPUSupport(): Promise<boolean> {
-  // In Web Workers, we need to check if gpu is available on the global object
-  if (typeof (self as any).navigator === 'undefined' || !(self as any).navigator.gpu) {
-    console.log('[Worker] WebGPU not available - navigator.gpu not found');
-    return false;
-  }
-  
-  try {
-    const gpu = (self as any).navigator.gpu;
-    const adapter = await gpu.requestAdapter();
-    if (!adapter) {
-      console.log('[Worker] WebGPU not available - no adapter found');
-      return false;
-    }
-    console.log('[Worker] WebGPU is available and supported');
-    return true;
-  } catch (error) {
-    console.log('[Worker] WebGPU not available - error:', error);
-    return false;
-  }
-}
+
+// Global error handler for unhandled worker errors
+self.onerror = (error) => {
+  console.error('[Worker] Unhandled error:', error);
+  self.postMessage({
+    error: 'Worker initialization or execution error',
+    debug: `[Worker] Unhandled error: ${error.toString()}`,
+    errorType: 'WorkerError'
+  });
+};
 
 self.onmessage = async (event: MessageEvent) => {
   console.log('[Worker] Received message:', event.data);
@@ -145,17 +133,27 @@ self.onmessage = async (event: MessageEvent) => {
       const chunkLength = 15;
       const totalChunks = Math.ceil(durationSeconds / chunkLength);
       
-      // Check WebGPU support before loading the pipeline
-      const hasWebGPU = await checkWebGPUSupport();
-      const device = hasWebGPU ? 'webgpu' : 'wasm';
+      // Model-specific optimizations
+      const isBaseModel = model && model.includes('base');
+      const isSmallModel = model && model.includes('small');
+      const isTinyModel = model && model.includes('tiny');
+      
+      // Use WASM for all models for maximum reliability
+      const device = 'wasm';
+      const dtype = 'q8';
       
       self.postMessage({ 
-        debug: `[Worker] Using ${device.toUpperCase()} backend for transcription`,
+        debug: `[Worker] Using WASM backend for all models (reliable and universal compatibility)`
+      });
+      
+      
+      self.postMessage({ 
+        debug: `[Worker] Using ${device.toUpperCase()} backend for transcription with dtype: ${dtype}`,
         progress: 25,
         status: `Initializing ${device.toUpperCase()} backend...`
       });
       
-      // Load the pipeline with timeout protection
+      // Load the pipeline with WASM backend
       let pipelineLoaded = false;
       const pipelineTimeout = setTimeout(() => {
         if (!pipelineLoaded) {
@@ -163,40 +161,20 @@ self.onmessage = async (event: MessageEvent) => {
         }
       }, 30000);
       
-      let lastChunkUpdate = 0;
       const transcriber = await pipeline(
         "automatic-speech-recognition",
         model || "Xenova/whisper-tiny.en",
         {
-          device: device,  // Use WebGPU if available, WASM otherwise
-          dtype: hasWebGPU ? 'fp16' : 'q8',  // Use fp16 for WebGPU, q8 for WASM
+          device: device,
+          dtype: dtype,
           progress_callback: (progress: any) => {
             if (progress && progress.progress) {
-              // During model loading, simulate chunk progress for long files
-              if (durationSeconds > 30 && progress.progress > 0.5) {
-                const simulatedChunk = Math.min(Math.floor(progress.progress * 2), totalChunks - 1);
-                if (simulatedChunk > lastChunkUpdate) {
-                  lastChunkUpdate = simulatedChunk;
-                  self.postMessage({
-                    type: 'progress',
-                    progress: {
-                      currentChunk: simulatedChunk,
-                      totalChunks: totalChunks,
-                      overallProgress: 20 + (progress.progress * 30),
-                      estimatedTimeRemaining: Math.round((totalChunks - simulatedChunk) * 10),
-                      status: `Loading model and preparing chunk ${simulatedChunk + 1} of ${totalChunks}...`,
-                      chunksCompleted: simulatedChunk,
-                      memoryUsageMB: 0
-                    }
-                  });
-                }
-              } else {
-                self.postMessage({
-                  progress: 20 + (progress.progress * 0.3), // 20-50% for model loading
-                  status: `Loading model... ${Math.round(progress.progress * 100)}%`,
-                  debug: `[Worker] Model loading progress: ${progress.progress}`
-                });
-              }
+              const percentage = Math.min(Math.round(progress.progress * 100), 100);
+              self.postMessage({
+                progress: 20 + (progress.progress * 30),
+                status: `Loading model... ${percentage}%`,
+                debug: `[Worker] Model loading progress: ${progress.progress}`
+              });
             }
           }
         }
@@ -222,37 +200,25 @@ self.onmessage = async (event: MessageEvent) => {
       const startTime = Date.now();
       lastProgressUpdate = startTime;
       
-      // Always send chunk information for files > 30s
-      if (durationSeconds > 30) {
-        console.log(`[Worker] File duration ${durationSeconds}s will be processed in ${totalChunks} chunks`);
-        self.postMessage({
-          type: 'progress',
-          progress: {
-            currentChunk: 0,
-            totalChunks: totalChunks,
-            overallProgress: 55,
-            estimatedTimeRemaining: Math.round(durationSeconds * 0.5), // Rough estimate
-            status: `Starting to process ${totalChunks} chunks (${chunkLength}s each)...`,
-            chunksCompleted: 0,
-            memoryUsageMB: 0
-          }
-        });
-        
-        // We'll track progress through the pipeline callbacks instead of setInterval
-        // since setInterval doesn't work while the transcription is blocking the thread
-      } else {
-        self.postMessage({ 
-          progress: 60,
-          status: `Processing audio...`
-        });
-      }
+      // Simple processing message without chunking details
+      self.postMessage({ 
+        progress: 60,
+        status: `Processing audio...`
+      });
       
       // Transcribe the audio using Float32Array directly
-      // For English-only models, don't specify language or task
+      // Use 30-second chunks for WASM backend
       const transcriptionOptions: any = {
-        chunk_length_s: 15, // Match the display chunk length
-        stride_length_s: 3, // Proportionally reduced overlap
-        return_timestamps: "word"
+        chunk_length_s: 30, // 30s chunks for WASM
+        stride_length_s: 5, // Standard overlap  
+        return_timestamps: true, // Required for word-level timestamps
+        // Increase token limits for Base model to prevent truncation
+        max_new_tokens: isBaseModel ? 512 : 448, // More tokens for Base model
+        // Add sampling parameters for better quality
+        temperature: 0.0, // Deterministic output
+        compression_ratio_threshold: 2.4, // Standard threshold
+        logprob_threshold: -1.0, // Standard threshold
+        no_speech_threshold: 0.6, // Standard threshold
       };
       
       // Only add language/task for multilingual models
@@ -261,23 +227,7 @@ self.onmessage = async (event: MessageEvent) => {
         transcriptionOptions.task = "transcribe";
       }
       
-      // For long files, send periodic estimated progress updates
-      // Since the transcription blocks, we'll send updates before it starts
-      if (durationSeconds > 30) {
-        // Send a message that we're starting chunk processing
-        self.postMessage({
-          type: 'progress',
-          progress: {
-            currentChunk: 0,
-            totalChunks: totalChunks,
-            overallProgress: 60,
-            estimatedTimeRemaining: Math.round(durationSeconds * 0.7),
-            status: `Processing audio in ${totalChunks} chunks (this may take a while)...`,
-            chunksCompleted: 0,
-            memoryUsageMB: 0
-          }
-        });
-      }
+      // Remove chunking messages - it's handled transparently now
       
       console.log(`[Worker] Starting transcription of ${durationSeconds}s audio with ${device.toUpperCase()}...`);
       const transcriptionStart = Date.now();
@@ -290,27 +240,26 @@ self.onmessage = async (event: MessageEvent) => {
       // Log performance metrics
       const throughput = durationSeconds / transcriptionTime;
       console.log(`[Worker] Performance: ${throughput.toFixed(2)}x real-time (${device.toUpperCase()})`);
+      console.log(`[Worker] Used chunk_length_s: ${transcriptionOptions.chunk_length_s}s`);
       
-      // Send completion message for chunked files
-      if (durationSeconds > 30) {
-        self.postMessage({
-          type: 'progress',
-          progress: {
-            currentChunk: totalChunks - 1,
-            totalChunks: totalChunks,
-            overallProgress: 85,
-            estimatedTimeRemaining: 0,
-            status: `Completed processing all ${totalChunks} chunks`,
-            chunksCompleted: totalChunks,
-            memoryUsageMB: 0
-          }
-        });
-      }
+      // Remove chunking completion message
       
       self.postMessage({ progress: 90, status: "Finalizing transcription..." });
       
+      // Log the raw result structure for debugging
+      self.postMessage({ 
+        debug: `[Worker] Result type: ${typeof result}, isArray: ${Array.isArray(result)}, keys: ${result ? Object.keys(result).join(', ') : 'null'}`
+      });
+      
       // Handle both single result and array of results
       const finalResult = Array.isArray(result) ? result[0] : result;
+      
+      // Log the finalResult structure
+      if (finalResult) {
+        self.postMessage({ 
+          debug: `[Worker] Final result - text length: ${finalResult.text?.length || 0}, chunks: ${finalResult.chunks?.length || 0}`
+        });
+      }
       
       // Format the result
       const formattedResult = {
@@ -326,9 +275,11 @@ self.onmessage = async (event: MessageEvent) => {
       });
     }
   } catch (error: any) {
+    console.error('[Worker] Error occurred:', error);
     self.postMessage({
-      error: error.message,
-      debug: `[Worker] Error: ${error.stack}`
+      error: error?.message || 'Unknown worker error',
+      debug: `[Worker] Error: ${error?.stack || error?.toString() || 'No error details available'}`,
+      errorType: error?.name || 'UnknownError'
     });
   }
 };

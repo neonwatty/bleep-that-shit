@@ -5,7 +5,7 @@ import { useDropzone } from 'react-dropzone'
 import dynamic from 'next/dynamic'
 import { decodeAudioToMono16kHzPCM } from '@/lib/utils/audioDecode'
 import { applyBleeps, applyBleepsToVideo } from '@/lib/utils/audioProcessor'
-import { DEFAULT_CHUNKING_CONFIG, ChunkingConfig, TranscriptionProgress } from '@/lib/types/chunking'
+import { TranscriptionProgress } from '@/lib/types/chunking'
 import { estimateMemoryUsage, formatTime } from '@/lib/utils/audioChunking'
 import 'plyr-react/plyr.css'
 
@@ -44,12 +44,6 @@ export default function BleepPage() {
   const [bleepSound, setBleepSound] = useState('bleep')
   const [censoredAudioUrl, setCensoredAudioUrl] = useState<string | null>(null)
   const [showFileWarning, setShowFileWarning] = useState(false)
-  const [useChunking, setUseChunking] = useState(true)
-  const [chunkingConfig, setChunkingConfig] = useState<Partial<ChunkingConfig>>({
-    chunkLengthSeconds: 30,
-    overlapSeconds: 5,
-    enableProgressiveResults: true
-  })
   const [transcriptionProgress, setTranscriptionProgress] = useState<TranscriptionProgress | null>(null)
   const [isCancelling, setIsCancelling] = useState(false)
   const [backendType, setBackendType] = useState<string>('')
@@ -85,9 +79,7 @@ export default function BleepPage() {
     try {
       // Initialize worker using webpack - use chunked worker for files > 30 seconds
       const fileDurationSeconds = (file.size * 8) / (128 * 1000); // Convert bytes to bits, then divide by 128kbps
-      const shouldUseChunking = useChunking && fileDurationSeconds > 30;
       console.log('[Main] File size:', file.size, 'bytes, estimated duration:', fileDurationSeconds, 'seconds');
-      console.log('[Main] Should use chunking:', shouldUseChunking);
       
       if (!workerRef.current) {
         console.log('[Main] Creating new webpack worker')
@@ -95,8 +87,7 @@ export default function BleepPage() {
         try {
           // Use webpack worker syntax with TypeScript file
           // Webpack will handle the module bundling
-          console.log('[Main] Using chunking:', shouldUseChunking);
-          
+            
           workerRef.current = new Worker(
             new URL('../workers/transcriptionWorker.ts', import.meta.url),
             { type: 'module' }
@@ -104,12 +95,9 @@ export default function BleepPage() {
           console.log('[Main] Worker created successfully');
           
           // Initialize chunked worker if needed
-          if (shouldUseChunking) {
-            workerRef.current.postMessage({
-              type: 'initialize',
-              config: chunkingConfig
-            });
-          }
+          workerRef.current.postMessage({
+            type: 'initialize'
+          });
         } catch (workerError) {
           console.error('[Main] Failed to create worker:', workerError);
           throw new Error(`Failed to create worker: ${workerError instanceof Error ? workerError.message : 'Unknown error'}`);
@@ -151,10 +139,8 @@ export default function BleepPage() {
         
         if (debug) {
           console.log(debug)
-          // Capture backend type from debug messages
-          if (debug.includes('Using WEBGPU backend')) {
-            setBackendType('WebGPU')
-          } else if (debug.includes('Using WASM backend')) {
+          // Set backend type to WASM (only backend we use now)
+          if (debug.includes('Using WASM backend')) {
             setBackendType('WASM')
           }
         }
@@ -255,28 +241,14 @@ export default function BleepPage() {
           
           console.log('[Main] Sending to worker - type: transcribe, audioData length:', audioCopy.length, 'model:', model, 'language:', language)
           
-          // Send decoded audio to worker with transfer
-          const shouldUseChunking = useChunking && audioCopy.length / 16000 > 60;
-          
-          if (shouldUseChunking) {
-            // Use chunked processing for long files
-            worker.postMessage({
-              type: 'processAudio',
-              audioData: audioCopy,
-              model,
-              language,
-              config: chunkingConfig
-            }, [audioCopy.buffer]);
-          } else {
-            // Use standard processing for short files
-            worker.postMessage({
-              type: 'transcribe',
-              audioData: audioCopy,
-              fileType: file.type,
-              model,
-              language
-            }, [audioCopy.buffer]);
-          }
+          // Send decoded audio to worker (chunking handled automatically)
+          worker.postMessage({
+            type: 'transcribe',
+            audioData: audioCopy,
+            fileType: file.type,
+            model,
+            language
+          }, [audioCopy.buffer]);
           
           console.log('[Main] Message sent to worker')
         } catch (decodeError) {
@@ -351,28 +323,33 @@ export default function BleepPage() {
 
     transcriptionResult.chunks.forEach((chunk, index) => {
       const chunkText = chunk.text.toLowerCase().trim()
-      // Remove common punctuation for exact matching
-      const chunkTextClean = chunkText.replace(/[.,!?;:'"]/g, '')
+      // Remove common punctuation for clean comparison
+      const chunkTextClean = chunkText.replace(/[.,!?;:'"]/g, '').trim()
       let isMatch = false
       
       // Check all search words against this chunk
       for (const word of words) {
+        // Clean the search word too for consistent comparison
+        const wordClean = word.replace(/[.,!?;:'"]/g, '').trim()
+        
         if (matchMode.exact) {
-          // Try both with and without punctuation
-          if (chunkText === word || chunkTextClean === word) {
-            console.log(`Exact match: "${chunk.text}" matches "${word}"`)
+          // Exact match: compare cleaned versions
+          if (chunkTextClean === wordClean) {
+            console.log(`Exact match: "${chunk.text}" (cleaned: "${chunkTextClean}") matches "${word}" (cleaned: "${wordClean}")`)
             isMatch = true
             break
           }
         }
-        if (matchMode.partial && chunkText.includes(word)) {
+        if (matchMode.partial && chunkTextClean.includes(wordClean)) {
+          console.log(`Partial match: "${chunk.text}" (cleaned: "${chunkTextClean}") contains "${word}" (cleaned: "${wordClean}")`)
           isMatch = true
           break // Stop checking other words once we have a match
         }
         if (matchMode.fuzzy) {
-          // Simple fuzzy matching (Levenshtein distance)
-          const distance = levenshteinDistance(chunkText, word)
+          // Simple fuzzy matching (Levenshtein distance) - use cleaned text
+          const distance = levenshteinDistance(chunkTextClean, wordClean)
           if (distance <= fuzzyDistance) {
+            console.log(`Fuzzy match: "${chunk.text}" (cleaned: "${chunkTextClean}") fuzzy matches "${word}" (cleaned: "${wordClean}") with distance ${distance}`)
             isMatch = true
             break // Stop checking other words once we have a match
           }
@@ -605,30 +582,6 @@ export default function BleepPage() {
           </div>
         </div>
         
-        {/* Advanced Settings for Long Files */}
-        {file && (
-          <div className="mt-4 p-4 bg-gray-50 rounded">
-            <h3 className="text-sm font-semibold mb-2">Advanced Settings</h3>
-            <div className="flex items-center mb-2">
-              <input
-                type="checkbox"
-                id="useChunking"
-                checked={useChunking}
-                onChange={(e) => setUseChunking(e.target.checked)}
-                className="mr-2"
-              />
-              <label htmlFor="useChunking" className="text-sm">
-                Enable chunking for long files (recommended for files &gt; 5 minutes)
-              </label>
-            </div>
-            {useChunking && (
-              <div className="ml-6 text-sm text-gray-600">
-                <p>Chunk size: {chunkingConfig.chunkLengthSeconds}s with {chunkingConfig.overlapSeconds}s overlap</p>
-                <p>Progressive results: {chunkingConfig.enableProgressiveResults ? 'Enabled' : 'Disabled'}</p>
-              </div>
-            )}
-          </div>
-        )}
       </section>
 
       {/* Step 3: Transcribe */}
@@ -670,50 +623,11 @@ export default function BleepPage() {
               {progressText}
               {backendType && (
                 <span className="ml-2 px-2 py-1 bg-gray-100 rounded text-xs font-mono">
-                  {backendType === 'WebGPU' ? '🚀 ' : ''}
                   {backendType}
                 </span>
               )}
             </p>
             
-            {/* Enhanced progress info for chunked processing */}
-            {transcriptionProgress && transcriptionProgress.totalChunks > 1 && (
-              <div className="mt-3 p-3 bg-blue-50 rounded text-sm">
-                <div className="space-y-2">
-                  <div className="font-semibold">
-                    Processing long file in {transcriptionProgress.totalChunks} chunks
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    Your {Math.round((transcriptionProgress.totalChunks * 15))} second file is being processed in {transcriptionProgress.totalChunks} chunks.
-                    This helps manage memory for long recordings.
-                  </div>
-                  {transcriptionProgress.status && (
-                    <div className="text-xs italic">
-                      {transcriptionProgress.status}
-                    </div>
-                  )}
-                  {transcriptionProgress.estimatedTimeRemaining > 0 && (
-                    <div className="text-xs">
-                      <span className="font-semibold">Estimated time:</span> {formatTime(transcriptionProgress.estimatedTimeRemaining)}
-                    </div>
-                  )}
-                  {transcriptionProgress.chunksCompleted === transcriptionProgress.totalChunks && (
-                    <div className="text-green-600 font-semibold">
-                      ✓ All {transcriptionProgress.totalChunks} chunks processed
-                    </div>
-                  )}
-                </div>
-                {transcriptionProgress.partialResult && (
-                  <div className="mt-2 pt-2 border-t border-blue-200">
-                    <p className="font-semibold mb-1">Partial transcription ({transcriptionProgress.partialResult.chunks.length} words):</p>
-                    <p className="text-xs text-gray-700 max-h-20 overflow-y-auto">
-                      {transcriptionProgress.partialResult.text.slice(0, 200)}
-                      {transcriptionProgress.partialResult.text.length > 200 && '...'}
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         )}
 
