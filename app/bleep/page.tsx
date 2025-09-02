@@ -52,6 +52,7 @@ export default function BleepPage() {
   })
   const [transcriptionProgress, setTranscriptionProgress] = useState<TranscriptionProgress | null>(null)
   const [isCancelling, setIsCancelling] = useState(false)
+  const [backendType, setBackendType] = useState<string>('')
   
   const workerRef = useRef<Worker | null>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
@@ -150,6 +151,12 @@ export default function BleepPage() {
         
         if (debug) {
           console.log(debug)
+          // Capture backend type from debug messages
+          if (debug.includes('Using WEBGPU backend')) {
+            setBackendType('WebGPU')
+          } else if (debug.includes('Using WASM backend')) {
+            setBackendType('WASM')
+          }
         }
         
         // Handle chunked worker responses
@@ -659,7 +666,15 @@ export default function BleepPage() {
                 style={{width: `${progress}%`}}
               ></div>
             </div>
-            <p className="mt-2 text-sm text-gray-600">{progressText}</p>
+            <p className="mt-2 text-sm text-gray-600">
+              {progressText}
+              {backendType && (
+                <span className="ml-2 px-2 py-1 bg-gray-100 rounded text-xs font-mono">
+                  {backendType === 'WebGPU' ? '🚀 ' : ''}
+                  {backendType}
+                </span>
+              )}
+            </p>
             
             {/* Enhanced progress info for chunked processing */}
             {transcriptionProgress && transcriptionProgress.totalChunks > 1 && (

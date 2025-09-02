@@ -14,6 +14,29 @@ let isCancelled = false;
 let currentProcessingChunk = 0;
 let lastProgressUpdate = 0;
 
+// Check if WebGPU is available in the current environment
+async function checkWebGPUSupport(): Promise<boolean> {
+  // In Web Workers, we need to check if gpu is available on the global object
+  if (typeof (self as any).navigator === 'undefined' || !(self as any).navigator.gpu) {
+    console.log('[Worker] WebGPU not available - navigator.gpu not found');
+    return false;
+  }
+  
+  try {
+    const gpu = (self as any).navigator.gpu;
+    const adapter = await gpu.requestAdapter();
+    if (!adapter) {
+      console.log('[Worker] WebGPU not available - no adapter found');
+      return false;
+    }
+    console.log('[Worker] WebGPU is available and supported');
+    return true;
+  } catch (error) {
+    console.log('[Worker] WebGPU not available - error:', error);
+    return false;
+  }
+}
+
 self.onmessage = async (event: MessageEvent) => {
   console.log('[Worker] Received message:', event.data);
   const { type, fileBuffer, audioData, fileType, model, language } = event.data;
@@ -117,6 +140,21 @@ self.onmessage = async (event: MessageEvent) => {
         status: "Loading model..." 
       });
       
+      // Calculate duration first (before creating pipeline)
+      const durationSeconds = audioData.length / 16000;
+      const chunkLength = 15;
+      const totalChunks = Math.ceil(durationSeconds / chunkLength);
+      
+      // Check WebGPU support before loading the pipeline
+      const hasWebGPU = await checkWebGPUSupport();
+      const device = hasWebGPU ? 'webgpu' : 'wasm';
+      
+      self.postMessage({ 
+        debug: `[Worker] Using ${device.toUpperCase()} backend for transcription`,
+        progress: 25,
+        status: `Initializing ${device.toUpperCase()} backend...`
+      });
+      
       // Load the pipeline with timeout protection
       let pipelineLoaded = false;
       const pipelineTimeout = setTimeout(() => {
@@ -130,6 +168,8 @@ self.onmessage = async (event: MessageEvent) => {
         "automatic-speech-recognition",
         model || "Xenova/whisper-tiny.en",
         {
+          device: device,  // Use WebGPU if available, WASM otherwise
+          dtype: hasWebGPU ? 'fp16' : 'q8',  // Use fp16 for WebGPU, q8 for WASM
           progress_callback: (progress: any) => {
             if (progress && progress.progress) {
               // During model loading, simulate chunk progress for long files
@@ -172,15 +212,12 @@ self.onmessage = async (event: MessageEvent) => {
         return;
       }
       
-      // Directly pass Float32Array to pipeline
-      const durationSeconds = audioData.length / 16000;
+      // Log audio duration
       self.postMessage({ 
         debug: `[Worker] Audio duration: ${durationSeconds.toFixed(2)} seconds`,
       });
       
-      // Calculate number of chunks for progress reporting
-      const chunkLength = 15; // Reduced to 15 seconds for better visibility
-      const totalChunks = Math.ceil(durationSeconds / chunkLength);
+      // Initialize processing variables
       currentProcessingChunk = 0;
       const startTime = Date.now();
       lastProgressUpdate = startTime;
@@ -242,13 +279,17 @@ self.onmessage = async (event: MessageEvent) => {
         });
       }
       
-      console.log(`[Worker] Starting transcription of ${durationSeconds}s audio...`);
+      console.log(`[Worker] Starting transcription of ${durationSeconds}s audio with ${device.toUpperCase()}...`);
       const transcriptionStart = Date.now();
       
       const result = await transcriber(audioData, transcriptionOptions);
       
       const transcriptionTime = (Date.now() - transcriptionStart) / 1000;
-      console.log(`[Worker] Transcription completed in ${transcriptionTime}s`);
+      console.log(`[Worker] Transcription completed in ${transcriptionTime}s using ${device.toUpperCase()}`);
+      
+      // Log performance metrics
+      const throughput = durationSeconds / transcriptionTime;
+      console.log(`[Worker] Performance: ${throughput.toFixed(2)}x real-time (${device.toUpperCase()})`);
       
       // Send completion message for chunked files
       if (durationSeconds > 30) {
