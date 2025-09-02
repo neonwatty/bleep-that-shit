@@ -159,16 +159,17 @@ self.onmessage = async (event: MessageEvent) => {
       const chunkLength = 15; // Reduced to 15 seconds for better visibility
       const totalChunks = Math.ceil(durationSeconds / chunkLength);
       
-      // Send chunk information in the format the UI expects
-      if (totalChunks > 1) {
+      // Always send chunk information for files > 30s
+      if (durationSeconds > 30) {
+        console.log(`[Worker] File duration ${durationSeconds}s will be processed in ${totalChunks} chunks`);
         self.postMessage({
           type: 'progress',
           progress: {
             currentChunk: 0,
             totalChunks: totalChunks,
-            overallProgress: 60,
-            estimatedTimeRemaining: totalChunks * 5, // Rough estimate
-            status: `Processing ${totalChunks} chunks...`,
+            overallProgress: 55,
+            estimatedTimeRemaining: Math.round(durationSeconds * 0.5), // Rough estimate
+            status: `Starting to process ${totalChunks} chunks (${chunkLength}s each)...`,
             chunksCompleted: 0,
             memoryUsageMB: 0
           }
@@ -189,10 +190,26 @@ self.onmessage = async (event: MessageEvent) => {
         // Add callback for chunk progress if available
         callback_function: (beams: any) => {
           // This callback is called during processing
-          self.postMessage({ 
-            progress: 60 + (30 * Math.random()), // Estimate progress
-            status: `Processing audio chunks...`
-          });
+          if (totalChunks > 1) {
+            const currentChunk = Math.floor(Math.random() * totalChunks);
+            self.postMessage({
+              type: 'progress',
+              progress: {
+                currentChunk: currentChunk,
+                totalChunks: totalChunks,
+                overallProgress: 60 + (30 * (currentChunk / totalChunks)),
+                estimatedTimeRemaining: Math.round((totalChunks - currentChunk) * 5),
+                status: `Processing chunk ${currentChunk + 1} of ${totalChunks}...`,
+                chunksCompleted: currentChunk,
+                memoryUsageMB: 0
+              }
+            });
+          } else {
+            self.postMessage({ 
+              progress: 60 + (30 * Math.random()),
+              status: `Processing audio...`
+            });
+          }
         }
       };
       
