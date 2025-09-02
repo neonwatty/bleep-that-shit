@@ -1,0 +1,1786 @@
+Navigating to http://localhost:3020/bleep...
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Page loaded
+Uploading file...
+File uploaded
+Starting transcription...
+[log] [Main] File size: 1546353 bytes, estimated duration: 96.6470625 seconds
+[log] [Main] Should use chunking: true
+[log] [Main] Creating new webpack worker
+[log] [Main] Using chunking: true
+[log] [Main] Worker created successfully
+Transcription started
+Observing for 30 seconds...
+[log] Decoded audio to Float32Array, length: 889789
+[log] [Main] Sending to worker - type: transcribe, audioData length: 889789 model: Xenova/whisper-tiny.en language: en
+[log] [Main] Message sent to worker
+[log] [Worker] Received message: {type: initialize, config: Object}
+[log] [Worker] Received message: {type: transcribe, audioData: Float32Array(889789), fileType: audio/mpeg, model: Xenova/whisper-tiny.en, language: en}
+[log] [Main] Received message from worker: {type: initialized, stats: Object}
+[log] [Main] Received message from worker: {debug: [Worker] Starting transcription with model: Xenova/whisper-tiny.en}
+[log] [Worker] Starting transcription with model: Xenova/whisper-tiny.en
+[log] [Main] Received message from worker: {debug: [Worker] Received audioData type: Float32Array, length: 889789}
+[log] [Worker] Received audioData type: Float32Array, length: 889789
+[log] [Main] Received message from worker: {debug: [Worker] Audio data received, length: 889789, progress: 20, status: Loading model...}
+[log] [Worker] Audio data received, length: 889789
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[warning] Unable to determine content-length from response headers. Will expand buffer when needed.
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[warning] Unable to determine content-length from response headers. Will expand buffer when needed.
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[warning] dtype not specified for "encoder_model". Using the default dtype (q8) for this device (wasm).
+[warning] dtype not specified for "decoder_model_merged". Using the default dtype (q8) for this device (wasm).
+[warning] Unable to determine content-length from response headers. Will expand buffer when needed.
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[warning] Unable to determine content-length from response headers. Will expand buffer when needed.
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 20.015345921757994, status: Loading model... 5%, debug: [Worker] Model loading progress: 0.051153072526647414}
+[log] [Worker] Model loading progress: 0.051153072526647414
+[log] [Main] Received message from worker: {progress: 20.031324503988007, status: Loading model... 10%, debug: [Worker] Model loading progress: 0.10441501329335509}
+[log] [Worker] Model loading progress: 0.10441501329335509
+[log] [Main] Received message from worker: {progress: 20.04730308621802, status: Loading model... 16%, debug: [Worker] Model loading progress: 0.1576769540600628}
+[log] [Worker] Model loading progress: 0.1576769540600628
+[log] [Main] Received message from worker: {progress: 20.06234341734678, status: Loading model... 21%, debug: [Worker] Model loading progress: 0.20781139115594033}
+[log] [Worker] Model loading progress: 0.20781139115594033
+[log] [Main] Received message from worker: {progress: 20.078321999576794, status: Loading model... 26%, debug: [Worker] Model loading progress: 0.261073331922648}
+[log] [Worker] Model loading progress: 0.261073331922648
+[log] [Main] Received message from worker: {progress: 20.12632804187483, status: Loading model... 42%, debug: [Worker] Model loading progress: 0.4210934729161111}
+[log] [Worker] Model loading progress: 0.4210934729161111
+[log] [Main] Received message from worker: {progress: 20.142306624104847, status: Loading model... 47%, debug: [Worker] Model loading progress: 0.4743554136828188}
+[log] [Worker] Model loading progress: 0.4743554136828188
+[log] [Main] Received message from worker: {progress: 20.15828520633486, status: Loading model... 53%, debug: [Worker] Model loading progress: 0.5276173544495265}
+[log] [Worker] Model loading progress: 0.5276173544495265
+[log] [Main] Received message from worker: {progress: 20.174263788564872, status: Loading model... 58%, debug: [Worker] Model loading progress: 0.5808792952162343}
+[log] [Worker] Model loading progress: 0.5808792952162343
+[log] [Main] Received message from worker: {progress: 20.190242370794884, status: Loading model... 63%, debug: [Worker] Model loading progress: 0.6341412359829418}
+[log] [Worker] Model loading progress: 0.6341412359829418
+[log] [Main] Received message from worker: {progress: 20.206220953024896, status: Loading model... 69%, debug: [Worker] Model loading progress: 0.6874031767496496}
+[log] [Worker] Model loading progress: 0.6874031767496496
+[log] [Main] Received message from worker: {progress: 20.22219953525491, status: Loading model... 74%, debug: [Worker] Model loading progress: 0.7406651175163572}
+[log] [Worker] Model loading progress: 0.7406651175163572
+[log] [Main] Received message from worker: {progress: 20.23817811748492, status: Loading model... 79%, debug: [Worker] Model loading progress: 0.793927058283065}
+[log] [Worker] Model loading progress: 0.793927058283065
+[log] [Main] Received message from worker: {progress: 20.25121990542507, status: Loading model... 84%, debug: [Worker] Model loading progress: 0.8373996847502335}
+[log] [Worker] Model loading progress: 0.8373996847502335
+[log] [Main] Received message from worker: {progress: 20.267198487655083, status: Loading model... 89%, debug: [Worker] Model loading progress: 0.8906616255169413}
+[log] [Worker] Model loading progress: 0.8906616255169413
+[log] [Main] Received message from worker: {progress: 20.283177069885095, status: Loading model... 94%, debug: [Worker] Model loading progress: 0.9439235662836489}
+[log] [Worker] Model loading progress: 0.9439235662836489
+[log] [Main] Received message from worker: {progress: 20.299155652115108, status: Loading model... 100%, debug: [Worker] Model loading progress: 0.9971855070503567}
+[log] [Worker] Model loading progress: 0.9971855070503567
+[log] [Main] Received message from worker: {progress: 20.31513423434512, status: Loading model... 105%, debug: [Worker] Model loading progress: 1.0504474478170645}
+[log] [Worker] Model loading progress: 1.0504474478170645
+[log] [Main] Received message from worker: {progress: 20.331112816575132, status: Loading model... 110%, debug: [Worker] Model loading progress: 1.103709388583772}
+[log] [Worker] Model loading progress: 1.103709388583772
+[log] [Main] Received message from worker: {progress: 20.347091398805144, status: Loading model... 116%, debug: [Worker] Model loading progress: 1.1569713293504795}
+[log] [Worker] Model loading progress: 1.1569713293504795
+[log] [Main] Received message from worker: {progress: 20.363069981035157, status: Loading model... 121%, debug: [Worker] Model loading progress: 1.2102332701171872}
+[log] [Worker] Model loading progress: 1.2102332701171872
+[log] [Main] Received message from worker: {progress: 20.37904856326517, status: Loading model... 126%, debug: [Worker] Model loading progress: 1.263495210883895}
+[log] [Worker] Model loading progress: 1.263495210883895
+[log] [Main] Received message from worker: {progress: 20.39502714549518, status: Loading model... 132%, debug: [Worker] Model loading progress: 1.3167571516506027}
+[log] [Worker] Model loading progress: 1.3167571516506027
+[log] [Main] Received message from worker: {progress: 20.411005727725193, status: Loading model... 137%, debug: [Worker] Model loading progress: 1.3700190924173103}
+[log] [Worker] Model loading progress: 1.3700190924173103
+[log] [Main] Received message from worker: {progress: 20.426984309955206, status: Loading model... 142%, debug: [Worker] Model loading progress: 1.423281033184018}
+[log] [Worker] Model loading progress: 1.423281033184018
+[log] [Main] Received message from worker: {progress: 20.442962892185218, status: Loading model... 148%, debug: [Worker] Model loading progress: 1.4765429739507256}
+[log] [Worker] Model loading progress: 1.4765429739507256
+[log] [Main] Received message from worker: {progress: 20.45894147441523, status: Loading model... 153%, debug: [Worker] Model loading progress: 1.5298049147174335}
+[log] [Worker] Model loading progress: 1.5298049147174335
+[log] [Main] Received message from worker: {progress: 20.474920056645242, status: Loading model... 158%, debug: [Worker] Model loading progress: 1.5830668554841412}
+[log] [Worker] Model loading progress: 1.5830668554841412
+[log] [Main] Received message from worker: {progress: 20.490898638875255, status: Loading model... 164%, debug: [Worker] Model loading progress: 1.6363287962508486}
+[log] [Worker] Model loading progress: 1.6363287962508486
+[log] [Main] Received message from worker: {progress: 20.507158403537275, status: Loading model... 169%, debug: [Worker] Model loading progress: 1.6905280117909167}
+[log] [Worker] Model loading progress: 1.6905280117909167
+[log] [Main] Received message from worker: {progress: 20.523136985767287, status: Loading model... 174%, debug: [Worker] Model loading progress: 1.7437899525576241}
+[log] [Worker] Model loading progress: 1.7437899525576241
+[log] [Main] Received message from worker: {progress: 20.5391155679973, status: Loading model... 180%, debug: [Worker] Model loading progress: 1.797051893324332}
+[log] [Worker] Model loading progress: 1.797051893324332
+[log] [Main] Received message from worker: {progress: 20.555094150227312, status: Loading model... 185%, debug: [Worker] Model loading progress: 1.8503138340910397}
+[log] [Worker] Model loading progress: 1.8503138340910397
+[log] [Main] Received message from worker: {progress: 20.571072732457324, status: Loading model... 190%, debug: [Worker] Model loading progress: 1.9035757748577475}
+[log] [Worker] Model loading progress: 1.9035757748577475
+[log] [Main] Received message from worker: {progress: 20.587051314687336, status: Loading model... 196%, debug: [Worker] Model loading progress: 1.956837715624455}
+[log] [Worker] Model loading progress: 1.956837715624455
+[log] [Main] Received message from worker: {progress: 20.60302989691735, status: Loading model... 201%, debug: [Worker] Model loading progress: 2.010099656391163}
+[log] [Worker] Model loading progress: 2.010099656391163
+[log] [Main] Received message from worker: {progress: 20.634987061377373, status: Loading model... 212%, debug: [Worker] Model loading progress: 2.1166235379245784}
+[log] [Worker] Model loading progress: 2.1166235379245784
+[log] [Main] Received message from worker: {progress: 20.650965643607385, status: Loading model... 217%, debug: [Worker] Model loading progress: 2.1698854786912856}
+[log] [Worker] Model loading progress: 2.1698854786912856
+[log] [Main] Received message from worker: {progress: 20.666944225837398, status: Loading model... 222%, debug: [Worker] Model loading progress: 2.2231474194579937}
+[log] [Worker] Model loading progress: 2.2231474194579937
+[log] [Main] Received message from worker: {progress: 20.68292280806741, status: Loading model... 228%, debug: [Worker] Model loading progress: 2.2764093602247013}
+[log] [Worker] Model loading progress: 2.2764093602247013
+[log] [Main] Received message from worker: {progress: 20.698901390297422, status: Loading model... 233%, debug: [Worker] Model loading progress: 2.329671300991409}
+[log] [Worker] Model loading progress: 2.329671300991409
+[log] [Main] Received message from worker: {progress: 20.714879972527434, status: Loading model... 238%, debug: [Worker] Model loading progress: 2.3829332417581166}
+[log] [Worker] Model loading progress: 2.3829332417581166
+[log] [Main] Received message from worker: {progress: 20.730858554757447, status: Loading model... 244%, debug: [Worker] Model loading progress: 2.4361951825248243}
+[log] [Worker] Model loading progress: 2.4361951825248243
+[log] [Main] Received message from worker: {progress: 20.74683713698746, status: Loading model... 249%, debug: [Worker] Model loading progress: 2.489457123291532}
+[log] [Worker] Model loading progress: 2.489457123291532
+[log] [Main] Received message from worker: {progress: 20.763057848533922, status: Loading model... 254%, debug: [Worker] Model loading progress: 2.543526161779744}
+[log] [Worker] Model loading progress: 2.543526161779744
+[log] [Main] Received message from worker: {progress: 20.779036430763934, status: Loading model... 260%, debug: [Worker] Model loading progress: 2.596788102546452}
+[log] [Worker] Model loading progress: 2.596788102546452
+[log] [Main] Received message from worker: {progress: 20.795015012993947, status: Loading model... 265%, debug: [Worker] Model loading progress: 2.6500500433131595}
+[log] [Worker] Model loading progress: 2.6500500433131595
+[log] [Main] Received message from worker: {progress: 20.81099359522396, status: Loading model... 270%, debug: [Worker] Model loading progress: 2.703311984079867}
+[log] [Worker] Model loading progress: 2.703311984079867
+[log] [Main] Received message from worker: {progress: 20.82697217745397, status: Loading model... 276%, debug: [Worker] Model loading progress: 2.756573924846575}
+[log] [Worker] Model loading progress: 2.756573924846575
+[log] [Main] Received message from worker: {progress: 20.842950759683983, status: Loading model... 281%, debug: [Worker] Model loading progress: 2.8098358656132825}
+[log] [Worker] Model loading progress: 2.8098358656132825
+[log] [Main] Received message from worker: {progress: 20.858929341913996, status: Loading model... 286%, debug: [Worker] Model loading progress: 2.8630978063799906}
+[log] [Worker] Model loading progress: 2.8630978063799906
+[log] [Main] Received message from worker: {progress: 20.874907924144008, status: Loading model... 292%, debug: [Worker] Model loading progress: 2.9163597471466978}
+[log] [Worker] Model loading progress: 2.9163597471466978
+[log] [Main] Received message from worker: {progress: 20.89088650637402, status: Loading model... 297%, debug: [Worker] Model loading progress: 2.969621687913406}
+[log] [Worker] Model loading progress: 2.969621687913406
+[log] [Main] Received message from worker: {progress: 20.906865088604032, status: Loading model... 302%, debug: [Worker] Model loading progress: 3.0228836286801135}
+[log] [Worker] Model loading progress: 3.0228836286801135
+[log] [Main] Received message from worker: {progress: 20.922843670834045, status: Loading model... 308%, debug: [Worker] Model loading progress: 3.076145569446821}
+[log] [Worker] Model loading progress: 3.076145569446821
+[log] [Main] Received message from worker: {progress: 20.93882225306406, status: Loading model... 313%, debug: [Worker] Model loading progress: 3.1294075102135293}
+[log] [Worker] Model loading progress: 3.1294075102135293
+[log] [Main] Received message from worker: {progress: 20.954800835294073, status: Loading model... 318%, debug: [Worker] Model loading progress: 3.1826694509802365}
+[log] [Worker] Model loading progress: 3.1826694509802365
+[log] [Main] Received message from worker: {progress: 20.970779417524085, status: Loading model... 324%, debug: [Worker] Model loading progress: 3.235931391746944}
+[log] [Worker] Model loading progress: 3.235931391746944
+[log] [Main] Received message from worker: {progress: 20.986757999754097, status: Loading model... 329%, debug: [Worker] Model loading progress: 3.289193332513652}
+[log] [Worker] Model loading progress: 3.289193332513652
+[log] [Main] Received message from worker: {progress: 21.00273658198411, status: Loading model... 334%, debug: [Worker] Model loading progress: 3.3424552732803594}
+[log] [Worker] Model loading progress: 3.3424552732803594
+[log] [Main] Received message from worker: {progress: 21.01808445639788, status: Loading model... 339%, debug: [Worker] Model loading progress: 3.3936148546596}
+[log] [Worker] Model loading progress: 3.3936148546596
+[log] [Main] Received message from worker: {progress: 21.03406303862789, status: Loading model... 345%, debug: [Worker] Model loading progress: 3.4468767954263075}
+[log] [Worker] Model loading progress: 3.4468767954263075
+[log] [Main] Received message from worker: {progress: 21.050041620857904, status: Loading model... 350%, debug: [Worker] Model loading progress: 3.5001387361930147}
+[log] [Worker] Model loading progress: 3.5001387361930147
+[log] [Main] Received message from worker: {progress: 21.066020203087916, status: Loading model... 355%, debug: [Worker] Model loading progress: 3.553400676959723}
+[log] [Worker] Model loading progress: 3.553400676959723
+[log] [Main] Received message from worker: {progress: 21.08199878531793, status: Loading model... 361%, debug: [Worker] Model loading progress: 3.6066626177264305}
+[log] [Worker] Model loading progress: 3.6066626177264305
+[log] [Main] Received message from worker: {progress: 21.09797736754794, status: Loading model... 366%, debug: [Worker] Model loading progress: 3.659924558493138}
+[log] [Worker] Model loading progress: 3.659924558493138
+[log] [Main] Received message from worker: {progress: 21.113955949777953, status: Loading model... 371%, debug: [Worker] Model loading progress: 3.7131864992598453}
+[log] [Worker] Model loading progress: 3.7131864992598453
+[log] [Main] Received message from worker: {progress: 21.129934532007965, status: Loading model... 377%, debug: [Worker] Model loading progress: 3.7664484400265534}
+[log] [Worker] Model loading progress: 3.7664484400265534
+[log] [Main] Received message from worker: {progress: 21.193848860928014, status: Loading model... 398%, debug: [Worker] Model loading progress: 3.979496203093384}
+[log] [Worker] Model loading progress: 3.979496203093384
+[log] [Main] Received message from worker: {progress: 21.209827443158026, status: Loading model... 403%, debug: [Worker] Model loading progress: 4.032758143860092}
+[log] [Worker] Model loading progress: 4.032758143860092
+[log] [Main] Received message from worker: {progress: 21.22580602538804, status: Loading model... 409%, debug: [Worker] Model loading progress: 4.0860200846268}
+[log] [Worker] Model loading progress: 4.0860200846268
+[log] [Main] Received message from worker: {progress: 21.257763189848063, status: Loading model... 419%, debug: [Worker] Model loading progress: 4.192543966160215}
+[log] [Worker] Model loading progress: 4.192543966160215
+[log] [Main] Received message from worker: {progress: 21.271818406136912, status: Loading model... 424%, debug: [Worker] Model loading progress: 4.239394687123036}
+[log] [Worker] Model loading progress: 4.239394687123036
+[log] [Main] Received message from worker: {progress: 20.054302688823103, status: Loading model... 18%, debug: [Worker] Model loading progress: 0.18100896274367986}
+[log] [Worker] Model loading progress: 0.18100896274367986
+[log] [Main] Received message from worker: {progress: 20.102794957349264, status: Loading model... 34%, debug: [Worker] Model loading progress: 0.34264985783087715}
+[log] [Worker] Model loading progress: 0.34264985783087715
+[log] [Main] Received message from worker: {progress: 20.199779494401582, status: Loading model... 67%, debug: [Worker] Model loading progress: 0.6659316480052717}
+[log] [Worker] Model loading progress: 0.6659316480052717
+[log] [Main] Received message from worker: {progress: 20.24827176292774, status: Loading model... 83%, debug: [Worker] Model loading progress: 0.8275725430924691}
+[log] [Worker] Model loading progress: 0.8275725430924691
+[log] [Main] Received message from worker: {progress: 20.2967640314539, status: Loading model... 99%, debug: [Worker] Model loading progress: 0.9892134381796664}
+[log] [Worker] Model loading progress: 0.9892134381796664
+[log] [Main] Received message from worker: {progress: 20.345256299980058, status: Loading model... 115%, debug: [Worker] Model loading progress: 1.1508543332668637}
+[log] [Worker] Model loading progress: 1.1508543332668637
+[log] [Main] Received message from worker: {progress: 20.393721901610412, status: Loading model... 131%, debug: [Worker] Model loading progress: 1.3124063387013793}
+[log] [Worker] Model loading progress: 1.3124063387013793
+[log] [Main] Received message from worker: {progress: 20.403028648246163, status: Loading model... 134%, debug: [Worker] Model loading progress: 1.343428827487209}
+[log] [Worker] Model loading progress: 1.343428827487209
+[log] [Main] Received message from worker: {progress: 21.284730342467835, status: Loading model... 428%, debug: [Worker] Model loading progress: 4.282434474892784}
+[log] [Worker] Model loading progress: 4.282434474892784
+[log] [Main] Received message from worker: {progress: 21.300708924697847, status: Loading model... 434%, debug: [Worker] Model loading progress: 4.335696415659492}
+[log] [Worker] Model loading progress: 4.335696415659492
+[log] [Main] Received message from worker: {progress: 21.31668750692786, status: Loading model... 439%, debug: [Worker] Model loading progress: 4.3889583564262}
+[log] [Worker] Model loading progress: 4.3889583564262
+[log] [Main] Received message from worker: {progress: 21.348644671387884, status: Loading model... 450%, debug: [Worker] Model loading progress: 4.4954822379596155}
+[log] [Worker] Model loading progress: 4.4954822379596155
+[log] [Main] Received message from worker: {progress: 21.364623253617896, status: Loading model... 455%, debug: [Worker] Model loading progress: 4.548744178726323}
+[log] [Worker] Model loading progress: 4.548744178726323
+[log] [Main] Received message from worker: {progress: 21.38060183584791, status: Loading model... 460%, debug: [Worker] Model loading progress: 4.602006119493031}
+[log] [Worker] Model loading progress: 4.602006119493031
+[log] [Main] Received message from worker: {progress: 21.39658041807792, status: Loading model... 466%, debug: [Worker] Model loading progress: 4.655268060259738}
+[log] [Worker] Model loading progress: 4.655268060259738
+[log] [Main] Received message from worker: {progress: 21.412559000307933, status: Loading model... 471%, debug: [Worker] Model loading progress: 4.708530001026446}
+[log] [Worker] Model loading progress: 4.708530001026446
+[log] [Main] Received message from worker: {progress: 21.428537582537945, status: Loading model... 476%, debug: [Worker] Model loading progress: 4.761791941793154}
+[log] [Worker] Model loading progress: 4.761791941793154
+[log] [Main] Received message from worker: {progress: 21.444516164767958, status: Loading model... 482%, debug: [Worker] Model loading progress: 4.815053882559861}
+[log] [Worker] Model loading progress: 4.815053882559861
+[log] [Main] Received message from worker: {progress: 21.476473329227982, status: Loading model... 492%, debug: [Worker] Model loading progress: 4.921577764093277}
+[log] [Worker] Model loading progress: 4.921577764093277
+[log] [Main] Received message from worker: {progress: 21.492451911457994, status: Loading model... 497%, debug: [Worker] Model loading progress: 4.974839704859985}
+[log] [Worker] Model loading progress: 4.974839704859985
+[log] [Main] Received message from worker: {progress: 21.508430493688007, status: Loading model... 503%, debug: [Worker] Model loading progress: 5.028101645626693}
+[log] [Worker] Model loading progress: 5.028101645626693
+[log] [Main] Received message from worker: {progress: 21.52440907591802, status: Loading model... 508%, debug: [Worker] Model loading progress: 5.081363586393399}
+[log] [Worker] Model loading progress: 5.081363586393399
+[log] [Main] Received message from worker: {progress: 21.527756904249117, status: Loading model... 509%, debug: [Worker] Model loading progress: 5.092523014163719}
+[log] [Worker] Model loading progress: 5.092523014163719
+[log] [Main] Received message from worker: {progress: 20.489799764205383, status: Loading model... 163%, debug: [Worker] Model loading progress: 1.6326658806846046}
+[log] [Worker] Model loading progress: 1.6326658806846046
+[log] [Main] Received message from worker: {progress: 20.538265365835738, status: Loading model... 179%, debug: [Worker] Model loading progress: 1.79421788611912}
+[log] [Worker] Model loading progress: 1.79421788611912
+[log] [Main] Received message from worker: {progress: 20.586757634361895, status: Loading model... 196%, debug: [Worker] Model loading progress: 1.9558587812063175}
+[log] [Worker] Model loading progress: 1.9558587812063175
+[log] [Main] Received message from worker: {progress: 20.635196569096447, status: Loading model... 212%, debug: [Worker] Model loading progress: 2.1173218969881518}
+[log] [Worker] Model loading progress: 2.1173218969881518
+[log] [Main] Received message from worker: {progress: 20.683688837622604, status: Loading model... 228%, debug: [Worker] Model loading progress: 2.2789627920753492}
+[log] [Worker] Model loading progress: 2.2789627920753492
+[log] [Main] Received message from worker: {progress: 20.825221905610448, status: Loading model... 275%, debug: [Worker] Model loading progress: 2.7507396853681607}
+[log] [Worker] Model loading progress: 2.7507396853681607
+[log] [Main] Received message from worker: {progress: 20.922206442662766, status: Loading model... 307%, debug: [Worker] Model loading progress: 3.0740214755425552}
+[log] [Worker] Model loading progress: 3.0740214755425552
+[log] [Main] Received message from worker: {progress: 20.970698711188927, status: Loading model... 324%, debug: [Worker] Model loading progress: 3.2356623706297527}
+[log] [Worker] Model loading progress: 3.2356623706297527
+[log] [Main] Received message from worker: {progress: 21.019190979715084, status: Loading model... 340%, debug: [Worker] Model loading progress: 3.3973032657169497}
+[log] [Worker] Model loading progress: 3.3973032657169497
+[log] [Main] Received message from worker: {progress: 21.067683248241245, status: Loading model... 356%, debug: [Worker] Model loading progress: 3.558944160804147}
+[log] [Worker] Model loading progress: 3.558944160804147
+[log] [Main] Received message from worker: {progress: 21.116175516767402, status: Loading model... 372%, debug: [Worker] Model loading progress: 3.7205850558913443}
+[log] [Worker] Model loading progress: 3.7205850558913443
+[log] [Main] Received message from worker: {progress: 21.116548853308664, status: Loading model... 372%, debug: [Worker] Model loading progress: 3.7218295110288846}
+[log] [Worker] Model loading progress: 3.7218295110288846
+[log] [Main] Received message from worker: {progress: 21.543612469165126, status: Loading model... 515%, debug: [Worker] Model loading progress: 5.145374897217081}
+[log] [Worker] Model loading progress: 5.145374897217081
+[log] [Main] Received message from worker: {progress: 21.559591051395138, status: Loading model... 520%, debug: [Worker] Model loading progress: 5.198636837983789}
+[log] [Worker] Model loading progress: 5.198636837983789
+[log] [Main] Received message from worker: {progress: 21.591548215855163, status: Loading model... 531%, debug: [Worker] Model loading progress: 5.305160719517205}
+[log] [Worker] Model loading progress: 5.305160719517205
+[log] [Main] Received message from worker: {progress: 21.607526798085175, status: Loading model... 536%, debug: [Worker] Model loading progress: 5.358422660283912}
+[log] [Worker] Model loading progress: 5.358422660283912
+[log] [Main] Received message from worker: {progress: 21.623505380315187, status: Loading model... 541%, debug: [Worker] Model loading progress: 5.411684601050619}
+[log] [Worker] Model loading progress: 5.411684601050619
+[log] [Main] Received message from worker: {progress: 21.6394839625452, status: Loading model... 546%, debug: [Worker] Model loading progress: 5.464946541817327}
+[log] [Worker] Model loading progress: 5.464946541817327
+[log] [Main] Received message from worker: {progress: 21.671441127005224, status: Loading model... 557%, debug: [Worker] Model loading progress: 5.5714704233507435}
+[log] [Worker] Model loading progress: 5.5714704233507435
+[log] [Main] Received message from worker: {progress: 21.687419709235236, status: Loading model... 562%, debug: [Worker] Model loading progress: 5.624732364117451}
+[log] [Worker] Model loading progress: 5.624732364117451
+[log] [Main] Received message from worker: {progress: 21.70339829146525, status: Loading model... 568%, debug: [Worker] Model loading progress: 5.677994304884158}
+[log] [Worker] Model loading progress: 5.677994304884158
+[log] [Main] Received message from worker: {progress: 21.71937687369526, status: Loading model... 573%, debug: [Worker] Model loading progress: 5.731256245650866}
+[log] [Worker] Model loading progress: 5.731256245650866
+[log] [Main] Received message from worker: {progress: 21.735355455925273, status: Loading model... 578%, debug: [Worker] Model loading progress: 5.784518186417574}
+[log] [Worker] Model loading progress: 5.784518186417574
+[log] [Main] Received message from worker: {progress: 21.767312620385297, status: Loading model... 589%, debug: [Worker] Model loading progress: 5.891042067950989}
+[log] [Worker] Model loading progress: 5.891042067950989
+[log] [Main] Received message from worker: {progress: 21.78329120261531, status: Loading model... 594%, debug: [Worker] Model loading progress: 5.944304008717697}
+[log] [Worker] Model loading progress: 5.944304008717697
+[log] [Main] Received message from worker: {progress: 21.78369540236132, status: Loading model... 595%, debug: [Worker] Model loading progress: 5.945651341204402}
+[log] [Worker] Model loading progress: 5.945651341204402
+[log] [Main] Received message from worker: {progress: 21.16381444462782, status: Loading model... 388%, debug: [Worker] Model loading progress: 3.879381482092735}
+[log] [Worker] Model loading progress: 3.879381482092735
+[log] [Main] Received message from worker: {progress: 21.26079898168014, status: Loading model... 420%, debug: [Worker] Model loading progress: 4.20266327226713}
+[log] [Worker] Model loading progress: 4.20266327226713
+[log] [Main] Received message from worker: {progress: 21.309291250206297, status: Loading model... 436%, debug: [Worker] Model loading progress: 4.364304167354327}
+[log] [Worker] Model loading progress: 4.364304167354327
+[log] [Main] Received message from worker: {progress: 21.406275787258615, status: Loading model... 469%, debug: [Worker] Model loading progress: 4.6875859575287215}
+[log] [Worker] Model loading progress: 4.6875859575287215
+[log] [Main] Received message from worker: {progress: 21.503260324310936, status: Loading model... 501%, debug: [Worker] Model loading progress: 5.0108677477031165}
+[log] [Worker] Model loading progress: 5.0108677477031165
+[log] [Main] Received message from worker: {progress: 21.553459274168578, status: Loading model... 518%, debug: [Worker] Model loading progress: 5.1781975805619265}
+[log] [Worker] Model loading progress: 5.1781975805619265
+[log] [Main] Received message from worker: {progress: 21.698936079747057, status: Loading model... 566%, debug: [Worker] Model loading progress: 5.663120265823519}
+[log] [Worker] Model loading progress: 5.663120265823519
+[log] [Main] Received message from worker: {progress: 21.747428348273214, status: Loading model... 582%, debug: [Worker] Model loading progress: 5.8247611609107155}
+[log] [Worker] Model loading progress: 5.8247611609107155
+[log] [Main] Received message from worker: {progress: 21.844732888075185, status: Loading model... 615%, debug: [Worker] Model loading progress: 6.149109626917288}
+[log] [Worker] Model loading progress: 6.149109626917288
+[log] [Main] Received message from worker: {progress: 21.79956854117933, status: Loading model... 600%, debug: [Worker] Model loading progress: 5.9985618039311}
+[log] [Worker] Model loading progress: 5.9985618039311
+[log] [Main] Received message from worker: {progress: 21.815547123409342, status: Loading model... 605%, debug: [Worker] Model loading progress: 6.051823744697807}
+[log] [Worker] Model loading progress: 6.051823744697807
+[log] [Main] Received message from worker: {progress: 21.847504287869366, status: Loading model... 616%, debug: [Worker] Model loading progress: 6.1583476262312224}
+[log] [Worker] Model loading progress: 6.1583476262312224
+[log] [Main] Received message from worker: {progress: 21.86348287009938, status: Loading model... 621%, debug: [Worker] Model loading progress: 6.2116095669979305}
+[log] [Worker] Model loading progress: 6.2116095669979305
+[log] [Main] Received message from worker: {progress: 21.895440034559403, status: Loading model... 632%, debug: [Worker] Model loading progress: 6.318133448531346}
+[log] [Worker] Model loading progress: 6.318133448531346
+[log] [Main] Received message from worker: {progress: 21.927397199019428, status: Loading model... 642%, debug: [Worker] Model loading progress: 6.42465733006476}
+[log] [Worker] Model loading progress: 6.42465733006476
+[log] [Main] Received message from worker: {progress: 21.959354363479452, status: Loading model... 653%, debug: [Worker] Model loading progress: 6.531181211598176}
+[log] [Worker] Model loading progress: 6.531181211598176
+[log] [Main] Received message from worker: {progress: 21.991311527939477, status: Loading model... 664%, debug: [Worker] Model loading progress: 6.637705093131592}
+[log] [Worker] Model loading progress: 6.637705093131592
+[log] [Main] Received message from worker: {progress: 22.0232686923995, status: Loading model... 674%, debug: [Worker] Model loading progress: 6.744228974665008}
+[log] [Worker] Model loading progress: 6.744228974665008
+[log] [Main] Received message from worker: {progress: 22.039247274629513, status: Loading model... 680%, debug: [Worker] Model loading progress: 6.797490915431716}
+[log] [Worker] Model loading progress: 6.797490915431716
+[log] [Main] Received message from worker: {progress: 22.039633900473525, status: Loading model... 680%, debug: [Worker] Model loading progress: 6.798779668245085}
+[log] [Worker] Model loading progress: 6.798779668245085
+[log] [Main] Received message from worker: {progress: 21.89205181318595, status: Loading model... 631%, debug: [Worker] Model loading progress: 6.306839377286501}
+[log] [Worker] Model loading progress: 6.306839377286501
+[log] [Main] Received message from worker: {progress: 21.98903635023827, status: Loading model... 663%, debug: [Worker] Model loading progress: 6.630121167460895}
+[log] [Worker] Model loading progress: 6.630121167460895
+[log] [Main] Received message from worker: {progress: 22.134513155816748, status: Loading model... 712%, debug: [Worker] Model loading progress: 7.115043852722487}
+[log] [Worker] Model loading progress: 7.115043852722487
+[log] [Main] Received message from worker: {progress: 22.279989961395223, status: Loading model... 760%, debug: [Worker] Model loading progress: 7.599966537984079}
+[log] [Worker] Model loading progress: 7.599966537984079
+[log] [Main] Received message from worker: {progress: 22.378681179779026, status: Loading model... 793%, debug: [Worker] Model loading progress: 7.928937265930087}
+[log] [Worker] Model loading progress: 7.928937265930087
+[log] [Main] Received message from worker: {progress: 22.427173448305187, status: Loading model... 809%, debug: [Worker] Model loading progress: 8.090578161017286}
+[log] [Worker] Model loading progress: 8.090578161017286
+[log] [Main] Received message from worker: {progress: 22.572650253883662, status: Loading model... 858%, debug: [Worker] Model loading progress: 8.575500846278878}
+[log] [Worker] Model loading progress: 8.575500846278878
+[log] [Main] Received message from worker: {progress: 22.66963479093598, status: Loading model... 890%, debug: [Worker] Model loading progress: 8.898782636453271}
+[log] [Worker] Model loading progress: 8.898782636453271
+[log] [Main] Received message from worker: {progress: 22.81511159651446, status: Loading model... 938%, debug: [Worker] Model loading progress: 9.383705321714864}
+[log] [Worker] Model loading progress: 9.383705321714864
+[log] [Main] Received message from worker: {progress: 22.863603865040616, status: Loading model... 955%, debug: [Worker] Model loading progress: 9.54534621680206}
+[log] [Worker] Model loading progress: 9.54534621680206
+[log] [Main] Received message from worker: {progress: 22.04750798489764, status: Loading model... 683%, debug: [Worker] Model loading progress: 6.825026616325465}
+[log] [Worker] Model loading progress: 6.825026616325465
+[log] [Main] Received message from worker: {progress: 22.05538402197753, status: Loading model... 685%, debug: [Worker] Model loading progress: 6.8512800732584385}
+[log] [Worker] Model loading progress: 6.8512800732584385
+[log] [Main] Received message from worker: {progress: 22.961281741383853, status: Loading model... 987%, debug: [Worker] Model loading progress: 9.870939137946174}
+[log] [Worker] Model loading progress: 9.870939137946174
+[log] [Main] Received message from worker: {progress: 22.071362604207543, status: Loading model... 690%, debug: [Worker] Model loading progress: 6.904542014025146}
+[log] [Worker] Model loading progress: 6.904542014025146
+[log] [Main] Received message from worker: {progress: 22.11929835089758, status: Loading model... 706%, debug: [Worker] Model loading progress: 7.064327836325268}
+[log] [Worker] Model loading progress: 7.064327836325268
+[log] [Main] Received message from worker: {progress: 22.18321267981763, status: Loading model... 728%, debug: [Worker] Model loading progress: 7.2773755993921}
+[log] [Worker] Model loading progress: 7.2773755993921
+[log] [Main] Received message from worker: {progress: 22.231148426507666, status: Loading model... 744%, debug: [Worker] Model loading progress: 7.437161421692222}
+[log] [Worker] Model loading progress: 7.437161421692222
+[log] [Main] Received message from worker: {progress: 22.26310559096769, status: Loading model... 754%, debug: [Worker] Model loading progress: 7.5436853032256375}
+[log] [Worker] Model loading progress: 7.5436853032256375
+[log] [Main] Received message from worker: {progress: 22.295062755427715, status: Loading model... 765%, debug: [Worker] Model loading progress: 7.650209184759054}
+[log] [Worker] Model loading progress: 7.650209184759054
+[log] [Main] Received message from worker: {progress: 22.29557239858573, status: Loading model... 765%, debug: [Worker] Model loading progress: 7.651907995285769}
+[log] [Worker] Model loading progress: 7.651907995285769
+[log] [Main] Received message from worker: {progress: 23.106918548337156, status: Loading model... 1036%, debug: [Worker] Model loading progress: 10.356395161123853}
+[log] [Worker] Model loading progress: 10.356395161123853
+[log] [Main] Received message from worker: {progress: 23.203903085389474, status: Loading model... 1068%, debug: [Worker] Model loading progress: 10.679676951298248}
+[log] [Worker] Model loading progress: 10.679676951298248
+[log] [Main] Received message from worker: {progress: 23.349379890967953, status: Loading model... 1116%, debug: [Worker] Model loading progress: 11.16459963655984}
+[log] [Worker] Model loading progress: 11.16459963655984
+[log] [Main] Received message from worker: {progress: 23.39787215949411, status: Loading model... 1133%, debug: [Worker] Model loading progress: 11.326240531647038}
+[log] [Worker] Model loading progress: 11.326240531647038
+[log] [Main] Received message from worker: {progress: 23.54334896507259, status: Loading model... 1181%, debug: [Worker] Model loading progress: 11.81116321690863}
+[log] [Worker] Model loading progress: 11.81116321690863
+[log] [Main] Received message from worker: {progress: 23.671471547459223, status: Loading model... 1224%, debug: [Worker] Model loading progress: 12.238238491530742}
+[log] [Worker] Model loading progress: 12.238238491530742
+[log] [Main] Received message from worker: {progress: 22.343508145275766, status: Loading model... 781%, debug: [Worker] Model loading progress: 7.8116938175858905}
+[log] [Worker] Model loading progress: 7.8116938175858905
+[log] [Main] Received message from worker: {progress: 22.43937963865584, status: Loading model... 813%, debug: [Worker] Model loading progress: 8.131265462186137}
+[log] [Worker] Model loading progress: 8.131265462186137
+[log] [Main] Received message from worker: {progress: 22.5192725498059, status: Loading model... 840%, debug: [Worker] Model loading progress: 8.397575166019676}
+[log] [Worker] Model loading progress: 8.397575166019676
+[log] [Main] Received message from worker: {progress: 22.591457352272965, status: Loading model... 864%, debug: [Worker] Model loading progress: 8.63819117424322}
+[log] [Worker] Model loading progress: 8.63819117424322
+[log] [Main] Received message from worker: {progress: 22.59944664338797, status: Loading model... 866%, debug: [Worker] Model loading progress: 8.664822144626575}
+[log] [Worker] Model loading progress: 8.664822144626575
+[log] [Main] Received message from worker: {progress: 22.631403807847995, status: Loading model... 877%, debug: [Worker] Model loading progress: 8.771346026159991}
+[log] [Worker] Model loading progress: 8.771346026159991
+[log] [Main] Received message from worker: {progress: 22.711287932047057, status: Loading model... 904%, debug: [Worker] Model loading progress: 9.037626440156862}
+[log] [Worker] Model loading progress: 9.037626440156862
+[log] [Main] Received message from worker: {progress: 22.74324509650708, status: Loading model... 914%, debug: [Worker] Model loading progress: 9.144150321690276}
+[log] [Worker] Model loading progress: 9.144150321690276
+[log] [Main] Received message from worker: {progress: 22.80715942542713, status: Loading model... 936%, debug: [Worker] Model loading progress: 9.357198084757107}
+[log] [Worker] Model loading progress: 9.357198084757107
+[log] [Main] Received message from worker: {progress: 22.807449394810142, status: Loading model... 936%, debug: [Worker] Model loading progress: 9.358164649367135}
+[log] [Worker] Model loading progress: 9.358164649367135
+[log] [Main] Received message from worker: {progress: 23.76749607626258, status: Loading model... 1256%, debug: [Worker] Model loading progress: 12.558320254208605}
+[log] [Worker] Model loading progress: 12.558320254208605
+[log] [Main] Received message from worker: {progress: 23.864453946419097, status: Loading model... 1288%, debug: [Worker] Model loading progress: 12.881513154730317}
+[log] [Worker] Model loading progress: 12.881513154730317
+[log] [Main] Received message from worker: {progress: 23.96141181657561, status: Loading model... 1320%, debug: [Worker] Model loading progress: 13.20470605525203}
+[log] [Worker] Model loading progress: 13.20470605525203
+[log] [Main] Received message from worker: {progress: 24.009904085101766, status: Loading model... 1337%, debug: [Worker] Model loading progress: 13.366346950339228}
+[log] [Worker] Model loading progress: 13.366346950339228
+[log] [Main] Received message from worker: {progress: 24.22803929278207, status: Loading model... 1409%, debug: [Worker] Model loading progress: 14.093464309273571}
+[log] [Worker] Model loading progress: 14.093464309273571
+[log] [Main] Received message from worker: {progress: 24.252285427045152, status: Loading model... 1417%, debug: [Worker] Model loading progress: 14.17428475681717}
+[log] [Worker] Model loading progress: 14.17428475681717
+[log] [Main] Received message from worker: {progress: 24.34921663030586, status: Loading model... 1450%, debug: [Worker] Model loading progress: 14.4973887676862}
+[log] [Worker] Model loading progress: 14.4973887676862
+[log] [Main] Received message from worker: {progress: 24.448201184543514, status: Loading model... 1483%, debug: [Worker] Model loading progress: 14.827337281811706}
+[log] [Worker] Model loading progress: 14.827337281811706
+[log] [Main] Received message from worker: {progress: 22.823427977040154, status: Loading model... 941%, debug: [Worker] Model loading progress: 9.411426590133843}
+[log] [Worker] Model loading progress: 9.411426590133843
+[log] [Main] Received message from worker: {progress: 22.887412601568204, status: Loading model... 962%, debug: [Worker] Model loading progress: 9.624708671894012}
+[log] [Worker] Model loading progress: 9.624708671894012
+[log] [Main] Received message from worker: {progress: 22.93527805265024, status: Loading model... 978%, debug: [Worker] Model loading progress: 9.784260175500796}
+[log] [Worker] Model loading progress: 9.784260175500796
+[log] [Main] Received message from worker: {progress: 22.99919238157029, status: Loading model... 1000%, debug: [Worker] Model loading progress: 9.997307938567626}
+[log] [Worker] Model loading progress: 9.997307938567626
+[log] [Main] Received message from worker: {progress: 23.071096001605344, status: Loading model... 1024%, debug: [Worker] Model loading progress: 10.236986672017812}
+[log] [Worker] Model loading progress: 10.236986672017812
+[log] [Main] Received message from worker: {progress: 23.07936647515236, status: Loading model... 1026%, debug: [Worker] Model loading progress: 10.264554917174525}
+[log] [Worker] Model loading progress: 10.264554917174525
+[log] [Main] Received message from worker: {progress: 23.127302221842395, status: Loading model... 1042%, debug: [Worker] Model loading progress: 10.424340739474648}
+[log] [Worker] Model loading progress: 10.424340739474648
+[log] [Main] Received message from worker: {progress: 23.20452585254416, status: Loading model... 1068%, debug: [Worker] Model loading progress: 10.681752841813859}
+[log] [Worker] Model loading progress: 10.681752841813859
+[log] [Main] Received message from worker: {progress: 24.619035245043587, status: Loading model... 1540%, debug: [Worker] Model loading progress: 15.39678415014529}
+[log] [Worker] Model loading progress: 15.39678415014529
+[log] [Main] Received message from worker: {progress: 23.22050443477417, status: Loading model... 1074%, debug: [Worker] Model loading progress: 10.735014782580567}
+[log] [Worker] Model loading progress: 10.735014782580567
+[log] [Main] Received message from worker: {progress: 23.268431394513208, status: Loading model... 1089%, debug: [Worker] Model loading progress: 10.894771315044022}
+[log] [Worker] Model loading progress: 10.894771315044022
+[log] [Main] Received message from worker: {progress: 23.316367141203244, status: Loading model... 1105%, debug: [Worker] Model loading progress: 11.054557137344146}
+[log] [Worker] Model loading progress: 11.054557137344146
+[log] [Main] Received message from worker: {progress: 23.34832430566327, status: Loading model... 1116%, debug: [Worker] Model loading progress: 11.16108101887756}
+[log] [Worker] Model loading progress: 11.16108101887756
+[log] [Main] Received message from worker: {progress: 23.420227925698324, status: Loading model... 1140%, debug: [Worker] Model loading progress: 11.400759752327746}
+[log] [Worker] Model loading progress: 11.400759752327746
+[log] [Main] Received message from worker: {progress: 23.42821721681333, status: Loading model... 1143%, debug: [Worker] Model loading progress: 11.427390722711099}
+[log] [Worker] Model loading progress: 11.427390722711099
+[log] [Main] Received message from worker: {progress: 23.460174381273355, status: Loading model... 1153%, debug: [Worker] Model loading progress: 11.533914604244513}
+[log] [Worker] Model loading progress: 11.533914604244513
+[log] [Main] Received message from worker: {progress: 23.460464350656363, status: Loading model... 1153%, debug: [Worker] Model loading progress: 11.534881168854541}
+[log] [Worker] Model loading progress: 11.534881168854541
+[log] [Main] Received message from worker: {progress: 24.812017644003458, status: Loading model... 1604%, debug: [Worker] Model loading progress: 16.040058813344864}
+[log] [Worker] Model loading progress: 16.040058813344864
+[log] [Main] Received message from worker: {progress: 24.95746778268613, status: Loading model... 1652%, debug: [Worker] Model loading progress: 16.524892608953774}
+[log] [Worker] Model loading progress: 16.524892608953774
+[log] [Main] Received message from worker: {progress: 25.151410189894964, status: Loading model... 1717%, debug: [Worker] Model loading progress: 17.171367299649884}
+[log] [Worker] Model loading progress: 17.171367299649884
+[log] [Main] Received message from worker: {progress: 25.296860328577637, status: Loading model... 1766%, debug: [Worker] Model loading progress: 17.656201095258794}
+[log] [Worker] Model loading progress: 17.656201095258794
+[log] [Main] Received message from worker: {progress: 25.395764882127878, status: Loading model... 1799%, debug: [Worker] Model loading progress: 17.985882940426254}
+[log] [Worker] Model loading progress: 17.985882940426254
+[log] [Main] Received message from worker: {progress: 23.476442932886375, status: Loading model... 1159%, debug: [Worker] Model loading progress: 11.58814310962125}
+[log] [Worker] Model loading progress: 11.58814310962125
+[log] [Main] Received message from worker: {progress: 23.540357261806424, status: Loading model... 1180%, debug: [Worker] Model loading progress: 11.80119087268808}
+[log] [Worker] Model loading progress: 11.80119087268808
+[log] [Main] Received message from worker: {progress: 23.58829300849646, status: Loading model... 1196%, debug: [Worker] Model loading progress: 11.960976694988203}
+[log] [Worker] Model loading progress: 11.960976694988203
+[log] [Main] Received message from worker: {progress: 23.636228755186497, status: Loading model... 1212%, debug: [Worker] Model loading progress: 12.120762517288327}
+[log] [Worker] Model loading progress: 12.120762517288327
+[log] [Main] Received message from worker: {progress: 23.684164501876534, status: Loading model... 1228%, debug: [Worker] Model loading progress: 12.28054833958845}
+[log] [Worker] Model loading progress: 12.28054833958845
+[log] [Main] Received message from worker: {progress: 23.716402848768567, status: Loading model... 1239%, debug: [Worker] Model loading progress: 12.388009495895226}
+[log] [Worker] Model loading progress: 12.388009495895226
+[log] [Main] Received message from worker: {progress: 23.780317177688616, status: Loading model... 1260%, debug: [Worker] Model loading progress: 12.601057258962056}
+[log] [Worker] Model loading progress: 12.601057258962056
+[log] [Main] Received message from worker: {progress: 23.81227434214864, status: Loading model... 1271%, debug: [Worker] Model loading progress: 12.707581140495472}
+[log] [Worker] Model loading progress: 12.707581140495472
+[log] [Main] Received message from worker: {progress: 23.844231506608665, status: Loading model... 1281%, debug: [Worker] Model loading progress: 12.814105022028885}
+[log] [Worker] Model loading progress: 12.814105022028885
+[log] [Main] Received message from worker: {progress: 23.89143110207046, status: Loading model... 1297%, debug: [Worker] Model loading progress: 12.971437006901532}
+[log] [Worker] Model loading progress: 12.971437006901532
+[log] [Main] Received message from worker: {progress: 25.492749419180193, status: Loading model... 1831%, debug: [Worker] Model loading progress: 18.30916473060065}
+[log] [Worker] Model loading progress: 18.30916473060065
+[log] [Main] Received message from worker: {progress: 25.686718493284832, status: Loading model... 1896%, debug: [Worker] Model loading progress: 18.95572831094944}
+[log] [Worker] Model loading progress: 18.95572831094944
+[log] [Main] Received message from worker: {progress: 25.977672104441787, status: Loading model... 1993%, debug: [Worker] Model loading progress: 19.92557368147262}
+[log] [Worker] Model loading progress: 19.92557368147262
+[log] [Main] Received message from worker: {progress: 26.074656641494105, status: Loading model... 2025%, debug: [Worker] Model loading progress: 20.248855471647015}
+[log] [Worker] Model loading progress: 20.248855471647015
+[log] [Main] Received message from worker: {progress: 26.123148910020262, status: Loading model... 2041%, debug: [Worker] Model loading progress: 20.41049636673421}
+[log] [Worker] Model loading progress: 20.41049636673421
+[log] [Main] Received message from worker: {progress: 26.21383709667431, status: Loading model... 2071%, debug: [Worker] Model loading progress: 20.712790322247706}
+[log] [Worker] Model loading progress: 20.712790322247706
+[log] [Main] Received message from worker: {progress: 26.220986787738326, status: Loading model... 2074%, debug: [Worker] Model loading progress: 20.736622625794414}
+[log] [Worker] Model loading progress: 20.736622625794414
+[log] [Main] Received message from worker: {progress: 26.26243899577211, status: Loading model... 2087%, debug: [Worker] Model loading progress: 20.874796652573707}
+[log] [Worker] Model loading progress: 20.874796652573707
+[log] [Main] Received message from worker: {progress: 23.97363498133359, status: Loading model... 1325%, debug: [Worker] Model loading progress: 13.245449937778625}
+[log] [Worker] Model loading progress: 13.245449937778625
+[log] [Main] Received message from worker: {progress: 24.00558335884261, status: Loading model... 1335%, debug: [Worker] Model loading progress: 13.351944529475372}
+[log] [Worker] Model loading progress: 13.351944529475372
+[log] [Main] Received message from worker: {progress: 24.053519105532647, status: Loading model... 1351%, debug: [Worker] Model loading progress: 13.511730351775494}
+[log] [Worker] Model loading progress: 13.511730351775494
+[log] [Main] Received message from worker: {progress: 24.095015969795277, status: Loading model... 1365%, debug: [Worker] Model loading progress: 13.65005323265093}
+[log] [Worker] Model loading progress: 13.65005323265093
+[log] [Main] Received message from worker: {progress: 24.101454852222687, status: Loading model... 1367%, debug: [Worker] Model loading progress: 13.671516174075618}
+[log] [Worker] Model loading progress: 13.671516174075618
+[log] [Main] Received message from worker: {progress: 24.147369600182664, status: Loading model... 1382%, debug: [Worker] Model loading progress: 13.824565333942216}
+[log] [Worker] Model loading progress: 13.824565333942216
+[log] [Main] Received message from worker: {progress: 26.413969186698196, status: Loading model... 2138%, debug: [Worker] Model loading progress: 21.37989728899399}
+[log] [Worker] Model loading progress: 21.37989728899399
+[log] [Main] Received message from worker: {progress: 26.51092705685471, status: Loading model... 2170%, debug: [Worker] Model loading progress: 21.703090189515702}
+[log] [Worker] Model loading progress: 21.703090189515702
+[log] [Main] Received message from worker: {progress: 26.656403862433187, status: Loading model... 2219%, debug: [Worker] Model loading progress: 22.188012874777293}
+[log] [Worker] Model loading progress: 22.188012874777293
+[log] [Main] Received message from worker: {progress: 26.704896130959348, status: Loading model... 2235%, debug: [Worker] Model loading progress: 22.349653769864492}
+[log] [Worker] Model loading progress: 22.349653769864492
+[log] [Main] Received message from worker: {progress: 26.801880668011666, status: Loading model... 2267%, debug: [Worker] Model loading progress: 22.672935560038887}
+[log] [Worker] Model loading progress: 22.672935560038887
+[log] [Main] Received message from worker: {progress: 26.995849742116302, status: Loading model... 2332%, debug: [Worker] Model loading progress: 23.319499140387677}
+[log] [Worker] Model loading progress: 23.319499140387677
+[log] [Main] Received message from worker: {progress: 27.039168632856402, status: Loading model... 2346%, debug: [Worker] Model loading progress: 23.463895442854668}
+[log] [Worker] Model loading progress: 23.463895442854668
+[log] [Main] Received message from worker: {progress: 24.1953053468727, status: Loading model... 1398%, debug: [Worker] Model loading progress: 13.984351156242338}
+[log] [Worker] Model loading progress: 13.984351156242338
+[log] [Main] Received message from worker: {progress: 24.227262511332725, status: Loading model... 1409%, debug: [Worker] Model loading progress: 14.090875037775753}
+[log] [Worker] Model loading progress: 14.090875037775753
+[log] [Main] Received message from worker: {progress: 24.307155422482786, status: Loading model... 1436%, debug: [Worker] Model loading progress: 14.357184741609291}
+[log] [Worker] Model loading progress: 14.357184741609291
+[log] [Main] Received message from worker: {progress: 24.3231340047128, status: Loading model... 1441%, debug: [Worker] Model loading progress: 14.410446682376}
+[log] [Worker] Model loading progress: 14.410446682376
+[log] [Main] Received message from worker: {progress: 24.41101620697787, status: Loading model... 1470%, debug: [Worker] Model loading progress: 14.703387356592893}
+[log] [Worker] Model loading progress: 14.703387356592893
+[log] [Main] Received message from worker: {progress: 24.41928668052488, status: Loading model... 1473%, debug: [Worker] Model loading progress: 14.730955601749606}
+[log] [Worker] Model loading progress: 14.730955601749606
+[log] [Main] Received message from worker: {progress: 24.435265262754893, status: Loading model... 1478%, debug: [Worker] Model loading progress: 14.784217542516313}
+[log] [Worker] Model loading progress: 14.784217542516313
+[log] [Main] Received message from worker: {progress: 24.49917959167494, status: Loading model... 1500%, debug: [Worker] Model loading progress: 14.997265305583143}
+[log] [Worker] Model loading progress: 14.997265305583143
+[log] [Main] Received message from worker: {progress: 24.579072502825007, status: Loading model... 1526%, debug: [Worker] Model loading progress: 15.263575009416682}
+[log] [Worker] Model loading progress: 15.263575009416682
+[log] [Main] Received message from worker: {progress: 24.59505108505502, status: Loading model... 1532%, debug: [Worker] Model loading progress: 15.31683695018339}
+[log] [Worker] Model loading progress: 15.31683695018339
+[log] [Main] Received message from worker: {progress: 24.659246596407073, status: Loading model... 1553%, debug: [Worker] Model loading progress: 15.530821988023579}
+[log] [Worker] Model loading progress: 15.530821988023579
+[log] [Main] Received message from worker: {progress: 27.136153169908717, status: Loading model... 2379%, debug: [Worker] Model loading progress: 23.787177233029063}
+[log] [Worker] Model loading progress: 23.787177233029063
+[log] [Main] Received message from worker: {progress: 27.354368378276437, status: Loading model... 2451%, debug: [Worker] Model loading progress: 24.514561260921454}
+[log] [Worker] Model loading progress: 24.514561260921454
+[log] [Main] Received message from worker: {progress: 27.378614512539514, status: Loading model... 2460%, debug: [Worker] Model loading progress: 24.59538170846505}
+[log] [Worker] Model loading progress: 24.59538170846505
+[log] [Main] Received message from worker: {progress: 27.62107585517031, status: Loading model... 2540%, debug: [Worker] Model loading progress: 25.40358618390104}
+[log] [Worker] Model loading progress: 25.40358618390104
+[log] [Main] Received message from worker: {progress: 27.706990667475367, status: Loading model... 2569%, debug: [Worker] Model loading progress: 25.689968891584552}
+[log] [Worker] Model loading progress: 25.689968891584552
+[log] [Main] Received message from worker: {progress: 24.747128798672144, status: Loading model... 1582%, debug: [Worker] Model loading progress: 15.823762662240473}
+[log] [Worker] Model loading progress: 15.823762662240473
+[log] [Main] Received message from worker: {progress: 24.803053836477183, status: Loading model... 1601%, debug: [Worker] Model loading progress: 16.01017945492395}
+[log] [Worker] Model loading progress: 16.01017945492395
+[log] [Main] Received message from worker: {progress: 24.878467355272896, status: Loading model... 1626%, debug: [Worker] Model loading progress: 16.261557850909654}
+[log] [Worker] Model loading progress: 16.261557850909654
+[log] [Main] Received message from worker: {progress: 27.755482936001524, status: Loading model... 2585%, debug: [Worker] Model loading progress: 25.851609786671748}
+[log] [Worker] Model loading progress: 25.851609786671748
+[log] [Main] Received message from worker: {progress: 27.992362008443923, status: Loading model... 2664%, debug: [Worker] Model loading progress: 26.64120669481308}
+[log] [Worker] Model loading progress: 26.64120669481308
+[log] [Main] Received message from worker: {progress: 24.91042451973292, status: Loading model... 1637%, debug: [Worker] Model loading progress: 16.36808173244307}
+[log] [Worker] Model loading progress: 16.36808173244307
+[log] [Main] Received message from worker: {progress: 24.958360266422957, status: Loading model... 1653%, debug: [Worker] Model loading progress: 16.527867554743192}
+[log] [Worker] Model loading progress: 16.527867554743192
+[log] [Main] Received message from worker: {progress: 25.022344890951008, status: Loading model... 1674%, debug: [Worker] Model loading progress: 16.741149636503362}
+[log] [Worker] Model loading progress: 16.741149636503362
+[log] [Main] Received message from worker: {progress: 25.05423175980303, status: Loading model... 1685%, debug: [Worker] Model loading progress: 16.84743919934344}
+[log] [Worker] Model loading progress: 16.84743919934344
+[log] [Main] Received message from worker: {progress: 25.1344058533851, status: Loading model... 1711%, debug: [Worker] Model loading progress: 17.114686177950336}
+[log] [Worker] Model loading progress: 17.114686177950336
+[log] [Main] Received message from worker: {progress: 28.03997426940854, status: Loading model... 2680%, debug: [Worker] Model loading progress: 26.79991423136179}
+[log] [Worker] Model loading progress: 26.79991423136179
+[log] [Main] Received message from worker: {progress: 28.28240894514353, status: Loading model... 2761%, debug: [Worker] Model loading progress: 27.608029817145095}
+[log] [Worker] Model loading progress: 27.608029817145095
+[log] [Main] Received message from worker: {progress: 28.549116422037404, status: Loading model... 2850%, debug: [Worker] Model loading progress: 28.497054740124682}
+[log] [Worker] Model loading progress: 28.497054740124682
+[log] [Main] Received message from worker: {progress: 28.57336255630048, status: Loading model... 2858%, debug: [Worker] Model loading progress: 28.577875187668276}
+[log] [Worker] Model loading progress: 28.577875187668276
+[log] [Main] Received message from worker: {progress: 28.670347093352802, status: Loading model... 2890%, debug: [Worker] Model loading progress: 28.901156977842675}
+[log] [Worker] Model loading progress: 28.901156977842675
+[log] [Main] Received message from worker: {progress: 28.769091645528214, status: Loading model... 2923%, debug: [Worker] Model loading progress: 29.230305485094043}
+[log] [Worker] Model loading progress: 29.230305485094043
+[log] [Main] Received message from worker: {progress: 25.19832018230515, status: Loading model... 1733%, debug: [Worker] Model loading progress: 17.32773394101717}
+[log] [Worker] Model loading progress: 17.32773394101717
+[log] [Main] Received message from worker: {progress: 25.246255928995186, status: Loading model... 1749%, debug: [Worker] Model loading progress: 17.48751976331729}
+[log] [Worker] Model loading progress: 17.48751976331729
+[log] [Main] Received message from worker: {progress: 25.334138131260254, status: Loading model... 1778%, debug: [Worker] Model loading progress: 17.780460437534185}
+[log] [Worker] Model loading progress: 17.780460437534185
+[log] [Main] Received message from worker: {progress: 25.342127422375263, status: Loading model... 1781%, debug: [Worker] Model loading progress: 17.80709140791754}
+[log] [Worker] Model loading progress: 17.80709140791754
+[log] [Main] Received message from worker: {progress: 25.42230151595733, status: Loading model... 1807%, debug: [Worker] Model loading progress: 18.074338386524435}
+[log] [Worker] Model loading progress: 18.074338386524435
+[log] [Main] Received message from worker: {progress: 25.518173009337403, status: Loading model... 1839%, debug: [Worker] Model loading progress: 18.393910031124683}
+[log] [Worker] Model loading progress: 18.393910031124683
+[log] [Main] Received message from worker: {progress: 25.606055211602474, status: Loading model... 1869%, debug: [Worker] Model loading progress: 18.686850705341573}
+[log] [Worker] Model loading progress: 18.686850705341573
+[log] [Main] Received message from worker: {progress: 25.614044502717476, status: Loading model... 1871%, debug: [Worker] Model loading progress: 18.71348167572493}
+[log] [Worker] Model loading progress: 18.71348167572493
+[log] [Main] Received message from worker: {progress: 29.01155298815901, status: Loading model... 3004%, debug: [Worker] Model loading progress: 30.03850996053003}
+[log] [Worker] Model loading progress: 30.03850996053003
+[log] [Main] Received message from worker: {progress: 25.63018710803283, status: Loading model... 1877%, debug: [Worker] Model loading progress: 18.767290360109428}
+[log] [Worker] Model loading progress: 18.767290360109428
+[log] [Main] Received message from worker: {progress: 29.157029793737486, status: Loading model... 3052%, debug: [Worker] Model loading progress: 30.52343264579162}
+[log] [Worker] Model loading progress: 30.52343264579162
+[log] [Main] Received message from worker: {progress: 29.351212203008558, status: Loading model... 3117%, debug: [Worker] Model loading progress: 31.170707343361865}
+[log] [Worker] Model loading progress: 31.170707343361865
+[log] [Main] Received message from worker: {progress: 29.447983404894444, status: Loading model... 3149%, debug: [Worker] Model loading progress: 31.493278016314807}
+[log] [Worker] Model loading progress: 31.493278016314807
+[log] [Main] Received message from worker: {progress: 29.59431355113866, status: Loading model... 3198%, debug: [Worker] Model loading progress: 31.98104517046221}
+[log] [Worker] Model loading progress: 31.98104517046221
+[log] [Main] Received message from worker: {progress: 29.788495960409733, status: Loading model... 3263%, debug: [Worker] Model loading progress: 32.62831986803245}
+[log] [Worker] Model loading progress: 32.62831986803245
+[log] [Main] Received message from worker: {progress: 29.887489403612655, status: Loading model... 3296%, debug: [Worker] Model loading progress: 32.95829801204218}
+[log] [Worker] Model loading progress: 32.95829801204218
+[log] [Main] Received message from worker: {progress: 25.694171732560882, status: Loading model... 1898%, debug: [Worker] Model loading progress: 18.9805724418696}
+[log] [Worker] Model loading progress: 18.9805724418696
+[log] [Main] Received message from worker: {progress: 25.742037183642914, status: Loading model... 1914%, debug: [Worker] Model loading progress: 19.140123945476383}
+[log] [Worker] Model loading progress: 19.140123945476383
+[log] [Main] Received message from worker: {progress: 25.821930094792975, status: Loading model... 1941%, debug: [Worker] Model loading progress: 19.40643364930992}
+[log] [Worker] Model loading progress: 19.40643364930992
+[log] [Main] Received message from worker: {progress: 25.879484623844622, status: Loading model... 1960%, debug: [Worker] Model loading progress: 19.598282079482072}
+[log] [Worker] Model loading progress: 19.598282079482072
+[log] [Main] Received message from worker: {progress: 25.94241676690842, status: Loading model... 1981%, debug: [Worker] Model loading progress: 19.808055889694735}
+[log] [Worker] Model loading progress: 19.808055889694735
+[log] [Main] Received message from worker: {progress: 30.077002143129526, status: Loading model... 3359%, debug: [Worker] Model loading progress: 33.590007143765085}
+[log] [Worker] Model loading progress: 33.590007143765085
+[log] [Main] Received message from worker: {progress: 25.974373931368447, status: Loading model... 1991%, debug: [Worker] Model loading progress: 19.91457977122815}
+[log] [Worker] Model loading progress: 19.91457977122815
+[log] [Main] Received message from worker: {progress: 26.06078773648858, status: Loading model... 2020%, debug: [Worker] Model loading progress: 20.202625788295272}
+[log] [Worker] Model loading progress: 20.202625788295272
+[log] [Main] Received message from worker: {progress: 26.06730863045866, status: Loading model... 2022%, debug: [Worker] Model loading progress: 20.224362101528857}
+[log] [Worker] Model loading progress: 20.224362101528857
+[log] [Main] Received message from worker: {progress: 30.173986680181844, status: Loading model... 3391%, debug: [Worker] Model loading progress: 33.913288933939484}
+[log] [Worker] Model loading progress: 33.913288933939484
+[log] [Main] Received message from worker: {progress: 30.266514882646398, status: Loading model... 3422%, debug: [Worker] Model loading progress: 34.22171627548799}
+[log] [Worker] Model loading progress: 34.22171627548799
+[log] [Main] Received message from worker: {progress: 26.14252395469292, status: Loading model... 2048%, debug: [Worker] Model loading progress: 20.475079848976396}
+[log] [Worker] Model loading progress: 20.475079848976396
+[log] [Main] Received message from worker: {progress: 26.14609145679902, status: Loading model... 2049%, debug: [Worker] Model loading progress: 20.486971522663403}
+[log] [Worker] Model loading progress: 20.486971522663403
+[log] [Main] Received message from worker: {progress: 26.233973659064088, status: Loading model... 2078%, debug: [Worker] Model loading progress: 20.779912196880293}
+[log] [Worker] Model loading progress: 20.779912196880293
+[log] [Main] Received message from worker: {progress: 26.241962950179094, status: Loading model... 2081%, debug: [Worker] Model loading progress: 20.806543167263648}
+[log] [Worker] Model loading progress: 20.806543167263648
+[log] [Main] Received message from worker: {progress: 26.305947574707144, status: Loading model... 2102%, debug: [Worker] Model loading progress: 21.019825249023818}
+[log] [Worker] Model loading progress: 21.019825249023818
+[log] [Main] Received message from worker: {progress: 26.35381302578918, status: Loading model... 2118%, debug: [Worker] Model loading progress: 21.179376752630603}
+[log] [Worker] Model loading progress: 21.179376752630603
+[log] [Main] Received message from worker: {progress: 30.508096217715647, status: Loading model... 3503%, debug: [Worker] Model loading progress: 35.02698739238549}
+[log] [Worker] Model loading progress: 35.02698739238549
+[log] [Main] Received message from worker: {progress: 26.3700815774022, status: Loading model... 2123%, debug: [Worker] Model loading progress: 21.233605258007337}
+[log] [Worker] Model loading progress: 21.233605258007337
+[log] [Main] Received message from worker: {progress: 30.726311426083363, status: Loading model... 3575%, debug: [Worker] Model loading progress: 35.75437142027788}
+[log] [Worker] Model loading progress: 35.75437142027788
+[log] [Main] Received message from worker: {progress: 30.750557560346444, status: Loading model... 3584%, debug: [Worker] Model loading progress: 35.83519186782148}
+[log] [Worker] Model loading progress: 35.83519186782148
+[log] [Main] Received message from worker: {progress: 30.799049828872604, status: Loading model... 3600%, debug: [Worker] Model loading progress: 35.99683276290868}
+[log] [Worker] Model loading progress: 35.99683276290868
+[log] [Main] Received message from worker: {progress: 31.017238370344515, status: Loading model... 3672%, debug: [Worker] Model loading progress: 36.724127901148385}
+[log] [Worker] Model loading progress: 36.724127901148385
+[log] [Main] Received message from worker: {progress: 31.043244519730685, status: Loading model... 3681%, debug: [Worker] Model loading progress: 36.810815065768956}
+[log] [Worker] Model loading progress: 36.810815065768956
+[log] [Main] Received message from worker: {progress: 26.402038741862228, status: Loading model... 2134%, debug: [Worker] Model loading progress: 21.340129139540753}
+[log] [Worker] Model loading progress: 21.340129139540753
+[log] [Main] Received message from worker: {progress: 26.418017324092236, status: Loading model... 2139%, debug: [Worker] Model loading progress: 21.39339108030746}
+[log] [Worker] Model loading progress: 21.39339108030746
+[log] [Main] Received message from worker: {progress: 26.48992094412729, status: Loading model... 2163%, debug: [Worker] Model loading progress: 21.633069813757643}
+[log] [Worker] Model loading progress: 21.633069813757643
+[log] [Main] Received message from worker: {progress: 26.4979102352423, status: Loading model... 2166%, debug: [Worker] Model loading progress: 21.659700784141}
+[log] [Worker] Model loading progress: 21.659700784141
+[log] [Main] Received message from worker: {progress: 26.75421387998496, status: Loading model... 2251%, debug: [Worker] Model loading progress: 22.514046266616532}
+[log] [Worker] Model loading progress: 22.514046266616532
+[log] [Main] Received message from worker: {progress: 31.23742692900176, status: Loading model... 3746%, debug: [Worker] Model loading progress: 37.4580897633392}
+[log] [Worker] Model loading progress: 37.4580897633392
+[log] [Main] Received message from worker: {progress: 31.382690399413804, status: Loading model... 3794%, debug: [Worker] Model loading progress: 37.94230133137934}
+[log] [Worker] Model loading progress: 37.94230133137934
+[log] [Main] Received message from worker: {progress: 31.57665947351844, status: Loading model... 3859%, debug: [Worker] Model loading progress: 38.58886491172813}
+[log] [Worker] Model loading progress: 38.58886491172813
+[log] [Main] Received message from worker: {progress: 31.89185921893847, status: Loading model... 3964%, debug: [Worker] Model loading progress: 39.63953072979491}
+[log] [Worker] Model loading progress: 39.63953072979491
+[log] [Main] Received message from worker: {progress: 31.916958693867294, status: Loading model... 3972%, debug: [Worker] Model loading progress: 39.72319564622432}
+[log] [Worker] Model loading progress: 39.72319564622432
+[log] [Main] Received message from worker: {progress: 32.111141103138365, status: Loading model... 4037%, debug: [Worker] Model loading progress: 40.37047034379456}
+[log] [Worker] Model loading progress: 40.37047034379456
+[log] [Main] Received message from worker: {progress: 32.20791230502425, status: Loading model... 4069%, debug: [Worker] Model loading progress: 40.6930410167475}
+[log] [Worker] Model loading progress: 40.6930410167475
+[log] [Main] Received message from worker: {progress: 32.25640457355041, status: Loading model... 4085%, debug: [Worker] Model loading progress: 40.8546819118347}
+[log] [Worker] Model loading progress: 40.8546819118347
+[log] [Main] Received message from worker: {progress: 32.42767419334862, status: Loading model... 4143%, debug: [Worker] Model loading progress: 41.42558064449541}
+[log] [Worker] Model loading progress: 41.42558064449541
+[log] [Main] Received message from worker: {progress: 32.549888576820365, status: Loading model... 4183%, debug: [Worker] Model loading progress: 41.83296192273455}
+[log] [Worker] Model loading progress: 41.83296192273455
+[log] [Main] Received message from worker: {progress: 26.786171044444984, status: Loading model... 2262%, debug: [Worker] Model loading progress: 22.620570148149945}
+[log] [Worker] Model loading progress: 22.620570148149945
+[log] [Main] Received message from worker: {progress: 26.83410679113502, status: Loading model... 2278%, debug: [Worker] Model loading progress: 22.78035597045007}
+[log] [Worker] Model loading progress: 22.78035597045007
+[log] [Main] Received message from worker: {progress: 26.921988993400088, status: Loading model... 2307%, debug: [Worker] Model loading progress: 23.073296644666964}
+[log] [Worker] Model loading progress: 23.073296644666964
+[log] [Main] Received message from worker: {progress: 26.945956866745107, status: Loading model... 2315%, debug: [Worker] Model loading progress: 23.153189555817026}
+[log] [Worker] Model loading progress: 23.153189555817026
+[log] [Main] Received message from worker: {progress: 27.004022991610544, status: Loading model... 2335%, debug: [Worker] Model loading progress: 23.34674330536848}
+[log] [Worker] Model loading progress: 23.34674330536848
+[log] [Main] Received message from worker: {progress: 32.64687311387268, status: Loading model... 4216%, debug: [Worker] Model loading progress: 42.15624371290894}
+[log] [Worker] Model loading progress: 42.15624371290894
+[log] [Main] Received message from worker: {progress: 32.743857650925, status: Loading model... 4248%, debug: [Worker] Model loading progress: 42.47952550308334}
+[log] [Worker] Model loading progress: 42.47952550308334
+[log] [Main] Received message from worker: {progress: 32.9863189935558, status: Loading model... 4329%, debug: [Worker] Model loading progress: 43.28772997851932}
+[log] [Worker] Model loading progress: 43.28772997851932
+[log] [Main] Received message from worker: {progress: 33.22878033618659, status: Loading model... 4410%, debug: [Worker] Model loading progress: 44.09593445395531}
+[log] [Worker] Model loading progress: 44.09593445395531
+[log] [Main] Received message from worker: {progress: 33.27727260471275, status: Loading model... 4426%, debug: [Worker] Model loading progress: 44.257575349042504}
+[log] [Worker] Model loading progress: 44.257575349042504
+[log] [Main] Received message from worker: {progress: 33.51970728044774, status: Loading model... 4507%, debug: [Worker] Model loading progress: 45.06569093482581}
+[log] [Worker] Model loading progress: 45.06569093482581
+[log] [Main] Received message from worker: {progress: 33.550400877518655, status: Loading model... 4517%, debug: [Worker] Model loading progress: 45.168002925062176}
+[log] [Worker] Model loading progress: 45.168002925062176
+[log] [Main] Received message from worker: {progress: 33.59889314604481, status: Loading model... 4533%, debug: [Worker] Model loading progress: 45.32964382014937}
+[log] [Worker] Model loading progress: 45.32964382014937
+[log] [Main] Received message from worker: {progress: 27.107883776105623, status: Loading model... 2369%, debug: [Worker] Model loading progress: 23.69294592035208}
+[log] [Worker] Model loading progress: 23.69294592035208
+[log] [Main] Received message from worker: {progress: 33.6869650139216, status: Loading model... 4562%, debug: [Worker] Model loading progress: 45.623216713072004}
+[log] [Worker] Model loading progress: 45.623216713072004
+[log] [Main] Received message from worker: {progress: 27.131851649450645, status: Loading model... 2377%, debug: [Worker] Model loading progress: 23.772838831502145}
+[log] [Worker] Model loading progress: 23.772838831502145
+[log] [Main] Received message from worker: {progress: 27.203755269485697, status: Loading model... 2401%, debug: [Worker] Model loading progress: 24.01251756495233}
+[log] [Worker] Model loading progress: 24.01251756495233
+[log] [Main] Received message from worker: {progress: 27.211744560600707, status: Loading model... 2404%, debug: [Worker] Model loading progress: 24.039148535335684}
+[log] [Worker] Model loading progress: 24.039148535335684
+[log] [Main] Received message from worker: {progress: 27.256845051101326, status: Loading model... 2419%, debug: [Worker] Model loading progress: 24.18948350367109}
+[log] [Worker] Model loading progress: 24.18948350367109
+[log] [Main] Received message from worker: {progress: 33.73545728244776, status: Loading model... 4578%, debug: [Worker] Model loading progress: 45.7848576081592}
+[log] [Worker] Model loading progress: 45.7848576081592
+[log] [Main] Received message from worker: {progress: 34.02641089360471, status: Loading model... 4675%, debug: [Worker] Model loading progress: 46.75470297868238}
+[log] [Worker] Model loading progress: 46.75470297868238
+[log] [Main] Received message from worker: {progress: 34.07490316213087, status: Loading model... 4692%, debug: [Worker] Model loading progress: 46.916343873769584}
+[log] [Worker] Model loading progress: 46.916343873769584
+[log] [Main] Received message from worker: {progress: 34.31736450476167, status: Loading model... 4772%, debug: [Worker] Model loading progress: 47.72454834920557}
+[log] [Worker] Model loading progress: 47.72454834920557
+[log] [Main] Received message from worker: {progress: 34.41434904181399, status: Loading model... 4805%, debug: [Worker] Model loading progress: 48.04783013937997}
+[log] [Worker] Model loading progress: 48.04783013937997
+[log] [Main] Received message from worker: {progress: 27.336737962251387, status: Loading model... 2446%, debug: [Worker] Model loading progress: 24.455793207504627}
+[log] [Worker] Model loading progress: 24.455793207504627
+[log] [Main] Received message from worker: {progress: 34.44501597198909, status: Loading model... 4815%, debug: [Worker] Model loading progress: 48.15005323996364}
+[log] [Worker] Model loading progress: 48.15005323996364
+[log] [Main] Received message from worker: {progress: 27.368695126711412, status: Loading model... 2456%, debug: [Worker] Model loading progress: 24.562317089038043}
+[log] [Worker] Model loading progress: 24.562317089038043
+[log] [Main] Received message from worker: {progress: 27.448588037861473, status: Loading model... 2483%, debug: [Worker] Model loading progress: 24.82862679287158}
+[log] [Worker] Model loading progress: 24.82862679287158
+[log] [Main] Received message from worker: {progress: 27.4805452023215, status: Loading model... 2494%, debug: [Worker] Model loading progress: 24.935150674404998}
+[log] [Worker] Model loading progress: 24.935150674404998
+[log] [Main] Received message from worker: {progress: 27.51278354921353, status: Loading model... 2504%, debug: [Worker] Model loading progress: 25.042611830711774}
+[log] [Worker] Model loading progress: 25.042611830711774
+[log] [Main] Received message from worker: {progress: 34.54112050147987, status: Loading model... 4847%, debug: [Worker] Model loading progress: 48.47040167159955}
+[log] [Worker] Model loading progress: 48.47040167159955
+[log] [Main] Received message from worker: {progress: 34.78358184411066, status: Loading model... 4928%, debug: [Worker] Model loading progress: 49.27860614703554}
+[log] [Worker] Model loading progress: 49.27860614703554
+[log] [Main] Received message from worker: {progress: 34.88056638116298, status: Loading model... 4960%, debug: [Worker] Model loading progress: 49.60188793720993}
+[log] [Worker] Model loading progress: 49.60188793720993
+[log] [Main] Received message from worker: {progress: 34.92905864968914, status: Loading model... 4976%, debug: [Worker] Model loading progress: 49.763528832297126}
+[log] [Worker] Model loading progress: 49.763528832297126
+[log] [Main] Received message from worker: {progress: 34.9775509182153, status: Loading model... 4993%, debug: [Worker] Model loading progress: 49.92516972738432}
+[log] [Worker] Model loading progress: 49.92516972738432
+[log] [Main] Received message from worker: {progress: 35.219985593950284, status: Loading model... 5073%, debug: [Worker] Model loading progress: 50.73328531316763}
+[log] [Worker] Model loading progress: 50.73328531316763
+[log] [Main] Received message from worker: {progress: 35.22174560907338, status: Loading model... 5074%, debug: [Worker] Model loading progress: 50.739152030244604}
+[log] [Worker] Model loading progress: 50.739152030244604
+[log] [Main] Received message from worker: {progress: 27.592096521597576, status: Loading model... 2531%, debug: [Worker] Model loading progress: 25.30698840532526}
+[log] [Worker] Model loading progress: 25.30698840532526
+[log] [Main] Received message from worker: {progress: 27.608655042593607, status: Loading model... 2536%, debug: [Worker] Model loading progress: 25.362183475312023}
+[log] [Worker] Model loading progress: 25.362183475312023
+[log] [Main] Received message from worker: {progress: 27.704526535973677, status: Loading model... 2568%, debug: [Worker] Model loading progress: 25.681755119912264}
+[log] [Worker] Model loading progress: 25.681755119912264
+[log] [Main] Received message from worker: {progress: 27.79240873823875, status: Loading model... 2597%, debug: [Worker] Model loading progress: 25.97469579412916}
+[log] [Worker] Model loading progress: 25.97469579412916
+[log] [Main] Received message from worker: {progress: 27.800679211785763, status: Loading model... 2600%, debug: [Worker] Model loading progress: 26.002264039285873}
+[log] [Worker] Model loading progress: 26.002264039285873
+[log] [Main] Received message from worker: {progress: 27.832636376245787, status: Loading model... 2611%, debug: [Worker] Model loading progress: 26.10878792081929}
+[log] [Worker] Model loading progress: 26.10878792081929
+[log] [Main] Received message from worker: {progress: 27.91252928739585, status: Loading model... 2638%, debug: [Worker] Model loading progress: 26.375097624652827}
+[log] [Worker] Model loading progress: 26.375097624652827
+[log] [Main] Received message from worker: {progress: 27.944486451855873, status: Loading model... 2648%, debug: [Worker] Model loading progress: 26.481621506186244}
+[log] [Worker] Model loading progress: 26.481621506186244
+[log] [Main] Received message from worker: {progress: 27.976443616315898, status: Loading model... 2659%, debug: [Worker] Model loading progress: 26.58814538771966}
+[log] [Worker] Model loading progress: 26.58814538771966
+[log] [Main] Received message from worker: {progress: 28.024660545437943, status: Loading model... 2675%, debug: [Worker] Model loading progress: 26.748868484793142}
+[log] [Worker] Model loading progress: 26.748868484793142
+[log] [Main] Received message from worker: {progress: 35.36722241465186, status: Loading model... 5122%, debug: [Worker] Model loading progress: 51.2240747155062}
+[log] [Worker] Model loading progress: 51.2240747155062
+[log] [Main] Received message from worker: {progress: 35.56140482392293, status: Loading model... 5187%, debug: [Worker] Model loading progress: 51.87134941307644}
+[log] [Worker] Model loading progress: 51.87134941307644
+[log] [Main] Received message from worker: {progress: 35.706668294334975, status: Loading model... 5236%, debug: [Worker] Model loading progress: 52.355560981116575}
+[log] [Worker] Model loading progress: 52.355560981116575
+[log] [Main] Received message from worker: {progress: 35.755160562861136, status: Loading model... 5252%, debug: [Worker] Model loading progress: 52.51720187620378}
+[log] [Worker] Model loading progress: 52.51720187620378
+[log] [Main] Received message from worker: {progress: 35.94934297213221, status: Loading model... 5316%, debug: [Worker] Model loading progress: 53.164476573774024}
+[log] [Worker] Model loading progress: 53.164476573774024
+[log] [Main] Received message from worker: {progress: 35.99847524615767, status: Loading model... 5333%, debug: [Worker] Model loading progress: 53.32825082052557}
+[log] [Worker] Model loading progress: 53.32825082052557
+[log] [Main] Received message from worker: {progress: 36.216690454525384, status: Loading model... 5406%, debug: [Worker] Model loading progress: 54.05563484841795}
+[log] [Worker] Model loading progress: 54.05563484841795
+[log] [Main] Received message from worker: {progress: 36.24093658878847, status: Loading model... 5414%, debug: [Worker] Model loading progress: 54.13645529596156}
+[log] [Worker] Model loading progress: 54.13645529596156
+[log] [Main] Received message from worker: {progress: 36.337921125840786, status: Loading model... 5446%, debug: [Worker] Model loading progress: 54.45973708613595}
+[log] [Worker] Model loading progress: 54.45973708613595
+[log] [Main] Received message from worker: {progress: 36.628874736997744, status: Loading model... 5543%, debug: [Worker] Model loading progress: 55.42958245665913}
+[log] [Worker] Model loading progress: 55.42958245665913
+[log] [Main] Received message from worker: {progress: 36.677367005523905, status: Loading model... 5559%, debug: [Worker] Model loading progress: 55.591223351746336}
+[log] [Worker] Model loading progress: 55.591223351746336
+[log] [Main] Received message from worker: {progress: 28.112261565271, status: Loading model... 2704%, debug: [Worker] Model loading progress: 27.040871884236672}
+[log] [Worker] Model loading progress: 27.040871884236672
+[log] [Main] Received message from worker: {progress: 28.136510621048025, status: Loading model... 2712%, debug: [Worker] Model loading progress: 27.12170207016009}
+[log] [Worker] Model loading progress: 27.12170207016009
+[log] [Main] Received message from worker: {progress: 36.775204883241955, status: Loading model... 5592%, debug: [Worker] Model loading progress: 55.91734961080653}
+[log] [Worker] Model loading progress: 55.91734961080653
+[log] [Main] Received message from worker: {progress: 28.184446367738065, status: Loading model... 2728%, debug: [Worker] Model loading progress: 27.281487892460216}
+[log] [Worker] Model loading progress: 27.281487892460216
+[log] [Main] Received message from worker: {progress: 28.190031939590558, status: Loading model... 2730%, debug: [Worker] Model loading progress: 27.30010646530186}
+[log] [Worker] Model loading progress: 27.30010646530186
+[log] [Main] Received message from worker: {progress: 28.232382114428102, status: Loading model... 2744%, debug: [Worker] Model loading progress: 27.44127371476034}
+[log] [Worker] Model loading progress: 27.44127371476034
+[log] [Main] Received message from worker: {progress: 28.328534790240184, status: Loading model... 2776%, debug: [Worker] Model loading progress: 27.761782634133947}
+[log] [Worker] Model loading progress: 27.761782634133947
+[log] [Main] Received message from worker: {progress: 28.344513372470196, status: Loading model... 2782%, debug: [Worker] Model loading progress: 27.815044574900654}
+[log] [Worker] Model loading progress: 27.815044574900654
+[log] [Main] Received message from worker: {progress: 28.424406283620257, status: Loading model... 2808%, debug: [Worker] Model loading progress: 28.081354278734196}
+[log] [Worker] Model loading progress: 28.081354278734196
+[log] [Main] Received message from worker: {progress: 28.44038486585027, status: Loading model... 2813%, debug: [Worker] Model loading progress: 28.134616219500902}
+[log] [Worker] Model loading progress: 28.134616219500902
+[log] [Main] Received message from worker: {progress: 28.471295406813375, status: Loading model... 2824%, debug: [Worker] Model loading progress: 28.237651356044584}
+[log] [Worker] Model loading progress: 28.237651356044584
+[log] [Main] Received message from worker: {progress: 36.969387292513034, status: Loading model... 5656%, debug: [Worker] Model loading progress: 56.56462430837678}
+[log] [Worker] Model loading progress: 56.56462430837678
+[log] [Main] Received message from worker: {progress: 37.11465076292507, status: Loading model... 5705%, debug: [Worker] Model loading progress: 57.048835876416916}
+[log] [Worker] Model loading progress: 57.048835876416916
+[log] [Main] Received message from worker: {progress: 37.26012756850355, status: Loading model... 5753%, debug: [Worker] Model loading progress: 57.5337585616785}
+[log] [Worker] Model loading progress: 57.5337585616785
+[log] [Main] Received message from worker: {progress: 37.44050245172477, status: Loading model... 5814%, debug: [Worker] Model loading progress: 58.1350081724159}
+[log] [Worker] Model loading progress: 58.1350081724159
+[log] [Main] Received message from worker: {progress: 28.519231153503412, status: Loading model... 2840%, debug: [Worker] Model loading progress: 28.39743717834471}
+[log] [Worker] Model loading progress: 28.39743717834471
+[log] [Main] Received message from worker: {progress: 28.615102646883486, status: Loading model... 2872%, debug: [Worker] Model loading progress: 28.717008822944955}
+[log] [Worker] Model loading progress: 28.717008822944955
+[log] [Main] Received message from worker: {progress: 28.631081229113498, status: Loading model... 2877%, debug: [Worker] Model loading progress: 28.770270763711665}
+[log] [Worker] Model loading progress: 28.770270763711665
+[log] [Main] Received message from worker: {progress: 28.721079133913847, status: Loading model... 2907%, debug: [Worker] Model loading progress: 29.07026377971283}
+[log] [Worker] Model loading progress: 29.07026377971283
+[log] [Main] Received message from worker: {progress: 37.58597925730325, status: Loading model... 5862%, debug: [Worker] Model loading progress: 58.619930857677495}
+[log] [Worker] Model loading progress: 58.619930857677495
+[log] [Main] Received message from worker: {progress: 37.780161666574315, status: Loading model... 5927%, debug: [Worker] Model loading progress: 59.267205555247735}
+[log] [Worker] Model loading progress: 59.267205555247735
+[log] [Main] Received message from worker: {progress: 37.8769328684602, status: Loading model... 5959%, debug: [Worker] Model loading progress: 59.58977622820068}
+[log] [Worker] Model loading progress: 59.58977622820068
+[log] [Main] Received message from worker: {progress: 38.07090194256484, status: Loading model... 6024%, debug: [Worker] Model loading progress: 60.23633980854947}
+[log] [Worker] Model loading progress: 60.23633980854947
+[log] [Main] Received message from worker: {progress: 38.26508435183591, status: Loading model... 6088%, debug: [Worker] Model loading progress: 60.88361450611971}
+[log] [Worker] Model loading progress: 60.88361450611971
+[log] [Main] Received message from worker: {progress: 38.399710693810405, status: Loading model... 6133%, debug: [Worker] Model loading progress: 61.33236897936803}
+[log] [Worker] Model loading progress: 61.33236897936803
+[log] [Main] Received message from worker: {progress: 38.64151129002293, status: Loading model... 6214%, debug: [Worker] Model loading progress: 62.13837096674312}
+[log] [Worker] Model loading progress: 62.13837096674312
+[log] [Main] Received message from worker: {progress: 28.75303629837387, status: Loading model... 2918%, debug: [Worker] Model loading progress: 29.176787661246244}
+[log] [Worker] Model loading progress: 29.176787661246244
+[log] [Main] Received message from worker: {progress: 28.832929209523932, status: Loading model... 2944%, debug: [Worker] Model loading progress: 29.443097365079783}
+[log] [Worker] Model loading progress: 29.443097365079783
+[log] [Main] Received message from worker: {progress: 28.896843538443985, status: Loading model... 2966%, debug: [Worker] Model loading progress: 29.656145128146616}
+[log] [Worker] Model loading progress: 29.656145128146616
+[log] [Main] Received message from worker: {progress: 28.984716953758053, status: Loading model... 2995%, debug: [Worker] Model loading progress: 29.949056512526838}
+[log] [Worker] Model loading progress: 29.949056512526838
+[log] [Main] Received message from worker: {progress: 28.986841443244334, status: Loading model... 2996%, debug: [Worker] Model loading progress: 29.956138144147783}
+[log] [Worker] Model loading progress: 29.956138144147783
+[log] [Main] Received message from worker: {progress: 29.05874506327939, status: Loading model... 3020%, debug: [Worker] Model loading progress: 30.19581687759797}
+[log] [Worker] Model loading progress: 30.19581687759797
+[log] [Main] Received message from worker: {progress: 29.0667343543944, status: Loading model... 3022%, debug: [Worker] Model loading progress: 30.22244784798132}
+[log] [Worker] Model loading progress: 30.22244784798132
+[log] [Main] Received message from worker: {progress: 29.098691518854423, status: Loading model... 3033%, debug: [Worker] Model loading progress: 30.328971729514738}
+[log] [Worker] Model loading progress: 30.328971729514738
+[log] [Main] Received message from worker: {progress: 29.194563012234497, status: Loading model... 3065%, debug: [Worker] Model loading progress: 30.648543374114983}
+[log] [Worker] Model loading progress: 30.648543374114983
+[log] [Main] Received message from worker: {progress: 38.85972649839066, status: Loading model... 6287%, debug: [Worker] Model loading progress: 62.865754994635516}
+[log] [Worker] Model loading progress: 62.865754994635516
+[log] [Main] Received message from worker: {progress: 38.88397263265374, status: Loading model... 6295%, debug: [Worker] Model loading progress: 62.94657544217911}
+[log] [Worker] Model loading progress: 62.94657544217911
+[log] [Main] Received message from worker: {progress: 29.21390992568127, status: Loading model... 3071%, debug: [Worker] Model loading progress: 30.713033085604234}
+[log] [Worker] Model loading progress: 30.713033085604234
+[log] [Main] Received message from worker: {progress: 38.9324649011799, status: Loading model... 6311%, debug: [Worker] Model loading progress: 63.10821633726631}
+[log] [Worker] Model loading progress: 63.10821633726631
+[log] [Main] Received message from worker: {progress: 39.12794806236853, status: Loading model... 6376%, debug: [Worker] Model loading progress: 63.75982687456179}
+[log] [Worker] Model loading progress: 63.75982687456179
+[log] [Main] Received message from worker: {progress: 39.321917136473175, status: Loading model... 6441%, debug: [Worker] Model loading progress: 64.40639045491058}
+[log] [Worker] Model loading progress: 64.40639045491058
+[log] [Main] Received message from worker: {progress: 39.540132344840885, status: Loading model... 6513%, debug: [Worker] Model loading progress: 65.13377448280296}
+[log] [Worker] Model loading progress: 65.13377448280296
+[log] [Main] Received message from worker: {progress: 39.564378479103965, status: Loading model... 6521%, debug: [Worker] Model loading progress: 65.21459493034656}
+[log] [Worker] Model loading progress: 65.21459493034656
+[log] [Main] Received message from worker: {progress: 39.75920089387435, status: Loading model... 6586%, debug: [Worker] Model loading progress: 65.86400297958116}
+[log] [Worker] Model loading progress: 65.86400297958116
+[log] [Main] Received message from worker: {progress: 39.80769316240051, status: Loading model... 6603%, debug: [Worker] Model loading progress: 66.02564387466836}
+[log] [Worker] Model loading progress: 66.02564387466836
+[log] [Main] Received message from worker: {progress: 40.00166223650514, status: Loading model... 6667%, debug: [Worker] Model loading progress: 66.67220745501714}
+[log] [Worker] Model loading progress: 66.67220745501714
+[log] [Main] Received message from worker: {progress: 40.0501545050313, status: Loading model... 6683%, debug: [Worker] Model loading progress: 66.83384835010435}
+[log] [Worker] Model loading progress: 66.83384835010435
+[log] [Main] Received message from worker: {progress: 40.2926158476621, status: Loading model... 6764%, debug: [Worker] Model loading progress: 67.64205282554033}
+[log] [Worker] Model loading progress: 67.64205282554033
+[log] [Main] Received message from worker: {progress: 40.535077190292895, status: Loading model... 6845%, debug: [Worker] Model loading progress: 68.45025730097632}
+[log] [Worker] Model loading progress: 68.45025730097632
+[log] [Main] Received message from worker: {progress: 40.63291506801095, status: Loading model... 6878%, debug: [Worker] Model loading progress: 68.7763835600365}
+[log] [Worker] Model loading progress: 68.7763835600365
+[log] [Main] Received message from worker: {progress: 40.87537641064175, status: Loading model... 6958%, debug: [Worker] Model loading progress: 69.5845880354725}
+[log] [Worker] Model loading progress: 69.5845880354725
+[log] [Main] Received message from worker: {progress: 41.117837753272546, status: Loading model... 7039%, debug: [Worker] Model loading progress: 70.39279251090849}
+[log] [Worker] Model loading progress: 70.39279251090849
+[log] [Main] Received message from worker: {progress: 41.1663300217987, status: Loading model... 7055%, debug: [Worker] Model loading progress: 70.55443340599568}
+[log] [Worker] Model loading progress: 70.55443340599568
+[log] [Main] Received message from worker: {progress: 41.408791364429504, status: Loading model... 7136%, debug: [Worker] Model loading progress: 71.36263788143167}
+[log] [Worker] Model loading progress: 71.36263788143167
+[log] [Main] Received message from worker: {progress: 41.772483378375696, status: Loading model... 7257%, debug: [Worker] Model loading progress: 72.57494459458566}
+[log] [Worker] Model loading progress: 72.57494459458566
+[log] [Main] Received message from worker: {progress: 41.991551927409155, status: Loading model... 7331%, debug: [Worker] Model loading progress: 73.30517309136386}
+[log] [Worker] Model loading progress: 73.30517309136386
+[log] [Main] Received message from worker: {progress: 42.35521727445955, status: Loading model... 7452%, debug: [Worker] Model loading progress: 74.51739091486515}
+[log] [Worker] Model loading progress: 74.51739091486515
+[log] [Main] Received message from worker: {progress: 42.840139959721135, status: Loading model... 7613%, debug: [Worker] Model loading progress: 76.13379986573712}
+[log] [Worker] Model loading progress: 76.13379986573712
+[log] [Main] Received message from worker: {progress: 42.96137063103653, status: Loading model... 7654%, debug: [Worker] Model loading progress: 76.53790210345511}
+[log] [Worker] Model loading progress: 76.53790210345511
+[log] [Main] Received message from worker: {progress: 43.68872799203311, status: Loading model... 7896%, debug: [Worker] Model loading progress: 78.96242664011038}
+[log] [Worker] Model loading progress: 78.96242664011038
+[log] [Main] Received message from worker: {progress: 43.72974167778034, status: Loading model... 7910%, debug: [Worker] Model loading progress: 79.09913892593448}
+[log] [Worker] Model loading progress: 79.09913892593448
+[log] [Main] Received message from worker: {progress: 43.972203020411136, status: Loading model... 7991%, debug: [Worker] Model loading progress: 79.90734340137045}
+[log] [Worker] Model loading progress: 79.90734340137045
+[log] [Main] Received message from worker: {progress: 44.34231583026936, status: Loading model... 8114%, debug: [Worker] Model loading progress: 81.14105276756453}
+[log] [Worker] Model loading progress: 81.14105276756453
+[log] [Main] Received message from worker: {progress: 44.58477717290015, status: Loading model... 8195%, debug: [Worker] Model loading progress: 81.9492572430005}
+[log] [Worker] Model loading progress: 81.9492572430005
+[log] [Main] Received message from worker: {progress: 44.82723851553095, status: Loading model... 8276%, debug: [Worker] Model loading progress: 82.7574617184365}
+[log] [Worker] Model loading progress: 82.7574617184365
+[log] [Main] Received message from worker: {progress: 44.855348386697244, status: Loading model... 8285%, debug: [Worker] Model loading progress: 82.85116128899082}
+[log] [Worker] Model loading progress: 82.85116128899082
+[log] [Main] Received message from worker: {progress: 45.25029992850309, status: Loading model... 8417%, debug: [Worker] Model loading progress: 84.16766642834364}
+[log] [Worker] Model loading progress: 84.16766642834364
+[log] [Main] Received message from worker: {progress: 45.49276127113389, status: Loading model... 8498%, debug: [Worker] Model loading progress: 84.97587090377962}
+[log] [Worker] Model loading progress: 84.97587090377962
+[log] [Main] Received message from worker: {progress: 45.621538673961936, status: Loading model... 8541%, debug: [Worker] Model loading progress: 85.40512891320647}
+[log] [Worker] Model loading progress: 85.40512891320647
+[log] [Main] Received message from worker: {progress: 45.86400001659274, status: Loading model... 8621%, debug: [Worker] Model loading progress: 86.21333338864245}
+[log] [Worker] Model loading progress: 86.21333338864245
+[log] [Main] Received message from worker: {progress: 46.05796909069737, status: Loading model... 8686%, debug: [Worker] Model loading progress: 86.85989696899124}
+[log] [Worker] Model loading progress: 86.85989696899124
+[log] [Main] Received message from worker: {progress: 46.35867389675349, status: Loading model... 8786%, debug: [Worker] Model loading progress: 87.86224632251161}
+[log] [Worker] Model loading progress: 87.86224632251161
+[log] [Main] Received message from worker: {progress: 46.60113523938428, status: Loading model... 8867%, debug: [Worker] Model loading progress: 88.6704507979476}
+[log] [Worker] Model loading progress: 88.6704507979476
+[log] [Main] Received message from worker: {progress: 46.72236591069968, status: Loading model... 8907%, debug: [Worker] Model loading progress: 89.07455303566559}
+[log] [Worker] Model loading progress: 89.07455303566559
+[log] [Main] Received message from worker: {progress: 47.692157947431255, status: Loading model... 9231%, debug: [Worker] Model loading progress: 92.30719315810417}
+[log] [Worker] Model loading progress: 92.30719315810417
+[log] [Main] Received message from worker: {progress: 47.968264023601975, status: Loading model... 9323%, debug: [Worker] Model loading progress: 93.22754674533994}
+[log] [Worker] Model loading progress: 93.22754674533994
+[log] [Main] Received message from worker: {progress: 29.32266308922771, status: Loading model... 3108%, debug: [Worker] Model loading progress: 31.07554363075904}
+[log] [Worker] Model loading progress: 31.07554363075904
+[log] [Main] Received message from worker: {progress: 29.40255600037777, status: Loading model... 3134%, debug: [Worker] Model loading progress: 31.341853334592578}
+[log] [Worker] Model loading progress: 31.341853334592578
+[log] [Main] Received message from worker: {progress: 29.442502455952805, status: Loading model... 3148%, debug: [Worker] Model loading progress: 31.475008186509353}
+[log] [Worker] Model loading progress: 31.475008186509353
+[log] [Main] Received message from worker: {progress: 29.562341822677897, status: Loading model... 3187%, debug: [Worker] Model loading progress: 31.87447274225966}
+[log] [Worker] Model loading progress: 31.87447274225966
+[log] [Main] Received message from worker: {progress: 29.602288278252928, status: Loading model... 3201%, debug: [Worker] Model loading progress: 32.00762759417643}
+[log] [Worker] Model loading progress: 32.00762759417643
+[log] [Main] Received message from worker: {progress: 29.68218118940299, status: Loading model... 3227%, debug: [Worker] Model loading progress: 32.27393729800996}
+[log] [Worker] Model loading progress: 32.27393729800996
+[log] [Main] Received message from worker: {progress: 29.72212764497802, status: Loading model... 3241%, debug: [Worker] Model loading progress: 32.40709214992673}
+[log] [Worker] Model loading progress: 32.40709214992673
+[log] [Main] Received message from worker: {progress: 29.921859922853173, status: Loading model... 3307%, debug: [Worker] Model loading progress: 33.07286640951058}
+[log] [Worker] Model loading progress: 33.07286640951058
+[log] [Main] Received message from worker: {progress: 30.081645745153295, status: Loading model... 3361%, debug: [Worker] Model loading progress: 33.60548581717765}
+[log] [Worker] Model loading progress: 33.60548581717765
+[log] [Main] Received message from worker: {progress: 30.161538656303357, status: Loading model... 3387%, debug: [Worker] Model loading progress: 33.871795521011194}
+[log] [Worker] Model loading progress: 33.871795521011194
+[log] [Main] Received message from worker: {progress: 30.20147632492739, status: Loading model... 3400%, debug: [Worker] Model loading progress: 34.0049210830913}
+[log] [Worker] Model loading progress: 34.0049210830913
+[log] [Main] Received message from worker: {progress: 30.237539924488196, status: Loading model... 3413%, debug: [Worker] Model loading progress: 34.125133081627325}
+[log] [Worker] Model loading progress: 34.125133081627325
+[log] [Main] Received message from worker: {progress: 30.521039182576637, status: Loading model... 3507%, debug: [Worker] Model loading progress: 35.070130608588784}
+[log] [Worker] Model loading progress: 35.070130608588784
+[log] [Main] Received message from worker: {progress: 30.640878549301725, status: Loading model... 3547%, debug: [Worker] Model loading progress: 35.46959516433909}
+[log] [Worker] Model loading progress: 35.46959516433909
+[log] [Main] Received message from worker: {progress: 30.646868320900232, status: Loading model... 3549%, debug: [Worker] Model loading progress: 35.48956106966744}
+[log] [Worker] Model loading progress: 35.48956106966744
+[log] [Main] Received message from worker: {progress: 30.675990229170843, status: Loading model... 3559%, debug: [Worker] Model loading progress: 35.58663409723614}
+[log] [Worker] Model loading progress: 35.58663409723614
+[log] [Main] Received message from worker: {progress: 30.707947393630867, status: Loading model... 3569%, debug: [Worker] Model loading progress: 35.693157978769555}
+[log] [Worker] Model loading progress: 35.693157978769555
+[log] [Main] Received message from worker: {progress: 30.78784030478093, status: Loading model... 3596%, debug: [Worker] Model loading progress: 35.95946768260309}
+[log] [Worker] Model loading progress: 35.95946768260309
+[log] [Main] Received message from worker: {progress: 30.851754633700978, status: Loading model... 3617%, debug: [Worker] Model loading progress: 36.17251544566992}
+[log] [Worker] Model loading progress: 36.17251544566992
+[log] [Main] Received message from worker: {progress: 30.95773112073134, status: Loading model... 3653%, debug: [Worker] Model loading progress: 36.5257704024378}
+[log] [Worker] Model loading progress: 36.5257704024378
+[log] [Main] Received message from worker: {progress: 30.989688285191363, status: Loading model... 3663%, debug: [Worker] Model loading progress: 36.63229428397122}
+[log] [Worker] Model loading progress: 36.63229428397122
+[log] [Main] Received message from worker: {progress: 31.0376240318814, status: Loading model... 3679%, debug: [Worker] Model loading progress: 36.792080106271335}
+[log] [Worker] Model loading progress: 36.792080106271335
+[log] [Main] Received message from worker: {progress: 31.11751694303146, status: Loading model... 3706%, debug: [Worker] Model loading progress: 37.05838981010488}
+[log] [Worker] Model loading progress: 37.05838981010488
+[log] [Main] Received message from worker: {progress: 31.17555768337179, status: Loading model... 3725%, debug: [Worker] Model loading progress: 37.25185894457263}
+[log] [Worker] Model loading progress: 37.25185894457263
+[log] [Main] Received message from worker: {progress: 31.23947201229184, status: Loading model... 3746%, debug: [Worker] Model loading progress: 37.464906707639464}
+[log] [Worker] Model loading progress: 37.464906707639464
+[log] [Main] Received message from worker: {progress: 31.311375632326893, status: Loading model... 3770%, debug: [Worker] Model loading progress: 37.70458544108964}
+[log] [Worker] Model loading progress: 37.70458544108964
+[log] [Main] Received message from worker: {progress: 31.3193649234419, status: Loading model... 3773%, debug: [Worker] Model loading progress: 37.731216411473}
+[log] [Worker] Model loading progress: 37.731216411473
+[log] [Main] Received message from worker: {progress: 31.383279252361945, status: Loading model... 3794%, debug: [Worker] Model loading progress: 37.944264174539825}
+[log] [Worker] Model loading progress: 37.944264174539825
+[log] [Main] Received message from worker: {progress: 31.425341410472264, status: Loading model... 3808%, debug: [Worker] Model loading progress: 38.08447136824088}
+[log] [Worker] Model loading progress: 38.08447136824088
+[log] [Main] Received message from worker: {progress: 31.53719148608235, status: Loading model... 3846%, debug: [Worker] Model loading progress: 38.45730495360783}
+[log] [Worker] Model loading progress: 38.45730495360783
+[log] [Main] Received message from worker: {progress: 31.585127232772386, status: Loading model... 3862%, debug: [Worker] Model loading progress: 38.617090775907954}
+[log] [Worker] Model loading progress: 38.617090775907954
+[log] [Main] Received message from worker: {progress: 31.6011058150024, status: Loading model... 3867%, debug: [Worker] Model loading progress: 38.670352716674664}
+[log] [Worker] Model loading progress: 38.670352716674664
+[log] [Main] Received message from worker: {progress: 31.697258490814477, status: Loading model... 3899%, debug: [Worker] Model loading progress: 38.990861636048265}
+[log] [Worker] Model loading progress: 38.990861636048265
+[log] [Main] Received message from worker: {progress: 31.7292156552745, status: Loading model... 3910%, debug: [Worker] Model loading progress: 39.09738551758168}
+[log] [Worker] Model loading progress: 39.09738551758168
+[log] [Main] Received message from worker: {progress: 31.841065730884587, status: Loading model... 3947%, debug: [Worker] Model loading progress: 39.47021910294863}
+[log] [Worker] Model loading progress: 39.47021910294863
+[log] [Main] Received message from worker: {progress: 31.873022895344615, status: Loading model... 3958%, debug: [Worker] Model loading progress: 39.57674298448205}
+[log] [Worker] Model loading progress: 39.57674298448205
+[log] [Main] Received message from worker: {progress: 31.937218406696672, status: Loading model... 3979%, debug: [Worker] Model loading progress: 39.79072802232224}
+[log] [Worker] Model loading progress: 39.79072802232224
+[log] [Main] Received message from worker: {progress: 32.00113273561672, status: Loading model... 4000%, debug: [Worker] Model loading progress: 40.003775785389074}
+[log] [Worker] Model loading progress: 40.003775785389074
+[log] [Main] Received message from worker: {progress: 32.04906848230676, status: Loading model... 4016%, debug: [Worker] Model loading progress: 40.163561607689196}
+[log] [Worker] Model loading progress: 40.163561607689196
+[log] [Main] Received message from worker: {progress: 32.08102564676678, status: Loading model... 4027%, debug: [Worker] Model loading progress: 40.27008548922261}
+[log] [Worker] Model loading progress: 40.27008548922261
+[log] [Main] Received message from worker: {progress: 32.11298281122681, status: Loading model... 4038%, debug: [Worker] Model loading progress: 40.37660937075602}
+[log] [Worker] Model loading progress: 40.37660937075602
+[log] [Main] Received message from worker: {progress: 32.160918557916844, status: Loading model... 4054%, debug: [Worker] Model loading progress: 40.536395193056144}
+[log] [Worker] Model loading progress: 40.536395193056144
+[log] [Main] Received message from worker: {progress: 32.1906711740037, status: Loading model... 4064%, debug: [Worker] Model loading progress: 40.63557058001231}
+[log] [Worker] Model loading progress: 40.63557058001231
+[log] [Main] Received message from worker: {progress: 32.22262833846372, status: Loading model... 4074%, debug: [Worker] Model loading progress: 40.74209446154573}
+[log] [Worker] Model loading progress: 40.74209446154573
+[log] [Main] Received message from worker: {progress: 32.28504790938584, status: Loading model... 4095%, debug: [Worker] Model loading progress: 40.95015969795279}
+[log] [Worker] Model loading progress: 40.95015969795279
+[log] [Main] Received message from worker: {progress: 32.28861541149194, status: Loading model... 4096%, debug: [Worker] Model loading progress: 40.962051371639795}
+[log] [Worker] Model loading progress: 40.962051371639795
+[log] [Main] Received message from worker: {progress: 48.11374082918046, status: Loading model... 9371%, debug: [Worker] Model loading progress: 93.71246943060153}
+[log] [Worker] Model loading progress: 93.71246943060153
+[log] [Main] Received message from worker: {progress: 48.3077099032851, status: Loading model... 9436%, debug: [Worker] Model loading progress: 94.35903301095033}
+[log] [Worker] Model loading progress: 94.35903301095033
+[log] [Main] Received message from worker: {progress: 48.39231211171889, status: Loading model... 9464%, debug: [Worker] Model loading progress: 94.64104037239629}
+[log] [Worker] Model loading progress: 94.64104037239629
+[log] [Main] Received message from worker: {progress: 48.53778891729736, status: Loading model... 9513%, debug: [Worker] Model loading progress: 95.12596305765788}
+[log] [Worker] Model loading progress: 95.12596305765788
+[log] [Main] Received message from worker: {progress: 48.78025025992815, status: Loading model... 9593%, debug: [Worker] Model loading progress: 95.93416753309386}
+[log] [Worker] Model loading progress: 95.93416753309386
+[log] [Main] Received message from worker: {progress: 48.877234796980474, status: Loading model... 9626%, debug: [Worker] Model loading progress: 96.25744932326826}
+[log] [Worker] Model loading progress: 96.25744932326826
+[log] [Main] Received message from worker: {progress: 49.02271160255896, status: Loading model... 9674%, debug: [Worker] Model loading progress: 96.74237200852986}
+[log] [Worker] Model loading progress: 96.74237200852986
+[log] [Main] Received message from worker: {progress: 49.241780151592415, status: Loading model... 9747%, debug: [Worker] Model loading progress: 97.47260050530805}
+[log] [Worker] Model loading progress: 97.47260050530805
+[log] [Main] Received message from worker: {progress: 49.26602628585549, status: Loading model... 9755%, debug: [Worker] Model loading progress: 97.55342095285164}
+[log] [Worker] Model loading progress: 97.55342095285164
+[log] [Main] Received message from worker: {progress: 49.41150309143397, status: Loading model... 9804%, debug: [Worker] Model loading progress: 98.03834363811323}
+[log] [Worker] Model loading progress: 98.03834363811323
+[log] [Main] Received message from worker: {progress: 49.65396443406477, status: Loading model... 9885%, debug: [Worker] Model loading progress: 98.84654811354923}
+[log] [Worker] Model loading progress: 98.84654811354923
+[log] [Main] Received message from worker: {progress: 49.799441239643244, status: Loading model... 9933%, debug: [Worker] Model loading progress: 99.33147079881081}
+[log] [Worker] Model loading progress: 99.33147079881081
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 32.494545418805934, status: Loading model... 4165%, debug: [Worker] Model loading progress: 41.64848472935312}
+[log] [Worker] Model loading progress: 41.64848472935312
+[log] [Main] Received message from worker: {progress: 32.60639549441602, status: Loading model... 4202%, debug: [Worker] Model loading progress: 42.02131831472008}
+[log] [Worker] Model loading progress: 42.02131831472008
+[log] [Main] Received message from worker: {progress: 32.65433124110606, status: Loading model... 4218%, debug: [Worker] Model loading progress: 42.1811041370202}
+[log] [Worker] Model loading progress: 42.1811041370202
+[log] [Main] Received message from worker: {progress: 32.702548170228106, status: Loading model... 4234%, debug: [Worker] Model loading progress: 42.341827234093685}
+[log] [Worker] Model loading progress: 42.341827234093685
+[log] [Main] Received message from worker: {progress: 32.766462499148155, status: Loading model... 4255%, debug: [Worker] Model loading progress: 42.55487499716051}
+[log] [Worker] Model loading progress: 42.55487499716051
+[log] [Main] Received message from worker: {progress: 32.81439824583819, status: Loading model... 4271%, debug: [Worker] Model loading progress: 42.71466081946064}
+[log] [Worker] Model loading progress: 42.71466081946064
+[log] [Main] Received message from worker: {progress: 32.830376828068204, status: Loading model... 4277%, debug: [Worker] Model loading progress: 42.76792276022734}
+[log] [Worker] Model loading progress: 42.76792276022734
+[log] [Main] Received message from worker: {progress: 32.92624832144828, status: Loading model... 4309%, debug: [Worker] Model loading progress: 43.087494404827595}
+[log] [Worker] Model loading progress: 43.087494404827595
+[log] [Main] Received message from worker: {progress: 33.00642241503034, status: Loading model... 4335%, debug: [Worker] Model loading progress: 43.35474138343449}
+[log] [Worker] Model loading progress: 43.35474138343449
+[log] [Main] Received message from worker: {progress: 33.02240099726036, status: Loading model... 4341%, debug: [Worker] Model loading progress: 43.4080033242012}
+[log] [Worker] Model loading progress: 43.4080033242012
+[log] [Main] Received message from worker: {progress: 33.118272490640436, status: Loading model... 4373%, debug: [Worker] Model loading progress: 43.72757496880144}
+[log] [Worker] Model loading progress: 43.72757496880144
+[log] [Main] Received message from worker: {progress: 33.13425107287044, status: Loading model... 4378%, debug: [Worker] Model loading progress: 43.78083690956815}
+[log] [Worker] Model loading progress: 43.78083690956815
+[log] [Main] Received message from worker: {progress: 33.18980608240559, status: Loading model... 4397%, debug: [Worker] Model loading progress: 43.9660202746853}
+[log] [Worker] Model loading progress: 43.9660202746853
+[log] [Main] Received message from worker: {progress: 33.237741829095626, status: Loading model... 4413%, debug: [Worker] Model loading progress: 44.12580609698542}
+[log] [Worker] Model loading progress: 44.12580609698542
+[log] [Main] Received message from worker: {progress: 33.3336133224757, status: Loading model... 4445%, debug: [Worker] Model loading progress: 44.44537774158566}
+[log] [Worker] Model loading progress: 44.44537774158566
+[log] [Main] Received message from worker: {progress: 33.41312937106064, status: Loading model... 4471%, debug: [Worker] Model loading progress: 44.7104312368688}
+[log] [Worker] Model loading progress: 44.7104312368688
+[log] [Main] Received message from worker: {progress: 33.445086535520666, status: Loading model... 4482%, debug: [Worker] Model loading progress: 44.81695511840221}
+[log] [Worker] Model loading progress: 44.81695511840221
+[log] [Main] Received message from worker: {progress: 33.4930222822107, status: Loading model... 4498%, debug: [Worker] Model loading progress: 44.976740940702335}
+[log] [Worker] Model loading progress: 44.976740940702335
+[log] [Main] Received message from worker: {progress: 33.572915193360764, status: Loading model... 4524%, debug: [Worker] Model loading progress: 45.24305064453588}
+[log] [Worker] Model loading progress: 45.24305064453588
+[log] [Main] Received message from worker: {progress: 33.60487235782078, status: Loading model... 4535%, debug: [Worker] Model loading progress: 45.34957452606928}
+[log] [Worker] Model loading progress: 45.34957452606928
+[log] [Main] Received message from worker: {progress: 33.71084884485115, status: Loading model... 4570%, debug: [Worker] Model loading progress: 45.70282948283717}
+[log] [Worker] Model loading progress: 45.70282948283717
+[log] [Main] Received message from worker: {progress: 33.758784591541186, status: Loading model... 4586%, debug: [Worker] Model loading progress: 45.86261530513729}
+[log] [Worker] Model loading progress: 45.86261530513729
+[log] [Main] Received message from worker: {progress: 33.82775141728638, status: Loading model... 4609%, debug: [Worker] Model loading progress: 46.09250472428793}
+[log] [Worker] Model loading progress: 46.09250472428793
+[log] [Main] Received message from worker: {progress: 33.83574070840139, status: Loading model... 4612%, debug: [Worker] Model loading progress: 46.119135694671286}
+[log] [Worker] Model loading progress: 46.119135694671286
+[log] [Main] Received message from worker: {progress: 33.85025089348647, status: Loading model... 4617%, debug: [Worker] Model loading progress: 46.167502978288226}
+[log] [Worker] Model loading progress: 46.167502978288226
+[log] [Main] Received message from worker: {progress: 33.928675407491596, status: Loading model... 4643%, debug: [Worker] Model loading progress: 46.42891802497199}
+[log] [Worker] Model loading progress: 46.42891802497199
+[log] [Main] Received message from worker: {progress: 33.94465398972161, status: Loading model... 4648%, debug: [Worker] Model loading progress: 46.4821799657387}
+[log] [Worker] Model loading progress: 46.4821799657387
+[log] [Main] Received message from worker: {progress: 34.02539630613503, status: Loading model... 4675%, debug: [Worker] Model loading progress: 46.7513210204501}
+[log] [Worker] Model loading progress: 46.7513210204501
+[log] [Main] Received message from worker: {progress: 34.03990649122011, status: Loading model... 4680%, debug: [Worker] Model loading progress: 46.79968830406704}
+[log] [Worker] Model loading progress: 46.79968830406704
+[log] [Main] Received message from worker: {progress: 34.134309587455256, status: Loading model... 4711%, debug: [Worker] Model loading progress: 47.114365291517515}
+[log] [Worker] Model loading progress: 47.114365291517515
+[log] [Main] Received message from worker: {progress: 34.22693967224413, status: Loading model... 4742%, debug: [Worker] Model loading progress: 47.42313224081375}
+[log] [Worker] Model loading progress: 47.42313224081375
+[log] [Main] Received message from worker: {progress: 34.324685715170915, status: Loading model... 4775%, debug: [Worker] Model loading progress: 47.74895238390306}
+[log] [Worker] Model loading progress: 47.74895238390306
+[log] [Main] Received message from worker: {progress: 34.33255589428347, status: Loading model... 4778%, debug: [Worker] Model loading progress: 47.77518631427826}
+[log] [Worker] Model loading progress: 47.77518631427826
+[log] [Main] Received message from worker: {progress: 34.371153064716026, status: Loading model... 4790%, debug: [Worker] Model loading progress: 47.90384354905341}
+[log] [Worker] Model loading progress: 47.90384354905341
+[log] [Main] Received message from worker: {progress: 34.476944049447496, status: Loading model... 4826%, debug: [Worker] Model loading progress: 48.25648016482498}
+[log] [Worker] Model loading progress: 48.25648016482498
+[log] [Main] Received message from worker: {progress: 34.524879796137526, status: Loading model... 4842%, debug: [Worker] Model loading progress: 48.4162659871251}
+[log] [Worker] Model loading progress: 48.4162659871251
+[log] [Main] Received message from worker: {progress: 34.62874058063261, status: Loading model... 4876%, debug: [Worker] Model loading progress: 48.7624686021087}
+[log] [Worker] Model loading progress: 48.7624686021087
+[log] [Main] Received message from worker: {progress: 34.63672987174761, status: Loading model... 4879%, debug: [Worker] Model loading progress: 48.78909957249205}
+[log] [Worker] Model loading progress: 48.78909957249205
+[log] [Main] Received message from worker: {progress: 34.68466561843765, status: Loading model... 4895%, debug: [Worker] Model loading progress: 48.94888539479217}
+[log] [Worker] Model loading progress: 48.94888539479217
+[log] [Main] Received message from worker: {progress: 34.7617232733983, status: Loading model... 4921%, debug: [Worker] Model loading progress: 49.205744244661}
+[log] [Worker] Model loading progress: 49.205744244661
+[log] [Main] Received message from worker: {progress: 34.84161618454836, status: Loading model... 4947%, debug: [Worker] Model loading progress: 49.47205394849454}
+[log] [Worker] Model loading progress: 49.47205394849454
+[log] [Main] Received message from worker: {progress: 34.8895519312384, status: Loading model... 4963%, debug: [Worker] Model loading progress: 49.63183977079466}
+[log] [Worker] Model loading progress: 49.63183977079466
+[log] [Main] Received message from worker: {progress: 35.00139321989748, status: Loading model... 5000%, debug: [Worker] Model loading progress: 50.00464406632494}
+[log] [Worker] Model loading progress: 50.00464406632494
+[log] [Main] Received message from worker: {progress: 35.1611790421976, status: Loading model... 5054%, debug: [Worker] Model loading progress: 50.53726347399202}
+[log] [Worker] Model loading progress: 50.53726347399202
+[log] [Main] Received message from worker: {progress: 35.20112549777264, status: Loading model... 5067%, debug: [Worker] Model loading progress: 50.6704183259088}
+[log] [Worker] Model loading progress: 50.6704183259088
+[log] [Main] Received message from worker: {progress: 35.480741899846855, status: Loading model... 5160%, debug: [Worker] Model loading progress: 51.602472999489514}
+[log] [Worker] Model loading progress: 51.602472999489514
+[log] [Main] Received message from worker: {progress: 35.560626024045916, status: Loading model... 5187%, debug: [Worker] Model loading progress: 51.86875341348638}
+[log] [Worker] Model loading progress: 51.86875341348638
+[log] [Main] Received message from worker: {progress: 35.680465390771005, status: Loading model... 5227%, debug: [Worker] Model loading progress: 52.26821796923669}
+[log] [Worker] Model loading progress: 52.26821796923669
+[log] [Main] Received message from worker: {progress: 35.741294523562075, status: Loading model... 5247%, debug: [Worker] Model loading progress: 52.470981745206934}
+[log] [Worker] Model loading progress: 52.470981745206934
+[log] [Main] Received message from worker: {progress: 35.78923027025211, status: Loading model... 5263%, debug: [Worker] Model loading progress: 52.63076756750705}
+[log] [Worker] Model loading progress: 52.63076756750705
+[log] [Main] Received message from worker: {progress: 35.83716601694215, status: Loading model... 5279%, debug: [Worker] Model loading progress: 52.79055338980717}
+[log] [Worker] Model loading progress: 52.79055338980717
+[log] [Main] Received message from worker: {progress: 35.91705892809222, status: Loading model... 5306%, debug: [Worker] Model loading progress: 53.056863093640715}
+[log] [Worker] Model loading progress: 53.056863093640715
+[log] [Main] Received message from worker: {progress: 35.980973257012266, status: Loading model... 5327%, debug: [Worker] Model loading progress: 53.26991085670755}
+[log] [Worker] Model loading progress: 53.26991085670755
+[log] [Main] Received message from worker: {progress: 36.06086616816232, status: Loading model... 5354%, debug: [Worker] Model loading progress: 53.53622056054108}
+[log] [Worker] Model loading progress: 53.53622056054108
+[log] [Main] Received message from worker: {progress: 36.100812623737355, status: Loading model... 5367%, debug: [Worker] Model loading progress: 53.66937541245785}
+[log] [Worker] Model loading progress: 53.66937541245785
+[log] [Main] Received message from worker: {progress: 36.14075907931239, status: Loading model... 5380%, debug: [Worker] Model loading progress: 53.802530264374624}
+[log] [Worker] Model loading progress: 53.802530264374624
+[log] [Main] Received message from worker: {progress: 36.380063879181115, status: Loading model... 5460%, debug: [Worker] Model loading progress: 54.60021293060372}
+[log] [Worker] Model loading progress: 54.60021293060372
+[log] [Main] Received message from worker: {progress: 36.44912052709209, status: Loading model... 5483%, debug: [Worker] Model loading progress: 54.830401756973636}
+[log] [Worker] Model loading progress: 54.830401756973636
+[log] [Main] Received message from worker: {progress: 36.48239768685793, status: Loading model... 5494%, debug: [Worker] Model loading progress: 54.94132562285977}
+[log] [Worker] Model loading progress: 54.94132562285977
+[log] [Main] Received message from worker: {progress: 36.602228266632025, status: Loading model... 5534%, debug: [Worker] Model loading progress: 55.34076088877341}
+[log] [Worker] Model loading progress: 55.34076088877341
+[log] [Main] Received message from worker: {progress: 36.76201408893215, status: Loading model... 5587%, debug: [Worker] Model loading progress: 55.87338029644049}
+[log] [Worker] Model loading progress: 55.87338029644049
+[log] [Main] Received message from worker: {progress: 36.78627193166017, status: Loading model... 5595%, debug: [Worker] Model loading progress: 55.95423977220057}
+[log] [Worker] Model loading progress: 55.95423977220057
+[log] [Main] Received message from worker: {progress: 36.850186260580216, status: Loading model... 5617%, debug: [Worker] Model loading progress: 56.167287535267405}
+[log] [Worker] Model loading progress: 56.167287535267405
+[log] [Main] Received message from worker: {progress: 36.930079171730284, status: Loading model... 5643%, debug: [Worker] Model loading progress: 56.43359723910094}
+[log] [Worker] Model loading progress: 56.43359723910094
+[log] [Main] Received message from worker: {progress: 37.009963295929346, status: Loading model... 5670%, debug: [Worker] Model loading progress: 56.69987765309782}
+[log] [Worker] Model loading progress: 56.69987765309782
+[log] [Main] Received message from worker: {progress: 37.08985620707941, status: Loading model... 5697%, debug: [Worker] Model loading progress: 56.96618735693135}
+[log] [Worker] Model loading progress: 56.96618735693135
+[log] [Main] Received message from worker: {progress: 37.12980266265444, status: Loading model... 5710%, debug: [Worker] Model loading progress: 57.09934220884813}
+[log] [Worker] Model loading progress: 57.09934220884813
+[log] [Main] Received message from worker: {progress: 37.16974911822946, status: Loading model... 5723%, debug: [Worker] Model loading progress: 57.232497060764885}
+[log] [Worker] Model loading progress: 57.232497060764885
+[log] [Main] Received message from worker: {progress: 37.209695573804495, status: Loading model... 5737%, debug: [Worker] Model loading progress: 57.365651912681656}
+[log] [Worker] Model loading progress: 57.365651912681656
+[log] [Main] Received message from worker: {progress: 37.24964202937953, status: Loading model... 5750%, debug: [Worker] Model loading progress: 57.498806764598434}
+[log] [Worker] Model loading progress: 57.498806764598434
+[log] [Main] Received message from worker: {progress: 37.339851797331775, status: Loading model... 5780%, debug: [Worker] Model loading progress: 57.79950599110592}
+[log] [Worker] Model loading progress: 57.79950599110592
+[log] [Main] Received message from worker: {progress: 37.41974470848183, status: Loading model... 5807%, debug: [Worker] Model loading progress: 58.065815694939445}
+[log] [Worker] Model loading progress: 58.065815694939445
+[log] [Main] Received message from worker: {progress: 37.4375509765199, status: Loading model... 5813%, debug: [Worker] Model loading progress: 58.125169921733}
+[log] [Worker] Model loading progress: 58.125169921733
+[log] [Main] Received message from worker: {progress: 37.50945459655496, status: Loading model... 5836%, debug: [Worker] Model loading progress: 58.36484865518319}
+[log] [Worker] Model loading progress: 58.36484865518319
+[log] [Main] Received message from worker: {progress: 37.54940105212998, status: Loading model... 5850%, debug: [Worker] Model loading progress: 58.49800350709995}
+[log] [Worker] Model loading progress: 58.49800350709995
+[log] [Main] Received message from worker: {progress: 37.62929396328005, status: Loading model... 5876%, debug: [Worker] Model loading progress: 58.764313210933494}
+[log] [Worker] Model loading progress: 58.764313210933494
+[log] [Main] Received message from worker: {progress: 37.66923163190408, status: Loading model... 5890%, debug: [Worker] Model loading progress: 58.8974387730136}
+[log] [Worker] Model loading progress: 58.8974387730136
+[log] [Main] Received message from worker: {progress: 37.7091780874791, status: Loading model... 5903%, debug: [Worker] Model loading progress: 59.03059362493036}
+[log] [Worker] Model loading progress: 59.03059362493036
+[log] [Main] Received message from worker: {progress: 37.8290174542042, status: Loading model... 5943%, debug: [Worker] Model loading progress: 59.43005818068067}
+[log] [Worker] Model loading progress: 59.43005818068067
+[log] [Main] Received message from worker: {progress: 37.90891036535426, status: Loading model... 5970%, debug: [Worker] Model loading progress: 59.69636788451421}
+[log] [Worker] Model loading progress: 59.69636788451421
+[log] [Main] Received message from worker: {progress: 38.06869618765438, status: Loading model... 6023%, debug: [Worker] Model loading progress: 60.22898729218129}
+[log] [Worker] Model loading progress: 60.22898729218129
+[log] [Main] Received message from worker: {progress: 38.14858031185345, status: Loading model... 6050%, debug: [Worker] Model loading progress: 60.495267706178154}
+[log] [Worker] Model loading progress: 60.495267706178154
+[log] [Main] Received message from worker: {progress: 38.18852676742848, status: Loading model... 6063%, debug: [Worker] Model loading progress: 60.62842255809493}
+[log] [Worker] Model loading progress: 60.62842255809493
+[log] [Main] Received message from worker: {progress: 38.30836613415357, status: Loading model... 6103%, debug: [Worker] Model loading progress: 61.02788711384524}
+[log] [Worker] Model loading progress: 61.02788711384524
+[log] [Main] Received message from worker: {progress: 38.38825025835263, status: Loading model... 6129%, debug: [Worker] Model loading progress: 61.294167527842106}
+[log] [Worker] Model loading progress: 61.294167527842106
+[log] [Main] Received message from worker: {progress: 38.42757186407876, status: Loading model... 6143%, debug: [Worker] Model loading progress: 61.42523954692919}
+[log] [Worker] Model loading progress: 61.42523954692919
+[log] [Main] Received message from worker: {progress: 38.468143169502696, status: Loading model... 6156%, debug: [Worker] Model loading progress: 61.56047723167565}
+[log] [Worker] Model loading progress: 61.56047723167565
+[log] [Main] Received message from worker: {progress: 38.50138322880875, status: Loading model... 6167%, debug: [Worker] Model loading progress: 61.67127742936251}
+[log] [Worker] Model loading progress: 61.67127742936251
+[log] [Main] Received message from worker: {progress: 38.58127613995882, status: Loading model... 6194%, debug: [Worker] Model loading progress: 61.93758713319605}
+[log] [Worker] Model loading progress: 61.93758713319605
+[log] [Main] Received message from worker: {progress: 38.61323330441884, status: Loading model... 6204%, debug: [Worker] Model loading progress: 62.04411101472947}
+[log] [Worker] Model loading progress: 62.04411101472947
+[log] [Main] Received message from worker: {progress: 38.690898235326394, status: Loading model... 6230%, debug: [Worker] Model loading progress: 62.30299411775465}
+[log] [Worker] Model loading progress: 62.30299411775465
+[log] [Main] Received message from worker: {progress: 38.80274831093648, status: Loading model... 6268%, debug: [Worker] Model loading progress: 62.6758277031216}
+[log] [Worker] Model loading progress: 62.6758277031216
+[log] [Main] Received message from worker: {progress: 38.850684057626516, status: Loading model... 6284%, debug: [Worker] Model loading progress: 62.83561352542172}
+[log] [Worker] Model loading progress: 62.83561352542172
+[log] [Main] Received message from worker: {progress: 38.9468367334386, status: Loading model... 6316%, debug: [Worker] Model loading progress: 63.15612244479533}
+[log] [Worker] Model loading progress: 63.15612244479533
+[log] [Main] Received message from worker: {progress: 39.026729644588656, status: Loading model... 6342%, debug: [Worker] Model loading progress: 63.42243214862887}
+[log] [Worker] Model loading progress: 63.42243214862887
+[log] [Main] Received message from worker: {progress: 39.106622555738724, status: Loading model... 6369%, debug: [Worker] Model loading progress: 63.68874185246241}
+[log] [Worker] Model loading progress: 63.68874185246241
+[log] [Main] Received message from worker: {progress: 39.12039658959556, status: Loading model... 6373%, debug: [Worker] Model loading progress: 63.734655298651866}
+[log] [Worker] Model loading progress: 63.734655298651866
+[log] [Main] Received message from worker: {progress: 39.20827879186062, status: Loading model... 6403%, debug: [Worker] Model loading progress: 64.02759597286875}
+[log] [Worker] Model loading progress: 64.02759597286875
+[log] [Main] Received message from worker: {progress: 39.21626808297563, status: Loading model... 6405%, debug: [Worker] Model loading progress: 64.05422694325212}
+[log] [Worker] Model loading progress: 64.05422694325212
+[log] [Main] Received message from worker: {progress: 39.23224666520565, status: Loading model... 6411%, debug: [Worker] Model loading progress: 64.10748888401882}
+[log] [Worker] Model loading progress: 64.10748888401882
+[log] [Main] Received message from worker: {progress: 39.312139576355705, status: Loading model... 6437%, debug: [Worker] Model loading progress: 64.37379858785236}
+[log] [Worker] Model loading progress: 64.37379858785236
+[log] [Main] Received message from worker: {progress: 39.34409674081573, status: Loading model... 6448%, debug: [Worker] Model loading progress: 64.48032246938578}
+[log] [Worker] Model loading progress: 64.48032246938578
+[log] [Main] Received message from worker: {progress: 39.40213748115606, status: Loading model... 6467%, debug: [Worker] Model loading progress: 64.67379160385353}
+[log] [Worker] Model loading progress: 64.67379160385353
+[log] [Main] Received message from worker: {progress: 39.418116063386066, status: Loading model... 6473%, debug: [Worker] Model loading progress: 64.72705354462023}
+[log] [Worker] Model loading progress: 64.72705354462023
+[log] [Main] Received message from worker: {progress: 39.45007322784609, status: Loading model... 6483%, debug: [Worker] Model loading progress: 64.83357742615365}
+[log] [Worker] Model loading progress: 64.83357742615365
+[log] [Main] Received message from worker: {progress: 39.46605181007611, status: Loading model... 6489%, debug: [Worker] Model loading progress: 64.88683936692036}
+[log] [Worker] Model loading progress: 64.88683936692036
+[log] [Main] Received message from worker: {progress: 39.545944721226164, status: Loading model... 6515%, debug: [Worker] Model loading progress: 65.1531490707539}
+[log] [Worker] Model loading progress: 65.1531490707539
+[log] [Main] Received message from worker: {progress: 39.56192330345618, status: Loading model... 6521%, debug: [Worker] Model loading progress: 65.2064110115206}
+[log] [Worker] Model loading progress: 65.2064110115206
+[log] [Main] Received message from worker: {progress: 39.6199640437965, status: Loading model... 6540%, debug: [Worker] Model loading progress: 65.39988014598835}
+[log] [Worker] Model loading progress: 65.39988014598835
+[log] [Main] Received message from worker: {progress: 39.651921208256525, status: Loading model... 6551%, debug: [Worker] Model loading progress: 65.50640402752177}
+[log] [Worker] Model loading progress: 65.50640402752177
+[log] [Main] Received message from worker: {progress: 39.683878372716556, status: Loading model... 6561%, debug: [Worker] Model loading progress: 65.61292790905519}
+[log] [Worker] Model loading progress: 65.61292790905519
+[log] [Main] Received message from worker: {progress: 39.71583553717658, status: Loading model... 6572%, debug: [Worker] Model loading progress: 65.71945179058861}
+[log] [Worker] Model loading progress: 65.71945179058861
+[log] [Main] Received message from worker: {progress: 39.7477927016366, status: Loading model... 6583%, debug: [Worker] Model loading progress: 65.82597567212201}
+[log] [Worker] Model loading progress: 65.82597567212201
+[log] [Main] Received message from worker: {progress: 39.77974986609663, status: Loading model... 6593%, debug: [Worker] Model loading progress: 65.93249955365543}
+[log] [Worker] Model loading progress: 65.93249955365543
+[log] [Main] Received message from worker: {progress: 39.823280421351875, status: Loading model... 6608%, debug: [Worker] Model loading progress: 66.07760140450625}
+[log] [Worker] Model loading progress: 66.07760140450625
+[log] [Main] Received message from worker: {progress: 39.87121616804191, status: Loading model... 6624%, debug: [Worker] Model loading progress: 66.23738722680636}
+[log] [Worker] Model loading progress: 66.23738722680636
+[log] [Main] Received message from worker: {progress: 39.91915191473195, status: Loading model... 6640%, debug: [Worker] Model loading progress: 66.3971730491065}
+[log] [Worker] Model loading progress: 66.3971730491065
+[log] [Main] Received message from worker: {progress: 39.99904482588201, status: Loading model... 6666%, debug: [Worker] Model loading progress: 66.66348275294003}
+[log] [Worker] Model loading progress: 66.66348275294003
+[log] [Main] Received message from worker: {progress: 40.089042730682365, status: Loading model... 6696%, debug: [Worker] Model loading progress: 66.96347576894121}
+[log] [Worker] Model loading progress: 66.96347576894121
+[log] [Main] Received message from worker: {progress: 40.16893564183242, status: Loading model... 6723%, debug: [Worker] Model loading progress: 67.22978547277474}
+[log] [Worker] Model loading progress: 67.22978547277474
+[log] [Main] Received message from worker: {progress: 40.23036619260307, status: Loading model... 6743%, debug: [Worker] Model loading progress: 67.43455397534356}
+[log] [Worker] Model loading progress: 67.43455397534356
+[log] [Main] Received message from worker: {progress: 40.26232335706309, status: Loading model... 6754%, debug: [Worker] Model loading progress: 67.54107785687697}
+[log] [Worker] Model loading progress: 67.54107785687697
+[log] [Main] Received message from worker: {progress: 40.29428052152312, status: Loading model... 6765%, debug: [Worker] Model loading progress: 67.64760173841039}
+[log] [Worker] Model loading progress: 67.64760173841039
+[log] [Main] Received message from worker: {progress: 40.33927947392329, status: Loading model... 6780%, debug: [Worker] Model loading progress: 67.79759824641097}
+[log] [Worker] Model loading progress: 67.79759824641097
+[log] [Main] Received message from worker: {progress: 40.38721522061333, status: Loading model... 6796%, debug: [Worker] Model loading progress: 67.9573840687111}
+[log] [Worker] Model loading progress: 67.9573840687111
+[log] [Main] Received message from worker: {progress: 40.432214173013506, status: Loading model... 6811%, debug: [Worker] Model loading progress: 68.10738057671168}
+[log] [Worker] Model loading progress: 68.10738057671168
+[log] [Main] Received message from worker: {progress: 40.46417133747352, status: Loading model... 6821%, debug: [Worker] Model loading progress: 68.21390445824508}
+[log] [Worker] Model loading progress: 68.21390445824508
+[log] [Main] Received message from worker: {progress: 40.47507984897639, status: Loading model... 6825%, debug: [Worker] Model loading progress: 68.25026616325465}
+[log] [Worker] Model loading progress: 68.25026616325465
+[log] [Main] Received message from worker: {progress: 40.51210708416356, status: Loading model... 6837%, debug: [Worker] Model loading progress: 68.37369028054522}
+[log] [Worker] Model loading progress: 68.37369028054522
+[log] [Main] Received message from worker: {progress: 40.55710603656374, status: Loading model... 6852%, debug: [Worker] Model loading progress: 68.5236867885458}
+[log] [Worker] Model loading progress: 68.5236867885458
+[log] [Main] Received message from worker: {progress: 40.6369989477138, status: Loading model... 6879%, debug: [Worker] Model loading progress: 68.78999649237933}
+[log] [Worker] Model loading progress: 68.78999649237933
+[log] [Main] Received message from worker: {progress: 40.69797648234399, status: Loading model... 6899%, debug: [Worker] Model loading progress: 68.99325494114663}
+[log] [Worker] Model loading progress: 68.99325494114663
+[log] [Main] Received message from worker: {progress: 40.76988010237905, status: Loading model... 6923%, debug: [Worker] Model loading progress: 69.23293367459682}
+[log] [Worker] Model loading progress: 69.23293367459682
+[log] [Main] Received message from worker: {progress: 40.77786939349404, status: Loading model... 6926%, debug: [Worker] Model loading progress: 69.25956464498016}
+[log] [Worker] Model loading progress: 69.25956464498016
+[log] [Main] Received message from worker: {progress: 40.79384797572406, status: Loading model... 6931%, debug: [Worker] Model loading progress: 69.31282658574688}
+[log] [Worker] Model loading progress: 69.31282658574688
+[log] [Main] Received message from worker: {progress: 40.8417837224141, status: Loading model... 6947%, debug: [Worker] Model loading progress: 69.472612408047}
+[log] [Worker] Model loading progress: 69.472612408047
+[log] [Main] Received message from worker: {progress: 40.926368865398295, status: Loading model... 6975%, debug: [Worker] Model loading progress: 69.75456288466098}
+[log] [Worker] Model loading progress: 69.75456288466098
+[log] [Main] Received message from worker: {progress: 40.99028319431835, status: Loading model... 6997%, debug: [Worker] Model loading progress: 69.96761064772782}
+[log] [Worker] Model loading progress: 69.96761064772782
+[log] [Main] Received message from worker: {progress: 41.00626177654836, status: Loading model... 7002%, debug: [Worker] Model loading progress: 70.02087258849453}
+[log] [Worker] Model loading progress: 70.02087258849453
+[log] [Main] Received message from worker: {progress: 41.05667349076469, status: Loading model... 7019%, debug: [Worker] Model loading progress: 70.18891163588229}
+[log] [Worker] Model loading progress: 70.18891163588229
+[log] [Main] Received message from worker: {progress: 41.15254498414476, status: Loading model... 7051%, debug: [Worker] Model loading progress: 70.50848328048254}
+[log] [Worker] Model loading progress: 70.50848328048254
+[log] [Main] Received message from worker: {progress: 41.24042718640983, status: Loading model... 7080%, debug: [Worker] Model loading progress: 70.80142395469943}
+[log] [Worker] Model loading progress: 70.80142395469943
+[log] [Main] Received message from worker: {progress: 41.248416477524835, status: Loading model... 7083%, debug: [Worker] Model loading progress: 70.82805492508278}
+[log] [Worker] Model loading progress: 70.82805492508278
+[log] [Main] Received message from worker: {progress: 41.28037364198486, status: Loading model... 7093%, debug: [Worker] Model loading progress: 70.9345788066162}
+[log] [Worker] Model loading progress: 70.9345788066162
+[log] [Main] Received message from worker: {progress: 41.322435800095164, status: Loading model... 7107%, debug: [Worker] Model loading progress: 71.07478600031723}
+[log] [Worker] Model loading progress: 71.07478600031723
+[log] [Main] Received message from worker: {progress: 41.37037154678521, status: Loading model... 7123%, debug: [Worker] Model loading progress: 71.23457182261737}
+[log] [Worker] Model loading progress: 71.23457182261737
+[log] [Main] Received message from worker: {progress: 41.43428587570526, status: Loading model... 7145%, debug: [Worker] Model loading progress: 71.4476195856842}
+[log] [Worker] Model loading progress: 71.4476195856842
+[log] [Main] Received message from worker: {progress: 41.51141577892969, status: Loading model... 7170%, debug: [Worker] Model loading progress: 71.70471926309895}
+[log] [Worker] Model loading progress: 71.70471926309895
+[log] [Main] Received message from worker: {progress: 41.58331939896475, status: Loading model... 7194%, debug: [Worker] Model loading progress: 71.94439799654914}
+[log] [Worker] Model loading progress: 71.94439799654914
+[log] [Main] Received message from worker: {progress: 41.59130869007974, status: Loading model... 7197%, debug: [Worker] Model loading progress: 71.9710289669325}
+[log] [Worker] Model loading progress: 71.9710289669325
+[log] [Main] Received message from worker: {progress: 41.639244436769786, status: Loading model... 7213%, debug: [Worker] Model loading progress: 72.13081478923262}
+[log] [Worker] Model loading progress: 72.13081478923262
+[log] [Main] Received message from worker: {progress: 41.65522301899979, status: Loading model... 7218%, debug: [Worker] Model loading progress: 72.18407672999932}
+[log] [Worker] Model loading progress: 72.18407672999932
+[log] [Main] Received message from worker: {progress: 41.72712663903485, status: Loading model... 7242%, debug: [Worker] Model loading progress: 72.4237554634495}
+[log] [Worker] Model loading progress: 72.4237554634495
+[log] [Main] Received message from worker: {progress: 41.73511593014986, status: Loading model... 7245%, debug: [Worker] Model loading progress: 72.45038643383286}
+[log] [Worker] Model loading progress: 72.45038643383286
+[log] [Main] Received message from worker: {progress: 41.74973351130272, status: Loading model... 7250%, debug: [Worker] Model loading progress: 72.4991117043424}
+[log] [Worker] Model loading progress: 72.4991117043424
+[log] [Main] Received message from worker: {progress: 41.845605004682795, status: Loading model... 7282%, debug: [Worker] Model loading progress: 72.81868334894264}
+[log] [Worker] Model loading progress: 72.81868334894264
+[log] [Main] Received message from worker: {progress: 41.92549791583285, status: Loading model... 7308%, debug: [Worker] Model loading progress: 73.08499305277618}
+[log] [Worker] Model loading progress: 73.08499305277618
+[log] [Main] Received message from worker: {progress: 41.98648130843038, status: Loading model... 7329%, debug: [Worker] Model loading progress: 73.28827102810126}
+[log] [Worker] Model loading progress: 73.28827102810126
+[log] [Main] Received message from worker: {progress: 42.06637421958044, status: Loading model... 7355%, debug: [Worker] Model loading progress: 73.55458073193479}
+[log] [Worker] Model loading progress: 73.55458073193479
+[log] [Main] Received message from worker: {progress: 42.08235280181045, status: Loading model... 7361%, debug: [Worker] Model loading progress: 73.60784267270151}
+[log] [Worker] Model loading progress: 73.60784267270151
+[log] [Main] Received message from worker: {progress: 42.09833138404046, status: Loading model... 7366%, debug: [Worker] Model loading progress: 73.66110461346821}
+[log] [Worker] Model loading progress: 73.66110461346821
+[log] [Main] Received message from worker: {progress: 42.16619007763173, status: Loading model... 7389%, debug: [Worker] Model loading progress: 73.88730025877244}
+[log] [Worker] Model loading progress: 73.88730025877244
+[log] [Main] Received message from worker: {progress: 42.23930336792116, status: Loading model... 7413%, debug: [Worker] Model loading progress: 74.13101122640387}
+[log] [Worker] Model loading progress: 74.13101122640387
+[log] [Main] Received message from worker: {progress: 42.27126053238118, status: Loading model... 7424%, debug: [Worker] Model loading progress: 74.23753510793728}
+[log] [Worker] Model loading progress: 74.23753510793728
+[log] [Main] Received message from worker: {progress: 42.34968504638631, status: Loading model... 7450%, debug: [Worker] Model loading progress: 74.49895015462104}
+[log] [Worker] Model loading progress: 74.49895015462104
+[log] [Main] Received message from worker: {progress: 42.41359937530636, status: Loading model... 7471%, debug: [Worker] Model loading progress: 74.71199791768788}
+[log] [Worker] Model loading progress: 74.71199791768788
+[log] [Main] Received message from worker: {progress: 42.49534340413381, status: Loading model... 7498%, debug: [Worker] Model loading progress: 74.98447801377938}
+[log] [Worker] Model loading progress: 74.98447801377938
+[log] [Main] Received message from worker: {progress: 42.52258783387403, status: Loading model... 7508%, debug: [Worker] Model loading progress: 75.07529277958011}
+[log] [Worker] Model loading progress: 75.07529277958011
+[log] [Main] Received message from worker: {progress: 42.53528985970884, status: Loading model... 7512%, debug: [Worker] Model loading progress: 75.11763286569614}
+[log] [Worker] Model loading progress: 75.11763286569614
+[log] [Main] Received message from worker: {progress: 42.55457135918706, status: Loading model... 7518%, debug: [Worker] Model loading progress: 75.18190453062353}
+[log] [Worker] Model loading progress: 75.18190453062353
+[log] [Main] Received message from worker: {progress: 42.57054994141707, status: Loading model... 7524%, debug: [Worker] Model loading progress: 75.23516647139023}
+[log] [Worker] Model loading progress: 75.23516647139023
+[log] [Main] Received message from worker: {progress: 42.65044285256714, status: Loading model... 7550%, debug: [Worker] Model loading progress: 75.50147617522379}
+[log] [Worker] Model loading progress: 75.50147617522379
+[log] [Main] Received message from worker: {progress: 42.74631434594721, status: Loading model... 7582%, debug: [Worker] Model loading progress: 75.82104781982403}
+[log] [Worker] Model loading progress: 75.82104781982403
+[log] [Main] Received message from worker: {progress: 42.83668325534535, status: Loading model... 7612%, debug: [Worker] Model loading progress: 76.12227751781782}
+[log] [Worker] Model loading progress: 76.12227751781782
+[log] [Main] Received message from worker: {progress: 42.852661837575354, status: Loading model... 7618%, debug: [Worker] Model loading progress: 76.17553945858452}
+[log] [Worker] Model loading progress: 76.17553945858452
+[log] [Main] Received message from worker: {progress: 42.93255474872542, status: Loading model... 7644%, debug: [Worker] Model loading progress: 76.44184916241807}
+[log] [Worker] Model loading progress: 76.44184916241807
+[log] [Main] Received message from worker: {progress: 43.00804246844069, status: Loading model... 7669%, debug: [Worker] Model loading progress: 76.69347489480229}
+[log] [Worker] Model loading progress: 76.69347489480229
+[log] [Main] Received message from worker: {progress: 43.087935379590746, status: Loading model... 7696%, debug: [Worker] Model loading progress: 76.95978459863584}
+[log] [Worker] Model loading progress: 76.95978459863584
+[log] [Main] Received message from worker: {progress: 43.190796404327585, status: Loading model... 7730%, debug: [Worker] Model loading progress: 77.30265468109194}
+[log] [Worker] Model loading progress: 77.30265468109194
+[log] [Main] Received message from worker: {progress: 43.19878569544258, status: Loading model... 7733%, debug: [Worker] Model loading progress: 77.32928565147529}
+[log] [Worker] Model loading progress: 77.32928565147529
+[log] [Main] Received message from worker: {progress: 43.293647665785514, status: Loading model... 7765%, debug: [Worker] Model loading progress: 77.64549221928506}
+[log] [Worker] Model loading progress: 77.64549221928506
+[log] [Main] Received message from worker: {progress: 43.38658236487573, status: Loading model... 7796%, debug: [Worker] Model loading progress: 77.95527454958577}
+[log] [Worker] Model loading progress: 77.95527454958577
+[log] [Main] Received message from worker: {progress: 43.40256094710574, status: Loading model... 7801%, debug: [Worker] Model loading progress: 78.00853649035247}
+[log] [Worker] Model loading progress: 78.00853649035247
+[log] [Main] Received message from worker: {progress: 43.514411022715834, status: Loading model... 7838%, debug: [Worker] Model loading progress: 78.38137007571943}
+[log] [Worker] Model loading progress: 78.38137007571943
+[log] [Main] Received message from worker: {progress: 43.53038960494584, status: Loading model... 7843%, debug: [Worker] Model loading progress: 78.43463201648613}
+[log] [Worker] Model loading progress: 78.43463201648613
+[log] [Main] Received message from worker: {progress: 43.61386661577612, status: Loading model... 7871%, debug: [Worker] Model loading progress: 78.71288871925373}
+[log] [Worker] Model loading progress: 78.71288871925373
+[log] [Main] Received message from worker: {progress: 43.63783448912113, status: Loading model... 7879%, debug: [Worker] Model loading progress: 78.79278163040378}
+[log] [Worker] Model loading progress: 78.79278163040378
+[log] [Main] Received message from worker: {progress: 43.68577023581118, status: Loading model... 7895%, debug: [Worker] Model loading progress: 78.95256745270392}
+[log] [Worker] Model loading progress: 78.95256745270392
+[log] [Main] Received message from worker: {progress: 43.733705982501206, status: Loading model... 7911%, debug: [Worker] Model loading progress: 79.11235327500404}
+[log] [Worker] Model loading progress: 79.11235327500404
+[log] [Main] Received message from worker: {progress: 43.825172284446495, status: Loading model... 7942%, debug: [Worker] Model loading progress: 79.41724094815498}
+[log] [Worker] Model loading progress: 79.41724094815498
+[log] [Main] Received message from worker: {progress: 43.90506519559655, status: Loading model... 7968%, debug: [Worker] Model loading progress: 79.68355065198851}
+[log] [Worker] Model loading progress: 79.68355065198851
+[log] [Main] Received message from worker: {progress: 43.97945552276468, status: Loading model... 7993%, debug: [Worker] Model loading progress: 79.9315184092156}
+[log] [Worker] Model loading progress: 79.9315184092156
+[log] [Main] Received message from worker: {progress: 44.067337725029745, status: Loading model... 8022%, debug: [Worker] Model loading progress: 80.22445908343249}
+[log] [Worker] Model loading progress: 80.22445908343249
+[log] [Main] Received message from worker: {progress: 44.075327016144755, status: Loading model... 8025%, debug: [Worker] Model loading progress: 80.25109005381584}
+[log] [Worker] Model loading progress: 80.25109005381584
+[log] [Main] Received message from worker: {progress: 44.139241345064804, status: Loading model... 8046%, debug: [Worker] Model loading progress: 80.46413781688267}
+[log] [Worker] Model loading progress: 80.46413781688267
+[log] [Main] Received message from worker: {progress: 44.22712354732987, status: Loading model... 8076%, debug: [Worker] Model loading progress: 80.75707849109956}
+[log] [Worker] Model loading progress: 80.75707849109956
+[log] [Main] Received message from worker: {progress: 44.24825616448547, status: Loading model... 8083%, debug: [Worker] Model loading progress: 80.82752054828491}
+[log] [Worker] Model loading progress: 80.82752054828491
+[log] [Main] Received message from worker: {progress: 44.32814907563554, status: Loading model... 8109%, debug: [Worker] Model loading progress: 81.09383025211845}
+[log] [Worker] Model loading progress: 81.09383025211845
+[log] [Main] Received message from worker: {progress: 44.4080419867856, status: Loading model... 8136%, debug: [Worker] Model loading progress: 81.360139955952}
+[log] [Worker] Model loading progress: 81.360139955952
+[log] [Main] Received message from worker: {progress: 44.48206130935594, status: Loading model... 8161%, debug: [Worker] Model loading progress: 81.60687103118646}
+[log] [Worker] Model loading progress: 81.60687103118646
+[log] [Main] Received message from worker: {progress: 44.57009581877168, status: Loading model... 8190%, debug: [Worker] Model loading progress: 81.90031939590558}
+[log] [Worker] Model loading progress: 81.90031939590558
+[log] [Main] Received message from worker: {progress: 44.577932802736, status: Loading model... 8193%, debug: [Worker] Model loading progress: 81.92644267578669}
+[log] [Worker] Model loading progress: 81.92644267578669
+[log] [Main] Received message from worker: {progress: 44.64262428865563, status: Loading model... 8214%, debug: [Worker] Model loading progress: 82.14208096218545}
+[log] [Worker] Model loading progress: 82.14208096218545
+[log] [Main] Received message from worker: {progress: 44.65061357977064, status: Loading model... 8217%, debug: [Worker] Model loading progress: 82.16871193256881}
+[log] [Worker] Model loading progress: 82.16871193256881
+[log] [Main] Received message from worker: {progress: 44.722517199805694, status: Loading model... 8241%, debug: [Worker] Model loading progress: 82.40839066601899}
+[log] [Worker] Model loading progress: 82.40839066601899
+[log] [Main] Received message from worker: {progress: 44.73799980746814, status: Loading model... 8246%, debug: [Worker] Model loading progress: 82.45999935822714}
+[log] [Worker] Model loading progress: 82.45999935822714
+[log] [Main] Received message from worker: {progress: 44.825882009733206, status: Loading model... 8275%, debug: [Worker] Model loading progress: 82.75294003244402}
+[log] [Worker] Model loading progress: 82.75294003244402
+[log] [Main] Received message from worker: {progress: 44.833871300848216, status: Loading model... 8278%, debug: [Worker] Model loading progress: 82.77957100282738}
+[log] [Worker] Model loading progress: 82.77957100282738
+[log] [Main] Received message from worker: {progress: 44.881807047538246, status: Loading model... 8294%, debug: [Worker] Model loading progress: 82.9393568251275}
+[log] [Worker] Model loading progress: 82.9393568251275
+[log] [Main] Received message from worker: {progress: 44.91376421199828, status: Loading model... 8305%, debug: [Worker] Model loading progress: 83.04588070666092}
+[log] [Worker] Model loading progress: 83.04588070666092
+[log] [Main] Received message from worker: {progress: 45.009916887810355, status: Loading model... 8337%, debug: [Worker] Model loading progress: 83.36638962603452}
+[log] [Worker] Model loading progress: 83.36638962603452
+[log] [Main] Received message from worker: {progress: 45.02589547004037, status: Loading model... 8342%, debug: [Worker] Model loading progress: 83.41965156680124}
+[log] [Worker] Model loading progress: 83.41965156680124
+[log] [Main] Received message from worker: {progress: 45.13774554565045, status: Loading model... 8379%, debug: [Worker] Model loading progress: 83.79248515216818}
+[log] [Worker] Model loading progress: 83.79248515216818
+[log] [Main] Received message from worker: {progress: 45.153724127880466, status: Loading model... 8385%, debug: [Worker] Model loading progress: 83.8457470929349}
+[log] [Worker] Model loading progress: 83.8457470929349
+[log] [Main] Received message from worker: {progress: 45.24987680369255, status: Loading model... 8417%, debug: [Worker] Model loading progress: 84.16625601230851}
+[log] [Worker] Model loading progress: 84.16625601230851
+[log] [Main] Received message from worker: {progress: 45.26585538592256, status: Loading model... 8422%, debug: [Worker] Model loading progress: 84.21951795307521}
+[log] [Worker] Model loading progress: 84.21951795307521
+[log] [Main] Received message from worker: {progress: 45.337759005957615, status: Loading model... 8446%, debug: [Worker] Model loading progress: 84.45919668652539}
+[log] [Worker] Model loading progress: 84.45919668652539
+[log] [Main] Received message from worker: {progress: 45.345748297072625, status: Loading model... 8449%, debug: [Worker] Model loading progress: 84.48582765690875}
+[log] [Worker] Model loading progress: 84.48582765690875
+[log] [Main] Received message from worker: {progress: 45.425641208222686, status: Loading model... 8475%, debug: [Worker] Model loading progress: 84.75213736074228}
+[log] [Worker] Model loading progress: 84.75213736074228
+[log] [Main] Received message from worker: {progress: 45.44161979045269, status: Loading model... 8481%, debug: [Worker] Model loading progress: 84.80539930150898}
+[log] [Worker] Model loading progress: 84.80539930150898
+[log] [Main] Received message from worker: {progress: 45.473576954912716, status: Loading model... 8491%, debug: [Worker] Model loading progress: 84.9119231830424}
+[log] [Worker] Model loading progress: 84.9119231830424
+[log] [Main] Received message from worker: {progress: 45.56972963072481, status: Loading model... 8523%, debug: [Worker] Model loading progress: 85.23243210241601}
+[log] [Worker] Model loading progress: 85.23243210241601
+[log] [Main] Received message from worker: {progress: 45.63364395964485, status: Loading model... 8545%, debug: [Worker] Model loading progress: 85.44547986548284}
+[log] [Worker] Model loading progress: 85.44547986548284
+[log] [Main] Received message from worker: {progress: 45.700147510126314, status: Loading model... 8567%, debug: [Worker] Model loading progress: 85.66715836708771}
+[log] [Worker] Model loading progress: 85.66715836708771
+[log] [Main] Received message from worker: {progress: 45.71612609235632, status: Loading model... 8572%, debug: [Worker] Model loading progress: 85.72042030785441}
+[log] [Worker] Model loading progress: 85.72042030785441
+[log] [Main] Received message from worker: {progress: 45.748083256816344, status: Loading model... 8583%, debug: [Worker] Model loading progress: 85.82694418938782}
+[log] [Worker] Model loading progress: 85.82694418938782
+[log] [Main] Received message from worker: {progress: 45.81199758573639, status: Loading model... 8604%, debug: [Worker] Model loading progress: 86.03999195245466}
+[log] [Worker] Model loading progress: 86.03999195245466
+[log] [Main] Received message from worker: {progress: 45.89189049688646, status: Loading model... 8631%, debug: [Worker] Model loading progress: 86.3063016562882}
+[log] [Worker] Model loading progress: 86.3063016562882
+[log] [Main] Received message from worker: {progress: 45.95071229953791, status: Loading model... 8650%, debug: [Worker] Model loading progress: 86.50237433179305}
+[log] [Worker] Model loading progress: 86.50237433179305
+[log] [Main] Received message from worker: {progress: 46.03060521068798, status: Loading model... 8677%, debug: [Worker] Model loading progress: 86.76868403562659}
+[log] [Worker] Model loading progress: 86.76868403562659
+[log] [Main] Received message from worker: {progress: 46.110498121838035, status: Loading model... 8703%, debug: [Worker] Model loading progress: 87.03499373946013}
+[log] [Worker] Model loading progress: 87.03499373946013
+[log] [Main] Received message from worker: {progress: 46.198371537152106, status: Loading model... 8733%, debug: [Worker] Model loading progress: 87.32790512384035}
+[log] [Worker] Model loading progress: 87.32790512384035
+[log] [Main] Received message from worker: {progress: 46.20049602663839, status: Loading model... 8733%, debug: [Worker] Model loading progress: 87.3349867554613}
+[log] [Worker] Model loading progress: 87.3349867554613
+[log] [Main] Received message from worker: {progress: 46.28038893778845, status: Loading model... 8760%, debug: [Worker] Model loading progress: 87.60129645929484}
+[log] [Worker] Model loading progress: 87.60129645929484
+[log] [Main] Received message from worker: {progress: 46.376260431168525, status: Loading model... 8792%, debug: [Worker] Model loading progress: 87.92086810389509}
+[log] [Worker] Model loading progress: 87.92086810389509
+[log] [Main] Received message from worker: {progress: 46.39223901339854, status: Loading model... 8797%, debug: [Worker] Model loading progress: 87.97413004466179}
+[log] [Worker] Model loading progress: 87.97413004466179
+[log] [Main] Received message from worker: {progress: 46.482236918198886, status: Loading model... 8827%, debug: [Worker] Model loading progress: 88.27412306066296}
+[log] [Worker] Model loading progress: 88.27412306066296
+[log] [Main] Received message from worker: {progress: 46.4982155004289, status: Loading model... 8833%, debug: [Worker] Model loading progress: 88.32738500142968}
+[log] [Worker] Model loading progress: 88.32738500142968
+[log] [Main] Received message from worker: {progress: 46.59408699380897, status: Loading model... 8865%, debug: [Worker] Model loading progress: 88.64695664602992}
+[log] [Worker] Model loading progress: 88.64695664602992
+[log] [Main] Received message from worker: {progress: 46.61006557603899, status: Loading model... 8870%, debug: [Worker] Model loading progress: 88.70021858679662}
+[log] [Worker] Model loading progress: 88.70021858679662
+[log] [Main] Received message from worker: {progress: 46.61760380366931, status: Loading model... 8873%, debug: [Worker] Model loading progress: 88.72534601223104}
+[log] [Worker] Model loading progress: 88.72534601223104
+[log] [Main] Received message from worker: {progress: 46.668106316379316, status: Loading model... 8889%, debug: [Worker] Model loading progress: 88.89368772126439}
+[log] [Worker] Model loading progress: 88.89368772126439
+[log] [Main] Received message from worker: {progress: 46.70006348083933, status: Loading model... 8900%, debug: [Worker] Model loading progress: 89.00021160279779}
+[log] [Worker] Model loading progress: 89.00021160279779
+[log] [Main] Received message from worker: {progress: 46.795934974219406, status: Loading model... 8932%, debug: [Worker] Model loading progress: 89.31978324739804}
+[log] [Worker] Model loading progress: 89.31978324739804
+[log] [Main] Received message from worker: {progress: 46.883808389533485, status: Loading model... 8961%, debug: [Worker] Model loading progress: 89.61269463177827}
+[log] [Worker] Model loading progress: 89.61269463177827
+[log] [Main] Received message from worker: {progress: 46.9033798583947, status: Loading model... 8968%, debug: [Worker] Model loading progress: 89.67793286131568}
+[log] [Worker] Model loading progress: 89.67793286131568
+[log] [Main] Received message from worker: {progress: 46.999251351774774, status: Loading model... 9000%, debug: [Worker] Model loading progress: 89.99750450591593}
+[log] [Worker] Model loading progress: 89.99750450591593
+[log] [Main] Received message from worker: {progress: 47.087133554039845, status: Loading model... 9029%, debug: [Worker] Model loading progress: 90.29044518013282}
+[log] [Worker] Model loading progress: 90.29044518013282
+[log] [Main] Received message from worker: {progress: 47.10568866556871, status: Loading model... 9035%, debug: [Worker] Model loading progress: 90.35229555189571}
+[log] [Worker] Model loading progress: 90.35229555189571
+[log] [Main] Received message from worker: {progress: 47.185581576718775, status: Loading model... 9062%, debug: [Worker] Model loading progress: 90.61860525572924}
+[log] [Worker] Model loading progress: 90.61860525572924
+[log] [Main] Received message from worker: {progress: 47.20156015894878, status: Loading model... 9067%, debug: [Worker] Model loading progress: 90.67186719649595}
+[log] [Worker] Model loading progress: 90.67186719649595
+[log] [Main] Received message from worker: {progress: 47.27851627580898, status: Loading model... 9093%, debug: [Worker] Model loading progress: 90.92838758602994}
+[log] [Worker] Model loading progress: 90.92838758602994
+[log] [Main] Received message from worker: {progress: 47.34243060472903, status: Loading model... 9114%, debug: [Worker] Model loading progress: 91.14143534909678}
+[log] [Worker] Model loading progress: 91.14143534909678
+[log] [Main] Received message from worker: {progress: 47.434209331598765, status: Loading model... 9145%, debug: [Worker] Model loading progress: 91.44736443866256}
+[log] [Worker] Model loading progress: 91.44736443866256
+[log] [Main] Received message from worker: {progress: 47.506112951633824, status: Loading model... 9169%, debug: [Worker] Model loading progress: 91.68704317211275}
+[log] [Worker] Model loading progress: 91.68704317211275
+[log] [Main] Received message from worker: {progress: 47.51410224274883, status: Loading model... 9171%, debug: [Worker] Model loading progress: 91.71367414249609}
+[log] [Worker] Model loading progress: 91.71367414249609
+[log] [Main] Received message from worker: {progress: 47.57507977737902, status: Loading model... 9192%, debug: [Worker] Model loading progress: 91.91693259126339}
+[log] [Worker] Model loading progress: 91.91693259126339
+[log] [Main] Received message from worker: {progress: 47.636428316606995, status: Loading model... 9212%, debug: [Worker] Model loading progress: 92.12142772202331}
+[log] [Worker] Model loading progress: 92.12142772202331
+[log] [Main] Received message from worker: {progress: 47.67790760696762, status: Loading model... 9226%, debug: [Worker] Model loading progress: 92.2596920232254}
+[log] [Worker] Model loading progress: 92.2596920232254
+[log] [Main] Received message from worker: {progress: 47.70986477142765, status: Loading model... 9237%, debug: [Worker] Model loading progress: 92.36621590475882}
+[log] [Worker] Model loading progress: 92.36621590475882
+[log] [Main] Received message from worker: {progress: 47.74182193588767, status: Loading model... 9247%, debug: [Worker] Model loading progress: 92.47273978629224}
+[log] [Worker] Model loading progress: 92.47273978629224
+[log] [Main] Received message from worker: {progress: 47.773779100347696, status: Loading model... 9258%, debug: [Worker] Model loading progress: 92.57926366782566}
+[log] [Worker] Model loading progress: 92.57926366782566
+[log] [Main] Received message from worker: {progress: 47.82171484703773, status: Loading model... 9274%, debug: [Worker] Model loading progress: 92.73904949012578}
+[log] [Worker] Model loading progress: 92.73904949012578
+[log] [Main] Received message from worker: {progress: 47.892366814719196, status: Loading model... 9297%, debug: [Worker] Model loading progress: 92.97455604906399}
+[log] [Worker] Model loading progress: 92.97455604906399
+[log] [Main] Received message from worker: {progress: 47.964270434754255, status: Loading model... 9321%, debug: [Worker] Model loading progress: 93.21423478251417}
+[log] [Worker] Model loading progress: 93.21423478251417
+[log] [Main] Received message from worker: {progress: 47.972259725869264, status: Loading model... 9324%, debug: [Worker] Model loading progress: 93.24086575289753}
+[log] [Worker] Model loading progress: 93.24086575289753
+[log] [Main] Received message from worker: {progress: 48.05215263701932, status: Loading model... 9351%, debug: [Worker] Model loading progress: 93.50717545673108}
+[log] [Worker] Model loading progress: 93.50717545673108
+[log] [Main] Received message from worker: {progress: 48.06813121924934, status: Loading model... 9356%, debug: [Worker] Model loading progress: 93.56043739749778}
+[log] [Worker] Model loading progress: 93.56043739749778
+[log] [Main] Received message from worker: {progress: 48.1560134215144, status: Loading model... 9385%, debug: [Worker] Model loading progress: 93.85337807171467}
+[log] [Worker] Model loading progress: 93.85337807171467
+[log] [Main] Received message from worker: {progress: 48.18026247729142, status: Loading model... 9393%, debug: [Worker] Model loading progress: 93.93420825763809}
+[log] [Worker] Model loading progress: 93.93420825763809
+[log] [Main] Received message from worker: {progress: 48.228198223981465, status: Loading model... 9409%, debug: [Worker] Model loading progress: 94.09399407993821}
+[log] [Worker] Model loading progress: 94.09399407993821
+[log] [Main] Received message from worker: {progress: 48.26015538844149, status: Loading model... 9420%, debug: [Worker] Model loading progress: 94.20051796147163}
+[log] [Worker] Model loading progress: 94.20051796147163
+[log] [Main] Received message from worker: {progress: 48.276133970671495, status: Loading model... 9425%, debug: [Worker] Model loading progress: 94.25377990223834}
+[log] [Worker] Model loading progress: 94.25377990223834
+[log] [Main] Received message from worker: {progress: 48.37200546405157, status: Loading model... 9457%, debug: [Worker] Model loading progress: 94.57335154683858}
+[log] [Worker] Model loading progress: 94.57335154683858
+[log] [Main] Received message from worker: {progress: 48.45217955763364, status: Loading model... 9484%, debug: [Worker] Model loading progress: 94.84059852544549}
+[log] [Worker] Model loading progress: 94.84059852544549
+[log] [Main] Received message from worker: {progress: 48.46815813986366, status: Loading model... 9489%, debug: [Worker] Model loading progress: 94.89386046621219}
+[log] [Worker] Model loading progress: 94.89386046621219
+[log] [Main] Received message from worker: {progress: 48.51609388655369, status: Loading model... 9505%, debug: [Worker] Model loading progress: 95.05364628851231}
+[log] [Worker] Model loading progress: 95.05364628851231
+[log] [Main] Received message from worker: {progress: 48.58799750658875, status: Loading model... 9529%, debug: [Worker] Model loading progress: 95.29332502196249}
+[log] [Worker] Model loading progress: 95.29332502196249
+[log] [Main] Received message from worker: {progress: 48.59598679770376, status: Loading model... 9532%, debug: [Worker] Model loading progress: 95.31995599234585}
+[log] [Worker] Model loading progress: 95.31995599234585
+[log] [Main] Received message from worker: {progress: 48.611965379933764, status: Loading model... 9537%, debug: [Worker] Model loading progress: 95.37321793311256}
+[log] [Worker] Model loading progress: 95.37321793311256
+[log] [Main] Received message from worker: {progress: 48.66511178856695, status: Loading model... 9555%, debug: [Worker] Model loading progress: 95.55037262855652}
+[log] [Worker] Model loading progress: 95.55037262855652
+[log] [Main] Received message from worker: {progress: 48.670921915833894, status: Loading model... 9557%, debug: [Worker] Model loading progress: 95.56973971944632}
+[log] [Worker] Model loading progress: 95.56973971944632
+[log] [Main] Received message from worker: {progress: 48.750814826983955, status: Loading model... 9584%, debug: [Worker] Model loading progress: 95.83604942327986}
+[log] [Worker] Model loading progress: 95.83604942327986
+[log] [Main] Received message from worker: {progress: 48.83070773813402, status: Loading model... 9610%, debug: [Worker] Model loading progress: 96.1023591271134}
+[log] [Worker] Model loading progress: 96.1023591271134
+[log] [Main] Received message from worker: {progress: 48.91361359714928, status: Loading model... 9638%, debug: [Worker] Model loading progress: 96.3787119904976}
+[log] [Worker] Model loading progress: 96.3787119904976
+[log] [Main] Received message from worker: {progress: 48.99350650829934, status: Loading model... 9665%, debug: [Worker] Model loading progress: 96.64502169433113}
+[log] [Worker] Model loading progress: 96.64502169433113
+[log] [Main] Received message from worker: {progress: 49.06541012833439, status: Loading model... 9688%, debug: [Worker] Model loading progress: 96.88470042778133}
+[log] [Worker] Model loading progress: 96.88470042778133
+[log] [Main] Received message from worker: {progress: 49.089378001679414, status: Loading model... 9696%, debug: [Worker] Model loading progress: 96.96459333893138}
+[log] [Worker] Model loading progress: 96.96459333893138
+[log] [Main] Received message from worker: {progress: 49.16127283476347, status: Loading model... 9720%, debug: [Worker] Model loading progress: 97.20424278254491}
+[log] [Worker] Model loading progress: 97.20424278254491
+[log] [Main] Received message from worker: {progress: 49.16339732424975, status: Loading model... 9721%, debug: [Worker] Model loading progress: 97.21132441416584}
+[log] [Worker] Model loading progress: 97.21132441416584
+[log] [Main] Received message from worker: {progress: 49.21133307093979, status: Loading model... 9737%, debug: [Worker] Model loading progress: 97.37111023646597}
+[log] [Worker] Model loading progress: 97.37111023646597
+[log] [Main] Received message from worker: {progress: 49.29122598208985, status: Loading model... 9764%, debug: [Worker] Model loading progress: 97.6374199402995}
+[log] [Worker] Model loading progress: 97.6374199402995
+[log] [Main] Received message from worker: {progress: 49.339161728779885, status: Loading model... 9780%, debug: [Worker] Model loading progress: 97.79720576259963}
+[log] [Worker] Model loading progress: 97.79720576259963
+[log] [Main] Received message from worker: {progress: 49.429159633580234, status: Loading model... 9810%, debug: [Worker] Model loading progress: 98.09719877860078}
+[log] [Worker] Model loading progress: 98.09719877860078
+[log] [Main] Received message from worker: {progress: 49.445138215810246, status: Loading model... 9815%, debug: [Worker] Model loading progress: 98.1504607193675}
+[log] [Worker] Model loading progress: 98.1504607193675
+[log] [Main] Received message from worker: {progress: 49.53302041807532, status: Loading model... 9844%, debug: [Worker] Model loading progress: 98.4434013935844}
+[log] [Worker] Model loading progress: 98.4434013935844
+[log] [Main] Received message from worker: {progress: 49.55698829142033, status: Loading model... 9852%, debug: [Worker] Model loading progress: 98.52329430473445}
+[log] [Worker] Model loading progress: 98.52329430473445
+[log] [Main] Received message from worker: {progress: 49.6629647784507, status: Loading model... 9888%, debug: [Worker] Model loading progress: 98.87654926150233}
+[log] [Worker] Model loading progress: 98.87654926150233
+[log] [Main] Received message from worker: {progress: 49.72687910737075, status: Loading model... 9909%, debug: [Worker] Model loading progress: 99.08959702456916}
+[log] [Worker] Model loading progress: 99.08959702456916
+[log] [Main] Received message from worker: {progress: 49.82275060075082, status: Loading model... 9941%, debug: [Worker] Model loading progress: 99.40916866916942}
+[log] [Worker] Model loading progress: 99.40916866916942
+[log] [Main] Received message from worker: {progress: 49.85470776521085, status: Loading model... 9952%, debug: [Worker] Model loading progress: 99.51569255070282}
+[log] [Worker] Model loading progress: 99.51569255070282
+[log] [Main] Received message from worker: {progress: 49.88079134109115, status: Loading model... 9960%, debug: [Worker] Model loading progress: 99.60263780363717}
+[log] [Worker] Model loading progress: 99.60263780363717
+[log] [Main] Received message from worker: {progress: 49.92872708778118, status: Loading model... 9976%, debug: [Worker] Model loading progress: 99.76242362593727}
+[log] [Worker] Model loading progress: 99.76242362593727
+[log] [Main] Received message from worker: {progress: 50, status: Loading model... 10000%, debug: [Worker] Model loading progress: 100}
+[log] [Worker] Model loading progress: 100
+[log] [Main] Received message from worker: {progress: 50, status: Processing audio...}
+[log] [Main] Received message from worker: {debug: [Worker] Audio duration: 55.61 seconds}
+[log] [Worker] Audio duration: 55.61 seconds
+[log] [Main] Received message from worker: {type: progress, progress: Object}
+[log] [Main] Received message from worker: {progress: 90, status: Finalizing transcription...}
+[log] [Main] Received message from worker: {type: complete, result: Object, progress: 100, status: Transcription complete!}
+Screenshot saved to debug-final.png

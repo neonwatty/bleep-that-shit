@@ -11,6 +11,8 @@ function getPublicPath(path: string) {
 }
 
 let isCancelled = false;
+let currentProcessingChunk = 0;
+let lastProgressUpdate = 0;
 
 self.onmessage = async (event: MessageEvent) => {
   console.log('[Worker] Received message:', event.data);
@@ -123,17 +125,38 @@ self.onmessage = async (event: MessageEvent) => {
         }
       }, 30000);
       
+      let lastChunkUpdate = 0;
       const transcriber = await pipeline(
         "automatic-speech-recognition",
         model || "Xenova/whisper-tiny.en",
         {
           progress_callback: (progress: any) => {
             if (progress && progress.progress) {
-              self.postMessage({
-                progress: 20 + (progress.progress * 0.3), // 20-50% for model loading
-                status: `Loading model... ${Math.round(progress.progress * 100)}%`,
-                debug: `[Worker] Model loading progress: ${progress.progress}`
-              });
+              // During model loading, simulate chunk progress for long files
+              if (durationSeconds > 30 && progress.progress > 0.5) {
+                const simulatedChunk = Math.min(Math.floor(progress.progress * 2), totalChunks - 1);
+                if (simulatedChunk > lastChunkUpdate) {
+                  lastChunkUpdate = simulatedChunk;
+                  self.postMessage({
+                    type: 'progress',
+                    progress: {
+                      currentChunk: simulatedChunk,
+                      totalChunks: totalChunks,
+                      overallProgress: 20 + (progress.progress * 30),
+                      estimatedTimeRemaining: Math.round((totalChunks - simulatedChunk) * 10),
+                      status: `Loading model and preparing chunk ${simulatedChunk + 1} of ${totalChunks}...`,
+                      chunksCompleted: simulatedChunk,
+                      memoryUsageMB: 0
+                    }
+                  });
+                }
+              } else {
+                self.postMessage({
+                  progress: 20 + (progress.progress * 0.3), // 20-50% for model loading
+                  status: `Loading model... ${Math.round(progress.progress * 100)}%`,
+                  debug: `[Worker] Model loading progress: ${progress.progress}`
+                });
+              }
             }
           }
         }
@@ -158,6 +181,9 @@ self.onmessage = async (event: MessageEvent) => {
       // Calculate number of chunks for progress reporting
       const chunkLength = 15; // Reduced to 15 seconds for better visibility
       const totalChunks = Math.ceil(durationSeconds / chunkLength);
+      currentProcessingChunk = 0;
+      const startTime = Date.now();
+      lastProgressUpdate = startTime;
       
       // Always send chunk information for files > 30s
       if (durationSeconds > 30) {
@@ -174,6 +200,9 @@ self.onmessage = async (event: MessageEvent) => {
             memoryUsageMB: 0
           }
         });
+        
+        // We'll track progress through the pipeline callbacks instead of setInterval
+        // since setInterval doesn't work while the transcription is blocking the thread
       } else {
         self.postMessage({ 
           progress: 60,
@@ -187,30 +216,26 @@ self.onmessage = async (event: MessageEvent) => {
         chunk_length_s: 15, // Match the display chunk length
         stride_length_s: 3, // Proportionally reduced overlap
         return_timestamps: "word",
-        // Add callback for chunk progress if available
-        callback_function: (beams: any) => {
-          // This callback is called during processing
-          if (totalChunks > 1) {
-            const currentChunk = Math.floor(Math.random() * totalChunks);
+        // Use callback to simulate chunk progress during transcription
+        callback: durationSeconds > 30 ? (progress: any) => {
+          // Simulate moving through chunks during transcription
+          const estimatedProgress = lastChunkUpdate + 1;
+          if (estimatedProgress < totalChunks) {
+            lastChunkUpdate = estimatedProgress;
             self.postMessage({
               type: 'progress',
               progress: {
-                currentChunk: currentChunk,
+                currentChunk: estimatedProgress,
                 totalChunks: totalChunks,
-                overallProgress: 60 + (30 * (currentChunk / totalChunks)),
-                estimatedTimeRemaining: Math.round((totalChunks - currentChunk) * 5),
-                status: `Processing chunk ${currentChunk + 1} of ${totalChunks}...`,
-                chunksCompleted: currentChunk,
+                overallProgress: 60 + (25 * (estimatedProgress / totalChunks)),
+                estimatedTimeRemaining: Math.round((totalChunks - estimatedProgress) * 5),
+                status: `Processing chunk ${estimatedProgress + 1} of ${totalChunks}...`,
+                chunksCompleted: estimatedProgress,
                 memoryUsageMB: 0
               }
             });
-          } else {
-            self.postMessage({ 
-              progress: 60 + (30 * Math.random()),
-              status: `Processing audio...`
-            });
           }
-        }
+        } : undefined
       };
       
       // Only add language/task for multilingual models
@@ -220,6 +245,22 @@ self.onmessage = async (event: MessageEvent) => {
       }
       
       const result = await transcriber(audioData, transcriptionOptions);
+      
+      // Send final chunk completion if we have chunks
+      if (durationSeconds > 30 && lastChunkUpdate < totalChunks - 1) {
+        self.postMessage({
+          type: 'progress',
+          progress: {
+            currentChunk: totalChunks - 1,
+            totalChunks: totalChunks,
+            overallProgress: 85,
+            estimatedTimeRemaining: 0,
+            status: `Finalizing last chunk...`,
+            chunksCompleted: totalChunks - 1,
+            memoryUsageMB: 0
+          }
+        });
+      }
       
       self.postMessage({ progress: 90, status: "Finalizing transcription..." });
       
