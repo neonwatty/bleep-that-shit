@@ -51,6 +51,7 @@ export default function BleepPage() {
     enableProgressiveResults: true
   })
   const [transcriptionProgress, setTranscriptionProgress] = useState<TranscriptionProgress | null>(null)
+  const [isCancelling, setIsCancelling] = useState(false)
   
   const workerRef = useRef<Worker | null>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
@@ -144,6 +145,14 @@ export default function BleepPage() {
         } else if (type === 'chunkComplete') {
           // Individual chunk completed
           console.log('Chunk completed:', event.data.result);
+        } else if (type === 'cancelled') {
+          // Handle cancellation response
+          setIsTranscribing(false);
+          setIsCancelling(false);
+          setProgress(0);
+          setProgressText('Transcription cancelled');
+          setTranscriptionProgress(null);
+          console.log('Transcription cancelled by user');
         } else if (workerProgress) {
           setProgress(workerProgress)
         }
@@ -261,6 +270,34 @@ export default function BleepPage() {
       setProgressText('Error during transcription')
       setErrorMessage(error instanceof Error ? error.message : 'Unknown error occurred')
     }
+  }
+
+  const handleCancelTranscription = () => {
+    if (!workerRef.current || !isTranscribing) return
+    
+    setIsCancelling(true)
+    setProgressText('Cancelling...')
+    
+    // Send cancel message to worker
+    workerRef.current.postMessage({ type: 'cancel' })
+    
+    // Set a timeout in case worker doesn't respond
+    setTimeout(() => {
+      if (isTranscribing) {
+        // Force cleanup if worker doesn't respond
+        setIsTranscribing(false)
+        setIsCancelling(false)
+        setProgress(0)
+        setProgressText('Transcription cancelled')
+        setTranscriptionProgress(null)
+        
+        // Terminate and recreate worker
+        if (workerRef.current) {
+          workerRef.current.terminate()
+          workerRef.current = null
+        }
+      }
+    }, 2000)
   }
 
   const handleMatch = () => {
@@ -568,13 +605,25 @@ export default function BleepPage() {
           <h2 className="text-2xl font-extrabold uppercase text-black font-inter">Transcribe</h2>
         </div>
         
-        <button 
-          onClick={handleTranscribe}
-          disabled={!file || isTranscribing}
-          className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isTranscribing ? 'Transcribing...' : 'Start Transcription'}
-        </button>
+        <div className="flex gap-3">
+          <button 
+            onClick={handleTranscribe}
+            disabled={!file || isTranscribing}
+            className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isTranscribing ? 'Transcribing...' : 'Start Transcription'}
+          </button>
+          
+          {isTranscribing && (
+            <button
+              onClick={handleCancelTranscription}
+              disabled={isCancelling}
+              className="btn bg-red-500 hover:bg-red-600 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isCancelling ? 'Cancelling...' : 'Cancel'}
+            </button>
+          )}
+        </div>
 
         {isTranscribing && (
           <div className="mt-4">
