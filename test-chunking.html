@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Chunking</title>
+</head>
+<body>
+    <h1>Test Audio Chunking</h1>
+    <input type="file" id="fileInput" accept="audio/*,video/*">
+    <button id="processBtn" disabled>Process File</button>
+    <button id="cancelBtn" disabled>Cancel</button>
+    <div id="status"></div>
+    <div id="progress"></div>
+    <div id="result"></div>
+
+    <script type="module">
+        const fileInput = document.getElementById('fileInput');
+        const processBtn = document.getElementById('processBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const statusDiv = document.getElementById('status');
+        const progressDiv = document.getElementById('progress');
+        const resultDiv = document.getElementById('result');
+        
+        let worker = null;
+        
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                processBtn.disabled = false;
+                // Calculate estimated duration
+                const fileSizeBytes = file.size;
+                const durationSeconds = (fileSizeBytes * 8) / (128 * 1000);
+                statusDiv.textContent = `File: ${file.name} (${(fileSizeBytes/1024/1024).toFixed(2)}MB, ~${durationSeconds.toFixed(1)}s)`;
+            }
+        });
+        
+        processBtn.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            if (!file) return;
+            
+            processBtn.disabled = true;
+            cancelBtn.disabled = false;
+            
+            // Create worker
+            worker = new Worker('/workers/transcriptionWorker.js', { type: 'module' });
+            
+            worker.onmessage = (event) => {
+                console.log('Worker message:', event.data);
+                const { type, progress, status, result, error, debug } = event.data;
+                
+                if (debug) {
+                    console.log(debug);
+                }
+                
+                if (type === 'progress' && event.data.progress) {
+                    const prog = event.data.progress;
+                    progressDiv.innerHTML = `
+                        <strong>Chunk Progress:</strong><br>
+                        Current Chunk: ${prog.currentChunk + 1} of ${prog.totalChunks}<br>
+                        Overall: ${prog.overallProgress.toFixed(1)}%<br>
+                        Status: ${prog.status}
+                    `;
+                } else if (progress) {
+                    progressDiv.textContent = `Progress: ${progress}% - ${status || ''}`;
+                }
+                
+                if (type === 'complete' && result) {
+                    resultDiv.textContent = `Result: ${result.text?.substring(0, 200)}...`;
+                    processBtn.disabled = false;
+                    cancelBtn.disabled = true;
+                }
+                
+                if (type === 'cancelled') {
+                    statusDiv.textContent = 'Cancelled!';
+                    processBtn.disabled = false;
+                    cancelBtn.disabled = true;
+                }
+                
+                if (error) {
+                    resultDiv.textContent = `Error: ${error}`;
+                    processBtn.disabled = false;
+                    cancelBtn.disabled = true;
+                }
+            };
+            
+            worker.onerror = (error) => {
+                console.error('Worker error:', error);
+                resultDiv.textContent = 'Worker error: ' + error.message;
+            };
+            
+            // Decode audio
+            statusDiv.textContent = 'Decoding audio...';
+            const arrayBuffer = await file.arrayBuffer();
+            const audioContext = new AudioContext({ sampleRate: 16000 });
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+            const audioData = audioBuffer.getChannelData(0);
+            
+            // Send to worker
+            statusDiv.textContent = 'Processing...';
+            worker.postMessage({
+                type: 'transcribe',
+                audioData: new Float32Array(audioData),
+                model: 'Xenova/whisper-tiny.en',
+                language: 'en'
+            }, [audioData.buffer]);
+        });
+        
+        cancelBtn.addEventListener('click', () => {
+            if (worker) {
+                worker.postMessage({ type: 'cancel' });
+                cancelBtn.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

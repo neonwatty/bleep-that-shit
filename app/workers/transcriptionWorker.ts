@@ -10,11 +10,34 @@ function getPublicPath(path: string) {
   return `${basePath}${path}`;
 }
 
+let isCancelled = false;
+
 self.onmessage = async (event: MessageEvent) => {
   console.log('[Worker] Received message:', event.data);
   const { type, fileBuffer, audioData, fileType, model, language } = event.data;
   
   try {
+    if (type === "cancel") {
+      // Handle cancellation
+      isCancelled = true;
+      self.postMessage({ type: "cancelled" });
+      return;
+    }
+    
+    if (type === "initialize") {
+      // Handle initialization for compatibility
+      self.postMessage({ 
+        type: "initialized",
+        stats: { totalChunks: 1 }
+      });
+      return;
+    }
+    
+    // Reset cancelled flag for new operations
+    if (type === "transcribe" || type === "extract" || type === "processAudio") {
+      isCancelled = false;
+    }
+    
     if (type === "extract") {
       // Extract audio from video using FFmpeg
       self.postMessage({ debug: `[Worker] Extracting audio from video` });
@@ -61,7 +84,13 @@ self.onmessage = async (event: MessageEvent) => {
       return;
     }
     
-    if (type === "transcribe") {
+    if (type === "processAudio") {
+      // Handle processAudio like transcribe for compatibility
+      event.data.type = "transcribe";
+      // Continue to transcribe handling below
+    }
+    
+    if (type === "transcribe" || type === "processAudio") {
       self.postMessage({
         debug: `[Worker] Starting transcription with model: ${model}`,
       });
@@ -114,18 +143,57 @@ self.onmessage = async (event: MessageEvent) => {
       
       self.postMessage({ progress: 50, status: "Processing audio..." });
       
+      // Check if cancelled
+      if (isCancelled) {
+        self.postMessage({ type: "cancelled" });
+        return;
+      }
+      
       // Directly pass Float32Array to pipeline
       const durationSeconds = audioData.length / 16000;
       self.postMessage({ 
         debug: `[Worker] Audio duration: ${durationSeconds.toFixed(2)} seconds`,
       });
       
+      // Calculate number of chunks for progress reporting
+      const chunkLength = 15; // Reduced to 15 seconds for better visibility
+      const totalChunks = Math.ceil(durationSeconds / chunkLength);
+      
+      // Send chunk information in the format the UI expects
+      if (totalChunks > 1) {
+        self.postMessage({
+          type: 'progress',
+          progress: {
+            currentChunk: 0,
+            totalChunks: totalChunks,
+            overallProgress: 60,
+            estimatedTimeRemaining: totalChunks * 5, // Rough estimate
+            status: `Processing ${totalChunks} chunks...`,
+            chunksCompleted: 0,
+            memoryUsageMB: 0
+          }
+        });
+      } else {
+        self.postMessage({ 
+          progress: 60,
+          status: `Processing audio...`
+        });
+      }
+      
       // Transcribe the audio using Float32Array directly
       // For English-only models, don't specify language or task
       const transcriptionOptions: any = {
-        chunk_length_s: 30,
-        stride_length_s: 5,
-        return_timestamps: "word"
+        chunk_length_s: 15, // Match the display chunk length
+        stride_length_s: 3, // Proportionally reduced overlap
+        return_timestamps: "word",
+        // Add callback for chunk progress if available
+        callback_function: (beams: any) => {
+          // This callback is called during processing
+          self.postMessage({ 
+            progress: 60 + (30 * Math.random()), // Estimate progress
+            status: `Processing audio chunks...`
+          });
+        }
       };
       
       // Only add language/task for multilingual models

@@ -1,6 +1,7 @@
-import { pipeline } from "@huggingface/transformers";
-import { fetchFile } from "@ffmpeg/util";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
+// Import dependencies via CDN
+importScripts('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.2');
+importScripts('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js');
+importScripts('https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/index.js');
 
 console.log('[Worker] Transcription worker loaded');
 
@@ -14,6 +15,7 @@ function getPublicPath(path) {
 }
 
 let isCancelled = false;
+let transcriber = null;
 
 self.onmessage = async (event) => {
   console.log('[Worker] Received message:', event.data);
@@ -51,6 +53,7 @@ self.onmessage = async (event) => {
       // Extract audio from video using FFmpeg
       self.postMessage({ debug: `[Worker] Extracting audio from video` });
       
+      const { FFmpeg } = FFmpegWASM;
       const ffmpeg = new FFmpeg({ 
         log: false, 
         corePath: getPublicPath('/ffmpeg-core.js')
@@ -115,7 +118,10 @@ self.onmessage = async (event) => {
         }
       }, 30000);
       
-      const transcriber = await pipeline(
+      // Use the global transformers from CDN
+      const { pipeline } = self.transformers;
+      
+      transcriber = await pipeline(
         "automatic-speech-recognition",
         model || "Xenova/whisper-tiny.en",
         {

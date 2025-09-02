@@ -82,27 +82,36 @@ export default function BleepPage() {
     setProgressText('Initializing...')
 
     try {
-      // Initialize worker using webpack - use chunked worker for files > 1 minute
-      const fileDuration = file.size / (128 * 1024); // Rough estimate: 128kbps
-      const shouldUseChunking = useChunking && fileDuration > 60;
+      // Initialize worker using webpack - use chunked worker for files > 30 seconds
+      const fileDurationSeconds = (file.size * 8) / (128 * 1000); // Convert bytes to bits, then divide by 128kbps
+      const shouldUseChunking = useChunking && fileDurationSeconds > 30;
+      console.log('[Main] File size:', file.size, 'bytes, estimated duration:', fileDurationSeconds, 'seconds');
+      console.log('[Main] Should use chunking:', shouldUseChunking);
       
       if (!workerRef.current) {
         console.log('[Main] Creating new webpack worker')
         
-        // Use chunked worker for long files
-        const workerUrl = shouldUseChunking 
-          ? new URL('../workers/chunkedTranscriptionWorker.ts', import.meta.url)
-          : new URL('../workers/transcriptionWorker.ts', import.meta.url);
-        
-        workerRef.current = new Worker(workerUrl, { type: 'module' });
-        console.log('[Main] Worker created successfully:', shouldUseChunking ? 'chunked' : 'standard');
-        
-        // Initialize chunked worker if needed
-        if (shouldUseChunking) {
-          workerRef.current.postMessage({
-            type: 'initialize',
-            config: chunkingConfig
-          });
+        try {
+          // Use webpack worker syntax with TypeScript file
+          // Webpack will handle the module bundling
+          console.log('[Main] Using chunking:', shouldUseChunking);
+          
+          workerRef.current = new Worker(
+            new URL('../workers/transcriptionWorker.ts', import.meta.url),
+            { type: 'module' }
+          );
+          console.log('[Main] Worker created successfully');
+          
+          // Initialize chunked worker if needed
+          if (shouldUseChunking) {
+            workerRef.current.postMessage({
+              type: 'initialize',
+              config: chunkingConfig
+            });
+          }
+        } catch (workerError) {
+          console.error('[Main] Failed to create worker:', workerError);
+          throw new Error(`Failed to create worker: ${workerError instanceof Error ? workerError.message : 'Unknown error'}`);
         }
       } else {
         console.log('[Main] Using existing worker')
@@ -113,7 +122,24 @@ export default function BleepPage() {
       // Set up error handler first
       worker.onerror = (error) => {
         console.error('[Main] Worker error:', error)
-        setErrorMessage('Worker error occurred')
+        console.error('[Main] Worker error details:', {
+          message: error instanceof ErrorEvent ? error.message : 'Unknown error',
+          filename: error instanceof ErrorEvent ? error.filename : 'Unknown file',
+          lineno: error instanceof ErrorEvent ? error.lineno : 0,
+          colno: error instanceof ErrorEvent ? error.colno : 0,
+          error: error instanceof ErrorEvent ? error.error : null
+        })
+        const errorMsg = error instanceof ErrorEvent && error.message 
+          ? `Worker error: ${error.message}` 
+          : 'Worker error occurred - check console for details';
+        setErrorMessage(errorMsg)
+        setIsTranscribing(false)
+      }
+      
+      // Also handle unhandled rejections in worker
+      worker.onmessageerror = (error) => {
+        console.error('[Main] Worker message error:', error)
+        setErrorMessage('Worker communication error')
         setIsTranscribing(false)
       }
 
