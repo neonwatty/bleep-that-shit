@@ -215,27 +215,7 @@ self.onmessage = async (event: MessageEvent) => {
       const transcriptionOptions: any = {
         chunk_length_s: 15, // Match the display chunk length
         stride_length_s: 3, // Proportionally reduced overlap
-        return_timestamps: "word",
-        // Use callback to simulate chunk progress during transcription
-        callback: durationSeconds > 30 ? (progress: any) => {
-          // Simulate moving through chunks during transcription
-          const estimatedProgress = lastChunkUpdate + 1;
-          if (estimatedProgress < totalChunks) {
-            lastChunkUpdate = estimatedProgress;
-            self.postMessage({
-              type: 'progress',
-              progress: {
-                currentChunk: estimatedProgress,
-                totalChunks: totalChunks,
-                overallProgress: 60 + (25 * (estimatedProgress / totalChunks)),
-                estimatedTimeRemaining: Math.round((totalChunks - estimatedProgress) * 5),
-                status: `Processing chunk ${estimatedProgress + 1} of ${totalChunks}...`,
-                chunksCompleted: estimatedProgress,
-                memoryUsageMB: 0
-              }
-            });
-          }
-        } : undefined
+        return_timestamps: "word"
       };
       
       // Only add language/task for multilingual models
@@ -244,10 +224,34 @@ self.onmessage = async (event: MessageEvent) => {
         transcriptionOptions.task = "transcribe";
       }
       
+      // For long files, send periodic estimated progress updates
+      // Since the transcription blocks, we'll send updates before it starts
+      if (durationSeconds > 30) {
+        // Send a message that we're starting chunk processing
+        self.postMessage({
+          type: 'progress',
+          progress: {
+            currentChunk: 0,
+            totalChunks: totalChunks,
+            overallProgress: 60,
+            estimatedTimeRemaining: Math.round(durationSeconds * 0.7),
+            status: `Processing audio in ${totalChunks} chunks (this may take a while)...`,
+            chunksCompleted: 0,
+            memoryUsageMB: 0
+          }
+        });
+      }
+      
+      console.log(`[Worker] Starting transcription of ${durationSeconds}s audio...`);
+      const transcriptionStart = Date.now();
+      
       const result = await transcriber(audioData, transcriptionOptions);
       
-      // Send final chunk completion if we have chunks
-      if (durationSeconds > 30 && lastChunkUpdate < totalChunks - 1) {
+      const transcriptionTime = (Date.now() - transcriptionStart) / 1000;
+      console.log(`[Worker] Transcription completed in ${transcriptionTime}s`);
+      
+      // Send completion message for chunked files
+      if (durationSeconds > 30) {
         self.postMessage({
           type: 'progress',
           progress: {
@@ -255,8 +259,8 @@ self.onmessage = async (event: MessageEvent) => {
             totalChunks: totalChunks,
             overallProgress: 85,
             estimatedTimeRemaining: 0,
-            status: `Finalizing last chunk...`,
-            chunksCompleted: totalChunks - 1,
+            status: `Completed processing all ${totalChunks} chunks`,
+            chunksCompleted: totalChunks,
             memoryUsageMB: 0
           }
         });

@@ -664,21 +664,27 @@ export default function BleepPage() {
             {/* Enhanced progress info for chunked processing */}
             {transcriptionProgress && transcriptionProgress.totalChunks > 1 && (
               <div className="mt-3 p-3 bg-blue-50 rounded text-sm">
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <span className="font-semibold">Chunk:</span> {transcriptionProgress.currentChunk + 1} of {transcriptionProgress.totalChunks}
+                <div className="space-y-2">
+                  <div className="font-semibold">
+                    Processing long file in {transcriptionProgress.totalChunks} chunks
                   </div>
-                  <div>
-                    <span className="font-semibold">Completed:</span> {transcriptionProgress.chunksCompleted}
+                  <div className="text-xs text-gray-600">
+                    Your {Math.round((transcriptionProgress.totalChunks * 15))} second file is being processed in {transcriptionProgress.totalChunks} chunks.
+                    This helps manage memory for long recordings.
                   </div>
-                  {transcriptionProgress.estimatedTimeRemaining > 0 && (
-                    <div>
-                      <span className="font-semibold">Time remaining:</span> {formatTime(transcriptionProgress.estimatedTimeRemaining)}
+                  {transcriptionProgress.status && (
+                    <div className="text-xs italic">
+                      {transcriptionProgress.status}
                     </div>
                   )}
-                  {transcriptionProgress.memoryUsageMB > 0 && (
-                    <div>
-                      <span className="font-semibold">Memory:</span> {Math.round(transcriptionProgress.memoryUsageMB)} MB
+                  {transcriptionProgress.estimatedTimeRemaining > 0 && (
+                    <div className="text-xs">
+                      <span className="font-semibold">Estimated time:</span> {formatTime(transcriptionProgress.estimatedTimeRemaining)}
+                    </div>
+                  )}
+                  {transcriptionProgress.chunksCompleted === transcriptionProgress.totalChunks && (
+                    <div className="text-green-600 font-semibold">
+                      ✓ All {transcriptionProgress.totalChunks} chunks processed
                     </div>
                   )}
                 </div>
