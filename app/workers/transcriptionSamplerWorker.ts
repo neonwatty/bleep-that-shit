@@ -16,10 +16,15 @@ self.onmessage = async (event: MessageEvent) => {
       model,
       {
         progress_callback: (progress: any) => {
-          if (progress && progress.progress) {
+          if (progress && progress.progress !== undefined) {
+            // Check if progress.progress is already a percentage (0-100) or decimal (0-1)
+            const progressValue = progress.progress;
+            const isPercentage = progressValue > 1;
+            const normalizedProgress = isPercentage ? progressValue / 100 : progressValue;
+            
             self.postMessage({
-              progress: 10 + (progress.progress * 0.4),
-              status: `Loading ${model}... ${Math.round(progress.progress * 100)}%`
+              progress: 10 + (normalizedProgress * 40), // 10-50% for model loading
+              status: `Loading ${model}... ${Math.round(normalizedProgress * 100)}%`
             });
           }
         }

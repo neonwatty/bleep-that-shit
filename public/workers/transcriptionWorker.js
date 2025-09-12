@@ -93,7 +93,7 @@ self.onmessage = async (event) => {
           progress_callback: (progress) => {
             if (progress && progress.progress) {
               self.postMessage({
-                progress: 20 + (progress.progress * 0.3), // 20-50% for model loading
+                progress: 20 + (progress.progress * 30), // 20-50% for model loading  
                 status: `Loading model... ${Math.round(progress.progress * 100)}%`,
                 debug: `[Worker] Model loading progress: ${progress.progress}`
               });

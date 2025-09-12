@@ -17,6 +17,11 @@ export default function Home() {
               100% private. Everything happens in your browser.
             </span>
           </div>
+          <div className="text-sm md:text-base text-black mb-4 text-center">
+            <span className="bg-blue-200 px-4 py-2 rounded-full font-semibold inline-block">
+              ⏱️ Currently supports files up to 10 minutes
+            </span>
+          </div>
           <div className="flex flex-col sm:flex-row gap-4 mt-2 justify-center items-center">
             <Link href="/bleep" className="btn btn-primary">
               Bleep Your Sh*t!

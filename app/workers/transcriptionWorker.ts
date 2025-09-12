@@ -99,11 +99,16 @@ self.onmessage = async (event: MessageEvent) => {
         model || "Xenova/whisper-tiny.en",
         {
           progress_callback: (progress: any) => {
-            if (progress && progress.progress) {
+            if (progress && progress.progress !== undefined) {
+              // Check if progress.progress is already a percentage (0-100) or decimal (0-1)
+              const progressValue = progress.progress;
+              const isPercentage = progressValue > 1;
+              const normalizedProgress = isPercentage ? progressValue / 100 : progressValue;
+              
               self.postMessage({
-                progress: 20 + (progress.progress * 0.3), // 20-50% for model loading
-                status: `Loading model... ${Math.round(progress.progress * 100)}%`,
-                debug: `[Worker] Model loading progress: ${progress.progress}`
+                progress: 20 + (normalizedProgress * 30), // 20-50% for model loading
+                status: `Loading model... ${Math.round(normalizedProgress * 100)}%`,
+                debug: `[Worker] Model loading progress - raw: ${progressValue}, normalized: ${normalizedProgress}`
               });
             }
           }
