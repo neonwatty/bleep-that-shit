@@ -42,17 +42,40 @@ export default function BleepPage() {
   const [bleepSound, setBleepSound] = useState('bleep')
   const [censoredAudioUrl, setCensoredAudioUrl] = useState<string | null>(null)
   const [showFileWarning, setShowFileWarning] = useState(false)
+  const [fileDurationWarning, setFileDurationWarning] = useState<string | null>(null)
   
   const workerRef = useRef<Worker | null>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: (acceptedFiles) => {
+    onDrop: async (acceptedFiles) => {
       const file = acceptedFiles[0]
       if (file && (file.type.includes('audio') || file.type.includes('video'))) {
         setFile(file)
-        setFileUrl(URL.createObjectURL(file))
+        const url = URL.createObjectURL(file)
+        setFileUrl(url)
         setShowFileWarning(false)
+        setFileDurationWarning(null)
+        
+        // Check file duration
+        try {
+          const mediaElement = document.createElement(file.type.includes('video') ? 'video' : 'audio')
+          mediaElement.src = url
+          
+          await new Promise((resolve) => {
+            mediaElement.addEventListener('loadedmetadata', () => {
+              const duration = mediaElement.duration
+              if (duration > 600) { // 10 minutes = 600 seconds
+                const minutes = Math.floor(duration / 60)
+                const seconds = Math.floor(duration % 60)
+                setFileDurationWarning(`This file is ${minutes}:${seconds.toString().padStart(2, '0')} long. Files longer than 10 minutes may not process correctly.`)
+              }
+              resolve(null)
+            })
+          })
+        } catch (error) {
+          console.error('Error checking file duration:', error)
+        }
       } else {
         setShowFileWarning(true)
       }
@@ -380,6 +403,9 @@ export default function BleepPage() {
 
       <div className="mb-8 p-3 bg-yellow-100 border-l-4 border-yellow-400">
         <span className="bg-pink-200 px-2 py-1 rounded font-bold">Process your entire audio or video file</span>, censoring selected words with customizable matching and bleep sounds.
+        <div className="mt-2 text-sm">
+          <span className="inline-flex items-center">⏱️ <strong className="ml-1">Note:</strong> Currently supports files up to 10 minutes in length.</span>
+        </div>
       </div>
 
       {/* Workflow */}
@@ -400,7 +426,7 @@ export default function BleepPage() {
           <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold text-base">1</span>
           <h2 className="text-2xl font-extrabold uppercase text-black font-inter">Upload Your File</h2>
         </div>
-        <p className="mb-2 text-base text-blue-900">Audio (MP3) or Video (MP4) supported. Preview your input before processing.</p>
+        <p className="mb-2 text-base text-blue-900">Audio (MP3) or Video (MP4) supported. Files up to 10 minutes. Preview your input before processing.</p>
         
         <div 
           {...getRootProps()} 
@@ -417,6 +443,15 @@ export default function BleepPage() {
         {showFileWarning && (
           <div className="mt-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded">
             Please upload a valid audio or video file (MP3, MP4, etc.)
+          </div>
+        )}
+
+        {fileDurationWarning && (
+          <div className="mt-2 p-3 bg-orange-100 border border-orange-400 text-orange-800 rounded">
+            <div className="flex items-start">
+              <span className="mr-2">⚠️</span>
+              <div>{fileDurationWarning}</div>
+            </div>
           </div>
         )}
 

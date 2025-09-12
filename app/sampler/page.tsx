@@ -19,6 +19,7 @@ export default function SamplerPage() {
   const [language, setLanguage] = useState('en')
   const [isProcessing, setIsProcessing] = useState(false)
   const [results, setResults] = useState<ModelResult[]>([])
+  const [fileDurationWarning, setFileDurationWarning] = useState<string | null>(null)
   
   const audioRef = useRef<HTMLAudioElement>(null)
 
@@ -32,12 +33,34 @@ export default function SamplerPage() {
   ]
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: (acceptedFiles) => {
+    onDrop: async (acceptedFiles) => {
       const file = acceptedFiles[0]
       if (file && (file.type.includes('audio') || file.type.includes('video'))) {
         setFile(file)
-        setFileUrl(URL.createObjectURL(file))
+        const url = URL.createObjectURL(file)
+        setFileUrl(url)
         setResults([])
+        setFileDurationWarning(null)
+        
+        // Check file duration
+        try {
+          const mediaElement = document.createElement(file.type.includes('video') ? 'video' : 'audio')
+          mediaElement.src = url
+          
+          await new Promise((resolve) => {
+            mediaElement.addEventListener('loadedmetadata', () => {
+              const duration = mediaElement.duration
+              if (duration > 600) { // 10 minutes = 600 seconds
+                const minutes = Math.floor(duration / 60)
+                const seconds = Math.floor(duration % 60)
+                setFileDurationWarning(`This file is ${minutes}:${seconds.toString().padStart(2, '0')} long. The sampler works on files of any length, but full transcription is limited to 10 minutes.`)
+              }
+              resolve(null)
+            })
+          })
+        } catch (error) {
+          console.error('Error checking file duration:', error)
+        }
       }
     },
     accept: {
@@ -178,6 +201,9 @@ export default function SamplerPage() {
           <li>See performance differences (speed vs quality)</li>
           <li>Choose the right model before processing your full file</li>
         </ul>
+        <div className="mt-3 text-sm text-blue-900">
+          <span className="inline-flex items-center">⏱️ <strong className="ml-1">Note:</strong> Full transcription supports files up to 10 minutes.</span>
+        </div>
       </div>
 
       {/* Step 1: Upload */}
@@ -198,6 +224,15 @@ export default function SamplerPage() {
             </div>
           )}
         </div>
+
+        {fileDurationWarning && (
+          <div className="mt-3 p-3 bg-orange-100 border border-orange-400 text-orange-800 rounded">
+            <div className="flex items-start">
+              <span className="mr-2">⚠️</span>
+              <div>{fileDurationWarning}</div>
+            </div>
+          </div>
+        )}
 
         {file && (
           <div className="mt-4">
