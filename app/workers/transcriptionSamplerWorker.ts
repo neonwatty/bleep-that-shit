@@ -48,7 +48,17 @@ self.onmessage = async (event: MessageEvent) => {
     const result = await transcriber(audioData, transcriptionOptions);
     
     // Handle both single result and array of results
-    const finalResult = Array.isArray(result) ? result[0] : result;
+    let finalResult;
+    if (Array.isArray(result)) {
+      // Merge all chunks when result is an array
+      console.log(`[Worker] Merging ${result.length} transcription chunks`);
+      finalResult = {
+        text: result.map(r => r.text || '').join(' '),
+        chunks: result.flatMap(r => r.chunks || [])
+      };
+    } else {
+      finalResult = result;
+    }
     
     self.postMessage({
       type: "complete",

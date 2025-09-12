@@ -107,7 +107,7 @@ self.onmessage = async (event: MessageEvent) => {
               
               self.postMessage({
                 progress: 20 + (normalizedProgress * 30), // 20-50% for model loading
-                status: `Loading model... ${Math.round(normalizedProgress * 100)}%`,
+                status: `Loading model...`,
                 debug: `[Worker] Model loading progress - raw: ${progressValue}, normalized: ${normalizedProgress}`
               });
             }
@@ -144,7 +144,17 @@ self.onmessage = async (event: MessageEvent) => {
       self.postMessage({ progress: 90, status: "Finalizing transcription..." });
       
       // Handle both single result and array of results
-      const finalResult = Array.isArray(result) ? result[0] : result;
+      let finalResult;
+      if (Array.isArray(result)) {
+        // Merge all chunks when result is an array
+        console.log(`[Worker] Merging ${result.length} transcription chunks`);
+        finalResult = {
+          text: result.map(r => r.text || '').join(' '),
+          chunks: result.flatMap(r => r.chunks || [])
+        };
+      } else {
+        finalResult = result;
+      }
       
       // Format the result
       const formattedResult = {

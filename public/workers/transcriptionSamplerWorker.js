@@ -41,10 +41,22 @@ self.onmessage = async (event) => {
         task: 'transcribe',
       });
 
+      // Handle both single result and array of results
+      let finalResult;
+      if (Array.isArray(result)) {
+        // Merge all chunks when result is an array
+        console.log(`[Worker] Merging ${result.length} transcription chunks`);
+        finalResult = {
+          text: result.map(r => r.text || '').join(' ')
+        };
+      } else {
+        finalResult = result;
+      }
+
       self.postMessage({
         type: 'complete',
         result: {
-          text: result.text || 'No transcription generated'
+          text: finalResult.text || 'No transcription generated'
         }
       });
     }
