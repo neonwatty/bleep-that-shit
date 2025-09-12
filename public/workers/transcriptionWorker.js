@@ -134,7 +134,6 @@ self.onmessage = async (event) => {
       let finalResult;
       if (Array.isArray(result)) {
         // Merge all chunks when result is an array
-        console.log(`[Worker] Merging ${result.length} transcription chunks`);
         finalResult = {
           text: result.map(r => r.text || '').join(' '),
           chunks: result.flatMap(r => r.chunks || [])

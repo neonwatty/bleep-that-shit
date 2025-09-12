@@ -143,11 +143,11 @@ self.onmessage = async (event: MessageEvent) => {
       
       self.postMessage({ progress: 90, status: "Finalizing transcription..." });
       
+      
       // Handle both single result and array of results
       let finalResult;
       if (Array.isArray(result)) {
         // Merge all chunks when result is an array
-        console.log(`[Worker] Merging ${result.length} transcription chunks`);
         finalResult = {
           text: result.map(r => r.text || '').join(' '),
           chunks: result.flatMap(r => r.chunks || [])
