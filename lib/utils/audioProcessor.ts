@@ -164,12 +164,146 @@ export async function applyBleepsToVideo(
   bleepSegments: BleepSegment[],
   bleepSound: string = 'bleep'
 ): Promise<Blob> {
-  // This would use FFmpeg.wasm to:
-  // 1. Extract audio from video
-  // 2. Apply bleeps to audio
-  // 3. Remux video with new audio
-  // For now, returning a placeholder
-  
-  console.log('Video bleeping not yet implemented')
-  return videoFile
+  console.log('Starting video bleeping process...')
+
+  // Step 1: Extract audio from video using FFmpeg in a worker
+  const extractWorker = new Worker(
+    new URL('../../app/workers/transcriptionWorker.ts', import.meta.url),
+    { type: 'module' }
+  )
+
+  const extractedAudio = await new Promise<ArrayBuffer>((resolve, reject) => {
+    extractWorker.onmessage = (event) => {
+      if (event.data.type === 'extracted') {
+        resolve(event.data.audioBuffer)
+        extractWorker.terminate()
+      } else if (event.data.error) {
+        reject(new Error(event.data.error))
+        extractWorker.terminate()
+      }
+    }
+
+    extractWorker.onerror = (error) => {
+      reject(error)
+      extractWorker.terminate()
+    }
+
+    videoFile.arrayBuffer().then((buffer) => {
+      extractWorker.postMessage({
+        type: 'extract',
+        fileBuffer: buffer,
+        fileType: videoFile.type
+      })
+    })
+  })
+
+  // Step 2: Decode extracted audio and apply bleeps
+  const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+  const audioBuffer = await audioContext.decodeAudioData(extractedAudio)
+
+  // Create offline context for rendering
+  const offlineContext = new OfflineAudioContext(
+    audioBuffer.numberOfChannels,
+    audioBuffer.length,
+    audioBuffer.sampleRate
+  )
+
+  // Create buffer source for original audio
+  const source = offlineContext.createBufferSource()
+  source.buffer = audioBuffer
+
+  // Create gain nodes for ducking audio during bleeps
+  const gainNode = offlineContext.createGain()
+  source.connect(gainNode)
+  gainNode.connect(offlineContext.destination)
+
+  // Load bleep sound
+  const bleepResponse = await fetch(getPublicPath(`/bleeps/${bleepSound}.mp3`))
+  const bleepArrayBuffer = await bleepResponse.arrayBuffer()
+  const bleepBuffer = await audioContext.decodeAudioData(bleepArrayBuffer)
+
+  // Schedule gain automation and bleeps
+  const now = offlineContext.currentTime
+
+  // Set initial gain
+  gainNode.gain.setValueAtTime(1, now)
+
+  // Schedule volume ducking for each bleep segment
+  bleepSegments.forEach(segment => {
+    const startTime = segment.start
+    const endTime = segment.end
+    const duration = endTime - startTime
+
+    // Duck the original audio
+    gainNode.gain.setValueAtTime(1, startTime - 0.01)
+    gainNode.gain.linearRampToValueAtTime(0.1, startTime) // Reduce to 10% volume
+    gainNode.gain.setValueAtTime(0.1, endTime)
+    gainNode.gain.linearRampToValueAtTime(1, endTime + 0.01)
+
+    // Add bleep sound
+    const bleepSource = offlineContext.createBufferSource()
+    bleepSource.buffer = bleepBuffer
+
+    // Create gain node for bleep to adjust volume
+    const bleepGain = offlineContext.createGain()
+    bleepGain.gain.value = 0.8
+
+    bleepSource.connect(bleepGain)
+    bleepGain.connect(offlineContext.destination)
+
+    // Loop the bleep if needed for longer segments
+    if (duration > bleepBuffer.duration) {
+      bleepSource.loop = true
+      bleepSource.loopEnd = bleepBuffer.duration
+    }
+
+    bleepSource.start(startTime, 0, duration)
+  })
+
+  // Start the original audio
+  source.start(0)
+
+  // Render the censored audio
+  const renderedBuffer = await offlineContext.startRendering()
+
+  // Convert to WAV blob
+  const censoredAudioBlob = await audioBufferToWav(renderedBuffer)
+
+  // Step 3: Remux video with censored audio using worker
+  const remuxWorker = new Worker(
+    new URL('../../app/workers/remuxWorker.ts', import.meta.url),
+    { type: 'module' }
+  )
+
+  const remuxedVideo = await new Promise<Blob>((resolve, reject) => {
+    remuxWorker.onmessage = (event) => {
+      if (event.data.type === 'complete') {
+        const videoBlob = new Blob([event.data.videoBuffer], { type: 'video/mp4' })
+        resolve(videoBlob)
+        remuxWorker.terminate()
+      } else if (event.data.type === 'error') {
+        reject(new Error(event.data.error))
+        remuxWorker.terminate()
+      }
+    }
+
+    remuxWorker.onerror = (error) => {
+      reject(error)
+      remuxWorker.terminate()
+    }
+
+    Promise.all([
+      videoFile.arrayBuffer(),
+      censoredAudioBlob.arrayBuffer()
+    ]).then(([videoBuffer, audioBuffer]) => {
+      remuxWorker.postMessage({
+        type: 'remux',
+        videoBuffer,
+        audioBuffer
+      }, [videoBuffer, audioBuffer])
+    })
+  })
+
+  console.log('Video bleeping complete!')
+  return remuxedVideo
 }
