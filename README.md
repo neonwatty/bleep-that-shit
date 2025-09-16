@@ -29,11 +29,11 @@ https://github.com/user-attachments/assets/da50f8a9-27ba-4747-92e0-72a25e65175c
 
 Let's look more closely at the last example above - below is a short clip we'll bleep out some words from using the pipeline in this repo. (make sure to turn on audio - its off by default)
 
-https://github.com/neonwatty/bleep_that_sht/assets/16326421/fb8568fe-aba0-49e2-a563-642d658c0651
+https://github.com/neonwatty/bleep-that-shit/assets/16326421/fb8568fe-aba0-49e2-a563-642d658c0651
 
 Now the same clip with the words - "treetz", "ice", "cream", "chocolate", "syrup", and "cookie" - bleeped out
 
-https://github.com/neonwatty/bleep_that_sht/assets/16326421/63ebd7a0-46f6-4efd-80ea-20512ff427c0
+https://github.com/neonwatty/bleep-that-shit/assets/16326421/63ebd7a0-46f6-4efd-80ea-20512ff427c0
 
 ---
 
