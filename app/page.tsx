@@ -151,7 +151,7 @@ export default function Home() {
         </div>
         <div className="flex justify-center mb-4">
           <a 
-            href="https://github.com/neonwatty/bleep-that-sh*t" 
+            href="https://github.com/neonwatty/bleep-that-shit" 
             target="_blank" 
             rel="noopener" 
             className="btn btn-secondary btn-blue flex items-center gap-2" 
