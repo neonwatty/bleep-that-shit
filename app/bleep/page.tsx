@@ -40,7 +40,8 @@ export default function BleepPage() {
   const [fuzzyDistance, setFuzzyDistance] = useState(1)
   const [matchedWords, setMatchedWords] = useState<Array<{word: string, start: number, end: number}>>([])
   const [bleepSound, setBleepSound] = useState('bleep')
-  const [censoredAudioUrl, setCensoredAudioUrl] = useState<string | null>(null)
+  const [censoredMediaUrl, setCensoredMediaUrl] = useState<string | null>(null)
+  const [isProcessingVideo, setIsProcessingVideo] = useState(false)
   const [showFileWarning, setShowFileWarning] = useState(false)
   const [fileDurationWarning, setFileDurationWarning] = useState<string | null>(null)
   
@@ -320,23 +321,25 @@ export default function BleepPage() {
         // Process audio file
         censoredBlob = await applyBleeps(file, matchedWords, bleepSound)
       } else if (file.type.includes('video')) {
-        // Process video file (placeholder for now)
-        console.log('Video bleeping not yet fully implemented')
+        // Process video file
+        setIsProcessingVideo(true)
+        setProgressText('Processing video (this may take a moment)...')
         censoredBlob = await applyBleepsToVideo(file, matchedWords, bleepSound)
+        setIsProcessingVideo(false)
       } else {
         throw new Error('Unsupported file type for bleeping')
       }
       
-      // Create URL for the censored audio
+      // Create URL for the censored media
       const url = URL.createObjectURL(censoredBlob)
-      setCensoredAudioUrl(url)
+      setCensoredMediaUrl(url)
       
       setProgress(100)
       setProgressText('Bleeping complete!')
       
       // Clean up old URL
-      if (censoredAudioUrl) {
-        URL.revokeObjectURL(censoredAudioUrl)
+      if (censoredMediaUrl) {
+        URL.revokeObjectURL(censoredMediaUrl)
       }
     } catch (error) {
       console.error('Error applying bleeps:', error)
@@ -694,19 +697,42 @@ export default function BleepPage() {
             Apply Bleeps!
           </button>
 
-          {censoredAudioUrl && (
+          {isProcessingVideo && (
+            <div className="mt-4">
+              <p className="text-gray-600">Processing video... This may take a few moments.</p>
+            </div>
+          )}
+
+          {censoredMediaUrl && (
             <div className="mt-4">
               <h3 className="font-bold mb-2">Censored Result:</h3>
-              <audio controls className="w-full">
-                <source src={censoredAudioUrl} type="audio/mpeg" />
-              </audio>
-              <a 
-                href={censoredAudioUrl}
-                download="censored-audio.mp3"
-                className="mt-2 inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-              >
-                Download Censored Audio
-              </a>
+              {file?.type.includes('video') ? (
+                <>
+                  <video controls className="w-full max-w-lg">
+                    <source src={censoredMediaUrl} type="video/mp4" />
+                  </video>
+                  <a
+                    href={censoredMediaUrl}
+                    download="censored-video.mp4"
+                    className="mt-2 inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                  >
+                    Download Censored Video
+                  </a>
+                </>
+              ) : (
+                <>
+                  <audio controls className="w-full">
+                    <source src={censoredMediaUrl} type="audio/mpeg" />
+                  </audio>
+                  <a
+                    href={censoredMediaUrl}
+                    download="censored-audio.mp3"
+                    className="mt-2 inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                  >
+                    Download Censored Audio
+                  </a>
+                </>
+              )}
             </div>
           )}
         </section>
