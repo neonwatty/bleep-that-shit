@@ -6,6 +6,8 @@ Make someone sound naughty 😈 or make your content more Ad-friendly.
 
 **Bleep That Sh\*t!** lets you instantly transcribe and censor words in your audio or video files, with full control over what gets bleeped. No uploads, no servers, no installs — everything happens right in your browser.
 
+**The current in-browser implementation works for clips of length 10 minutes or less.**
+
 ---
 
 ## How it works
@@ -15,23 +17,7 @@ Make someone sound naughty 😈 or make your content more Ad-friendly.
 3. **Censor**: Pick words to bleep (exact, partial, or fuzzy match).
 4. **Preview & Download**: Hear the result and save your censored file.
 
-All processing is done locally in your browser using cutting-edge technologies. Your media and transcripts stay private — nothing is sent to a server.
-
----
-
-## Technology Highlights
-
-- **Next.js 15**: Static site generation with App Router
-- **TypeScript**: Type-safe development throughout
-- **transformers.js + ONNX Whisper**: In-browser speech-to-text with word-level timestamps
-- **ffmpeg.wasm**: Audio/video extraction and muxing, all in-browser
-- **Web Audio API**: Precise audio editing and bleep insertion
-- **Web Workers**: Background processing to keep UI responsive
-- **Plyr**: Beautiful, interactive media playback
-- **Tailwind CSS**: Modern, responsive styling
-- **GitHub Pages**: Static hosting with GitHub Actions CI/CD
-- **No backend required** — 100% client-side processing
-- **No server/cloud processing** — privacy-first, local-only by design
+All processing is done locally in your browser.  Your media and transcripts stay private — nothing is sent to a server.
 
 ---
 
@@ -114,31 +100,6 @@ npm run start        # Start production server
 npm test            # Run Playwright tests
 npm run test:ui     # Run tests with UI
 ```
-
----
-
-## Deployment
-
-### GitHub Pages (Automatic)
-
-The app automatically deploys to GitHub Pages when changes are pushed to the main branch. The deployment workflow:
-1. Builds the Next.js app as a static site
-2. Exports all pages and assets
-3. Deploys to GitHub Pages
-
-### Deploy to Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/neonwatty/bleep-that-shit)
-
-### Build for Static Hosting
-
-```bash
-npm run build
-npm run export
-```
-
-The static files will be in the `out` directory. The app is configured for static export with `next.config.ts` supporting base path deployment.
-
 ---
 
 ## Browser Requirements
