@@ -3,7 +3,15 @@ export function Footer() {
     <footer className="w-full max-w-4xl mx-auto py-8 px-2 md:px-0 mt-12 border-t-2 border-black">
       <div className="flex flex-col items-center gap-4">
         <div className="text-center text-sm text-gray-700">
-          Built with love using Next.js, Whisper, and FFmpeg
+          Made by{' '}
+          <a
+            href="https://x.com/neonwatty"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-black hover:underline"
+          >
+            neonwatty
+          </a>
         </div>
         <div className="flex gap-6">
           <a
