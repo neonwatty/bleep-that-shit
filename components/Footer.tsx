@@ -6,14 +6,32 @@ export function Footer() {
           Built with love using Next.js, Whisper, and FFmpeg
         </div>
         <div className="flex gap-6">
-          <a 
-            href="https://github.com/neonwatty/bleep-that-shit" 
-            target="_blank" 
+          <a
+            href="https://github.com/neonwatty/bleep-that-shit"
+            target="_blank"
             rel="noopener noreferrer"
             className="text-gray-700 hover:text-black transition-colors"
             aria-label="GitHub repository"
           >
             <i className="fab fa-github text-2xl"></i>
+          </a>
+          <a
+            href="https://x.com/neonwatty"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-700 hover:text-black transition-colors"
+            aria-label="Follow on X"
+          >
+            <i className="fab fa-x-twitter text-2xl"></i>
+          </a>
+          <a
+            href="https://neonwatty.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-700 hover:text-black transition-colors"
+            aria-label="Visit blog"
+          >
+            <i className="fas fa-globe text-2xl"></i>
           </a>
         </div>
         <div className="text-center text-xs text-gray-600">
