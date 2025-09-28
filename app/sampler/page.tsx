@@ -313,8 +313,11 @@ export default function SamplerPage() {
                 <option value="de">German</option>
                 <option value="it">Italian</option>
                 <option value="pt">Portuguese</option>
+                <option value="nl">Dutch</option>
+                <option value="pl">Polish</option>
                 <option value="ja">Japanese</option>
                 <option value="zh">Chinese</option>
+                <option value="ko">Korean</option>
               </select>
             </div>
           </div>
