@@ -797,7 +797,7 @@ export default function BleepPage() {
               <h3 className="font-bold mb-2">Censored Result:</h3>
               {file?.type.includes('video') ? (
                 <>
-                  <video controls className="w-full max-w-lg">
+                  <video key={censoredMediaUrl} controls className="w-full max-w-lg">
                     <source src={censoredMediaUrl} type="video/mp4" />
                   </video>
                   <a
@@ -810,7 +810,7 @@ export default function BleepPage() {
                 </>
               ) : (
                 <>
-                  <audio controls className="w-full">
+                  <audio key={censoredMediaUrl} controls className="w-full">
                     <source src={censoredMediaUrl} type="audio/mpeg" />
                   </audio>
                   <a
