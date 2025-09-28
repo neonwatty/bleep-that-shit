@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone'
 import dynamic from 'next/dynamic'
 import { decodeAudioToMono16kHzPCM } from '@/lib/utils/audioDecode'
 import { applyBleeps, applyBleepsToVideo } from '@/lib/utils/audioProcessor'
+import { getPublicPath } from '@/lib/utils/paths'
 import 'plyr-react/plyr.css'
 
 // Dynamically import Plyr to avoid SSR issues
@@ -40,10 +41,14 @@ export default function BleepPage() {
   const [fuzzyDistance, setFuzzyDistance] = useState(1)
   const [matchedWords, setMatchedWords] = useState<Array<{word: string, start: number, end: number}>>([])
   const [bleepSound, setBleepSound] = useState('bleep')
+  const [bleepVolume, setBleepVolume] = useState(80)
   const [censoredMediaUrl, setCensoredMediaUrl] = useState<string | null>(null)
   const [isProcessingVideo, setIsProcessingVideo] = useState(false)
   const [showFileWarning, setShowFileWarning] = useState(false)
   const [fileDurationWarning, setFileDurationWarning] = useState<string | null>(null)
+  const [isPreviewingBleep, setIsPreviewingBleep] = useState(false)
+  const [hasBleeped, setHasBleeped] = useState(false)
+  const [lastBleepVolume, setLastBleepVolume] = useState<number | null>(null)
   
   const workerRef = useRef<Worker | null>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
@@ -311,20 +316,23 @@ export default function BleepPage() {
     try {
       setProgressText('Applying bleeps...')
       setProgress(0)
-      
-      console.log('Bleeping', matchedWords.length, 'words with', bleepSound, 'sound')
+
+      // Convert volume percentage to 0-1 range
+      const volumeValue = bleepVolume / 100
+
+      console.log('Bleeping', matchedWords.length, 'words with', bleepSound, 'sound at', bleepVolume + '% volume')
       console.log('Matched words:', matchedWords)
-      
+
       let censoredBlob: Blob
-      
+
       if (file.type.includes('audio')) {
         // Process audio file
-        censoredBlob = await applyBleeps(file, matchedWords, bleepSound)
+        censoredBlob = await applyBleeps(file, matchedWords, bleepSound, volumeValue)
       } else if (file.type.includes('video')) {
         // Process video file
         setIsProcessingVideo(true)
         setProgressText('Processing video (this may take a moment)...')
-        censoredBlob = await applyBleepsToVideo(file, matchedWords, bleepSound)
+        censoredBlob = await applyBleepsToVideo(file, matchedWords, bleepSound, volumeValue)
         setIsProcessingVideo(false)
       } else {
         throw new Error('Unsupported file type for bleeping')
@@ -333,10 +341,14 @@ export default function BleepPage() {
       // Create URL for the censored media
       const url = URL.createObjectURL(censoredBlob)
       setCensoredMediaUrl(url)
-      
+
       setProgress(100)
       setProgressText('Bleeping complete!')
-      
+
+      // Track bleeping state for re-bleeping feature
+      setHasBleeped(true)
+      setLastBleepVolume(bleepVolume)
+
       // Clean up old URL
       if (censoredMediaUrl) {
         URL.revokeObjectURL(censoredMediaUrl)
@@ -345,6 +357,50 @@ export default function BleepPage() {
       console.error('Error applying bleeps:', error)
       setErrorMessage('Failed to apply bleeps: ' + (error instanceof Error ? error.message : 'Unknown error'))
       setProgressText('Error applying bleeps')
+    }
+  }
+
+  const handlePreviewBleep = async () => {
+    setIsPreviewingBleep(true)
+
+    try {
+      // Load bleep sound based on bleepSound state
+      const bleepPath = getPublicPath(`/bleeps/${bleepSound}.mp3`)
+      const response = await fetch(bleepPath)
+      const arrayBuffer = await response.arrayBuffer()
+
+      // Create audio context
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
+
+      // Create source and gain node
+      const source = audioContext.createBufferSource()
+      source.buffer = audioBuffer
+
+      const gainNode = audioContext.createGain()
+      gainNode.gain.value = bleepVolume / 100  // Convert to 0-1
+
+      source.connect(gainNode)
+      gainNode.connect(audioContext.destination)
+
+      // Play for 1 second or full duration (whichever is shorter)
+      const duration = Math.min(1, audioBuffer.duration)
+      source.start(0, 0, duration)
+
+      // Cleanup after playing
+      setTimeout(() => {
+        try {
+          source.stop()
+        } catch {
+          // Ignore errors if already stopped
+        }
+        audioContext.close()
+        setIsPreviewingBleep(false)
+      }, duration * 1000)
+
+    } catch (error) {
+      console.error('Preview error:', error)
+      setIsPreviewingBleep(false)
     }
   }
 
@@ -419,7 +475,7 @@ export default function BleepPage() {
         <li><span className="bg-indigo-100 text-indigo-900 px-2 py-1 rounded">Transcribe</span> your file to generate a word-level transcript.</li>
         <li><span className="bg-purple-100 text-purple-900 px-2 py-1 rounded">Enter words and matching modes</span> (exact, partial, fuzzy).</li>
         <li><span className="bg-pink-100 text-pink-900 px-2 py-1 rounded">Run matching</span> to find words to censor.</li>
-        <li><span className="bg-yellow-100 text-yellow-900 px-2 py-1 rounded">Choose bleep sound</span> for censorship.</li>
+        <li><span className="bg-yellow-100 text-yellow-900 px-2 py-1 rounded">Choose bleep sound and volume</span> for censorship.</li>
         <li><span className="bg-violet-100 text-violet-900 px-2 py-1 rounded">Bleep That Sh*t! and preview/download the censored result.</span></li>
       </ol>
 
@@ -672,17 +728,48 @@ export default function BleepPage() {
       <section className={`editorial-section border-l-4 border-yellow-500 pl-4 mb-12 ${matchedWords.length === 0 ? 'opacity-50' : ''}`}>
           <div className="flex items-center mb-2">
             <span className="bg-yellow-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold text-base">5</span>
-            <h2 className="text-2xl font-extrabold uppercase text-black font-inter">Choose Bleep Sound</h2>
+            <h2 className="text-2xl font-extrabold uppercase text-black font-inter">Choose Bleep Sound & Volume</h2>
           </div>
-          
-          <select 
-            value={bleepSound}
-            onChange={(e) => setBleepSound(e.target.value)}
-            className="w-full max-w-xs p-2 border border-gray-300 rounded"
-          >
-            <option value="bleep">Classic Bleep</option>
-            <option value="brown">Brown Noise</option>
-          </select>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold mb-2">Bleep Sound</label>
+              <select
+                value={bleepSound}
+                onChange={(e) => setBleepSound(e.target.value)}
+                className="w-full max-w-xs p-2 border border-gray-300 rounded"
+              >
+                <option value="bleep">Classic Bleep</option>
+                <option value="brown">Brown Noise</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold mb-2">
+                Bleep Volume: <span className="font-bold text-yellow-600">{bleepVolume}%</span>
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={bleepVolume}
+                onChange={(e) => setBleepVolume(Number(e.target.value))}
+                className="w-full max-w-xs"
+              />
+              <div className="flex justify-between text-xs text-gray-600 max-w-xs mt-1">
+                <span>Quiet</span>
+                <span>Loud</span>
+              </div>
+              <button
+                onClick={handlePreviewBleep}
+                disabled={isPreviewingBleep}
+                className="mt-3 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-semibold text-sm"
+              >
+                {isPreviewingBleep ? '🔊 Playing...' : '🔊 Preview Bleep'}
+              </button>
+            </div>
+          </div>
         </section>
 
       {/* Step 6: Bleep! */}
@@ -692,12 +779,14 @@ export default function BleepPage() {
             <h2 className="text-2xl font-extrabold uppercase text-black font-inter">Bleep That Sh*t!</h2>
           </div>
           
-          <button 
+          <button
             onClick={handleBleep}
             disabled={!file || matchedWords.length === 0}
-            className="btn btn-pink disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`btn btn-pink disabled:opacity-50 disabled:cursor-not-allowed transition-all ${
+              hasBleeped && bleepVolume !== lastBleepVolume ? 'ring-4 ring-yellow-400 animate-pulse' : ''
+            }`}
           >
-            Apply Bleeps!
+            {hasBleeped ? 'Re-apply Bleeps with New Settings' : 'Apply Bleeps!'}
           </button>
 
           {isProcessingVideo && (
@@ -711,7 +800,7 @@ export default function BleepPage() {
               <h3 className="font-bold mb-2">Censored Result:</h3>
               {file?.type.includes('video') ? (
                 <>
-                  <video controls className="w-full max-w-lg">
+                  <video key={censoredMediaUrl} controls className="w-full max-w-lg">
                     <source src={censoredMediaUrl} type="video/mp4" />
                   </video>
                   <a
@@ -724,7 +813,7 @@ export default function BleepPage() {
                 </>
               ) : (
                 <>
-                  <audio controls className="w-full">
+                  <audio key={censoredMediaUrl} controls className="w-full">
                     <source src={censoredMediaUrl} type="audio/mpeg" />
                   </audio>
                   <a
@@ -736,6 +825,19 @@ export default function BleepPage() {
                   </a>
                 </>
               )}
+
+              {/* Info message about re-bleeping */}
+              <div className="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-sm rounded">
+                <p className="text-blue-900">
+                  💡 <strong>Tip:</strong> Want to adjust the volume or try a different bleep sound?
+                  Change your settings in Step 5 and click "Re-apply Bleeps" above to generate a new version.
+                  {lastBleepVolume !== null && bleepVolume !== lastBleepVolume && (
+                    <span className="block mt-2 font-semibold text-blue-700">
+                      ⚡ Volume changed from {lastBleepVolume}% to {bleepVolume}% - ready to re-apply!
+                    </span>
+                  )}
+                </p>
+              </div>
             </div>
           )}
         </section>

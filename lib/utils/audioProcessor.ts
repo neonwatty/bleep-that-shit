@@ -16,7 +16,8 @@ export interface BleepSegment {
 export async function applyBleeps(
   audioFile: File,
   bleepSegments: BleepSegment[],
-  bleepSound: string = 'bleep'
+  bleepSound: string = 'bleep',
+  bleepVolume: number = 0.8
 ): Promise<Blob> {
   // Create audio context
   const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
@@ -67,26 +68,26 @@ export async function applyBleeps(
     // Add bleep sound
     const bleepSource = offlineContext.createBufferSource()
     bleepSource.buffer = bleepBuffer
-    
+
     // Create gain node for bleep to adjust volume
     const bleepGain = offlineContext.createGain()
-    bleepGain.gain.value = 0.8
-    
+    bleepGain.gain.value = bleepVolume
+
     bleepSource.connect(bleepGain)
     bleepGain.connect(offlineContext.destination)
-    
+
     // Loop the bleep if needed for longer segments
     if (duration > bleepBuffer.duration) {
       bleepSource.loop = true
       bleepSource.loopEnd = bleepBuffer.duration
     }
-    
+
     bleepSource.start(startTime, 0, duration)
   })
-  
+
   // Start the original audio
   source.start(0)
-  
+
   // Render the audio
   const renderedBuffer = await offlineContext.startRendering()
   
@@ -162,7 +163,8 @@ function audioBufferToWav(buffer: AudioBuffer): Blob {
 export async function applyBleepsToVideo(
   videoFile: File,
   bleepSegments: BleepSegment[],
-  bleepSound: string = 'bleep'
+  bleepSound: string = 'bleep',
+  bleepVolume: number = 0.8
 ): Promise<Blob> {
   console.log('Starting video bleeping process...')
 
@@ -246,7 +248,7 @@ export async function applyBleepsToVideo(
 
     // Create gain node for bleep to adjust volume
     const bleepGain = offlineContext.createGain()
-    bleepGain.gain.value = 0.8
+    bleepGain.gain.value = bleepVolume
 
     bleepSource.connect(bleepGain)
     bleepGain.connect(offlineContext.destination)
