@@ -54,7 +54,9 @@ test.describe('Bleep Volume Control', () => {
   });
 
   test('should be in Step 5 section with bleep sound selector', async ({ page }) => {
-    const step5Section = page.locator('section', { has: page.locator('text=/Choose Bleep Sound & Volume/') });
+    const step5Section = page.locator('section', {
+      has: page.locator('text=/Choose Bleep Sound & Volume/'),
+    });
     await expect(step5Section).toBeVisible();
 
     // Check that both bleep sound selector and volume slider are in same section
@@ -67,12 +69,12 @@ test.describe('Bleep Volume Control', () => {
 
   test('volume slider should be disabled when no words matched', async ({ page }) => {
     // Step 5 section should have opacity-50 class when no matched words
-    const step5Section = page.locator('section').filter({ has: page.locator('text=/Choose Bleep Sound & Volume/') });
+    const step5Section = page
+      .locator('section')
+      .filter({ has: page.locator('text=/Choose Bleep Sound & Volume/') });
 
     // Check if section has opacity-50 class (disabled state)
-    const hasOpacity = await step5Section.evaluate(el =>
-      el.classList.contains('opacity-50')
-    );
+    const hasOpacity = await step5Section.evaluate(el => el.classList.contains('opacity-50'));
 
     expect(hasOpacity).toBeTruthy();
   });
@@ -83,7 +85,7 @@ test.describe('Bleep Volume Control', () => {
     await fileInput.setInputFiles({
       name: 'test-audio.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('dummy audio content')
+      buffer: Buffer.from('dummy audio content'),
     });
 
     // Wait for file to be loaded

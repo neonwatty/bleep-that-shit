@@ -23,7 +23,9 @@ test.describe('Bleep Preview Feature', () => {
     await previewBtn.click();
 
     // Should show "Playing..." immediately (or very quickly)
-    await expect(page.locator('button').filter({ hasText: /Playing/ })).toBeVisible({ timeout: 1000 });
+    await expect(page.locator('button').filter({ hasText: /Playing/ })).toBeVisible({
+      timeout: 1000,
+    });
   });
 
   test('preview button should be disabled while playing', async ({ page }) => {
@@ -49,10 +51,14 @@ test.describe('Bleep Preview Feature', () => {
     await previewBtn.click();
 
     // Wait for playing state
-    await expect(page.locator('button').filter({ hasText: /Playing/ })).toBeVisible({ timeout: 500 });
+    await expect(page.locator('button').filter({ hasText: /Playing/ })).toBeVisible({
+      timeout: 500,
+    });
 
     // Wait for it to finish (max 2 seconds)
-    await expect(page.locator('button').filter({ hasText: /^🔊 Preview Bleep$/ })).toBeVisible({ timeout: 3000 });
+    await expect(page.locator('button').filter({ hasText: /^🔊 Preview Bleep$/ })).toBeVisible({
+      timeout: 3000,
+    });
   });
 
   test('should work with both bleep sounds', async ({ page }) => {
@@ -108,9 +114,7 @@ test.describe('Bleep Preview Feature', () => {
     const previewBtn = page.locator('button').filter({ hasText: /Preview Bleep/ });
 
     // Check it has yellow background
-    const bgColor = await previewBtn.evaluate(el =>
-      window.getComputedStyle(el).backgroundColor
-    );
+    const bgColor = await previewBtn.evaluate(el => window.getComputedStyle(el).backgroundColor);
 
     // Should have some yellow-ish color (RGB values will be similar for yellow)
     // Just verify it's not the default (not black/white/gray)
@@ -127,7 +131,7 @@ test.describe('Bleep Preview Feature', () => {
 
     // Preview button should be in the same section (Step 5)
     const step5Section = page.locator('section').filter({
-      has: page.locator('text=/Choose Bleep Sound & Volume/')
+      has: page.locator('text=/Choose Bleep Sound & Volume/'),
     });
 
     const previewInStep5 = step5Section.locator('button').filter({ hasText: /Preview Bleep/ });
@@ -162,7 +166,7 @@ test.describe('Bleep Preview Feature', () => {
     await fileInput.setInputFiles({
       name: 'test.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('test')
+      buffer: Buffer.from('test'),
     });
 
     await expect(page.locator('text=/File loaded/')).toBeVisible({ timeout: 5000 });
@@ -176,7 +180,9 @@ test.describe('Bleep Preview Feature', () => {
     await previewBtn.click();
 
     // Should show playing state
-    await expect(page.locator('button').filter({ hasText: /Playing/ })).toBeVisible({ timeout: 1000 });
+    await expect(page.locator('button').filter({ hasText: /Playing/ })).toBeVisible({
+      timeout: 1000,
+    });
 
     // Should finish without errors
     await expect(previewBtn).toBeVisible({ timeout: 3000 });

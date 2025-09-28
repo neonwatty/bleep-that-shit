@@ -17,7 +17,7 @@ Make someone sound naughty 😈 or make your content more Ad-friendly.
 3. **Censor**: Pick words to bleep (exact, partial, or fuzzy match).
 4. **Preview & Download**: Hear the result and save your censored file.
 
-All processing is done locally in your browser.  Your media and transcripts stay private — nothing is sent to a server.
+All processing is done locally in your browser. Your media and transcripts stay private — nothing is sent to a server.
 
 ---
 
@@ -42,6 +42,7 @@ https://github.com/neonwatty/bleep-that-shit/assets/16326421/63ebd7a0-46f6-4efd-
 Just open the app in any modern browser — **no installation or setup required**.
 
 ### Live Demo
+
 Visit the deployed app at [https://neonwatty.github.io/bleep-that-shit/](https://neonwatty.github.io/bleep-that-shit/) or run it locally.
 
 ---
@@ -49,6 +50,7 @@ Visit the deployed app at [https://neonwatty.github.io/bleep-that-shit/](https:/
 ## App Features
 
 ### Main Workflow (`/bleep`)
+
 - Upload audio or video files
 - Select language and Whisper model
 - Transcribe to generate word-level timestamps
@@ -57,6 +59,7 @@ Visit the deployed app at [https://neonwatty.github.io/bleep-that-shit/](https:/
 - Preview and download the censored result
 
 ### Model Comparison (`/sampler`)
+
 - Compare transcription accuracy across different Whisper models
 - Test processing speeds
 - Find the best model for your needs
@@ -66,23 +69,27 @@ Visit the deployed app at [https://neonwatty.github.io/bleep-that-shit/](https:/
 ## Running Locally
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/neonwatty/bleep-that-shit.git
    cd bleep-that-shit
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Start the development server:
+
    ```bash
    npm run dev
    ```
@@ -100,6 +107,7 @@ npm run start        # Start production server
 npm test            # Run Playwright tests
 npm run test:ui     # Run tests with UI
 ```
+
 ---
 
 ## Browser Requirements

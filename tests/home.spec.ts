@@ -15,15 +15,15 @@ test.describe('Home Page Tests', () => {
     // Check navbar exists
     const navbar = page.locator('nav');
     await expect(navbar).toBeVisible();
-    
+
     // Check logo link
     const logo = navbar.locator('a').filter({ hasText: 'Bleep That Sh*t!' });
     await expect(logo).toBeVisible();
-    
+
     // Check main CTAs
     const bleepBtn = navbar.locator('a').filter({ hasText: 'Bleep Your Sh*t!' });
     const samplerBtn = navbar.locator('a').filter({ hasText: 'Transcription Sampler' });
-    
+
     await expect(bleepBtn).toBeVisible();
     await expect(samplerBtn).toBeVisible();
   });
@@ -36,12 +36,12 @@ test.describe('Home Page Tests', () => {
   test('should have hero section CTAs', async ({ page }) => {
     const heroCTAs = page.locator('.btn');
     await expect(heroCTAs).toHaveCount(3); // Updated: 2 in hero, 1 GitHub link
-    
+
     // Click on Bleep button
     const bleepBtn = page.locator('.btn-primary').first();
     await bleepBtn.click();
     await expect(page).toHaveURL(/.*\/bleep/);
-    
+
     // Go back and test sampler button
     await page.goBack();
     const samplerBtn = page.locator('.btn-pink').first();
@@ -59,15 +59,15 @@ test.describe('Home Page Tests', () => {
     // How It Works section
     const howItWorks = page.locator('h2').filter({ hasText: 'How It Works' });
     await expect(howItWorks).toBeVisible();
-    
+
     // Check workflow steps
     const steps = page.locator('ol li');
     await expect(steps).toHaveCount(4);
-    
+
     // Privacy section
     const privacy = page.locator('h2').filter({ hasText: 'Privacy & Local Processing' });
     await expect(privacy).toBeVisible();
-    
+
     // Technology section
     const tech = page.locator('h2').filter({ hasText: 'Powered by Open Source' });
     await expect(tech).toBeVisible();
@@ -76,11 +76,11 @@ test.describe('Home Page Tests', () => {
   test('should have responsive design', async ({ page }) => {
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    
+
     // Check if navigation becomes vertical on mobile
     const navbar = page.locator('nav');
     await expect(navbar).toHaveClass(/flex-col/);
-    
+
     // Test desktop viewport
     await page.setViewportSize({ width: 1920, height: 1080 });
     await expect(navbar).toHaveClass(/sm:flex-row/);
@@ -89,7 +89,7 @@ test.describe('Home Page Tests', () => {
   test('should have footer with GitHub link', async ({ page }) => {
     const footer = page.locator('footer');
     await expect(footer).toBeVisible();
-    
+
     const githubLink = footer.locator('a[href*="github.com"]');
     await expect(githubLink).toBeVisible();
     await expect(githubLink).toHaveAttribute('target', '_blank');
@@ -99,14 +99,14 @@ test.describe('Home Page Tests', () => {
     // Check if Font Awesome loads
     const fontAwesome = page.locator('link[href*="font-awesome"]');
     await expect(fontAwesome).toHaveCount(1);
-    
+
     // Check if custom fonts are applied - look for fallback fonts too
     const body = page.locator('body');
     const bodyStyles = await body.evaluate(el => window.getComputedStyle(el));
     // Check for either the CSS variable or fallback fonts
     const fontFamily = bodyStyles.fontFamily || '';
     console.log('Font family detected:', fontFamily);
-    
+
     // More lenient check - just verify we have some font loaded
     const hasFont = fontFamily.length > 0 && fontFamily !== 'none';
     expect(hasFont).toBeTruthy();
@@ -115,11 +115,11 @@ test.describe('Home Page Tests', () => {
   test('should have proper SEO meta tags', async ({ page }) => {
     // Check title
     await expect(page).toHaveTitle(/Bleep That Sh\*t!/);
-    
+
     // Check meta description
     const metaDescription = page.locator('meta[name="description"]');
     await expect(metaDescription).toHaveAttribute('content', /Effortlessly bleep out/);
-    
+
     // Check favicon - use specific selector for our custom icon
     const favicon = page.locator('link[rel="icon"][href="/icon.png"]');
     await expect(favicon).toHaveCount(1);
