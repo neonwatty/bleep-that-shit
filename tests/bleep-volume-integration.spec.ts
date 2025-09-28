@@ -18,7 +18,7 @@ test.describe('Bleep Volume Integration Tests', () => {
     await fileInput.setInputFiles({
       name: 'test-audio.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('dummy audio content for testing')
+      buffer: Buffer.from('dummy audio content for testing'),
     });
 
     // Wait for file to be loaded
@@ -37,8 +37,14 @@ test.describe('Bleep Volume Integration Tests', () => {
     await page.waitForTimeout(2000);
 
     // Check for either success or expected error (we're using dummy data)
-    const hasError = await page.locator('text=/Error/i').isVisible().catch(() => false);
-    const hasProgress = await page.locator('.bg-gray-200').isVisible().catch(() => false);
+    const hasError = await page
+      .locator('text=/Error/i')
+      .isVisible()
+      .catch(() => false);
+    const hasProgress = await page
+      .locator('.bg-gray-200')
+      .isVisible()
+      .catch(() => false);
 
     // Either error or progress is expected with dummy data
     expect(hasError || hasProgress).toBeTruthy();
@@ -59,7 +65,7 @@ test.describe('Bleep Volume Integration Tests', () => {
     await fileInput.setInputFiles({
       name: 'test-audio.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('dummy audio content')
+      buffer: Buffer.from('dummy audio content'),
     });
 
     await expect(page.locator('text=/File loaded/')).toBeVisible({ timeout: 5000 });
@@ -94,8 +100,8 @@ test.describe('Bleep Volume Integration Tests', () => {
           await page.waitForTimeout(2000);
 
           // Check console logs for volume parameter
-          const volumeLogged = consoleMessages.some(msg =>
-            msg.includes('75% volume') || msg.includes('75')
+          const volumeLogged = consoleMessages.some(
+            msg => msg.includes('75% volume') || msg.includes('75')
           );
 
           if (consoleMessages.length > 0) {
@@ -115,7 +121,7 @@ test.describe('Bleep Volume Integration Tests', () => {
     await fileInput.setInputFiles({
       name: 'test-audio.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('test audio data')
+      buffer: Buffer.from('test audio data'),
     });
 
     await expect(page.locator('text=/File loaded/')).toBeVisible({ timeout: 5000 });
@@ -160,7 +166,7 @@ test.describe('Bleep Volume Integration Tests', () => {
     await fileInput.setInputFiles({
       name: 'test.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('test')
+      buffer: Buffer.from('test'),
     });
 
     // Volume should persist after upload
@@ -180,7 +186,9 @@ test.describe('Bleep Volume Integration Tests', () => {
     await expect(page.locator('text=/85%/')).toBeVisible();
   });
 
-  test('should accept volume parameter in both audio and video processing paths', async ({ page }) => {
+  test('should accept volume parameter in both audio and video processing paths', async ({
+    page,
+  }) => {
     // Test with audio file
     const fileInput = page.locator('input[type="file"]');
 
@@ -188,7 +196,7 @@ test.describe('Bleep Volume Integration Tests', () => {
     await fileInput.setInputFiles({
       name: 'test.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('audio test data')
+      buffer: Buffer.from('audio test data'),
     });
 
     await expect(page.locator('text=/File loaded: test.mp3/')).toBeVisible({ timeout: 5000 });
@@ -204,7 +212,7 @@ test.describe('Bleep Volume Integration Tests', () => {
     await fileInput.setInputFiles({
       name: 'test.mp4',
       mimeType: 'video/mp4',
-      buffer: Buffer.from('video test data')
+      buffer: Buffer.from('video test data'),
     });
 
     await expect(page.locator('text=/File loaded: test.mp4/')).toBeVisible({ timeout: 5000 });
@@ -229,7 +237,7 @@ test.describe('Bleep Volume Integration Tests', () => {
     await fileInput.setInputFiles({
       name: 'test.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('test')
+      buffer: Buffer.from('test'),
     });
 
     // 0% should persist
@@ -255,7 +263,7 @@ test.describe('Bleep Volume Integration Tests', () => {
     await fileInput.setInputFiles({
       name: 'test.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('test')
+      buffer: Buffer.from('test'),
     });
 
     await expect(page.locator('text=/File loaded/')).toBeVisible({ timeout: 5000 });
@@ -269,15 +277,15 @@ test.describe('Bleep Volume Integration Tests', () => {
     await expect(bleepBtn).toBeDisabled();
   });
 
-  test('should show volume in step 5 section that becomes enabled after matching', async ({ page }) => {
+  test('should show volume in step 5 section that becomes enabled after matching', async ({
+    page,
+  }) => {
     // Initially, Step 5 should be visible but dimmed (opacity-50)
     const step5Section = page.locator('section').filter({
-      has: page.locator('text=/Choose Bleep Sound & Volume/')
+      has: page.locator('text=/Choose Bleep Sound & Volume/'),
     });
 
-    const hasOpacity = await step5Section.evaluate(el =>
-      el.classList.contains('opacity-50')
-    );
+    const hasOpacity = await step5Section.evaluate(el => el.classList.contains('opacity-50'));
     expect(hasOpacity).toBeTruthy();
 
     // Volume control should still be visible and interactive
@@ -295,7 +303,7 @@ test.describe('Bleep Volume Integration Tests', () => {
     await fileInput.setInputFiles({
       name: 'test.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('test')
+      buffer: Buffer.from('test'),
     });
 
     await expect(page.locator('text=/File loaded/')).toBeVisible({ timeout: 5000 });
@@ -337,7 +345,7 @@ test.describe('Bleep Volume Integration Tests', () => {
     await fileInput.setInputFiles({
       name: 'test.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('test')
+      buffer: Buffer.from('test'),
     });
 
     await expect(page.locator('text=/File loaded/')).toBeVisible({ timeout: 5000 });
@@ -369,8 +377,8 @@ test.describe('Bleep Volume Integration Tests', () => {
         await volumeSlider.fill('50');
 
         // Button should have ring-4 and ring-yellow-400 classes (visual highlight)
-        const hasHighlight = await bleepBtn.evaluate(el =>
-          el.classList.contains('ring-4') && el.classList.contains('ring-yellow-400')
+        const hasHighlight = await bleepBtn.evaluate(
+          el => el.classList.contains('ring-4') && el.classList.contains('ring-yellow-400')
         );
 
         expect(hasHighlight).toBeTruthy();
@@ -384,7 +392,7 @@ test.describe('Bleep Volume Integration Tests', () => {
     await fileInput.setInputFiles({
       name: 'test.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('test')
+      buffer: Buffer.from('test'),
     });
 
     await expect(page.locator('text=/File loaded/')).toBeVisible({ timeout: 5000 });
@@ -415,13 +423,15 @@ test.describe('Bleep Volume Integration Tests', () => {
     }
   });
 
-  test('should allow re-bleeping with different volume without re-transcription', async ({ page }) => {
+  test('should allow re-bleeping with different volume without re-transcription', async ({
+    page,
+  }) => {
     // Upload file
     const fileInput = page.locator('input[type="file"]');
     await fileInput.setInputFiles({
       name: 'test.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('test')
+      buffer: Buffer.from('test'),
     });
 
     await expect(page.locator('text=/File loaded/')).toBeVisible({ timeout: 5000 });
@@ -472,13 +482,15 @@ test.describe('Bleep Volume Integration Tests', () => {
     }
   });
 
-  test('should update media player with new censored content when re-bleeping', async ({ page }) => {
+  test('should update media player with new censored content when re-bleeping', async ({
+    page,
+  }) => {
     // Upload file
     const fileInput = page.locator('input[type="file"]');
     await fileInput.setInputFiles({
       name: 'test.mp3',
       mimeType: 'audio/mpeg',
-      buffer: Buffer.from('test')
+      buffer: Buffer.from('test'),
     });
 
     await expect(page.locator('text=/File loaded/')).toBeVisible({ timeout: 5000 });

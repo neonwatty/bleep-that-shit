@@ -8,7 +8,7 @@
 export async function decodeAudioToMono16kHzPCM(file: File | Blob): Promise<Float32Array> {
   // Read file as ArrayBuffer
   const arrayBuffer = await file.arrayBuffer();
-  
+
   // Decode audio data
   const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
   const decoded = await audioCtx.decodeAudioData(arrayBuffer);

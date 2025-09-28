@@ -1,0 +1,20 @@
+# Build outputs
+.next/
+out/
+build/
+
+# Dependencies
+node_modules/
+
+# Test outputs
+playwright-report/
+test-results/
+
+# Config files
+*.config.js
+*.config.ts
+next-env.d.ts
+
+# Misc
+.DS_Store
+*.log

@@ -51,7 +51,10 @@ test.describe('Video Bleeping Test', () => {
     await page.fill('input[placeholder*="bad, word, curse"]', 'the, a, and');
 
     // Enable exact matching
-    await page.check('input[type="checkbox"]', { hasText: /Exact match/ });
+    const exactMatchCheckbox = page
+      .locator('input[type="checkbox"]')
+      .filter({ hasText: /Exact match/ });
+    await exactMatchCheckbox.check();
 
     // Run matching
     console.log('9. Running word matching...');
@@ -78,7 +81,9 @@ test.describe('Video Bleeping Test', () => {
     }
 
     // Wait for censored result
-    const censoredResult = await page.waitForSelector('h3:has-text("Censored Result:")', { timeout: 120000 });
+    const censoredResult = await page.waitForSelector('h3:has-text("Censored Result:")', {
+      timeout: 120000,
+    });
     console.log('13. Censored result available');
 
     // CRITICAL: Check if we have a video player for the output (not just audio)
@@ -100,7 +105,7 @@ test.describe('Video Bleeping Test', () => {
     // Take screenshot
     await page.screenshot({
       path: 'test-results/video-bleeping-result.png',
-      fullPage: true
+      fullPage: true,
     });
 
     // Assertions

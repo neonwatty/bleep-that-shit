@@ -1,0 +1,29 @@
+# Build outputs
+.next/
+out/
+build/
+
+# Dependencies
+node_modules/
+
+# Test outputs
+playwright-report/
+test-results/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Config files (already formatted)
+*.config.js
+*.config.ts
+next-env.d.ts
+
+# Misc
+.DS_Store
+*.log
+
+# Assets
+public/**/*.js
+public/**/*.css
