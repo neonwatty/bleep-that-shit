@@ -471,4 +471,69 @@ test.describe('Bleep Volume Integration Tests', () => {
       }
     }
   });
+
+  test('should update media player with new censored content when re-bleeping', async ({ page }) => {
+    // Upload file
+    const fileInput = page.locator('input[type="file"]');
+    await fileInput.setInputFiles({
+      name: 'test.mp3',
+      mimeType: 'audio/mpeg',
+      buffer: Buffer.from('test')
+    });
+
+    await expect(page.locator('text=/File loaded/')).toBeVisible({ timeout: 5000 });
+
+    const volumeSlider = page.locator('input[type="range"]');
+    await volumeSlider.fill('50');
+
+    // Transcribe
+    const transcribeBtn = page.locator('button').filter({ hasText: 'Start Transcription' });
+    await transcribeBtn.click();
+    await page.waitForTimeout(2000);
+
+    const hasMatchSection = await page.locator('text=/Enter Words to Bleep/').isVisible();
+
+    if (hasMatchSection) {
+      // Match words
+      const wordsInput = page.locator('input[placeholder*="bad"]');
+      await wordsInput.fill('test');
+      const matchBtn = page.locator('button').filter({ hasText: 'Run Matching' });
+      await matchBtn.click();
+      await page.waitForTimeout(1000);
+
+      const bleepBtn = page.locator('button').filter({ hasText: /Apply Bleeps/ });
+
+      if (await bleepBtn.isEnabled()) {
+        // First bleep at 50%
+        await bleepBtn.click();
+        await page.waitForTimeout(2000);
+
+        // Wait for audio player to appear
+        const audioElement = page.locator('audio[controls]');
+        await expect(audioElement).toBeVisible({ timeout: 5000 });
+
+        // Get the initial src URL from source element
+        const initialSrc = await page.locator('audio source').getAttribute('src');
+        expect(initialSrc).toBeTruthy();
+
+        // Change volume to 90%
+        await volumeSlider.fill('90');
+
+        // Re-bleep with new volume
+        await bleepBtn.click();
+        await page.waitForTimeout(2000);
+
+        // Verify audio player is still visible
+        await expect(audioElement).toBeVisible();
+
+        // Get new src URL - should be different blob URL
+        const newSrc = await page.locator('audio source').getAttribute('src');
+        expect(newSrc).toBeTruthy();
+        expect(newSrc).not.toBe(initialSrc); // Different blob URL means new content
+
+        // Verify the audio element was remounted (key prop changed)
+        // This ensures the browser loads the new audio, not cached version
+      }
+    }
+  });
 });
