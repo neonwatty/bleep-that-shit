@@ -32,8 +32,15 @@ h6 {
 }
 
 .editorial-section {
-  margin-top: 4rem;
+  margin-top: 2rem; /* 32px on mobile */
   margin-bottom: 4rem;
+}
+
+/* Larger margins on tablets and desktop */
+@media (min-width: 768px) {
+  .editorial-section {
+    margin-top: 4rem; /* 64px on desktop */
+  }
 }
 
 .btn {
@@ -42,14 +49,24 @@ h6 {
   font-family: var(--font-inter), 'Montserrat', 'Segoe UI', 'Helvetica Neue', Arial, 'sans-serif';
   font-weight: 700;
   text-transform: uppercase;
-  padding: 1rem 2.5rem;
-  font-size: 1.125rem;
+  padding: 0.875rem 1.5rem;
+  font-size: 0.875rem;
   letter-spacing: 0.05em;
   transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
   border: none;
   box-shadow: none;
   cursor: pointer;
+  min-height: 44px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .btn {
+    padding: 1rem 2.5rem;
+    font-size: 1.125rem;
+    width: auto;
+  }
 }
 
 .btn-primary {
