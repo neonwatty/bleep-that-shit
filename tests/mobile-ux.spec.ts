@@ -69,7 +69,7 @@ test.describe('Mobile UX Improvements', () => {
 
     // Check that text is readable (not too small)
     const bodyText = page.locator('p').first();
-    if (await bodyText.count() > 0) {
+    if ((await bodyText.count()) > 0) {
       const fontSize = await bodyText.evaluate(el => window.getComputedStyle(el).fontSize);
       const fontSizeNum = parseFloat(fontSize);
       expect(fontSizeNum).toBeGreaterThanOrEqual(14); // At least 14px
@@ -86,7 +86,7 @@ test.describe('Mobile UX Improvements', () => {
 
     // Check dropzone area has proper touch size
     const dropzone = page.locator('[role="presentation"]').first();
-    if (await dropzone.count() > 0) {
+    if ((await dropzone.count()) > 0) {
       const dropzoneBox = await dropzone.boundingBox();
       if (dropzoneBox) {
         expect(dropzoneBox.height).toBeGreaterThan(100); // Minimum touch area
@@ -196,7 +196,9 @@ test.describe('Mobile UX Improvements', () => {
     }
 
     // Check for responsive video containers
-    const responsiveContainers = page.locator('[class*="responsive"], [class*="embed"], [class*="video"]');
+    const responsiveContainers = page.locator(
+      '[class*="responsive"], [class*="embed"], [class*="video"]'
+    );
     const containerCount = await responsiveContainers.count();
     if (containerCount > 0) {
       const container = responsiveContainers.first();
