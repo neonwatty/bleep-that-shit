@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, Merriweather } from 'next/font/google';
 import './globals.css';
-import { Navbar } from '@/components/Navbar';
+import { MobileNav } from '@/components/MobileNav';
 import { Footer } from '@/components/Footer';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 
@@ -45,8 +45,8 @@ export default function RootLayout({
         />
       </head>
       <body className="font-merriweather bg-pattern text-dark min-h-screen">
+        <MobileNav />
         <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 md:max-w-4xl md:px-0">
-          <Navbar />
           {children}
           <Footer />
         </main>

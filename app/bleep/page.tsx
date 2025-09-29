@@ -470,7 +470,7 @@ export default function BleepPage() {
   }, []);
 
   return (
-    <div className="editorial-section">
+    <div className="editorial-section px-2 sm:px-4">
       {/* Header */}
       <div className="mb-8 flex items-center gap-3">
         <span className="inline-block align-middle" aria-label="Waveform icon">
@@ -488,11 +488,11 @@ export default function BleepPage() {
             <rect x="26" y="14" width="4" height="8" rx="2" fill="#111" />
           </svg>
         </span>
-        <span className="text-2xl md:text-3xl" aria-label="Cursing emoji">
+        <span className="text-xl sm:text-2xl md:text-3xl" aria-label="Cursing emoji">
           🙊
         </span>
         <h1
-          className="font-inter ml-4 text-4xl leading-tight font-extrabold tracking-tight text-black uppercase md:text-5xl"
+          className="font-inter ml-3 text-2xl leading-tight font-extrabold tracking-tight text-black uppercase sm:text-3xl md:text-4xl lg:text-5xl"
           style={{ lineHeight: '0.95' }}
         >
           Bleep Your Sh*t!
@@ -513,10 +513,10 @@ export default function BleepPage() {
       </div>
 
       {/* Workflow */}
-      <div className="mb-2 text-xs font-semibold tracking-wide text-gray-700 uppercase md:text-sm">
+      <div className="mb-2 text-xs font-semibold tracking-wide text-gray-700 uppercase sm:text-sm">
         How it works
       </div>
-      <ol className="mb-8 list-decimal pl-4 text-base text-gray-900 md:pl-6 md:text-lg">
+      <ol className="mb-8 list-decimal pl-4 text-sm text-gray-900 sm:text-base md:pl-6 md:text-lg">
         <li>
           <span className="rounded bg-blue-100 px-2 py-1 text-blue-900">Upload your file</span>{' '}
           (audio or video).
@@ -555,25 +555,25 @@ export default function BleepPage() {
       </ol>
 
       {/* Step 1: Upload */}
-      <section className="editorial-section mb-12 border-l-4 border-blue-500 pl-4">
+      <section className="editorial-section mb-8 border-l-4 border-blue-500 pl-3 sm:mb-12 sm:pl-4">
         <div className="mb-2 flex items-center">
           <span className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-base font-bold text-white">
             1
           </span>
-          <h2 className="font-inter text-2xl font-extrabold text-black uppercase">
+          <h2 className="font-inter text-lg font-extrabold text-black uppercase sm:text-xl md:text-2xl">
             Upload Your File
           </h2>
         </div>
-        <p className="mb-2 text-base text-blue-900">
+        <p className="mb-2 text-sm text-blue-900 sm:text-base">
           Audio (MP3) or Video (MP4) supported. Files up to 10 minutes. Preview your input before
           processing.
         </p>
 
         <div
           {...getRootProps()}
-          className="cursor-pointer rounded-lg border-2 border-dashed border-gray-400 p-6 text-center transition-colors hover:border-blue-500"
+          className="min-h-[120px] cursor-pointer rounded-lg border-2 border-dashed border-gray-400 p-8 text-center transition-all hover:border-blue-500 hover:bg-gray-50 active:bg-gray-100 sm:min-h-[100px] sm:p-6"
         >
-          <input {...getInputProps()} />
+          <input {...getInputProps()} className="sr-only" />
           {isDragActive ? (
             <p className="text-gray-700">Drop the file here...</p>
           ) : (
@@ -607,7 +607,7 @@ export default function BleepPage() {
               </audio>
             )}
             {fileUrl && file.type.includes('video') && (
-              <video controls className="mt-2 w-full max-w-lg">
+              <video controls className="mt-2 w-full rounded-lg shadow-sm">
                 <source src={fileUrl} type={file.type} />
               </video>
             )}
@@ -616,23 +616,23 @@ export default function BleepPage() {
       </section>
 
       {/* Step 2: Language & Model */}
-      <section className="editorial-section mb-12 border-l-4 border-green-500 pl-4">
+      <section className="editorial-section mb-8 border-l-4 border-green-500 pl-3 sm:mb-12 sm:pl-4">
         <div className="mb-2 flex items-center">
           <span className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-base font-bold text-white">
             2
           </span>
-          <h2 className="font-inter text-2xl font-extrabold text-black uppercase">
+          <h2 className="font-inter text-lg font-extrabold text-black uppercase sm:text-xl md:text-2xl">
             Select Language & Model
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-semibold">Language</label>
             <select
               value={language}
               onChange={e => setLanguage(e.target.value)}
-              className="w-full rounded border border-gray-300 p-2"
+              className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:p-2"
             >
               <option value="en">English</option>
               <option value="es">Spanish</option>
@@ -653,7 +653,7 @@ export default function BleepPage() {
             <select
               value={model}
               onChange={e => setModel(e.target.value)}
-              className="w-full rounded border border-gray-300 p-2"
+              className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:p-2"
             >
               <option value="Xenova/whisper-tiny.en">Tiny (English only, fastest)</option>
               <option value="Xenova/whisper-base.en">Base (English only, fast)</option>
@@ -667,12 +667,14 @@ export default function BleepPage() {
       </section>
 
       {/* Step 3: Transcribe */}
-      <section className="editorial-section mb-12 border-l-4 border-indigo-500 pl-4">
+      <section className="editorial-section mb-8 border-l-4 border-indigo-500 pl-3 sm:mb-12 sm:pl-4">
         <div className="mb-2 flex items-center">
           <span className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-base font-bold text-white">
             3
           </span>
-          <h2 className="font-inter text-2xl font-extrabold text-black uppercase">Transcribe</h2>
+          <h2 className="font-inter text-lg font-extrabold text-black uppercase sm:text-xl md:text-2xl">
+            Transcribe
+          </h2>
         </div>
 
         <button
@@ -737,13 +739,13 @@ export default function BleepPage() {
 
       {/* Step 4: Word Matching */}
       <section
-        className={`editorial-section mb-12 border-l-4 border-purple-500 pl-4 ${!transcriptionResult ? 'opacity-50' : ''}`}
+        className={`editorial-section mb-8 border-l-4 border-purple-500 pl-3 sm:mb-12 sm:pl-4 ${!transcriptionResult ? 'opacity-50' : ''}`}
       >
         <div className="mb-2 flex items-center">
           <span className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-purple-500 text-base font-bold text-white">
             4
           </span>
-          <h2 className="font-inter text-2xl font-extrabold text-black uppercase">
+          <h2 className="font-inter text-lg font-extrabold text-black uppercase sm:text-xl md:text-2xl">
             Enter Words to Bleep
           </h2>
         </div>
@@ -757,37 +759,37 @@ export default function BleepPage() {
             value={wordsToMatch}
             onChange={e => setWordsToMatch(e.target.value)}
             placeholder="e.g., bad, word, curse"
-            className="w-full rounded border border-gray-300 p-2"
+            className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:p-2"
           />
         </div>
 
         <div className="mb-4">
           <label className="mb-2 block text-sm font-semibold">Matching modes</label>
           <div className="space-y-2">
-            <label className="flex items-center">
+            <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
               <input
                 type="checkbox"
                 checked={matchMode.exact}
                 onChange={e => setMatchMode({ ...matchMode, exact: e.target.checked })}
-                className="mr-2"
+                className="mr-3 h-5 w-5"
               />
               Exact match
             </label>
-            <label className="flex items-center">
+            <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
               <input
                 type="checkbox"
                 checked={matchMode.partial}
                 onChange={e => setMatchMode({ ...matchMode, partial: e.target.checked })}
-                className="mr-2"
+                className="mr-3 h-5 w-5"
               />
               Partial match
             </label>
-            <label className="flex items-center">
+            <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
               <input
                 type="checkbox"
                 checked={matchMode.fuzzy}
                 onChange={e => setMatchMode({ ...matchMode, fuzzy: e.target.checked })}
-                className="mr-2"
+                className="mr-3 h-5 w-5"
               />
               Fuzzy match
             </label>
@@ -832,13 +834,13 @@ export default function BleepPage() {
 
       {/* Step 5: Bleep Sound */}
       <section
-        className={`editorial-section mb-12 border-l-4 border-yellow-500 pl-4 ${matchedWords.length === 0 ? 'opacity-50' : ''}`}
+        className={`editorial-section mb-8 border-l-4 border-yellow-500 pl-3 sm:mb-12 sm:pl-4 ${matchedWords.length === 0 ? 'opacity-50' : ''}`}
       >
         <div className="mb-2 flex items-center">
           <span className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-yellow-500 text-base font-bold text-white">
             5
           </span>
-          <h2 className="font-inter text-2xl font-extrabold text-black uppercase">
+          <h2 className="font-inter text-lg font-extrabold text-black uppercase sm:text-xl md:text-2xl">
             Choose Bleep Sound & Volume
           </h2>
         </div>
@@ -849,7 +851,7 @@ export default function BleepPage() {
             <select
               value={bleepSound}
               onChange={e => setBleepSound(e.target.value)}
-              className="w-full max-w-xs rounded border border-gray-300 p-2"
+              className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-yellow-500 sm:max-w-xs sm:p-2"
             >
               <option value="bleep">Classic Bleep</option>
               <option value="brown">Brown Noise</option>
@@ -867,16 +869,16 @@ export default function BleepPage() {
               step="5"
               value={bleepVolume}
               onChange={e => setBleepVolume(Number(e.target.value))}
-              className="w-full max-w-xs"
+              className="h-2 w-full cursor-pointer rounded-lg sm:max-w-xs"
             />
-            <div className="mt-1 flex max-w-xs justify-between text-xs text-gray-600">
+            <div className="mt-1 flex w-full justify-between text-xs text-gray-600 sm:max-w-xs">
               <span>Quiet</span>
               <span>Loud</span>
             </div>
             <button
               onClick={handlePreviewBleep}
               disabled={isPreviewingBleep}
-              className="mt-3 rounded-lg bg-yellow-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50"
+              className="min-h-touch mt-3 w-full rounded-lg bg-yellow-500 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-4 sm:py-2 sm:text-sm"
             >
               {isPreviewingBleep ? '🔊 Playing...' : '🔊 Preview Bleep'}
             </button>
@@ -886,13 +888,13 @@ export default function BleepPage() {
 
       {/* Step 6: Bleep! */}
       <section
-        className={`editorial-section mb-12 border-l-4 border-violet-500 pl-4 ${matchedWords.length === 0 ? 'opacity-50' : ''}`}
+        className={`editorial-section mb-8 border-l-4 border-violet-500 pl-3 sm:mb-12 sm:pl-4 ${matchedWords.length === 0 ? 'opacity-50' : ''}`}
       >
         <div className="mb-2 flex items-center">
           <span className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-violet-500 text-base font-bold text-white">
             6
           </span>
-          <h2 className="font-inter text-2xl font-extrabold text-black uppercase">
+          <h2 className="font-inter text-lg font-extrabold text-black uppercase sm:text-xl md:text-2xl">
             Bleep That Sh*t!
           </h2>
         </div>
@@ -920,7 +922,7 @@ export default function BleepPage() {
             <h3 className="mb-2 font-bold">Censored Result:</h3>
             {file?.type.includes('video') ? (
               <>
-                <video key={censoredMediaUrl} controls className="w-full max-w-lg">
+                <video key={censoredMediaUrl} controls className="w-full rounded-lg shadow-md">
                   <source src={censoredMediaUrl} type="video/mp4" />
                 </video>
                 <a

@@ -2,25 +2,25 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="editorial-section font-merriweather px-4 md:px-0">
+    <div className="editorial-section font-merriweather">
       {/* Hero Section */}
-      <div className="mb-16 flex flex-col items-center justify-center px-2 pt-6 pb-12 text-center md:px-0 md:pt-10 md:pb-20">
+      <div className="mb-12 flex flex-col items-center justify-center pt-2 pb-8 text-center sm:mb-16 sm:pt-4 sm:pb-12 md:pt-6 md:pb-20">
         <div className="flex w-full max-w-2xl flex-col gap-5">
           <h1
-            className="font-inter mb-2 text-center text-2xl font-extrabold text-black md:text-4xl"
+            className="font-inter mb-2 text-center text-2xl font-extrabold text-black sm:text-3xl md:text-4xl lg:text-5xl"
             style={{ lineHeight: 1.1 }}
           >
             Effortlessly bleep out any words or phrases from your audio or video.
           </h1>
-          <div className="mb-1 text-center text-base text-black md:text-xl">
+          <div className="mb-1 text-center text-base text-black sm:text-lg md:text-xl lg:text-2xl">
             Keep your content ad-friendly 😇 or make someone sound naughty 😈.
           </div>
-          <div className="mb-4 text-center text-sm text-black md:text-base">
+          <div className="mb-4 text-center text-sm text-black sm:text-base md:text-lg">
             <span className="inline-block rounded-full bg-yellow-200 px-4 py-2 font-bold">
               100% private. Everything happens in your browser.
             </span>
           </div>
-          <div className="mb-4 text-center text-sm text-black md:text-base">
+          <div className="mb-4 text-center text-sm text-black sm:text-base md:text-lg">
             <span className="inline-block rounded-full bg-blue-200 px-4 py-2 font-semibold">
               ⏱️ Currently supports files up to 10 minutes
             </span>
@@ -42,7 +42,7 @@ export default function Home() {
       {/* See It In Action Section */}
       <section className="editorial-section mb-16">
         <h2
-          className="font-inter mb-4 text-left text-2xl font-extrabold text-black uppercase md:text-3xl"
+          className="font-inter mb-4 text-left text-2xl font-extrabold text-black uppercase sm:text-3xl md:text-4xl"
           style={{ lineHeight: 1.1 }}
         >
           See It In Action
@@ -58,7 +58,7 @@ export default function Home() {
             allowFullScreen
           ></iframe>
         </div>
-        <p className="max-w-2xl text-left text-base text-gray-900 md:text-lg">
+        <p className="max-w-2xl text-left text-base text-gray-900 sm:text-lg md:text-xl">
           Watch a quick demo of bleeped video clips created with Bleep That Sh*t. See how easy it is
           to censor audio and video content right in your browser!
         </p>
@@ -91,12 +91,12 @@ export default function Home() {
           </text>
         </svg>
         <h2
-          className="font-inter mb-6 text-left text-2xl font-extrabold text-black uppercase md:text-3xl"
+          className="font-inter mb-6 text-left text-2xl font-extrabold text-black uppercase sm:text-3xl md:text-4xl"
           style={{ lineHeight: 1.1 }}
         >
           How It Works
         </h2>
-        <ol className="mb-8 list-decimal pl-6 text-left text-base md:text-lg">
+        <ol className="mb-8 list-decimal pl-5 text-left text-base sm:pl-6 sm:text-lg md:text-xl">
           <li className="mb-2">
             <span className="font-bold">Upload</span> your audio (MP3) or video (MP4) file.
           </li>
@@ -112,32 +112,32 @@ export default function Home() {
             <span className="font-bold">Preview & Download</span> your censored file.
           </li>
         </ol>
-        <div className="grid grid-cols-1 gap-8 text-left md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 text-left sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="mb-2 text-2xl md:text-3xl">🎵</div>
             <div className="font-inter mb-1 font-bold text-black uppercase">Upload</div>
-            <div className="text-sm text-gray-800 md:text-base">
+            <div className="text-sm text-gray-800 sm:text-base md:text-lg">
               Drop in your audio (MP3) or video (MP4) file.
             </div>
           </div>
           <div>
             <div className="mb-2 text-2xl md:text-3xl">📣</div>
             <div className="font-inter mb-1 font-bold text-black uppercase">Transcribe</div>
-            <div className="text-sm text-gray-800 md:text-base">
+            <div className="text-sm text-gray-800 sm:text-base md:text-lg">
               Choose a model and get a word-level transcript.
             </div>
           </div>
           <div>
             <div className="mb-2 text-2xl md:text-3xl">🔔</div>
             <div className="font-inter mb-1 font-bold text-black uppercase">Censor</div>
-            <div className="text-sm text-gray-800 md:text-base">
+            <div className="text-sm text-gray-800 sm:text-base md:text-lg">
               Pick words to bleep (exact, partial, or fuzzy match).
             </div>
           </div>
           <div>
             <div className="mb-2 text-2xl md:text-3xl">⬇️</div>
             <div className="font-inter mb-1 font-bold text-black uppercase">Preview & Download</div>
-            <div className="text-sm text-gray-800 md:text-base">
+            <div className="text-sm text-gray-800 sm:text-base md:text-lg">
               Hear the result and save your censored file.
             </div>
           </div>
@@ -150,7 +150,7 @@ export default function Home() {
       {/* Privacy & Local Processing Section */}
       <section className="editorial-section mb-16">
         <h2
-          className="font-inter mb-4 text-left text-2xl font-extrabold text-black uppercase md:text-3xl"
+          className="font-inter mb-4 text-left text-2xl font-extrabold text-black uppercase sm:text-3xl md:text-4xl"
           style={{ lineHeight: 1.1 }}
         >
           Privacy & Local Processing
@@ -161,7 +161,7 @@ export default function Home() {
             Your files never leave your device.
           </span>
         </div>
-        <div className="text-left text-sm text-gray-800 md:text-base">
+        <div className="text-left text-base text-gray-800 md:text-lg">
           All processing is done locally in your browser using cutting-edge technologies. No
           uploads, no cloud, no tracking. Your media and transcripts stay private.
         </div>
@@ -173,35 +173,37 @@ export default function Home() {
       {/* Technology Section */}
       <section className="editorial-section mb-16">
         <h2
-          className="font-inter mb-4 text-left text-2xl font-extrabold text-black uppercase md:text-3xl"
+          className="font-inter mb-4 text-left text-2xl font-extrabold text-black uppercase sm:text-3xl md:text-4xl"
           style={{ lineHeight: 1.1 }}
         >
           Powered by Open Source AI & Web Tech
         </h2>
-        <div className="mb-6 grid grid-cols-1 gap-8 text-left md:grid-cols-4">
+        <div className="mb-6 grid grid-cols-1 gap-8 text-left sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="mb-1 text-2xl">🤗</div>
             <div className="font-inter mb-1 font-bold text-black uppercase">huggingface.js</div>
-            <div className="text-sm text-gray-800 md:text-base">Local Whisper transcription</div>
+            <div className="text-sm text-gray-800 sm:text-base md:text-lg">
+              Local Whisper transcription
+            </div>
           </div>
           <div>
             <div className="mb-1 text-2xl">🎬</div>
             <div className="font-inter mb-1 font-bold text-black uppercase">ffmpeg.wasm</div>
-            <div className="text-sm text-gray-800 md:text-base">
+            <div className="text-sm text-gray-800 sm:text-base md:text-lg">
               In-browser audio/video processing
             </div>
           </div>
           <div>
             <div className="mb-1 text-2xl">🎚️</div>
             <div className="font-inter mb-1 font-bold text-black uppercase">Web Audio API</div>
-            <div className="text-sm text-gray-800 md:text-base">
+            <div className="text-sm text-gray-800 sm:text-base md:text-lg">
               Precise audio editing & preview
             </div>
           </div>
           <div>
             <div className="mb-1 text-2xl">🎥</div>
             <div className="font-inter mb-1 font-bold text-black uppercase">Plyr</div>
-            <div className="text-sm text-gray-800 md:text-base">
+            <div className="text-sm text-gray-800 sm:text-base md:text-lg">
               Beautiful, interactive media playback
             </div>
           </div>
