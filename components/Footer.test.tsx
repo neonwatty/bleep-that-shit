@@ -78,7 +78,9 @@ describe('Footer', () => {
 
   it('renders newsletter subscribe button with correct attributes', () => {
     render(<Footer />);
-    const newsletterButton = screen.getByRole('link', { name: /get updates on projects like this/i });
+    const newsletterButton = screen.getByRole('link', {
+      name: /get updates on projects like this/i,
+    });
     expect(newsletterButton).toHaveAttribute('href', 'https://neonwatty.com/newsletter/');
     expect(newsletterButton).toHaveAttribute('target', '_blank');
     expect(newsletterButton).toHaveAttribute('rel', 'noopener noreferrer');
