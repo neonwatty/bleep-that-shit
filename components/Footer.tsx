@@ -48,7 +48,7 @@ export function Footer() {
           rel="noopener noreferrer"
           className="rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:from-violet-700 hover:to-indigo-700 hover:shadow-lg"
         >
-          📬 Get updates on fun projects
+          📬 Occasional updates on fun projects
         </a>
         <div className="text-center text-xs text-gray-600">
           © {new Date().getFullYear()} Bleep That Sh*t! All rights reserved.
