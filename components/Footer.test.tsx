@@ -22,7 +22,7 @@ describe('Footer', () => {
 
   it('renders the creator attribution', () => {
     render(<Footer />);
-    expect(screen.getByText('Made by')).toBeInTheDocument();
+    expect(screen.getByText('Created by')).toBeInTheDocument();
     expect(screen.getByText('neonwatty')).toBeInTheDocument();
   });
 

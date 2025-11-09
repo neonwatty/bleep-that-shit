@@ -3,7 +3,7 @@ export function Footer() {
     <footer className="mx-auto mt-12 w-full max-w-4xl border-t-2 border-black px-2 py-8 md:px-0">
       <div className="flex flex-col items-center gap-4">
         <div className="text-center text-sm text-gray-700">
-          Made by{' '}
+          Created by{' '}
           <a
             href="https://x.com/neonwatty"
             target="_blank"
