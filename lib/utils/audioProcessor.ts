@@ -17,7 +17,8 @@ export async function applyBleeps(
   audioFile: File,
   bleepSegments: BleepSegment[],
   bleepSound: string = 'bleep',
-  bleepVolume: number = 0.8
+  bleepVolume: number = 0.8,
+  originalVolumeReduction: number = 0.1 // New parameter
 ): Promise<Blob> {
   // Create audio context
   const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -61,8 +62,8 @@ export async function applyBleeps(
 
     // Duck the original audio
     gainNode.gain.setValueAtTime(1, startTime - 0.01);
-    gainNode.gain.linearRampToValueAtTime(0.1, startTime); // Reduce to 10% volume
-    gainNode.gain.setValueAtTime(0.1, endTime);
+    gainNode.gain.linearRampToValueAtTime(originalVolumeReduction, startTime); // Use new parameter
+    gainNode.gain.setValueAtTime(originalVolumeReduction, endTime); // Use new parameter
     gainNode.gain.linearRampToValueAtTime(1, endTime + 0.01);
 
     // Add bleep sound
@@ -164,7 +165,8 @@ export async function applyBleepsToVideo(
   videoFile: File,
   bleepSegments: BleepSegment[],
   bleepSound: string = 'bleep',
-  bleepVolume: number = 0.8
+  bleepVolume: number = 0.8,
+  originalVolumeReduction: number = 0.1 // New parameter
 ): Promise<Blob> {
   console.log('Starting video bleeping process...');
 
@@ -238,8 +240,8 @@ export async function applyBleepsToVideo(
 
     // Duck the original audio
     gainNode.gain.setValueAtTime(1, startTime - 0.01);
-    gainNode.gain.linearRampToValueAtTime(0.1, startTime); // Reduce to 10% volume
-    gainNode.gain.setValueAtTime(0.1, endTime);
+    gainNode.gain.linearRampToValueAtTime(originalVolumeReduction, startTime); // Use new parameter
+    gainNode.gain.setValueAtTime(originalVolumeReduction, endTime); // Use new parameter
     gainNode.gain.linearRampToValueAtTime(1, endTime + 0.01);
 
     // Add bleep sound

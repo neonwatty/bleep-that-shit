@@ -14,5 +14,13 @@
     "defaultVolume": 1.0,
     "defaultPrePaddingMs": 100,
     "defaultPostPaddingMs": 100
+  },
+  {
+    "name": "Dolphin Sounds Bleep",
+    "filename": "dolphin.mp3",
+    "category": "dolphin",
+    "defaultVolume": 1.0,
+    "defaultPrePaddingMs": 100,
+    "defaultPostPaddingMs": 100
   }
 ]

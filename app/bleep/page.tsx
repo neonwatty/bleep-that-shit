@@ -36,6 +36,7 @@ export default function BleepPage() {
   >([]);
   const [bleepSound, setBleepSound] = useState('bleep');
   const [bleepVolume, setBleepVolume] = useState(80);
+  const [originalVolumeReduction, setOriginalVolumeReduction] = useState(0.1); // New state for original audio reduction
   const [censoredMediaUrl, setCensoredMediaUrl] = useState<string | null>(null);
   const [isProcessingVideo, setIsProcessingVideo] = useState(false);
   const [showFileWarning, setShowFileWarning] = useState(false);
@@ -354,12 +355,24 @@ export default function BleepPage() {
 
       if (file.type.includes('audio')) {
         // Process audio file
-        censoredBlob = await applyBleeps(file, matchedWords, bleepSound, volumeValue);
+        censoredBlob = await applyBleeps(
+          file,
+          matchedWords,
+          bleepSound,
+          volumeValue,
+          originalVolumeReduction
+        );
       } else if (file.type.includes('video')) {
         // Process video file
         setIsProcessingVideo(true);
         setProgressText('Processing video (this may take a moment)...');
-        censoredBlob = await applyBleepsToVideo(file, matchedWords, bleepSound, volumeValue);
+        censoredBlob = await applyBleepsToVideo(
+          file,
+          matchedWords,
+          bleepSound,
+          volumeValue,
+          originalVolumeReduction
+        );
         setIsProcessingVideo(false);
       } else {
         throw new Error('Unsupported file type for bleeping');
@@ -855,6 +868,7 @@ export default function BleepPage() {
             >
               <option value="bleep">Classic Bleep</option>
               <option value="brown">Brown Noise</option>
+              <option value="dolphin">Dolphin Sounds Bleep</option>
             </select>
           </div>
 
@@ -865,7 +879,7 @@ export default function BleepPage() {
             <input
               type="range"
               min="0"
-              max="100"
+              max="150"
               step="5"
               value={bleepVolume}
               onChange={e => setBleepVolume(Number(e.target.value))}
@@ -874,6 +888,29 @@ export default function BleepPage() {
             <div className="mt-1 flex w-full justify-between text-xs text-gray-600 sm:max-w-xs">
               <span>Quiet</span>
               <span>Loud</span>
+            </div>
+
+            {/* New: Original Word Volume Reduction */}
+            <div className="mt-4">
+              <label className="mb-2 block text-sm font-semibold">
+                Original Word Volume:{' '}
+                <span className="font-bold text-yellow-600">
+                  {Math.round(originalVolumeReduction * 100)}%
+                </span>
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="10"
+                value={Math.round(originalVolumeReduction * 100)}
+                onChange={e => setOriginalVolumeReduction(Number(e.target.value) / 100)}
+                className="h-2 w-full cursor-pointer rounded-lg sm:max-w-xs"
+              />
+              <div className="mt-1 flex w-full justify-between text-xs text-gray-600 sm:max-w-xs">
+                <span>Removed</span>
+                <span>Original</span>
+              </div>
             </div>
             <button
               onClick={handlePreviewBleep}
