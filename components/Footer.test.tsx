@@ -78,7 +78,7 @@ describe('Footer', () => {
 
   it('renders newsletter subscribe button with correct attributes', () => {
     render(<Footer />);
-    const newsletterButton = screen.getByRole('link', { name: /occasional updates on fun projects/i });
+    const newsletterButton = screen.getByRole('link', { name: /get updates on projects like this/i });
     expect(newsletterButton).toHaveAttribute('href', 'https://neonwatty.com/newsletter/');
     expect(newsletterButton).toHaveAttribute('target', '_blank');
     expect(newsletterButton).toHaveAttribute('rel', 'noopener noreferrer');
@@ -87,5 +87,10 @@ describe('Footer', () => {
   it('displays newsletter button with emoji', () => {
     render(<Footer />);
     expect(screen.getByText(/📬/)).toBeInTheDocument();
+  });
+
+  it('displays newsletter subtitle text', () => {
+    render(<Footer />);
+    expect(screen.getByText(/Occasional updates • No spam/i)).toBeInTheDocument();
   });
 });
