@@ -355,12 +355,24 @@ export default function BleepPage() {
 
       if (file.type.includes('audio')) {
         // Process audio file
-        censoredBlob = await applyBleeps(file, matchedWords, bleepSound, volumeValue, originalVolumeReduction);
+        censoredBlob = await applyBleeps(
+          file,
+          matchedWords,
+          bleepSound,
+          volumeValue,
+          originalVolumeReduction
+        );
       } else if (file.type.includes('video')) {
         // Process video file
         setIsProcessingVideo(true);
         setProgressText('Processing video (this may take a moment)...');
-        censoredBlob = await applyBleepsToVideo(file, matchedWords, bleepSound, volumeValue, originalVolumeReduction);
+        censoredBlob = await applyBleepsToVideo(
+          file,
+          matchedWords,
+          bleepSound,
+          volumeValue,
+          originalVolumeReduction
+        );
         setIsProcessingVideo(false);
       } else {
         throw new Error('Unsupported file type for bleeping');
@@ -881,7 +893,10 @@ export default function BleepPage() {
             {/* New: Original Word Volume Reduction */}
             <div className="mt-4">
               <label className="mb-2 block text-sm font-semibold">
-                Original Word Volume: <span className="font-bold text-yellow-600">{Math.round(originalVolumeReduction * 100)}%</span>
+                Original Word Volume:{' '}
+                <span className="font-bold text-yellow-600">
+                  {Math.round(originalVolumeReduction * 100)}%
+                </span>
               </label>
               <input
                 type="range"
