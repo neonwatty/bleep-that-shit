@@ -3,7 +3,7 @@ export function Footer() {
     <footer className="mx-auto mt-12 w-full max-w-4xl border-t-2 border-black px-2 py-8 md:px-0">
       <div className="flex flex-col items-center gap-4">
         <div className="text-center text-sm text-gray-700">
-          Made by{' '}
+          Created by{' '}
           <a
             href="https://x.com/neonwatty"
             target="_blank"
@@ -41,6 +41,17 @@ export function Footer() {
           >
             <i className="fas fa-globe text-2xl"></i>
           </a>
+        </div>
+        <div className="flex flex-col items-center gap-1">
+          <a
+            href="https://neonwatty.com/newsletter/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:from-violet-700 hover:to-indigo-700 hover:shadow-lg"
+          >
+            📬 Get updates on projects like this
+          </a>
+          <span className="text-xs text-gray-500">Occasional updates • No spam</span>
         </div>
         <div className="text-center text-xs text-gray-600">
           © {new Date().getFullYear()} Bleep That Sh*t! All rights reserved.

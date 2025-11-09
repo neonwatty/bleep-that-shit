@@ -22,7 +22,7 @@ describe('Footer', () => {
 
   it('renders the creator attribution', () => {
     render(<Footer />);
-    expect(screen.getByText('Made by')).toBeInTheDocument();
+    expect(screen.getByText('Created by')).toBeInTheDocument();
     expect(screen.getByText('neonwatty')).toBeInTheDocument();
   });
 
@@ -74,5 +74,25 @@ describe('Footer', () => {
     expect(githubIcon).toBeInTheDocument();
     expect(twitterIcon).toBeInTheDocument();
     expect(blogIcon).toBeInTheDocument();
+  });
+
+  it('renders newsletter subscribe button with correct attributes', () => {
+    render(<Footer />);
+    const newsletterButton = screen.getByRole('link', {
+      name: /get updates on projects like this/i,
+    });
+    expect(newsletterButton).toHaveAttribute('href', 'https://neonwatty.com/newsletter/');
+    expect(newsletterButton).toHaveAttribute('target', '_blank');
+    expect(newsletterButton).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('displays newsletter button with emoji', () => {
+    render(<Footer />);
+    expect(screen.getByText(/📬/)).toBeInTheDocument();
+  });
+
+  it('displays newsletter subtitle text', () => {
+    render(<Footer />);
+    expect(screen.getByText(/Occasional updates • No spam/i)).toBeInTheDocument();
   });
 });
