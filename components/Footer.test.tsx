@@ -75,4 +75,17 @@ describe('Footer', () => {
     expect(twitterIcon).toBeInTheDocument();
     expect(blogIcon).toBeInTheDocument();
   });
+
+  it('renders newsletter subscribe button with correct attributes', () => {
+    render(<Footer />);
+    const newsletterButton = screen.getByRole('link', { name: /get updates on fun projects/i });
+    expect(newsletterButton).toHaveAttribute('href', 'https://neonwatty.com/newsletter/');
+    expect(newsletterButton).toHaveAttribute('target', '_blank');
+    expect(newsletterButton).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('displays newsletter button with emoji', () => {
+    render(<Footer />);
+    expect(screen.getByText(/📬/)).toBeInTheDocument();
+  });
 });
