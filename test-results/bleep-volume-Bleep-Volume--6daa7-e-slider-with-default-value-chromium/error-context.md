@@ -1,0 +1,162 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - text:   
+  - navigation [ref=e2]:
+    - link "Bleep That Sh*t!" [ref=e4] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e5]:
+      - link "Bleep Your Sh*t!" [ref=e6] [cursor=pointer]:
+        - /url: /bleep
+      - link "Transcription Sampler" [ref=e7] [cursor=pointer]:
+        - /url: /sampler
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic "Waveform icon" [ref=e11]:
+          - img [ref=e12]
+        - generic "Cursing emoji" [ref=e18]: 🙊
+        - heading "Bleep Your Sh*t!" [level=1] [ref=e19]
+      - generic [ref=e20]:
+        - text: Process your entire audio or video file, censoring selected words with customizable matching and bleep sounds.
+        - generic [ref=e22]:
+          - text: ⏱️
+          - strong [ref=e23]: "Note:"
+          - text: Currently supports files up to 10 minutes in length.
+      - generic [ref=e24]: How it works
+      - list [ref=e25]:
+        - listitem [ref=e26]: Upload your file (audio or video).
+        - listitem [ref=e27]: Select language and model for transcription.
+        - listitem [ref=e28]: Transcribe your file to generate a word-level transcript.
+        - listitem [ref=e29]: Enter words and matching modes (exact, partial, fuzzy).
+        - listitem [ref=e30]: Run matching to find words to censor.
+        - listitem [ref=e31]: Choose bleep sound and volume for censorship.
+        - listitem [ref=e32]: Bleep That Sh*t! and preview/download the censored result.
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - generic [ref=e35]: "1"
+          - heading "Upload Your File" [level=2] [ref=e36]
+        - paragraph [ref=e37]: Audio (MP3) or Video (MP4) supported. Files up to 10 minutes. Preview your input before processing.
+        - generic [ref=e38] [cursor=pointer]:
+          - button "Choose File" [ref=e39]
+          - paragraph [ref=e40]: Drag and drop your audio or video file here or click to browse
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e43]: "2"
+          - heading "Select Language & Model" [level=2] [ref=e44]
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - generic [ref=e47]: Language
+            - combobox [ref=e48]:
+              - option "English" [selected]
+              - option "Spanish"
+              - option "French"
+              - option "German"
+              - option "Italian"
+              - option "Portuguese"
+              - option "Dutch"
+              - option "Polish"
+              - option "Japanese"
+              - option "Chinese"
+              - option "Korean"
+          - generic [ref=e49]:
+            - generic [ref=e50]: Model
+            - combobox [ref=e51]:
+              - option "Tiny (English only, fastest)" [selected]
+              - option "Base (English only, fast)"
+              - option "Small (English only, balanced)"
+              - option "Tiny (Multilingual)"
+              - option "Base (Multilingual)"
+              - option "Small (Multilingual)"
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: "3"
+          - heading "Transcribe" [level=2] [ref=e55]
+        - button "Start Transcription" [disabled] [ref=e56] [cursor=pointer]
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - generic [ref=e59]: "4"
+          - heading "Enter Words to Bleep" [level=2] [ref=e60]
+        - generic [ref=e61]:
+          - generic [ref=e62]: Words to match (comma-separated)
+          - textbox "e.g., bad, word, curse" [ref=e63]
+        - generic [ref=e64]:
+          - generic [ref=e65]: Matching modes
+          - generic [ref=e66]:
+            - generic [ref=e67] [cursor=pointer]:
+              - checkbox "Exact match" [checked] [ref=e68]
+              - text: Exact match
+            - generic [ref=e69] [cursor=pointer]:
+              - checkbox "Partial match" [ref=e70]
+              - text: Partial match
+            - generic [ref=e71] [cursor=pointer]:
+              - checkbox "Fuzzy match" [ref=e72]
+              - text: Fuzzy match
+        - button "Run Matching" [disabled] [ref=e73] [cursor=pointer]
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - generic [ref=e76]: "5"
+          - heading "Choose Bleep Sound & Volume" [level=2] [ref=e77]
+        - generic [ref=e78]:
+          - generic [ref=e79]:
+            - generic [ref=e80]: Bleep Sound
+            - combobox [ref=e81]:
+              - option "Classic Bleep" [selected]
+              - option "Brown Noise"
+              - option "Dolphin Sounds Bleep"
+          - generic [ref=e82]:
+            - generic [ref=e83]:
+              - text: "Bleep Volume:"
+              - generic [ref=e84]: 80%
+            - slider [ref=e85] [cursor=pointer]: "80"
+            - generic [ref=e86]:
+              - generic [ref=e87]: Quiet
+              - generic [ref=e88]: Loud
+            - generic [ref=e89]:
+              - generic [ref=e90]:
+                - text: "Original Word Volume:"
+                - generic [ref=e91]: 0%
+              - slider [ref=e92] [cursor=pointer]: "0"
+              - generic [ref=e93]:
+                - generic [ref=e94]: Removed
+                - generic [ref=e95]: Original
+            - generic [ref=e96]:
+              - generic [ref=e97]:
+                - text: "Bleep Buffer:"
+                - generic [ref=e98]: 0.00s
+              - slider [ref=e99] [cursor=pointer]: "0"
+              - generic [ref=e100]:
+                - generic [ref=e101]: None
+                - generic [ref=e102]: 0.5s
+              - paragraph [ref=e103]: Extends bleep 0.00s before and after each word
+            - button "🔊 Preview Bleep" [ref=e104]
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - generic [ref=e107]: "6"
+          - heading "Bleep That Sh*t!" [level=2] [ref=e108]
+        - button "Apply Bleeps!" [disabled] [ref=e109] [cursor=pointer]
+    - generic [ref=e111]:
+      - generic [ref=e112]:
+        - text: Created by
+        - link "neonwatty" [ref=e113] [cursor=pointer]:
+          - /url: https://x.com/neonwatty
+      - generic [ref=e114]:
+        - link "GitHub repository" [ref=e115] [cursor=pointer]:
+          - /url: https://github.com/neonwatty/bleep-that-shit
+          - generic [ref=e116]: 
+        - link "Follow on X" [ref=e117] [cursor=pointer]:
+          - /url: https://x.com/neonwatty
+          - generic [ref=e118]: 
+        - link "Visit blog" [ref=e119] [cursor=pointer]:
+          - /url: https://neonwatty.com/
+          - generic [ref=e120]: 
+      - generic [ref=e121]:
+        - link "📬 Get updates on projects like this" [ref=e122] [cursor=pointer]:
+          - /url: https://neonwatty.com/newsletter/
+        - generic [ref=e123]: Occasional updates • No spam
+      - generic [ref=e124]: © 2025 Bleep That Sh*t! All rights reserved.
+  - button "Open Next.js Dev Tools" [ref=e130] [cursor=pointer]:
+    - img [ref=e131]
+  - alert [ref=e134]: BLEEP YOUR SH*T!
+```

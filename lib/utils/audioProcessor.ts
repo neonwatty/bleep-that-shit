@@ -54,11 +54,19 @@ export async function applyBleeps(
   // Set initial gain
   gainNode.gain.setValueAtTime(1, now);
 
+  console.log(`[Audio Processing] Applying ${bleepSegments.length} bleeps with:`);
+  console.log(`- Bleep volume: ${bleepVolume}`);
+  console.log(`- Original volume during bleeps: ${originalVolumeReduction}`);
+
   // Schedule volume ducking for each bleep segment
-  bleepSegments.forEach(segment => {
+  bleepSegments.forEach((segment, index) => {
     const startTime = segment.start;
     const endTime = segment.end;
     const duration = endTime - startTime;
+
+    console.log(
+      `  Bleep ${index + 1}: "${segment.word}" at ${startTime.toFixed(3)}s - ${endTime.toFixed(3)}s (duration: ${duration.toFixed(3)}s)`
+    );
 
     // Duck the original audio
     gainNode.gain.setValueAtTime(1, startTime - 0.01);
@@ -232,11 +240,19 @@ export async function applyBleepsToVideo(
   // Set initial gain
   gainNode.gain.setValueAtTime(1, now);
 
+  console.log(`[Audio Processing] Applying ${bleepSegments.length} bleeps with:`);
+  console.log(`- Bleep volume: ${bleepVolume}`);
+  console.log(`- Original volume during bleeps: ${originalVolumeReduction}`);
+
   // Schedule volume ducking for each bleep segment
-  bleepSegments.forEach(segment => {
+  bleepSegments.forEach((segment, index) => {
     const startTime = segment.start;
     const endTime = segment.end;
     const duration = endTime - startTime;
+
+    console.log(
+      `  Bleep ${index + 1}: "${segment.word}" at ${startTime.toFixed(3)}s - ${endTime.toFixed(3)}s (duration: ${duration.toFixed(3)}s)`
+    );
 
     // Duck the original audio
     gainNode.gain.setValueAtTime(1, startTime - 0.01);

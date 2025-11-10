@@ -1,0 +1,57 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - text:   
+  - navigation [ref=e2]:
+    - link "Bleep That Sh*t!" [ref=e4] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e5]:
+      - link "Bleep Your Sh*t!" [ref=e6] [cursor=pointer]:
+        - /url: /bleep
+      - link "Transcription Sampler" [ref=e7] [cursor=pointer]:
+        - /url: /sampler
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - heading "Transcription Sampler" [level=1] [ref=e11]
+        - paragraph [ref=e12]: Compare different Whisper models on a short audio sample to find the best balance of speed and accuracy for your needs.
+      - generic [ref=e13]:
+        - heading "Why use the sampler?" [level=2] [ref=e14]
+        - list [ref=e15]:
+          - listitem [ref=e16]: Test multiple models on the same audio snippet
+          - listitem [ref=e17]: Compare transcription accuracy across models
+          - listitem [ref=e18]: See performance differences (speed vs quality)
+          - listitem [ref=e19]: Choose the right model before processing your full file
+        - generic [ref=e21]:
+          - text: ⏱️
+          - strong [ref=e22]: "Note:"
+          - text: Full transcription supports files up to 10 minutes.
+      - generic [ref=e23]:
+        - 'heading "Step 1: Upload Audio/Video" [level=2] [ref=e24]'
+        - generic [ref=e25] [cursor=pointer]:
+          - button "Choose File" [ref=e26]
+          - generic [ref=e27]:
+            - paragraph [ref=e28]: Drag and drop your audio or video file here
+            - paragraph [ref=e29]: or click to browse
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - text: Created by
+        - link "neonwatty" [ref=e33] [cursor=pointer]:
+          - /url: https://x.com/neonwatty
+      - generic [ref=e34]:
+        - link "GitHub repository" [ref=e35] [cursor=pointer]:
+          - /url: https://github.com/neonwatty/bleep-that-shit
+          - generic [ref=e36]: 
+        - link "Follow on X" [ref=e37] [cursor=pointer]:
+          - /url: https://x.com/neonwatty
+          - generic [ref=e38]: 
+        - link "Visit blog" [ref=e39] [cursor=pointer]:
+          - /url: https://neonwatty.com/
+          - generic [ref=e40]: 
+      - generic [ref=e41]:
+        - link "📬 Get updates on projects like this" [ref=e42] [cursor=pointer]:
+          - /url: https://neonwatty.com/newsletter/
+        - generic [ref=e43]: Occasional updates • No spam
+      - generic [ref=e44]: © 2025 Bleep That Sh*t! All rights reserved.
+```
