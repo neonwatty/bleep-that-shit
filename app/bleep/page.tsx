@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone';
 import { decodeAudioToMono16kHzPCM } from '@/lib/utils/audioDecode';
 import { applyBleeps, applyBleepsToVideo } from '@/lib/utils/audioProcessor';
 import { getPublicPath } from '@/lib/utils/paths';
+import { mergeOverlappingBleeps } from '@/lib/utils/bleepMerger';
 
 interface TranscriptionResult {
   text: string;
@@ -36,7 +37,7 @@ export default function BleepPage() {
   >([]);
   const [bleepSound, setBleepSound] = useState('bleep');
   const [bleepVolume, setBleepVolume] = useState(80);
-  const [originalVolumeReduction, setOriginalVolumeReduction] = useState(0.1); // New state for original audio reduction
+  const [originalVolumeReduction, setOriginalVolumeReduction] = useState(0.0); // Default: completely mute original audio during bleeps
   const [censoredMediaUrl, setCensoredMediaUrl] = useState<string | null>(null);
   const [isProcessingVideo, setIsProcessingVideo] = useState(false);
   const [showFileWarning, setShowFileWarning] = useState(false);
@@ -44,6 +45,7 @@ export default function BleepPage() {
   const [isPreviewingBleep, setIsPreviewingBleep] = useState(false);
   const [hasBleeped, setHasBleeped] = useState(false);
   const [lastBleepVolume, setLastBleepVolume] = useState<number | null>(null);
+  const [bleepBuffer, setBleepBuffer] = useState<number>(0); // 0-0.5 seconds buffer before/after each word
 
   const workerRef = useRef<Worker | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -314,16 +316,20 @@ export default function BleepPage() {
 
         matched.push({
           word: chunk.text,
-          start: start,
-          end: end,
+          start: Math.max(0, start - bleepBuffer), // Apply buffer, prevent negative times
+          end: end + bleepBuffer, // Apply buffer
         });
       }
     });
 
     console.log('Total matches found:', matched.length);
-    setMatchedWords(matched);
 
-    if (matched.length === 0) {
+    // Merge overlapping bleeps
+    const mergedWords = mergeOverlappingBleeps(matched);
+    console.log('After merging overlaps:', mergedWords.length);
+    setMatchedWords(mergedWords);
+
+    if (mergedWords.length === 0) {
       console.log('No matches found. Check if words exist in transcription.');
     }
   };
@@ -823,6 +829,25 @@ export default function BleepPage() {
           )}
         </div>
 
+        {/* Bleep Buffer Control */}
+        <div className="mb-4">
+          <label className="mb-2 block text-sm font-semibold">
+            Bleep Buffer: {bleepBuffer.toFixed(2)}s
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="0.5"
+            step="0.05"
+            value={bleepBuffer}
+            onChange={e => setBleepBuffer(parseFloat(e.target.value))}
+            className="w-full"
+          />
+          <p className="mt-1 text-xs text-gray-600">
+            Extends bleep {bleepBuffer.toFixed(2)}s before and after each word
+          </p>
+        </div>
+
         <button
           onClick={handleMatch}
           disabled={!transcriptionResult || !wordsToMatch}
@@ -833,7 +858,10 @@ export default function BleepPage() {
 
         {matchedWords.length > 0 && (
           <div className="mt-4 rounded bg-yellow-50 p-4">
-            <h3 className="mb-2 font-bold">Matched {matchedWords.length} words:</h3>
+            <h3 className="mb-2 font-bold">
+              Matched {matchedWords.length} words
+              {bleepBuffer > 0 && ` (with ${bleepBuffer.toFixed(2)}s buffer)`}:
+            </h3>
             <div className="flex flex-wrap gap-2">
               {matchedWords.map((match, i) => (
                 <span key={i} className="rounded bg-yellow-200 px-2 py-1 text-sm">
