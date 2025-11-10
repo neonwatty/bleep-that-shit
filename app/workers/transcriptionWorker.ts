@@ -120,7 +120,7 @@ self.onmessage = async (event: MessageEvent) => {
       // For English-only models, don't specify language or task
       const transcriptionOptions: any = {
         chunk_length_s: 30,
-        stride_length_s: 5,
+        stride_length_s: 3, // Reduced from 5 to improve word-level timestamp accuracy
         return_timestamps: 'word',
       };
 
