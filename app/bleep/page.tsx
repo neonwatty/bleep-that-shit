@@ -644,7 +644,7 @@ export default function BleepPage() {
               </audio>
             )}
             {fileUrl && file.type.includes('video') && (
-              <video controls className="mt-2 w-full rounded-lg shadow-sm">
+              <video controls className="mx-auto mt-2 max-w-2xl rounded-lg shadow-sm">
                 <source src={fileUrl} type={file.type} />
               </video>
             )}
@@ -1014,8 +1014,8 @@ export default function BleepPage() {
           <div className="mt-4">
             <h3 className="mb-2 font-bold">Censored Result:</h3>
             {file?.type.includes('video') ? (
-              <>
-                <video key={censoredMediaUrl} controls className="w-full rounded-lg shadow-md">
+              <div className="flex flex-col items-center">
+                <video key={censoredMediaUrl} controls className="max-w-2xl rounded-lg shadow-md">
                   <source src={censoredMediaUrl} type="video/mp4" />
                 </video>
                 <a
@@ -1025,7 +1025,7 @@ export default function BleepPage() {
                 >
                   Download Censored Video
                 </a>
-              </>
+              </div>
             ) : (
               <>
                 <audio key={censoredMediaUrl} controls className="w-full">
