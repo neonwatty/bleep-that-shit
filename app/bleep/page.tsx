@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone';
 import { decodeAudioToMono16kHzPCM } from '@/lib/utils/audioDecode';
 import { applyBleeps, applyBleepsToVideo } from '@/lib/utils/audioProcessor';
 import { getPublicPath } from '@/lib/utils/paths';
+import { mergeOverlappingBleeps } from '@/lib/utils/bleepMerger';
 
 interface TranscriptionResult {
   text: string;
@@ -331,39 +332,6 @@ export default function BleepPage() {
     if (mergedWords.length === 0) {
       console.log('No matches found. Check if words exist in transcription.');
     }
-  };
-
-  // Merge overlapping bleep segments
-  const mergeOverlappingBleeps = (
-    segments: Array<{ word: string; start: number; end: number }>
-  ): Array<{ word: string; start: number; end: number }> => {
-    if (segments.length === 0) return [];
-
-    // Sort by start time
-    const sorted = [...segments].sort((a, b) => a.start - b.start);
-    const merged: Array<{ word: string; start: number; end: number }> = [];
-
-    let current = sorted[0];
-
-    for (let i = 1; i < sorted.length; i++) {
-      const next = sorted[i];
-
-      if (next.start <= current.end) {
-        // Overlapping - merge
-        current = {
-          word: `${current.word}, ${next.word}`, // Combine word labels
-          start: current.start,
-          end: Math.max(current.end, next.end),
-        };
-      } else {
-        // No overlap - push current and move to next
-        merged.push(current);
-        current = next;
-      }
-    }
-
-    merged.push(current); // Don't forget the last one
-    return merged;
   };
 
   const handleBleep = async () => {
