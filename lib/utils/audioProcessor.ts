@@ -64,7 +64,9 @@ export async function applyBleeps(
     const endTime = segment.end;
     const duration = endTime - startTime;
 
-    console.log(`  Bleep ${index + 1}: "${segment.word}" at ${startTime.toFixed(3)}s - ${endTime.toFixed(3)}s (duration: ${duration.toFixed(3)}s)`);
+    console.log(
+      `  Bleep ${index + 1}: "${segment.word}" at ${startTime.toFixed(3)}s - ${endTime.toFixed(3)}s (duration: ${duration.toFixed(3)}s)`
+    );
 
     // Duck the original audio
     gainNode.gain.setValueAtTime(1, startTime - 0.01);
@@ -248,7 +250,9 @@ export async function applyBleepsToVideo(
     const endTime = segment.end;
     const duration = endTime - startTime;
 
-    console.log(`  Bleep ${index + 1}: "${segment.word}" at ${startTime.toFixed(3)}s - ${endTime.toFixed(3)}s (duration: ${duration.toFixed(3)}s)`);
+    console.log(
+      `  Bleep ${index + 1}: "${segment.word}" at ${startTime.toFixed(3)}s - ${endTime.toFixed(3)}s (duration: ${duration.toFixed(3)}s)`
+    );
 
     // Duck the original audio
     gainNode.gain.setValueAtTime(1, startTime - 0.01);

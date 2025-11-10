@@ -314,22 +314,23 @@ export default function BleepPage() {
 
         console.log(`Match found: "${chunk.text}" at [${start}, ${end}]`);
 
+        // Store original timestamps WITHOUT buffer
+        // Buffer will be applied dynamically during bleeping
         matched.push({
           word: chunk.text,
-          start: Math.max(0, start - bleepBuffer), // Apply buffer, prevent negative times
-          end: end + bleepBuffer, // Apply buffer
+          start: start,
+          end: end,
         });
       }
     });
 
     console.log('Total matches found:', matched.length);
 
-    // Merge overlapping bleeps
-    const mergedWords = mergeOverlappingBleeps(matched);
-    console.log('After merging overlaps:', mergedWords.length);
-    setMatchedWords(mergedWords);
+    // Don't merge yet - store original timestamps
+    // Merging will happen during bleeping with current buffer applied
+    setMatchedWords(matched);
 
-    if (mergedWords.length === 0) {
+    if (matched.length === 0) {
       console.log('No matches found. Check if words exist in transcription.');
     }
   };
@@ -357,8 +358,22 @@ export default function BleepPage() {
       );
       console.log('Volume settings:');
       console.log(`- Bleep volume: ${bleepVolume}% (converted to ${volumeValue})`);
-      console.log(`- Original word volume: ${Math.round(originalVolumeReduction * 100)}% (value: ${originalVolumeReduction})`);
-      console.log('Matched words:', matchedWords);
+      console.log(
+        `- Original word volume: ${Math.round(originalVolumeReduction * 100)}% (value: ${originalVolumeReduction})`
+      );
+      console.log(`- Bleep buffer: ${bleepBuffer}s`);
+      console.log('Original matched words (no buffer):', matchedWords);
+
+      // Apply the current buffer to matched words
+      const wordsWithBuffer = matchedWords.map(word => ({
+        word: word.word,
+        start: Math.max(0, word.start - bleepBuffer),
+        end: word.end + bleepBuffer,
+      }));
+
+      // Merge overlapping bleeps (after buffer is applied)
+      const finalBleepSegments = mergeOverlappingBleeps(wordsWithBuffer);
+      console.log(`After applying ${bleepBuffer}s buffer and merging:`, finalBleepSegments);
 
       let censoredBlob: Blob;
 
@@ -366,7 +381,7 @@ export default function BleepPage() {
         // Process audio file
         censoredBlob = await applyBleeps(
           file,
-          matchedWords,
+          finalBleepSegments,
           bleepSound,
           volumeValue,
           originalVolumeReduction
@@ -377,7 +392,7 @@ export default function BleepPage() {
         setProgressText('Processing video (this may take a moment)...');
         censoredBlob = await applyBleepsToVideo(
           file,
-          matchedWords,
+          finalBleepSegments,
           bleepSound,
           volumeValue,
           originalVolumeReduction
@@ -832,25 +847,6 @@ export default function BleepPage() {
           )}
         </div>
 
-        {/* Bleep Buffer Control */}
-        <div className="mb-4">
-          <label className="mb-2 block text-sm font-semibold">
-            Bleep Buffer: {bleepBuffer.toFixed(2)}s
-          </label>
-          <input
-            type="range"
-            min="0"
-            max="0.5"
-            step="0.05"
-            value={bleepBuffer}
-            onChange={e => setBleepBuffer(parseFloat(e.target.value))}
-            className="w-full"
-          />
-          <p className="mt-1 text-xs text-gray-600">
-            Extends bleep {bleepBuffer.toFixed(2)}s before and after each word
-          </p>
-        </div>
-
         <button
           onClick={handleMatch}
           disabled={!transcriptionResult || !wordsToMatch}
@@ -863,14 +859,19 @@ export default function BleepPage() {
           <div className="mt-4 rounded bg-yellow-50 p-4">
             <h3 className="mb-2 font-bold">
               Matched {matchedWords.length} words
-              {bleepBuffer > 0 && ` (with ${bleepBuffer.toFixed(2)}s buffer)`}:
+              {bleepBuffer > 0 && ` (${bleepBuffer.toFixed(2)}s buffer will be applied)`}:
             </h3>
             <div className="flex flex-wrap gap-2">
-              {matchedWords.map((match, i) => (
-                <span key={i} className="rounded bg-yellow-200 px-2 py-1 text-sm">
-                  {match.word} ({match.start.toFixed(1)}s - {match.end.toFixed(1)}s)
-                </span>
-              ))}
+              {matchedWords.map((match, i) => {
+                // Calculate display times with current buffer
+                const displayStart = Math.max(0, match.start - bleepBuffer);
+                const displayEnd = match.end + bleepBuffer;
+                return (
+                  <span key={i} className="rounded bg-yellow-200 px-2 py-1 text-sm">
+                    {match.word} ({displayStart.toFixed(1)}s - {displayEnd.toFixed(1)}s)
+                  </span>
+                );
+              })}
             </div>
           </div>
         )}
@@ -942,6 +943,30 @@ export default function BleepPage() {
                 <span>Removed</span>
                 <span>Original</span>
               </div>
+            </div>
+
+            {/* Bleep Buffer Control */}
+            <div className="mt-4">
+              <label className="mb-2 block text-sm font-semibold">
+                Bleep Buffer:{' '}
+                <span className="font-bold text-yellow-600">{bleepBuffer.toFixed(2)}s</span>
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="0.5"
+                step="0.05"
+                value={bleepBuffer}
+                onChange={e => setBleepBuffer(parseFloat(e.target.value))}
+                className="h-2 w-full cursor-pointer rounded-lg sm:max-w-xs"
+              />
+              <div className="mt-1 flex w-full justify-between text-xs text-gray-600 sm:max-w-xs">
+                <span>None</span>
+                <span>0.5s</span>
+              </div>
+              <p className="mt-1 text-xs text-gray-600">
+                Extends bleep {bleepBuffer.toFixed(2)}s before and after each word
+              </p>
             </div>
             <button
               onClick={handlePreviewBleep}
