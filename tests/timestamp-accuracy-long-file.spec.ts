@@ -43,7 +43,7 @@ test.describe('Timestamp Accuracy - Long Files', () => {
 
     // Set up console monitoring for timestamp logs
     const debugLogs: string[] = [];
-    page.on('console', (msg) => {
+    page.on('console', msg => {
       const text = msg.text();
       if (text.includes('Match found') || text.includes('timestamp')) {
         debugLogs.push(text);
@@ -64,10 +64,7 @@ test.describe('Timestamp Accuracy - Long Files', () => {
     await page.waitForTimeout(1000);
 
     // Verify transcript text appears
-    const transcriptText = await page
-      .locator('p.text-gray-800')
-      .first()
-      .textContent();
+    const transcriptText = await page.locator('p.text-gray-800').first().textContent();
     console.log('Transcribed text length:', transcriptText?.length);
 
     // Verify we got a reasonable transcription
@@ -90,7 +87,9 @@ test.describe('Timestamp Accuracy - Long Files', () => {
 
     // Match a word that should appear in the middle/end of the video
     // This tests that timestamps work across chunk boundaries
-    const wordInput = page.locator('input[placeholder*="bad"]').or(page.locator('input[type="text"]').nth(1));
+    const wordInput = page
+      .locator('input[placeholder*="bad"]')
+      .or(page.locator('input[type="text"]').nth(1));
 
     // Try to match a common word (adjust based on actual content)
     await wordInput.fill('the');
@@ -101,7 +100,7 @@ test.describe('Timestamp Accuracy - Long Files', () => {
     await page.waitForTimeout(1000);
 
     // Check for timestamp logs
-    const timestampMatches = debugLogs.filter((log) => /\[[\d.]+,\s*[\d.]+\]/.test(log));
+    const timestampMatches = debugLogs.filter(log => /\[[\d.]+,\s*[\d.]+\]/.test(log));
     console.log('Found timestamp logs:', timestampMatches.length);
 
     // Parse timestamps and verify they span the full duration
@@ -163,7 +162,9 @@ test.describe('Timestamp Accuracy - Long Files', () => {
     await page.waitForTimeout(1000);
 
     // Enter a common word to bleep
-    const wordInput = page.locator('input[placeholder*="bad"]').or(page.locator('input[type="text"]').nth(1));
+    const wordInput = page
+      .locator('input[placeholder*="bad"]')
+      .or(page.locator('input[type="text"]').nth(1));
     await wordInput.fill('the');
 
     // Click Match Words
@@ -181,9 +182,7 @@ test.describe('Timestamp Accuracy - Long Files', () => {
 
     // Wait for bleeping to complete (longer timeout for 59s file)
     await expect(
-      page
-        .locator('text=/complete|success|done/i')
-        .or(page.locator('text=/Download/i'))
+      page.locator('text=/complete|success|done/i').or(page.locator('text=/Download/i'))
     ).toBeVisible({ timeout: 120000 }); // 2 minutes
 
     // Verify download button appears
@@ -209,7 +208,7 @@ test.describe('Timestamp Accuracy - Long Files', () => {
     // Set up console monitoring specifically for the 29.98 bug
     const debugLogs: string[] = [];
     let has2998Bug = false;
-    page.on('console', (msg) => {
+    page.on('console', msg => {
       const text = msg.text();
       if (text.includes('Match found') || text.includes('timestamp')) {
         debugLogs.push(text);
@@ -237,7 +236,9 @@ test.describe('Timestamp Accuracy - Long Files', () => {
     await page.waitForTimeout(1000);
 
     // Match words to trigger timestamp logging
-    const wordInput = page.locator('input[placeholder*="bad"]').or(page.locator('input[type="text"]').nth(1));
+    const wordInput = page
+      .locator('input[placeholder*="bad"]')
+      .or(page.locator('input[type="text"]').nth(1));
     await wordInput.fill('the');
 
     const matchBtn = page.locator('button').filter({ hasText: /Match Words/i });

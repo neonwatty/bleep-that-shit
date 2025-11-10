@@ -70,7 +70,7 @@ test.describe('Timestamp Accuracy', () => {
 
       // Alternative: Access via window if we expose it
       // For now, we'll add a console.log listener
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         // Trigger a console log by interacting with the page
         setTimeout(() => {
           // Look for any debug logs that might contain chunks
@@ -82,19 +82,28 @@ test.describe('Timestamp Accuracy', () => {
     // Since we can't easily access React state, let's test via console monitoring
     // Set up console listener before actions
     const consoleLogs: string[] = [];
-    page.on('console', (msg) => {
+    page.on('console', msg => {
       const text = msg.text();
       consoleLogs.push(text);
     });
 
     // Trigger word matching which logs chunk info
-    await page.locator('input[type="text"]').filter({ hasText: /bad|word/i }).first().fill('hello');
-    await page.locator('button').filter({ hasText: /Match Words/i }).click();
+    await page
+      .locator('input[type="text"]')
+      .filter({ hasText: /bad|word/i })
+      .first()
+      .fill('hello');
+    await page
+      .locator('button')
+      .filter({ hasText: /Match Words/i })
+      .click();
 
     await page.waitForTimeout(1000);
 
     // Check console logs for timestamp data
-    const timestampLogs = consoleLogs.filter((log) => log.includes('timestamp') || log.includes('Match found'));
+    const timestampLogs = consoleLogs.filter(
+      log => log.includes('timestamp') || log.includes('Match found')
+    );
     console.log('Timestamp logs found:', timestampLogs.length);
 
     // At minimum, verify transcription succeeded with chunks
@@ -133,7 +142,9 @@ test.describe('Timestamp Accuracy', () => {
     await page.waitForTimeout(1000);
 
     // Enter word to bleep - try to bleep "hello" (first word)
-    const wordInput = page.locator('input[placeholder*="bad"]').or(page.locator('input[type="text"]').nth(1));
+    const wordInput = page
+      .locator('input[placeholder*="bad"]')
+      .or(page.locator('input[type="text"]').nth(1));
     await wordInput.fill('hello');
 
     // Click Match Words
@@ -151,9 +162,7 @@ test.describe('Timestamp Accuracy', () => {
 
     // Wait for bleeping to complete
     await expect(
-      page
-        .locator('text=/complete|success|done/i')
-        .or(page.locator('text=/Download/i'))
+      page.locator('text=/complete|success|done/i').or(page.locator('text=/Download/i'))
     ).toBeVisible({ timeout: 60000 });
 
     // Verify download button appears
@@ -183,7 +192,9 @@ test.describe('Timestamp Accuracy', () => {
     await page.waitForTimeout(1000);
 
     // Match multiple words: "hello, test"
-    const wordInput = page.locator('input[placeholder*="bad"]').or(page.locator('input[type="text"]').nth(1));
+    const wordInput = page
+      .locator('input[placeholder*="bad"]')
+      .or(page.locator('input[type="text"]').nth(1));
     await wordInput.fill('hello, test');
 
     const matchBtn = page.locator('button').filter({ hasText: /Match Words/i });
@@ -200,9 +211,7 @@ test.describe('Timestamp Accuracy', () => {
     await bleepBtn.click();
 
     await expect(
-      page
-        .locator('text=/complete|success|done/i')
-        .or(page.locator('text=/Download/i'))
+      page.locator('text=/complete|success|done/i').or(page.locator('text=/Download/i'))
     ).toBeVisible({ timeout: 60000 });
 
     const downloadBtn = page.locator('button,a').filter({ hasText: /Download/i });
@@ -226,7 +235,7 @@ test.describe('Timestamp Accuracy', () => {
 
     // Set up console monitoring for debug logs
     const debugLogs: string[] = [];
-    page.on('console', (msg) => {
+    page.on('console', msg => {
       const text = msg.text();
       if (text.includes('Match found') || text.includes('timestamp')) {
         debugLogs.push(text);
@@ -241,7 +250,9 @@ test.describe('Timestamp Accuracy', () => {
     await page.waitForTimeout(1000);
 
     // Match first word to trigger logging
-    const wordInput = page.locator('input[placeholder*="bad"]').or(page.locator('input[type="text"]').nth(1));
+    const wordInput = page
+      .locator('input[placeholder*="bad"]')
+      .or(page.locator('input[type="text"]').nth(1));
     await wordInput.fill('hello');
 
     const matchBtn = page.locator('button').filter({ hasText: /Match Words/i });
@@ -250,7 +261,7 @@ test.describe('Timestamp Accuracy', () => {
     await page.waitForTimeout(1000);
 
     // Check debug logs for timestamp values
-    const timestampMatches = debugLogs.filter((log) => /\[[\d.]+,\s*[\d.]+\]/.test(log));
+    const timestampMatches = debugLogs.filter(log => /\[[\d.]+,\s*[\d.]+\]/.test(log));
     console.log('Found timestamp logs:', timestampMatches);
 
     // Parse timestamps from logs
@@ -265,7 +276,9 @@ test.describe('Timestamp Accuracy', () => {
         // Critical assertions: start should not equal end
         if (start === end) {
           console.error(`❌ Found identical timestamps: [${start}, ${end}]`);
-          throw new Error(`Timestamp accuracy regression: found identical start/end values [${start}, ${end}]`);
+          throw new Error(
+            `Timestamp accuracy regression: found identical start/end values [${start}, ${end}]`
+          );
         }
 
         // Verify timestamps are reasonable
