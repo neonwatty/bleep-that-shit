@@ -119,8 +119,8 @@ self.onmessage = async (event: MessageEvent) => {
       // Transcribe the audio using Float32Array directly
       // For English-only models, don't specify language or task
       const transcriptionOptions: any = {
-        chunk_length_s: 30,
-        stride_length_s: 5,
+        chunk_length_s: 20, // Reduced from 30 to avoid timestamp corruption on longer files (transformers.js issue #1358)
+        stride_length_s: 3, // Reduced from 5 to improve word-level timestamp accuracy
         return_timestamps: 'word',
       };
 
