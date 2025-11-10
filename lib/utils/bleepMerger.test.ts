@@ -211,4 +211,127 @@ describe('bleepMerger', () => {
       expect(merged).toHaveLength(2); // Should stay separate
     });
   });
+
+  describe('GAIN_RAMP_BUFFER (0.02s) merging', () => {
+    it('should merge segments within 0.02s to avoid gain automation conflicts', () => {
+      // Two segments 0.01s apart - within GAIN_RAMP_BUFFER
+      const segments: BleepSegment[] = [
+        { word: 'hello', start: 1.0, end: 1.5 },
+        { word: 'world', start: 1.51, end: 2.0 },
+      ];
+
+      const merged = mergeOverlappingBleeps(segments);
+      expect(merged).toHaveLength(1);
+      expect(merged[0].word).toBe('hello, world');
+      expect(merged[0].start).toBe(1.0);
+      expect(merged[0].end).toBe(2.0);
+    });
+
+    it('should merge segments exactly at 0.02s threshold', () => {
+      // Segments exactly 0.02s apart
+      const segments: BleepSegment[] = [
+        { word: 'hello', start: 1.0, end: 1.5 },
+        { word: 'world', start: 1.52, end: 2.0 },
+      ];
+
+      const merged = mergeOverlappingBleeps(segments);
+      expect(merged).toHaveLength(1);
+      expect(merged[0].word).toBe('hello, world');
+    });
+
+    it('should not merge segments with gap larger than 0.02s', () => {
+      // Segments 0.03s apart - beyond GAIN_RAMP_BUFFER
+      const segments: BleepSegment[] = [
+        { word: 'hello', start: 1.0, end: 1.5 },
+        { word: 'world', start: 1.53, end: 2.0 },
+      ];
+
+      const merged = mergeOverlappingBleeps(segments);
+      expect(merged).toHaveLength(2);
+      expect(merged[0].word).toBe('hello');
+      expect(merged[1].word).toBe('world');
+    });
+
+    it('should merge close segments even with zero buffer', () => {
+      // Zero buffer, but segments are 0.01s apart
+      const segments: BleepSegment[] = [
+        { word: 'hello', start: 1.0, end: 1.5 },
+        { word: 'world', start: 1.51, end: 2.0 },
+      ];
+
+      const buffered = segments.map(seg => applyBufferToSegment(seg, 0));
+      const merged = mergeOverlappingBleeps(buffered);
+
+      expect(merged).toHaveLength(1);
+      expect(merged[0].word).toBe('hello, world');
+    });
+
+    it('should handle complex scenario with multiple segments at varying distances', () => {
+      const segments: BleepSegment[] = [
+        { word: 'one', start: 1.0, end: 1.3 },
+        { word: 'two', start: 1.31, end: 1.6 }, // 0.01s from one - will merge
+        { word: 'three', start: 1.8, end: 2.0 }, // 0.2s from two - won't merge
+        { word: 'four', start: 2.01, end: 2.3 }, // 0.01s from three - will merge
+      ];
+
+      const merged = mergeOverlappingBleeps(segments);
+
+      expect(merged).toHaveLength(2);
+      expect(merged[0].word).toBe('one, two');
+      expect(merged[0].start).toBe(1.0);
+      expect(merged[0].end).toBe(1.6);
+      expect(merged[1].word).toBe('three, four');
+      expect(merged[1].start).toBe(1.8);
+      expect(merged[1].end).toBe(2.3);
+    });
+
+    it('should merge three segments where buffer causes all to be within GAIN_RAMP_BUFFER', () => {
+      // Three segments where buffer brings them all within 0.02s
+      const segments: BleepSegment[] = [
+        { word: 'one', start: 1.0, end: 1.1 },
+        { word: 'two', start: 1.3, end: 1.4 },
+        { word: 'three', start: 1.6, end: 1.7 },
+      ];
+
+      // With 0.15s buffer: one ends at 1.25, two is 1.15-1.55, three starts at 1.45
+      const buffered = segments.map(seg => applyBufferToSegment(seg, 0.15));
+      const merged = mergeOverlappingBleeps(buffered);
+
+      expect(merged).toHaveLength(1);
+      expect(merged[0].word).toBe('one, two, three');
+      expect(merged[0].start).toBeCloseTo(0.85, 5);
+      expect(merged[0].end).toBeCloseTo(1.85, 5);
+    });
+
+    it('should handle buffer at file start with GAIN_RAMP_BUFFER merging', () => {
+      const segments: BleepSegment[] = [
+        { word: 'hello', start: 0.1, end: 0.3 },
+        { word: 'world', start: 0.31, end: 0.5 },
+      ];
+
+      const buffered = segments.map(seg => applyBufferToSegment(seg, 0.2));
+      const merged = mergeOverlappingBleeps(buffered);
+
+      expect(merged).toHaveLength(1);
+      expect(merged[0].start).toBe(0); // Clamped to 0
+      expect(merged[0].end).toBe(0.7);
+      expect(merged[0].word).toBe('hello, world');
+    });
+
+    it('should merge segments with maximum buffer (0.5s)', () => {
+      // Segments 0.8s apart, but with 0.5s buffer they overlap
+      const segments: BleepSegment[] = [
+        { word: 'hello', start: 1.0, end: 1.2 },
+        { word: 'world', start: 2.0, end: 2.2 },
+      ];
+
+      // With 0.5s buffer: hello is 0.5-1.7, world is 1.5-2.7
+      const buffered = segments.map(seg => applyBufferToSegment(seg, 0.5));
+      const merged = mergeOverlappingBleeps(buffered);
+
+      expect(merged).toHaveLength(1);
+      expect(merged[0].start).toBe(0.5);
+      expect(merged[0].end).toBe(2.7);
+    });
+  });
 });
