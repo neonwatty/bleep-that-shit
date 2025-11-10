@@ -355,6 +355,9 @@ export default function BleepPage() {
         'sound at',
         bleepVolume + '% volume'
       );
+      console.log('Volume settings:');
+      console.log(`- Bleep volume: ${bleepVolume}% (converted to ${volumeValue})`);
+      console.log(`- Original word volume: ${Math.round(originalVolumeReduction * 100)}% (value: ${originalVolumeReduction})`);
       console.log('Matched words:', matchedWords);
 
       let censoredBlob: Blob;

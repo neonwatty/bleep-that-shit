@@ -6,6 +6,8 @@ export interface BleepSegment {
 
 /**
  * Merges overlapping bleep segments into continuous segments
+ * Also merges segments that are too close together (within 0.02s) to avoid
+ * gain automation conflicts in the audio processing pipeline.
  * @param segments Array of bleep segments with word, start, and end times
  * @returns Array of merged segments where overlaps are combined
  */
@@ -16,13 +18,17 @@ export const mergeOverlappingBleeps = (segments: BleepSegment[]): BleepSegment[]
   const sorted = [...segments].sort((a, b) => a.start - b.start);
   const merged: BleepSegment[] = [];
 
+  // Gain automation uses 0.01s ramps on each side, so merge if within 0.02s
+  const GAIN_RAMP_BUFFER = 0.02;
+
   let current = sorted[0];
 
   for (let i = 1; i < sorted.length; i++) {
     const next = sorted[i];
 
-    if (next.start <= current.end) {
-      // Overlapping - merge
+    // Merge if overlapping OR if too close together (within gain ramp time)
+    if (next.start <= current.end + GAIN_RAMP_BUFFER) {
+      // Overlapping or too close - merge
       current = {
         word: `${current.word}, ${next.word}`, // Combine word labels
         start: current.start,
