@@ -33,6 +33,12 @@ export class BleepPage {
   readonly matchedWordsContainer: Locator;
   readonly matchedWordChips: Locator;
 
+  // Transcript Review Elements (NEW)
+  readonly searchTranscriptInput: Locator;
+  readonly clearAllButton: Locator;
+  readonly transcriptExpandButton: Locator;
+  readonly transcriptStats: Locator;
+
   // Bleep Sound & Volume Controls
   readonly bleepSoundSelect: Locator;
   readonly bleepVolumeSlider: Locator;
@@ -76,6 +82,12 @@ export class BleepPage {
     this.runMatchingButton = page.getByTestId('run-matching-button');
     this.matchedWordsContainer = page.getByTestId('matched-words-container');
     this.matchedWordChips = page.getByTestId('matched-word-chip');
+
+    // Transcript Review (NEW)
+    this.searchTranscriptInput = page.getByTestId('search-transcript-input');
+    this.clearAllButton = page.getByTestId('clear-all-button');
+    this.transcriptExpandButton = page.locator('button').filter({ hasText: /Expand|Collapse/ });
+    this.transcriptStats = page.locator('text=/\\d+ of \\d+ words selected/i');
 
     // Bleep Sound & Volume
     this.bleepSoundSelect = page.getByTestId('bleep-sound-select');
@@ -306,5 +318,35 @@ export class BleepPage {
    */
   async expectErrorVisible() {
     await expect(this.errorMessage).toBeVisible();
+  }
+
+  /**
+   * Search within transcript
+   */
+  async searchTranscript(query: string) {
+    await this.searchTranscriptInput.fill(query);
+  }
+
+  /**
+   * Clear all selected words
+   */
+  async clearAllWords() {
+    await this.clearAllButton.click();
+  }
+
+  /**
+   * Toggle transcript expansion
+   */
+  async toggleTranscriptExpanded() {
+    await this.transcriptExpandButton.click();
+  }
+
+  /**
+   * Get the count of selected words from stats
+   */
+  async getSelectedWordCount(): Promise<number> {
+    const statsText = await this.transcriptStats.textContent();
+    const match = statsText?.match(/(\d+) of \d+ words selected/i);
+    return match ? parseInt(match[1], 10) : 0;
   }
 }
