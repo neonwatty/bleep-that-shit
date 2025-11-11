@@ -49,3 +49,40 @@ jobs:
           path: |
             coverage/
           retention-days: 7
+
+  smoke-tests:
+    name: Smoke Tests (UI Only)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js app (static export)
+        run: npm run build
+        # Note: No NEXT_PUBLIC_BASE_PATH for smoke tests - they expect root URLs
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run smoke tests (serves static build)
+        run: npm run test:smoke
+        env:
+          CI: true
+
+      - name: Upload smoke test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-test-report
+          path: playwright-report/
+          retention-days: 7

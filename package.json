@@ -16,12 +16,16 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
+    "test:smoke": "playwright test --project=smoke-chromium",
+    "test:smoke:ui": "playwright test --project=smoke-chromium --ui",
+    "test:smoke:debug": "playwright test --project=smoke-chromium --debug",
+    "test:smoke:headed": "playwright test --project=smoke-chromium --headed",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint .",
     "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint . --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "typecheck": "tsc --noEmit",
-    "validate": "npm run lint && npm run format:check && npm run typecheck && npm run test:unit && npm run build"
+    "validate": "npm run lint && npm run format:check && npm run typecheck && npm run test:unit && npm run test:smoke && npm run build"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.12.6",
