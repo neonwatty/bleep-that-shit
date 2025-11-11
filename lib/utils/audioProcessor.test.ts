@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { applyBleeps, BleepSegment } from './audioProcessor';
 
 describe('audioProcessor', () => {
@@ -91,6 +91,26 @@ describe('audioProcessor', () => {
       const result = await applyBleeps(mockFile, segments);
 
       expect(result).toBeInstanceOf(Blob);
+    });
+
+    it('should handle segments starting at timestamp 0 without error', async () => {
+      const mockFile = new File([new ArrayBuffer(1000)], 'test.mp3', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = [{ word: 'first', start: 0.0, end: 0.5 }];
+
+      const result = await applyBleeps(mockFile, segments);
+
+      expect(result).toBeInstanceOf(Blob);
+      expect(result.type).toBe('audio/wav');
+    });
+
+    it('should handle segments starting very close to timestamp 0', async () => {
+      const mockFile = new File([new ArrayBuffer(1000)], 'test.mp3', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = [{ word: 'early', start: 0.005, end: 0.3 }];
+
+      const result = await applyBleeps(mockFile, segments);
+
+      expect(result).toBeInstanceOf(Blob);
+      expect(result.type).toBe('audio/wav');
     });
   });
 
