@@ -69,8 +69,7 @@ jobs:
 
       - name: Build Next.js app (static export)
         run: npm run build
-        env:
-          NEXT_PUBLIC_BASE_PATH: /bleep-that-shit
+        # Note: No NEXT_PUBLIC_BASE_PATH for smoke tests - they expect root URLs
 
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
