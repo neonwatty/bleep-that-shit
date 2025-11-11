@@ -14,7 +14,9 @@ test.describe('Home Page - Smoke Tests', () => {
 
     const heading = page.locator('h1').first();
     await expect(heading).toBeVisible();
-    await expect(heading).toContainText('Effortlessly bleep out any words or phrases from your audio or video');
+    await expect(heading).toContainText(
+      'Effortlessly bleep out any words or phrases from your audio or video'
+    );
   });
 
   test('displays privacy badge', async ({ page }) => {
@@ -42,7 +44,9 @@ test.describe('Home Page - Smoke Tests', () => {
 
     // Verify key section headings exist
     await expect(page.locator('h2').filter({ hasText: /How It Works/i })).toBeVisible();
-    await expect(page.locator('h2').filter({ hasText: /Privacy.*Local Processing/i })).toBeVisible();
+    await expect(
+      page.locator('h2').filter({ hasText: /Privacy.*Local Processing/i })
+    ).toBeVisible();
   });
 
   test('displays workflow steps', async ({ page }) => {
@@ -51,8 +55,18 @@ test.describe('Home Page - Smoke Tests', () => {
     await expect(steps).toHaveCount(4);
 
     // Verify step content within the ordered list specifically
-    await expect(page.locator('ol li').filter({ hasText: /Upload.*audio/i }).first()).toBeVisible();
-    await expect(page.locator('ol li').filter({ hasText: /Censor/i }).first()).toBeVisible();
+    await expect(
+      page
+        .locator('ol li')
+        .filter({ hasText: /Upload.*audio/i })
+        .first()
+    ).toBeVisible();
+    await expect(
+      page
+        .locator('ol li')
+        .filter({ hasText: /Censor/i })
+        .first()
+    ).toBeVisible();
   });
 
   test('has footer with GitHub link', async ({ page }) => {
