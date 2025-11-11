@@ -4,7 +4,10 @@ export default function Home() {
   return (
     <div className="editorial-section font-merriweather">
       {/* Hero Section */}
-      <div className="mb-12 flex flex-col items-center justify-center pt-2 pb-8 text-center sm:mb-16 sm:pt-4 sm:pb-12 md:pt-6 md:pb-20">
+      <div
+        data-testid="hero-section"
+        className="mb-12 flex flex-col items-center justify-center pt-2 pb-8 text-center sm:mb-16 sm:pt-4 sm:pb-12 md:pt-6 md:pb-20"
+      >
         <div className="flex w-full max-w-2xl flex-col gap-5">
           <h1
             className="font-inter mb-2 text-center text-2xl font-extrabold text-black sm:text-3xl md:text-4xl lg:text-5xl"
@@ -26,10 +29,10 @@ export default function Home() {
             </span>
           </div>
           <div className="mt-2 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href="/bleep" className="btn btn-primary">
+            <Link href="/bleep" data-testid="bleep-button" className="btn btn-primary">
               Bleep Your Sh*t!
             </Link>
-            <Link href="/sampler" className="btn btn-pink">
+            <Link href="/sampler" data-testid="sampler-button" className="btn btn-pink">
               Try the Sampler
             </Link>
           </div>
@@ -49,6 +52,7 @@ export default function Home() {
         </h2>
         <div className="mb-6">
           <iframe
+            data-testid="demo-video"
             width="100%"
             height="220"
             className="h-full min-h-[180px] w-full rounded-xl border border-gray-200 md:min-h-[320px]"
@@ -68,7 +72,7 @@ export default function Home() {
       <div className="mx-auto my-10 h-0.5 w-24 rounded bg-black md:w-40"></div>
 
       {/* How It Works Section */}
-      <section className="editorial-section relative mb-16">
+      <section data-testid="how-it-works-section" className="editorial-section relative mb-16">
         {/* Sticker SVG accent */}
         <svg
           width="60"
@@ -148,7 +152,7 @@ export default function Home() {
       <div className="mx-auto my-10 h-0.5 w-24 rounded bg-black md:w-40"></div>
 
       {/* Privacy & Local Processing Section */}
-      <section className="editorial-section mb-16">
+      <section data-testid="privacy-section" className="editorial-section mb-16">
         <h2
           className="font-inter mb-4 text-left text-2xl font-extrabold text-black uppercase sm:text-3xl md:text-4xl"
           style={{ lineHeight: 1.1 }}
@@ -171,7 +175,7 @@ export default function Home() {
       <div className="mx-auto my-10 h-0.5 w-24 rounded bg-black md:w-40"></div>
 
       {/* Technology Section */}
-      <section className="editorial-section mb-16">
+      <section data-testid="technology-section" className="editorial-section mb-16">
         <h2
           className="font-inter mb-4 text-left text-2xl font-extrabold text-black uppercase sm:text-3xl md:text-4xl"
           style={{ lineHeight: 1.1 }}
@@ -210,6 +214,7 @@ export default function Home() {
         </div>
         <div className="mb-4 flex justify-center">
           <a
+            data-testid="github-link"
             href="https://github.com/neonwatty/bleep-that-shit"
             target="_blank"
             rel="noopener"

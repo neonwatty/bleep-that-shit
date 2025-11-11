@@ -608,9 +608,10 @@ export default function BleepPage() {
 
         <div
           {...getRootProps()}
+          data-testid="file-dropzone"
           className="min-h-[120px] cursor-pointer rounded-lg border-2 border-dashed border-gray-400 p-8 text-center transition-all hover:border-blue-500 hover:bg-gray-50 active:bg-gray-100 sm:min-h-[100px] sm:p-6"
         >
-          <input {...getInputProps()} className="sr-only" />
+          <input {...getInputProps()} data-testid="file-input" className="sr-only" />
           {isDragActive ? (
             <p className="text-gray-700">Drop the file here...</p>
           ) : (
@@ -621,13 +622,19 @@ export default function BleepPage() {
         </div>
 
         {showFileWarning && (
-          <div className="mt-2 rounded border border-red-400 bg-red-100 p-2 text-red-700">
+          <div
+            data-testid="file-warning"
+            className="mt-2 rounded border border-red-400 bg-red-100 p-2 text-red-700"
+          >
             Please upload a valid audio or video file (MP3, MP4, etc.)
           </div>
         )}
 
         {fileDurationWarning && (
-          <div className="mt-2 rounded border border-orange-400 bg-orange-100 p-3 text-orange-800">
+          <div
+            data-testid="file-duration-warning"
+            className="mt-2 rounded border border-orange-400 bg-orange-100 p-3 text-orange-800"
+          >
             <div className="flex items-start">
               <span className="mr-2">⚠️</span>
               <div>{fileDurationWarning}</div>
@@ -667,6 +674,7 @@ export default function BleepPage() {
           <div>
             <label className="mb-2 block text-sm font-semibold">Language</label>
             <select
+              data-testid="language-select"
               value={language}
               onChange={e => setLanguage(e.target.value)}
               className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:p-2"
@@ -688,6 +696,7 @@ export default function BleepPage() {
           <div>
             <label className="mb-2 block text-sm font-semibold">Model</label>
             <select
+              data-testid="model-select"
               value={model}
               onChange={e => setModel(e.target.value)}
               className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:p-2"
@@ -715,6 +724,7 @@ export default function BleepPage() {
         </div>
 
         <button
+          data-testid="transcribe-button"
           onClick={handleTranscribe}
           disabled={!file || isTranscribing}
           className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
@@ -724,19 +734,24 @@ export default function BleepPage() {
 
         {isTranscribing && (
           <div className="mt-4">
-            <div className="h-2.5 w-full rounded-full bg-gray-200">
+            <div data-testid="progress-bar" className="h-2.5 w-full rounded-full bg-gray-200">
               <div
                 className="h-2.5 rounded-full bg-blue-600 transition-all duration-300"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            <p className="mt-2 text-sm text-gray-600">{progressText}</p>
+            <p data-testid="progress-text" className="mt-2 text-sm text-gray-600">
+              {progressText}
+            </p>
           </div>
         )}
 
         {/* Error Display */}
         {errorMessage && (
-          <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4">
+          <div
+            data-testid="error-message"
+            className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4"
+          >
             <div className="flex items-start">
               <svg
                 className="mt-0.5 mr-2 h-5 w-5 text-red-500"
@@ -764,9 +779,11 @@ export default function BleepPage() {
         )}
 
         {transcriptionResult && (
-          <div className="mt-4 rounded bg-gray-50 p-4">
+          <div data-testid="transcript-result" className="mt-4 rounded bg-gray-50 p-4">
             <h3 className="mb-2 font-bold">Transcript:</h3>
-            <p className="text-gray-800">{transcriptionResult.text}</p>
+            <p data-testid="transcript-text" className="text-gray-800">
+              {transcriptionResult.text}
+            </p>
             <p className="mt-2 text-sm text-gray-600">
               Found {transcriptionResult.chunks.length} words with timestamps
             </p>
@@ -792,6 +809,7 @@ export default function BleepPage() {
             Words to match (comma-separated)
           </label>
           <input
+            data-testid="words-to-match-input"
             type="text"
             value={wordsToMatch}
             onChange={e => setWordsToMatch(e.target.value)}
@@ -805,6 +823,7 @@ export default function BleepPage() {
           <div className="space-y-2">
             <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
               <input
+                data-testid="exact-match-checkbox"
                 type="checkbox"
                 checked={matchMode.exact}
                 onChange={e => setMatchMode({ ...matchMode, exact: e.target.checked })}
@@ -814,6 +833,7 @@ export default function BleepPage() {
             </label>
             <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
               <input
+                data-testid="partial-match-checkbox"
                 type="checkbox"
                 checked={matchMode.partial}
                 onChange={e => setMatchMode({ ...matchMode, partial: e.target.checked })}
@@ -823,6 +843,7 @@ export default function BleepPage() {
             </label>
             <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
               <input
+                data-testid="fuzzy-match-checkbox"
                 type="checkbox"
                 checked={matchMode.fuzzy}
                 onChange={e => setMatchMode({ ...matchMode, fuzzy: e.target.checked })}
@@ -836,6 +857,7 @@ export default function BleepPage() {
             <div className="mt-2">
               <label className="text-sm">Fuzzy distance: {fuzzyDistance}</label>
               <input
+                data-testid="fuzzy-distance-slider"
                 type="range"
                 min="1"
                 max="3"
@@ -848,6 +870,7 @@ export default function BleepPage() {
         </div>
 
         <button
+          data-testid="run-matching-button"
           onClick={handleMatch}
           disabled={!transcriptionResult || !wordsToMatch}
           className="btn btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
@@ -856,7 +879,7 @@ export default function BleepPage() {
         </button>
 
         {matchedWords.length > 0 && (
-          <div className="mt-4 rounded bg-yellow-50 p-4">
+          <div data-testid="matched-words-container" className="mt-4 rounded bg-yellow-50 p-4">
             <h3 className="mb-2 font-bold">
               Matched {matchedWords.length} words
               {bleepBuffer > 0 && ` (${bleepBuffer.toFixed(2)}s buffer will be applied)`}:
@@ -867,7 +890,11 @@ export default function BleepPage() {
                 const displayStart = Math.max(0, match.start - bleepBuffer);
                 const displayEnd = match.end + bleepBuffer;
                 return (
-                  <span key={i} className="rounded bg-yellow-200 px-2 py-1 text-sm">
+                  <span
+                    key={i}
+                    data-testid="matched-word-chip"
+                    className="rounded bg-yellow-200 px-2 py-1 text-sm"
+                  >
                     {match.word} ({displayStart.toFixed(1)}s - {displayEnd.toFixed(1)}s)
                   </span>
                 );
@@ -894,6 +921,7 @@ export default function BleepPage() {
           <div>
             <label className="mb-2 block text-sm font-semibold">Bleep Sound</label>
             <select
+              data-testid="bleep-sound-select"
               value={bleepSound}
               onChange={e => setBleepSound(e.target.value)}
               className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-yellow-500 sm:max-w-xs sm:p-2"
@@ -909,6 +937,7 @@ export default function BleepPage() {
               Bleep Volume: <span className="font-bold text-yellow-600">{bleepVolume}%</span>
             </label>
             <input
+              data-testid="bleep-volume-slider"
               type="range"
               min="0"
               max="150"
@@ -931,6 +960,7 @@ export default function BleepPage() {
                 </span>
               </label>
               <input
+                data-testid="original-volume-slider"
                 type="range"
                 min="0"
                 max="100"
@@ -952,6 +982,7 @@ export default function BleepPage() {
                 <span className="font-bold text-yellow-600">{bleepBuffer.toFixed(2)}s</span>
               </label>
               <input
+                data-testid="bleep-buffer-slider"
                 type="range"
                 min="0"
                 max="0.5"
@@ -969,6 +1000,7 @@ export default function BleepPage() {
               </p>
             </div>
             <button
+              data-testid="preview-bleep-button"
               onClick={handlePreviewBleep}
               disabled={isPreviewingBleep}
               className="min-h-touch mt-3 w-full rounded-lg bg-yellow-500 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-4 sm:py-2 sm:text-sm"
@@ -993,6 +1025,7 @@ export default function BleepPage() {
         </div>
 
         <button
+          data-testid="apply-bleeps-button"
           onClick={handleBleep}
           disabled={!file || matchedWords.length === 0}
           className={`btn btn-pink transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
@@ -1005,13 +1038,13 @@ export default function BleepPage() {
         </button>
 
         {isProcessingVideo && (
-          <div className="mt-4">
+          <div data-testid="video-processing-indicator" className="mt-4">
             <p className="text-gray-600">Processing video... This may take a few moments.</p>
           </div>
         )}
 
         {censoredMediaUrl && (
-          <div className="mt-4">
+          <div data-testid="censored-result" className="mt-4">
             <h3 className="mb-2 font-bold">Censored Result:</h3>
             {file?.type.includes('video') ? (
               <div className="flex flex-col items-center">
@@ -1019,6 +1052,7 @@ export default function BleepPage() {
                   <source src={censoredMediaUrl} type="video/mp4" />
                 </video>
                 <a
+                  data-testid="download-button"
                   href={censoredMediaUrl}
                   download="censored-video.mp4"
                   className="mt-2 inline-block rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
@@ -1032,6 +1066,7 @@ export default function BleepPage() {
                   <source src={censoredMediaUrl} type="audio/mpeg" />
                 </audio>
                 <a
+                  data-testid="download-button"
                   href={censoredMediaUrl}
                   download="censored-audio.mp3"
                   className="mt-2 inline-block rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"

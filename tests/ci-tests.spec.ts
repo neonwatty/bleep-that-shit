@@ -1,10 +1,13 @@
 import { test, expect } from '@playwright/test';
 import path from 'path';
+import { HomePage, BleepPage, SamplerPage, NavbarComponent } from './helpers';
 
 test.describe('CI-Friendly Tests', () => {
   test.describe('Home Page', () => {
     test('should display main elements', async ({ page }) => {
-      await page.goto('/');
+      const homePage = new HomePage(page);
+      await homePage.goto();
+
       await expect(page.locator('h1').first()).toBeVisible();
       await expect(page.locator('nav')).toBeVisible();
       await expect(page.locator('footer')).toBeVisible();
@@ -13,22 +16,22 @@ test.describe('CI-Friendly Tests', () => {
 
   test.describe('Bleep Page', () => {
     test('should load UI elements', async ({ page }) => {
-      await page.goto('/bleep');
+      const bleepPage = new BleepPage(page);
+      await bleepPage.goto();
 
       // Check main heading
       await expect(page.locator('h1').filter({ hasText: 'Bleep Your Sh*t!' })).toBeVisible();
 
-      // Check file input
-      const fileInput = page.locator('input[type="file"]');
-      await expect(fileInput).toBeAttached();
+      // Check file input using page object
+      await expect(bleepPage.fileInput).toBeAttached();
+      await expect(bleepPage.fileDropzone).toBeVisible();
 
-      // Check model selector
-      const modelSelect = page.locator('select').nth(1);
-      await expect(modelSelect).toBeVisible();
+      // Check model selector using page object
+      await expect(bleepPage.modelSelect).toBeVisible();
 
       // Upload test file
       const testFile = path.join(__dirname, 'fixtures/files/test.mp3');
-      await fileInput.setInputFiles(testFile);
+      await bleepPage.fileInput.setInputFiles(testFile);
 
       // Check file loaded
       await expect(page.locator('text=/File loaded/')).toBeVisible({ timeout: 5000 });
@@ -36,27 +39,39 @@ test.describe('CI-Friendly Tests', () => {
       // Check audio player appears
       await expect(page.locator('audio')).toBeVisible();
 
-      // Check transcribe button
-      const transcribeBtn = page.locator('button').filter({ hasText: 'Start Transcription' });
-      await expect(transcribeBtn).toBeEnabled();
+      // Check transcribe button using page object
+      await expect(bleepPage.transcribeButton).toBeEnabled();
     });
 
     test('should reject invalid files', async ({ page }) => {
-      await page.goto('/bleep');
+      const bleepPage = new BleepPage(page);
+      await bleepPage.goto();
 
-      const fileInput = page.locator('input[type="file"]');
       const textFile = path.join(__dirname, 'fixtures/files/sample.txt');
-      await fileInput.setInputFiles(textFile);
+      await bleepPage.fileInput.setInputFiles(textFile);
 
-      await expect(page.locator('text=/Please upload a valid audio or video file/')).toBeVisible({
-        timeout: 5000,
-      });
+      // Check file warning using page object
+      await expect(bleepPage.fileWarning).toBeVisible({ timeout: 5000 });
+    });
+
+    test('should allow language and model selection', async ({ page }) => {
+      const bleepPage = new BleepPage(page);
+      await bleepPage.goto();
+
+      // Test language selection
+      await bleepPage.selectLanguage('es');
+      await expect(bleepPage.languageSelect).toHaveValue('es');
+
+      // Test model selection
+      await bleepPage.selectModel('Xenova/whisper-base.en');
+      await expect(bleepPage.modelSelect).toHaveValue('Xenova/whisper-base.en');
     });
   });
 
   test.describe('Sampler Page', () => {
     test('should load UI elements', async ({ page }) => {
-      await page.goto('/sampler');
+      const samplerPage = new SamplerPage(page);
+      await samplerPage.goto();
 
       // Check heading
       await expect(page.locator('h1').filter({ hasText: 'Transcription Sampler' })).toBeVisible();
@@ -64,42 +79,40 @@ test.describe('CI-Friendly Tests', () => {
       // Check info box
       await expect(page.locator('text=/Why use the sampler?/')).toBeVisible();
 
-      // Check file dropzone - use the specific border class
-      const dropzone = page.locator('.border-dashed').first();
-      await expect(dropzone).toBeVisible();
+      // Check file dropzone using page object
+      await expect(samplerPage.fileDropzone).toBeVisible();
 
       // Upload file to reveal configuration
-      const fileInput = page.locator('input[type="file"]');
       const testFile = path.join(__dirname, 'fixtures/files/test.mp3');
-      await fileInput.setInputFiles(testFile);
+      await samplerPage.fileInput.setInputFiles(testFile);
 
       // Check configuration section appears
       await expect(page.locator('h2').filter({ hasText: 'Step 2: Configure Sample' })).toBeVisible({
         timeout: 5000,
       });
 
-      // Check compare button appears
-      const compareBtn = page.locator('button').filter({ hasText: 'Compare All Models' });
-      await expect(compareBtn).toBeVisible();
+      // Check compare button using page object
+      await expect(samplerPage.compareAllButton).toBeVisible();
     });
   });
 
   test.describe('Navigation', () => {
     test('should navigate between pages', async ({ page }) => {
+      const navbar = new NavbarComponent(page);
       await page.goto('/');
 
-      // Navigate to Bleep
-      await page.locator('a[href="/bleep"]').first().click();
+      // Navigate to Bleep using page object
+      await navbar.goToBleepPage();
       await expect(page).toHaveURL(/.*\/bleep/);
       await expect(page.locator('h1').filter({ hasText: 'Bleep Your Sh*t!' })).toBeVisible();
 
-      // Navigate to Sampler
-      await page.locator('a[href="/sampler"]').first().click();
+      // Navigate to Sampler using page object
+      await navbar.goToSamplerPage();
       await expect(page).toHaveURL(/.*\/sampler/);
       await expect(page.locator('h1').filter({ hasText: 'Transcription Sampler' })).toBeVisible();
 
-      // Navigate back home
-      await page.locator('a[href="/"]').first().click();
+      // Navigate back home using page object
+      await navbar.goToHome();
       await expect(page).toHaveURL(/.*\//);
     });
   });
