@@ -233,9 +233,10 @@ export default function SamplerPage() {
 
         <div
           {...getRootProps()}
+          data-testid="file-dropzone"
           className="cursor-pointer rounded-lg border-2 border-dashed border-gray-400 p-8 text-center transition-colors hover:border-blue-500"
         >
-          <input {...getInputProps()} />
+          <input {...getInputProps()} data-testid="file-input" />
           {isDragActive ? (
             <p className="text-gray-700">Drop the file here...</p>
           ) : (
@@ -247,7 +248,10 @@ export default function SamplerPage() {
         </div>
 
         {fileDurationWarning && (
-          <div className="mt-3 rounded border border-orange-400 bg-orange-100 p-3 text-orange-800">
+          <div
+            data-testid="file-duration-warning"
+            className="mt-3 rounded border border-orange-400 bg-orange-100 p-3 text-orange-800"
+          >
             <div className="flex items-start">
               <span className="mr-2">⚠️</span>
               <div>{fileDurationWarning}</div>
@@ -259,7 +263,13 @@ export default function SamplerPage() {
           <div className="mt-4">
             <p className="mb-2 font-semibold text-green-700">File loaded: {file.name}</p>
             {fileUrl && (
-              <audio ref={audioRef} controls className="w-full" onTimeUpdate={handleTimeUpdate}>
+              <audio
+                ref={audioRef}
+                data-testid="audio-player"
+                controls
+                className="w-full"
+                onTimeUpdate={handleTimeUpdate}
+              >
                 <source src={fileUrl} type={file.type} />
               </audio>
             )}
@@ -276,6 +286,7 @@ export default function SamplerPage() {
             <div>
               <label className="mb-2 block text-sm font-semibold">Sample Start (seconds)</label>
               <input
+                data-testid="sample-start-input"
                 type="number"
                 value={sampleStart}
                 onChange={e => setSampleStart(Number(e.target.value))}
@@ -290,6 +301,7 @@ export default function SamplerPage() {
             <div>
               <label className="mb-2 block text-sm font-semibold">Sample Duration (seconds)</label>
               <input
+                data-testid="sample-duration-input"
                 type="number"
                 value={sampleDuration}
                 onChange={e => setSampleDuration(Number(e.target.value))}
@@ -303,6 +315,7 @@ export default function SamplerPage() {
             <div>
               <label className="mb-2 block text-sm font-semibold">Language</label>
               <select
+                data-testid="language-select"
                 value={language}
                 onChange={e => setLanguage(e.target.value)}
                 className="w-full rounded border border-gray-300 p-2"
@@ -330,6 +343,7 @@ export default function SamplerPage() {
           <h2 className="font-inter mb-4 text-2xl font-bold">Step 3: Run Comparison</h2>
 
           <button
+            data-testid="compare-all-button"
             onClick={handleSampleAll}
             disabled={isProcessing}
             className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
@@ -346,13 +360,14 @@ export default function SamplerPage() {
 
       {/* Results */}
       {results.length > 0 && (
-        <section className="mb-12">
+        <section data-testid="results-container" className="mb-12">
           <h2 className="font-inter mb-4 text-2xl font-bold">Results</h2>
 
           <div className="space-y-4">
             {results.map((result, index) => (
               <div
                 key={index}
+                data-testid="model-result"
                 className={`rounded-lg border p-4 ${
                   result.status === 'complete'
                     ? 'border-green-400 bg-green-50'
@@ -396,7 +411,10 @@ export default function SamplerPage() {
 
           {/* Summary */}
           {results.every(r => r.status === 'complete') && (
-            <div className="mt-6 rounded border border-yellow-400 bg-yellow-50 p-4">
+            <div
+              data-testid="recommendation"
+              className="mt-6 rounded border border-yellow-400 bg-yellow-50 p-4"
+            >
               <h3 className="mb-2 font-bold">Recommendation</h3>
               <p className="text-sm">
                 Based on your results, consider using{' '}

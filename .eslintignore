@@ -9,6 +9,7 @@ node_modules/
 # Test outputs
 playwright-report/
 test-results/
+tests/archived/
 
 # Config files
 *.config.js
