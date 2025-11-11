@@ -29,20 +29,16 @@ test.describe('Sampler Page UI - Smoke Tests', () => {
     await expect(samplerPage.fileInput).toBeAttached();
   });
 
-  test('language selector is visible with options', async ({ page }) => {
+  test('language selector is not visible initially', async ({ page }) => {
     const samplerPage = new SamplerPage(page);
-    await expect(samplerPage.languageSelect).toBeVisible();
-
-    // Check it has language options
-    await expect(samplerPage.languageSelect).toContainText('English');
+    // Language selector only appears after file upload
+    await expect(samplerPage.languageSelect).not.toBeVisible();
   });
 
-  test('compare all button is visible but disabled initially', async ({ page }) => {
+  test('compare all button is not visible initially', async ({ page }) => {
     const samplerPage = new SamplerPage(page);
-    await expect(samplerPage.compareAllButton).toBeVisible();
-
-    // Button should be disabled without file upload
-    await expect(samplerPage.compareAllButton).toBeDisabled();
+    // Compare button only appears after file upload
+    await expect(samplerPage.compareAllButton).not.toBeVisible();
   });
 
   test('results container is not visible initially', async ({ page }) => {

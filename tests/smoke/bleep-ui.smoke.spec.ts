@@ -73,7 +73,7 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     // Check placeholder text
     await expect(bleepPage.wordsToMatchInput).toHaveAttribute(
       'placeholder',
-      /Enter words to bleep/i
+      'e.g., bad, word, curse'
     );
   });
 
@@ -91,8 +91,9 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     await expect(bleepPage.bleepSoundSelect).toBeVisible();
 
     // Check it has bleep sound options
-    await expect(bleepPage.bleepSoundSelect).toContainText('White Noise');
+    await expect(bleepPage.bleepSoundSelect).toContainText('Classic Bleep');
     await expect(bleepPage.bleepSoundSelect).toContainText('Brown Noise');
+    await expect(bleepPage.bleepSoundSelect).toContainText('Dolphin');
   });
 
   test('volume sliders are visible', async ({ page }) => {
@@ -103,10 +104,10 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     await expect(bleepPage.originalVolumeSlider).toBeVisible();
   });
 
-  test('preview bleep button is visible but disabled initially', async ({ page }) => {
+  test('preview bleep button is visible and enabled initially', async ({ page }) => {
     const bleepPage = new BleepPage(page);
     await expect(bleepPage.previewBleepButton).toBeVisible();
-    await expect(bleepPage.previewBleepButton).toBeDisabled();
+    await expect(bleepPage.previewBleepButton).toBeEnabled();
   });
 
   test('apply bleeps button is visible but disabled initially', async ({ page }) => {
@@ -127,7 +128,7 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     await expect(bleepPage.fuzzyDistanceSlider).toBeVisible();
 
     // Check default value
-    await expect(bleepPage.fuzzyDistanceSlider).toHaveValue('2');
+    await expect(bleepPage.fuzzyDistanceSlider).toHaveValue('1');
   });
 
   test('bleep buffer slider is visible', async ({ page }) => {
@@ -138,7 +139,7 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
   test('all volume controls have proper labels', async ({ page }) => {
     // Check for volume-related labels
     await expect(page.locator('text=/Bleep Volume/i')).toBeVisible();
-    await expect(page.locator('text=/Original Volume/i')).toBeVisible();
+    await expect(page.locator('text=/Original Word Volume/i')).toBeVisible();
   });
 
   test('matching section has proper labels', async ({ page }) => {

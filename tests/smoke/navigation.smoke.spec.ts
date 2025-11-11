@@ -106,9 +106,9 @@ test.describe('Navigation - Smoke Tests', () => {
       await navbar.expectNavbarVisible();
 
       // Check navbar links are present
-      await expect(page.locator('nav a[href="/"]')).toBeVisible();
-      await expect(page.locator('nav a[href="/bleep"]')).toBeVisible();
-      await expect(page.locator('nav a[href="/sampler"]')).toBeVisible();
+      await expect(page.locator('nav a[href="/"]').first()).toBeVisible();
+      await expect(page.locator('nav a[href="/bleep"]').first()).toBeVisible();
+      await expect(page.locator('nav a[href="/sampler"]').first()).toBeVisible();
     }
   });
 
@@ -119,11 +119,11 @@ test.describe('Navigation - Smoke Tests', () => {
       await page.goto(pagePath);
 
       // Verify footer is visible
-      const footer = page.locator('footer');
+      const footer = page.locator('footer').first();
       await expect(footer).toBeVisible();
 
       // Verify GitHub link is present
-      const githubLink = footer.locator('a[href*="github.com"]');
+      const githubLink = footer.locator('a[href*="github.com"]').first();
       await expect(githubLink).toBeVisible();
     }
   });

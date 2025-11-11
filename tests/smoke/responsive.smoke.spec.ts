@@ -12,7 +12,7 @@ test.describe('Responsive Design - Smoke Tests', () => {
       await page.goto('/');
 
       // Navbar should be visible
-      const navbar = page.locator('nav');
+      const navbar = page.locator('nav').first();
       await expect(navbar).toBeVisible();
 
       // Main heading should be visible
@@ -20,7 +20,7 @@ test.describe('Responsive Design - Smoke Tests', () => {
       await expect(heading).toBeVisible();
 
       // Footer should be visible
-      await expect(page.locator('footer')).toBeVisible();
+      await expect(page.locator('footer').first()).toBeVisible();
     });
 
     test('bleep page renders correctly on mobile', async ({ page }) => {
@@ -56,9 +56,9 @@ test.describe('Responsive Design - Smoke Tests', () => {
       await page.goto('/');
 
       // All main sections should be visible
-      await expect(page.locator('nav')).toBeVisible();
+      await expect(page.locator('nav').first()).toBeVisible();
       await expect(page.locator('h1').first()).toBeVisible();
-      await expect(page.locator('footer')).toBeVisible();
+      await expect(page.locator('footer').first()).toBeVisible();
 
       // CTA buttons should be visible
       await expect(page.locator('a[href="/bleep"]').first()).toBeVisible();
@@ -95,7 +95,7 @@ test.describe('Responsive Design - Smoke Tests', () => {
     test('home page renders correctly on desktop', async ({ page }) => {
       await page.goto('/');
 
-      const navbar = page.locator('nav');
+      const navbar = page.locator('nav').first();
       await expect(navbar).toBeVisible();
 
       // Check navbar has horizontal layout on desktop
@@ -103,8 +103,8 @@ test.describe('Responsive Design - Smoke Tests', () => {
 
       // All sections should be visible
       await expect(page.locator('h1').first()).toBeVisible();
-      await expect(page.locator('iframe[src*="youtube.com"]')).toBeVisible();
-      await expect(page.locator('footer')).toBeVisible();
+      await expect(page.locator('iframe[src*="youtube.com"]').first()).toBeVisible();
+      await expect(page.locator('footer').first()).toBeVisible();
     });
 
     test('bleep page renders correctly on desktop', async ({ page }) => {
@@ -144,7 +144,7 @@ test.describe('Responsive Design - Smoke Tests', () => {
 
       // All elements should be visible
       await expect(page.locator('h1').first()).toBeVisible();
-      await expect(page.locator('nav')).toBeVisible();
+      await expect(page.locator('nav').first()).toBeVisible();
     });
 
     test('bleep page renders correctly on wide desktop', async ({ page }) => {
