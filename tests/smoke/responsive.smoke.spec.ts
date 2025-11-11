@@ -70,8 +70,8 @@ test.describe('Responsive Design - Smoke Tests', () => {
 
       // All workflow sections should be visible
       await expect(page.locator('h1').filter({ hasText: 'Bleep Your Sh*t!' })).toBeVisible();
-      await expect(page.locator('h2').filter({ hasText: 'Step 1' })).toBeVisible();
-      await expect(page.locator('h2').filter({ hasText: 'Step 2' })).toBeVisible();
+      await expect(page.locator('h2').filter({ hasText: 'Upload Your File' })).toBeVisible();
+      await expect(page.locator('h2').filter({ hasText: 'Select Language & Model' })).toBeVisible();
 
       // Controls should be accessible
       await expect(page.locator('select').first()).toBeVisible();

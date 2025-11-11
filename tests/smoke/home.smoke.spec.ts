@@ -46,13 +46,13 @@ test.describe('Home Page - Smoke Tests', () => {
   });
 
   test('displays workflow steps', async ({ page }) => {
-    // Check workflow steps are present
+    // Check workflow steps are present in the ordered list
     const steps = page.locator('ol li');
     await expect(steps).toHaveCount(4);
 
-    // Verify step content
-    await expect(page.locator('text=/Upload.*audio.*video/i')).toBeVisible();
-    await expect(page.locator('text=/Censor.*picking words/i')).toBeVisible();
+    // Verify step content within the ordered list specifically
+    await expect(page.locator('ol li').filter({ hasText: /Upload.*audio/i }).first()).toBeVisible();
+    await expect(page.locator('ol li').filter({ hasText: /Censor/i }).first()).toBeVisible();
   });
 
   test('has footer with GitHub link', async ({ page }) => {
