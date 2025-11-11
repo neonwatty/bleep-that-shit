@@ -105,10 +105,10 @@ test.describe('Navigation - Smoke Tests', () => {
       const navbar = new NavbarComponent(page);
       await navbar.expectNavbarVisible();
 
-      // Check navbar links are present
-      await expect(page.locator('nav a[href="/"]').first()).toBeVisible();
-      await expect(page.locator('nav a[href="/bleep"]').first()).toBeVisible();
-      await expect(page.locator('nav a[href="/sampler"]').first()).toBeVisible();
+      // Check navbar links are present (use visible nav)
+      await expect(page.locator('nav:visible a[href="/"]')).toBeVisible();
+      await expect(page.locator('nav:visible a[href="/bleep"]')).toBeVisible();
+      await expect(page.locator('nav:visible a[href="/sampler"]')).toBeVisible();
     }
   });
 

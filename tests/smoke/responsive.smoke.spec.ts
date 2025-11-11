@@ -11,8 +11,8 @@ test.describe('Responsive Design - Smoke Tests', () => {
     test('home page renders correctly on mobile', async ({ page }) => {
       await page.goto('/');
 
-      // Navbar should be visible
-      const navbar = page.locator('nav').first();
+      // Navbar should be visible (use visible nav)
+      const navbar = page.locator('nav:visible');
       await expect(navbar).toBeVisible();
 
       // Main heading should be visible
@@ -55,14 +55,14 @@ test.describe('Responsive Design - Smoke Tests', () => {
     test('home page renders correctly on tablet', async ({ page }) => {
       await page.goto('/');
 
-      // All main sections should be visible
-      await expect(page.locator('nav').first()).toBeVisible();
+      // All main sections should be visible (use visible nav)
+      await expect(page.locator('nav:visible')).toBeVisible();
       await expect(page.locator('h1').first()).toBeVisible();
       await expect(page.locator('footer').first()).toBeVisible();
 
-      // CTA buttons should be visible
-      await expect(page.locator('a[href="/bleep"]').first()).toBeVisible();
-      await expect(page.locator('a[href="/sampler"]').first()).toBeVisible();
+      // CTA buttons should be visible (scope to main content, not nav)
+      await expect(page.locator('main a[href="/bleep"]').first()).toBeVisible();
+      await expect(page.locator('main a[href="/sampler"]').first()).toBeVisible();
     });
 
     test('bleep page renders correctly on tablet', async ({ page }) => {
@@ -95,7 +95,7 @@ test.describe('Responsive Design - Smoke Tests', () => {
     test('home page renders correctly on desktop', async ({ page }) => {
       await page.goto('/');
 
-      const navbar = page.locator('nav').first();
+      const navbar = page.locator('nav:visible');
       await expect(navbar).toBeVisible();
 
       // Check navbar has horizontal layout on desktop
@@ -142,9 +142,9 @@ test.describe('Responsive Design - Smoke Tests', () => {
       const mainContent = page.locator('main, div[class*="container"]').first();
       await expect(mainContent).toBeVisible();
 
-      // All elements should be visible
+      // All elements should be visible (use visible nav)
       await expect(page.locator('h1').first()).toBeVisible();
-      await expect(page.locator('nav').first()).toBeVisible();
+      await expect(page.locator('nav:visible')).toBeVisible();
     });
 
     test('bleep page renders correctly on wide desktop', async ({ page }) => {
