@@ -15,11 +15,12 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
   test('displays all workflow step sections', async ({ page }) => {
     // Check all main section headings are present
     const expectedSections = [
-      'Step 1: Upload Your File',
-      'Step 2: Select Language & Model',
-      'Step 3: Transcribe',
-      'Step 4: Enter Words to Bleep',
-      'Step 5: Choose Bleep Sound & Volume',
+      'Upload Your File',
+      'Select Language & Model',
+      'Transcribe',
+      'Enter Words to Bleep',
+      'Choose Bleep Sound & Volume',
+      'Bleep That Sh*t!',
     ];
 
     for (const sectionTitle of expectedSections) {
@@ -123,12 +124,10 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     await expect(bleepPage.downloadButton).not.toBeVisible();
   });
 
-  test('fuzzy distance slider is visible', async ({ page }) => {
+  test('fuzzy distance slider is not visible initially', async ({ page }) => {
     const bleepPage = new BleepPage(page);
-    await expect(bleepPage.fuzzyDistanceSlider).toBeVisible();
-
-    // Check default value
-    await expect(bleepPage.fuzzyDistanceSlider).toHaveValue('1');
+    // Fuzzy distance slider only appears when fuzzy match is enabled
+    await expect(bleepPage.fuzzyDistanceSlider).not.toBeVisible();
   });
 
   test('bleep buffer slider is visible', async ({ page }) => {

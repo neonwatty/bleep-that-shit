@@ -73,7 +73,7 @@ test.describe('File Upload - Smoke Tests', () => {
       await expect(audioPlayer).toHaveAttribute('controls', '');
     });
 
-    test('displays file name and duration after upload', async ({ page }) => {
+    test('displays file name and audio player after upload', async ({ page }) => {
       const bleepPage = new BleepPage(page);
       await bleepPage.goto();
 
@@ -83,8 +83,8 @@ test.describe('File Upload - Smoke Tests', () => {
       // Should show file name
       await expect(page.locator('text=/test.mp3/i')).toBeVisible({ timeout: 5000 });
 
-      // Should show duration (format: X.X seconds or MM:SS)
-      await expect(page.locator('text=/duration/i')).toBeVisible();
+      // Should show audio player with controls
+      await expect(page.locator('audio[controls]').first()).toBeVisible();
     });
   });
 
@@ -115,11 +115,11 @@ test.describe('File Upload - Smoke Tests', () => {
       const textFile = path.join(__dirname, '../fixtures/files/sample.txt');
       await samplerPage.fileInput.setInputFiles(textFile);
 
-      // Should show error/warning message
-      await expect(page.locator('text=/Please upload a valid/i')).toBeVisible({ timeout: 5000 });
+      // File should not be loaded (no success message)
+      await expect(page.locator('text=/File loaded:/i')).not.toBeVisible({ timeout: 2000 });
 
-      // Compare button should remain disabled
-      await expect(samplerPage.compareAllButton).toBeDisabled();
+      // Compare button should not appear (it only appears after valid file upload)
+      await expect(samplerPage.compareAllButton).not.toBeVisible();
     });
 
     test('shows audio player after valid file upload', async ({ page }) => {

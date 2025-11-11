@@ -14,7 +14,7 @@ test.describe('Home Page - Smoke Tests', () => {
 
     const heading = page.locator('h1').first();
     await expect(heading).toBeVisible();
-    await expect(heading).toContainText('Effortlessly bleep out any words or phrases');
+    await expect(heading).toContainText('Effortlessly bleep out any words or phrases from your audio or video');
   });
 
   test('displays privacy badge', async ({ page }) => {
@@ -32,7 +32,7 @@ test.describe('Home Page - Smoke Tests', () => {
     const homePage = new HomePage(page);
     await homePage.expectDemoVideoVisible();
 
-    const iframe = page.locator('iframe[src*="youtube.com"]');
+    const iframe = page.locator('iframe[src*="youtube.com"]').first();
     await expect(iframe).toHaveAttribute('src', /wJzTvINvEbo/);
   });
 
@@ -42,7 +42,7 @@ test.describe('Home Page - Smoke Tests', () => {
 
     // Verify key section headings exist
     await expect(page.locator('h2').filter({ hasText: /How It Works/i })).toBeVisible();
-    await expect(page.locator('h2').filter({ hasText: /Your Privacy/i })).toBeVisible();
+    await expect(page.locator('h2').filter({ hasText: /Privacy.*Local Processing/i })).toBeVisible();
   });
 
   test('displays workflow steps', async ({ page }) => {
@@ -51,15 +51,15 @@ test.describe('Home Page - Smoke Tests', () => {
     await expect(steps).toHaveCount(4);
 
     // Verify step content
-    await expect(page.locator('text=/Upload your audio/i')).toBeVisible();
-    await expect(page.locator('text=/Choose your profanity/i')).toBeVisible();
+    await expect(page.locator('text=/Upload.*audio.*video/i')).toBeVisible();
+    await expect(page.locator('text=/Censor.*picking words/i')).toBeVisible();
   });
 
   test('has footer with GitHub link', async ({ page }) => {
-    const footer = page.locator('footer');
+    const footer = page.locator('footer').first();
     await expect(footer).toBeVisible();
 
-    const githubLink = footer.locator('a[href*="github.com"]');
+    const githubLink = footer.locator('a[href*="github.com"]').first();
     await expect(githubLink).toBeVisible();
     await expect(githubLink).toHaveAttribute('target', '_blank');
   });
@@ -82,9 +82,9 @@ test.describe('Home Page - Smoke Tests', () => {
     await navbar.expectNavbarVisible();
 
     // Verify navbar contains expected links
-    await expect(page.locator('nav a[href="/"]')).toBeVisible();
-    await expect(page.locator('nav a[href="/bleep"]')).toBeVisible();
-    await expect(page.locator('nav a[href="/sampler"]')).toBeVisible();
+    await expect(page.locator('nav a[href="/"]').first()).toBeVisible();
+    await expect(page.locator('nav a[href="/bleep"]').first()).toBeVisible();
+    await expect(page.locator('nav a[href="/sampler"]').first()).toBeVisible();
   });
 
   test('hero CTA buttons have correct href attributes', async ({ page }) => {
@@ -100,7 +100,7 @@ test.describe('Home Page - Smoke Tests', () => {
     await page.setViewportSize({ width: 375, height: 667 });
 
     // Check navbar is still visible on mobile
-    const navbar = page.locator('nav');
+    const navbar = page.locator('nav').first();
     await expect(navbar).toBeVisible();
 
     // Check hero section is visible
@@ -113,9 +113,9 @@ test.describe('Home Page - Smoke Tests', () => {
     await page.setViewportSize({ width: 768, height: 1024 });
 
     // Verify main elements are visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
     await expect(page.locator('h1').first()).toBeVisible();
-    await expect(page.locator('footer')).toBeVisible();
+    await expect(page.locator('footer').first()).toBeVisible();
   });
 
   test('responsive design - desktop viewport', async ({ page }) => {
@@ -123,7 +123,7 @@ test.describe('Home Page - Smoke Tests', () => {
     await page.setViewportSize({ width: 1920, height: 1080 });
 
     // Verify layout is properly displayed
-    const navbar = page.locator('nav');
+    const navbar = page.locator('nav').first();
     await expect(navbar).toBeVisible();
 
     // Check navbar has horizontal layout on desktop
