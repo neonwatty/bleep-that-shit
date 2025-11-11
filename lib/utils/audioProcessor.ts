@@ -69,7 +69,7 @@ export async function applyBleeps(
     );
 
     // Duck the original audio
-    gainNode.gain.setValueAtTime(1, startTime - 0.01);
+    gainNode.gain.setValueAtTime(1, Math.max(0, startTime - 0.01));
     gainNode.gain.linearRampToValueAtTime(originalVolumeReduction, startTime); // Use new parameter
     gainNode.gain.setValueAtTime(originalVolumeReduction, endTime); // Use new parameter
     gainNode.gain.linearRampToValueAtTime(1, endTime + 0.01);
@@ -255,7 +255,7 @@ export async function applyBleepsToVideo(
     );
 
     // Duck the original audio
-    gainNode.gain.setValueAtTime(1, startTime - 0.01);
+    gainNode.gain.setValueAtTime(1, Math.max(0, startTime - 0.01));
     gainNode.gain.linearRampToValueAtTime(originalVolumeReduction, startTime); // Use new parameter
     gainNode.gain.setValueAtTime(originalVolumeReduction, endTime); // Use new parameter
     gainNode.gain.linearRampToValueAtTime(1, endTime + 0.01);

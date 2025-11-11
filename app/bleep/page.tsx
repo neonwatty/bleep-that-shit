@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { decodeAudioToMono16kHzPCM } from '@/lib/utils/audioDecode';
 import { applyBleeps, applyBleepsToVideo } from '@/lib/utils/audioProcessor';
 import { getPublicPath } from '@/lib/utils/paths';
 import { mergeOverlappingBleeps } from '@/lib/utils/bleepMerger';
+import { levenshteinDistance } from '@/lib/utils/stringMatching';
+import { TranscriptReview } from '@/components/TranscriptReview';
+import { MatchedWordsDisplay } from '@/components/MatchedWordsDisplay';
 
 interface TranscriptionResult {
   text: string;
@@ -32,9 +35,9 @@ export default function BleepPage() {
     fuzzy: false,
   });
   const [fuzzyDistance, setFuzzyDistance] = useState(1);
-  const [matchedWords, setMatchedWords] = useState<
-    Array<{ word: string; start: number; end: number }>
-  >([]);
+  const [censoredWordIndices, setCensoredWordIndices] = useState<Set<number>>(new Set());
+  const [searchQuery, setSearchQuery] = useState('');
+  const [transcriptExpanded, setTranscriptExpanded] = useState(true);
   const [bleepSound, setBleepSound] = useState('bleep');
   const [bleepVolume, setBleepVolume] = useState(80);
   const [originalVolumeReduction, setOriginalVolumeReduction] = useState(0.0); // Default: completely mute original audio during bleeps
@@ -46,6 +49,20 @@ export default function BleepPage() {
   const [hasBleeped, setHasBleeped] = useState(false);
   const [lastBleepVolume, setLastBleepVolume] = useState<number | null>(null);
   const [bleepBuffer, setBleepBuffer] = useState<number>(0); // 0-0.5 seconds buffer before/after each word
+
+  // Derived state: compute matchedWords from censoredWordIndices
+  const matchedWords = useMemo(() => {
+    if (!transcriptionResult) return [];
+    return Array.from(censoredWordIndices)
+      .map(idx => transcriptionResult.chunks[idx])
+      .filter(Boolean)
+      .map(chunk => ({
+        word: chunk.text,
+        start: chunk.timestamp[0],
+        end: chunk.timestamp[1],
+      }))
+      .sort((a, b) => a.start - b.start);
+  }, [censoredWordIndices, transcriptionResult]);
 
   const workerRef = useRef<Worker | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -269,8 +286,9 @@ export default function BleepPage() {
       .split(',')
       .map(w => w.trim())
       .filter(Boolean);
-    const matched: Array<{ word: string; start: number; end: number }> = [];
-    const matchedChunkIndices = new Set<number>(); // Track which chunks have been matched
+
+    // Start with existing selections (additive behavior)
+    const newIndices = new Set(censoredWordIndices);
 
     if (transcriptionResult.chunks && transcriptionResult.chunks.length > 0) {
       console.log('Sample chunk structure:', transcriptionResult.chunks[0]);
@@ -306,31 +324,21 @@ export default function BleepPage() {
         }
       }
 
-      // Only add this chunk once, even if multiple search terms match it
-      if (isMatch && !matchedChunkIndices.has(index)) {
-        matchedChunkIndices.add(index);
+      // Add to censored indices if matched
+      if (isMatch) {
+        newIndices.add(index);
         const start = chunk.timestamp ? chunk.timestamp[0] : 0;
         const end = chunk.timestamp ? chunk.timestamp[1] : 0;
-
         console.log(`Match found: "${chunk.text}" at [${start}, ${end}]`);
-
-        // Store original timestamps WITHOUT buffer
-        // Buffer will be applied dynamically during bleeping
-        matched.push({
-          word: chunk.text,
-          start: start,
-          end: end,
-        });
       }
     });
 
-    console.log('Total matches found:', matched.length);
+    console.log('Total censored words:', newIndices.size);
 
-    // Don't merge yet - store original timestamps
-    // Merging will happen during bleeping with current buffer applied
-    setMatchedWords(matched);
+    // Update censored indices (additive - doesn't clear existing selections)
+    setCensoredWordIndices(newIndices);
 
-    if (matched.length === 0) {
+    if (newIndices.size === 0) {
       console.log('No matches found. Check if words exist in transcription.');
     }
   };
@@ -470,28 +478,18 @@ export default function BleepPage() {
   };
 
   // Simple Levenshtein distance implementation
-  const levenshteinDistance = (a: string, b: string): number => {
-    const matrix = [];
-    for (let i = 0; i <= b.length; i++) {
-      matrix[i] = [i];
+  const handleToggleWord = (index: number) => {
+    const newIndices = new Set(censoredWordIndices);
+    if (newIndices.has(index)) {
+      newIndices.delete(index);
+    } else {
+      newIndices.add(index);
     }
-    for (let j = 0; j <= a.length; j++) {
-      matrix[0][j] = j;
-    }
-    for (let i = 1; i <= b.length; i++) {
-      for (let j = 1; j <= a.length; j++) {
-        if (b.charAt(i - 1) === a.charAt(j - 1)) {
-          matrix[i][j] = matrix[i - 1][j - 1];
-        } else {
-          matrix[i][j] = Math.min(
-            matrix[i - 1][j - 1] + 1,
-            matrix[i][j - 1] + 1,
-            matrix[i - 1][j] + 1
-          );
-        }
-      }
-    }
-    return matrix[b.length][a.length];
+    setCensoredWordIndices(newIndices);
+  };
+
+  const handleClearAll = () => {
+    setCensoredWordIndices(new Set());
   };
 
   useEffect(() => {
@@ -791,7 +789,7 @@ export default function BleepPage() {
         )}
       </section>
 
-      {/* Step 4: Word Matching */}
+      {/* Step 4: Word Matching and Review */}
       <section
         className={`editorial-section mb-8 border-l-4 border-purple-500 pl-3 sm:mb-12 sm:pl-4 ${!transcriptionResult ? 'opacity-50' : ''}`}
       >
@@ -800,108 +798,119 @@ export default function BleepPage() {
             4
           </span>
           <h2 className="font-inter text-lg font-extrabold text-black uppercase sm:text-xl md:text-2xl">
-            Enter Words to Bleep
+            Review & Select Words to Bleep
           </h2>
         </div>
 
-        <div className="mb-4">
-          <label className="mb-2 block text-sm font-semibold">
-            Words to match (comma-separated)
-          </label>
-          <input
-            data-testid="words-to-match-input"
-            type="text"
-            value={wordsToMatch}
-            onChange={e => setWordsToMatch(e.target.value)}
-            placeholder="e.g., bad, word, curse"
-            className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:p-2"
-          />
-        </div>
+        {/* Pattern Matching Controls */}
+        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4">
+          <h3 className="mb-3 text-sm font-bold text-gray-700 uppercase">
+            Pattern Matching (Optional)
+          </h3>
 
-        <div className="mb-4">
-          <label className="mb-2 block text-sm font-semibold">Matching modes</label>
-          <div className="space-y-2">
-            <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
-              <input
-                data-testid="exact-match-checkbox"
-                type="checkbox"
-                checked={matchMode.exact}
-                onChange={e => setMatchMode({ ...matchMode, exact: e.target.checked })}
-                className="mr-3 h-5 w-5"
-              />
-              Exact match
+          <div className="mb-4">
+            <label className="mb-2 block text-sm font-semibold">
+              Words to match (comma-separated)
             </label>
-            <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
-              <input
-                data-testid="partial-match-checkbox"
-                type="checkbox"
-                checked={matchMode.partial}
-                onChange={e => setMatchMode({ ...matchMode, partial: e.target.checked })}
-                className="mr-3 h-5 w-5"
-              />
-              Partial match
-            </label>
-            <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
-              <input
-                data-testid="fuzzy-match-checkbox"
-                type="checkbox"
-                checked={matchMode.fuzzy}
-                onChange={e => setMatchMode({ ...matchMode, fuzzy: e.target.checked })}
-                className="mr-3 h-5 w-5"
-              />
-              Fuzzy match
-            </label>
+            <input
+              data-testid="words-to-match-input"
+              type="text"
+              value={wordsToMatch}
+              onChange={e => setWordsToMatch(e.target.value)}
+              placeholder="e.g., bad, word, curse"
+              className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:p-2"
+            />
           </div>
 
-          {matchMode.fuzzy && (
-            <div className="mt-2">
-              <label className="text-sm">Fuzzy distance: {fuzzyDistance}</label>
-              <input
-                data-testid="fuzzy-distance-slider"
-                type="range"
-                min="1"
-                max="3"
-                value={fuzzyDistance}
-                onChange={e => setFuzzyDistance(Number(e.target.value))}
-                className="w-full"
-              />
+          <div className="mb-4">
+            <label className="mb-2 block text-sm font-semibold">Matching modes</label>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+              <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
+                <input
+                  data-testid="exact-match-checkbox"
+                  type="checkbox"
+                  checked={matchMode.exact}
+                  onChange={e => setMatchMode({ ...matchMode, exact: e.target.checked })}
+                  className="mr-3 h-5 w-5"
+                />
+                Exact match
+              </label>
+              <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
+                <input
+                  data-testid="partial-match-checkbox"
+                  type="checkbox"
+                  checked={matchMode.partial}
+                  onChange={e => setMatchMode({ ...matchMode, partial: e.target.checked })}
+                  className="mr-3 h-5 w-5"
+                />
+                Partial match
+              </label>
+              <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
+                <input
+                  data-testid="fuzzy-match-checkbox"
+                  type="checkbox"
+                  checked={matchMode.fuzzy}
+                  onChange={e => setMatchMode({ ...matchMode, fuzzy: e.target.checked })}
+                  className="mr-3 h-5 w-5"
+                />
+                Fuzzy match
+              </label>
             </div>
-          )}
+
+            {matchMode.fuzzy && (
+              <div className="mt-2">
+                <label className="text-sm">Fuzzy distance: {fuzzyDistance}</label>
+                <input
+                  data-testid="fuzzy-distance-slider"
+                  type="range"
+                  min="1"
+                  max="3"
+                  value={fuzzyDistance}
+                  onChange={e => setFuzzyDistance(Number(e.target.value))}
+                  className="w-full"
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              data-testid="run-matching-button"
+              onClick={handleMatch}
+              disabled={!transcriptionResult || !wordsToMatch}
+              className="btn btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Match Words
+            </button>
+            {censoredWordIndices.size > 0 && (
+              <button
+                data-testid="clear-all-button"
+                onClick={handleClearAll}
+                className="btn bg-gray-500 text-white hover:bg-gray-600"
+              >
+                Clear All
+              </button>
+            )}
+          </div>
         </div>
 
-        <button
-          data-testid="run-matching-button"
-          onClick={handleMatch}
-          disabled={!transcriptionResult || !wordsToMatch}
-          className="btn btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          Run Matching
-        </button>
-
-        {matchedWords.length > 0 && (
-          <div data-testid="matched-words-container" className="mt-4 rounded bg-yellow-50 p-4">
-            <h3 className="mb-2 font-bold">
-              Matched {matchedWords.length} words
-              {bleepBuffer > 0 && ` (${bleepBuffer.toFixed(2)}s buffer will be applied)`}:
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {matchedWords.map((match, i) => {
-                // Calculate display times with current buffer
-                const displayStart = Math.max(0, match.start - bleepBuffer);
-                const displayEnd = match.end + bleepBuffer;
-                return (
-                  <span
-                    key={i}
-                    data-testid="matched-word-chip"
-                    className="rounded bg-yellow-200 px-2 py-1 text-sm"
-                  >
-                    {match.word} ({displayStart.toFixed(1)}s - {displayEnd.toFixed(1)}s)
-                  </span>
-                );
-              })}
-            </div>
+        {/* Interactive Transcript */}
+        {transcriptionResult && (
+          <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4">
+            <TranscriptReview
+              chunks={transcriptionResult.chunks}
+              censoredIndices={censoredWordIndices}
+              onToggleWord={handleToggleWord}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              isExpanded={transcriptExpanded}
+              onToggleExpanded={() => setTranscriptExpanded(!transcriptExpanded)}
+            />
           </div>
         )}
+
+        {/* Matched Words Display */}
+        <MatchedWordsDisplay matchedWords={matchedWords} isVisible={matchedWords.length > 0} />
       </section>
 
       {/* Step 5: Bleep Sound */}

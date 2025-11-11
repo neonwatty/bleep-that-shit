@@ -138,3 +138,128 @@ h6 {
 .hover\:animate-gradient-x:hover {
   animation: gradient-x 2s ease-in-out infinite;
 }
+
+/* Interactive Transcript Styles */
+.transcript-text {
+  font-size: 1.125rem;
+  line-height: 2.2;
+  letter-spacing: 0.01em;
+}
+
+.word-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 2px;
+  cursor: pointer;
+  vertical-align: top;
+  position: relative;
+}
+
+.word-text {
+  padding: 3px 6px;
+  border-radius: 4px;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.word-wrapper:hover .word-text {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.word-wrapper.censored .word-text {
+  background-color: #fce7f3;
+  color: #831843;
+  font-weight: 600;
+  border-bottom: 3px solid #ec4899;
+}
+
+.word-wrapper.uncensored .word-text {
+  background-color: transparent;
+  border-bottom: 2px solid transparent;
+}
+
+.word-wrapper.uncensored:hover .word-text {
+  background-color: #f3f4f6;
+  border-bottom-color: #d1d5db;
+}
+
+/* Hover timestamp tooltip */
+.timestamp {
+  position: fixed;
+  background: #1f2937;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 9999;
+  letter-spacing: 0;
+  transform: translateX(-50%) translateY(-100%);
+  margin-top: -8px;
+}
+
+.timestamp::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: #1f2937;
+}
+
+.word-wrapper:hover .timestamp {
+  opacity: 1;
+}
+
+.word-wrapper.censored .timestamp {
+  background: #ec4899;
+}
+
+.word-wrapper.censored .timestamp::after {
+  border-top-color: #ec4899;
+}
+
+.sentence {
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.sentence-timestamp {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6b7280;
+  white-space: nowrap;
+  padding-top: 0.25rem;
+  min-width: 80px;
+  text-align: right;
+}
+
+.sentence-words {
+  flex: 1;
+  line-height: 2.2;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .sentence {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .sentence-timestamp {
+    text-align: left;
+    min-width: auto;
+  }
+}

@@ -18,7 +18,7 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
       'Upload Your File',
       'Select Language & Model',
       'Transcribe',
-      'Enter Words to Bleep',
+      'Review & Select Words to Bleep',
       'Choose Bleep Sound & Volume',
       'Bleep That Sh*t!',
     ];
@@ -141,10 +141,21 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     await expect(page.locator('text=/Original Word Volume/i')).toBeVisible();
   });
 
-  test('matching section has proper labels', async ({ page }) => {
+  test('pattern matching section has proper labels', async ({ page }) => {
+    // Check for Pattern Matching section heading
+    await expect(page.locator('text=/Pattern Matching \\(Optional\\)/i')).toBeVisible();
+
     // Check for matching type labels
     await expect(page.locator('text=/Exact Match/i')).toBeVisible();
     await expect(page.locator('text=/Partial Match/i')).toBeVisible();
     await expect(page.locator('text=/Fuzzy Match/i')).toBeVisible();
+  });
+
+  test('clear all button is not visible initially', async ({ page }) => {
+    const bleepPage = new BleepPage(page);
+
+    // Clear All button should not be visible when no words are selected
+    const clearAllButton = page.getByTestId('clear-all-button');
+    await expect(clearAllButton).not.toBeVisible();
   });
 });
