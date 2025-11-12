@@ -24,12 +24,12 @@ export default function SamplerPage() {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const models = [
-    { id: 'Xenova/whisper-tiny.en', name: 'Tiny (English)', size: '39 MB' },
-    { id: 'Xenova/whisper-base.en', name: 'Base (English)', size: '74 MB' },
-    { id: 'Xenova/whisper-small.en', name: 'Small (English)', size: '242 MB' },
-    { id: 'Xenova/whisper-tiny', name: 'Tiny (Multilingual)', size: '39 MB' },
-    { id: 'Xenova/whisper-base', name: 'Base (Multilingual)', size: '74 MB' },
-    { id: 'Xenova/whisper-small', name: 'Small (Multilingual)', size: '242 MB' },
+    { id: 'Xenova/whisper-tiny.en', name: 'Tiny (fastest, lower accuracy)', size: '~50 MB' },
+    { id: 'Xenova/whisper-base.en', name: 'Base (balanced, recommended)', size: '~85 MB' },
+    { id: 'Xenova/whisper-small.en', name: 'Small (best accuracy)', size: '~275 MB' },
+    { id: 'Xenova/whisper-tiny', name: 'Tiny Multilingual (90+ languages)', size: '~50 MB' },
+    { id: 'Xenova/whisper-base', name: 'Base Multilingual (recommended)', size: '~85 MB' },
+    { id: 'Xenova/whisper-small', name: 'Small Multilingual (best accuracy)', size: '~275 MB' },
   ];
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

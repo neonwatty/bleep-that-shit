@@ -89,6 +89,7 @@ self.onmessage = async (event: MessageEvent) => {
         'automatic-speech-recognition',
         model || 'Xenova/whisper-tiny.en',
         {
+          revision: 'output_attentions', // Use revision with cross-attention outputs for accurate word-level timestamps
           progress_callback: (progress: any) => {
             if (progress && progress.progress !== undefined) {
               // Check if progress.progress is already a percentage (0-100) or decimal (0-1)
