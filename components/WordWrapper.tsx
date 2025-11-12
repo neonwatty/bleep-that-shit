@@ -25,7 +25,10 @@ export function WordWrapper({
   const wordRef = useRef<HTMLSpanElement>(null);
   const tooltipRef = useRef<HTMLSpanElement>(null);
 
-  const formatTimestamp = (seconds: number): string => {
+  const formatTimestamp = (seconds: number | null | undefined): string => {
+    if (seconds === null || seconds === undefined || isNaN(seconds)) {
+      return 'N/A';
+    }
     return seconds.toFixed(2) + 's';
   };
 

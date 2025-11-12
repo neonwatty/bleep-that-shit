@@ -146,10 +146,32 @@ self.onmessage = async (event: MessageEvent) => {
         finalResult = result;
       }
 
+      // Filter out chunks with null timestamps
+      const allChunks = finalResult.chunks || [];
+      const validChunks = allChunks.filter((chunk: any) => {
+        if (!chunk.timestamp || chunk.timestamp[0] === null || chunk.timestamp[1] === null) {
+          console.warn('[Worker] Chunk with null timestamp detected:', chunk.text);
+          return false;
+        }
+        return true;
+      });
+
+      const nullCount = allChunks.length - validChunks.length;
+      if (nullCount > 0) {
+        console.warn(
+          `[Worker] Filtered out ${nullCount} chunks with null timestamps out of ${allChunks.length} total chunks`
+        );
+      }
+
       // Format the result
       const formattedResult = {
         text: finalResult.text || '',
-        chunks: finalResult.chunks || [],
+        chunks: validChunks,
+        metadata: {
+          totalChunks: allChunks.length,
+          validChunks: validChunks.length,
+          nullTimestampCount: nullCount,
+        },
       };
 
       self.postMessage({

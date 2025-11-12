@@ -16,6 +16,12 @@ export function groupIntoSentences(chunks: TranscriptChunk[]): Sentence[] {
   const sentenceEnders = /[.!?;]$/;
 
   chunks.forEach((chunk, index) => {
+    // Skip chunks with null/invalid timestamps
+    if (!chunk.timestamp || chunk.timestamp[0] === null || chunk.timestamp[1] === null) {
+      console.warn(`Skipping chunk ${index} with null timestamp: "${chunk.text}"`);
+      return;
+    }
+
     const word: TranscriptWord = {
       text: chunk.text,
       index,

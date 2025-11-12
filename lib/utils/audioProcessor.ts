@@ -64,8 +64,13 @@ export async function applyBleeps(
     const endTime = segment.end;
     const duration = endTime - startTime;
 
+    // Defensive check for null timestamps
+    const startStr = typeof startTime === 'number' ? startTime.toFixed(3) : 'N/A';
+    const endStr = typeof endTime === 'number' ? endTime.toFixed(3) : 'N/A';
+    const durationStr = typeof duration === 'number' ? duration.toFixed(3) : 'N/A';
+
     console.log(
-      `  Bleep ${index + 1}: "${segment.word}" at ${startTime.toFixed(3)}s - ${endTime.toFixed(3)}s (duration: ${duration.toFixed(3)}s)`
+      `  Bleep ${index + 1}: "${segment.word}" at ${startStr}s - ${endStr}s (duration: ${durationStr}s)`
     );
 
     // Duck the original audio
@@ -250,8 +255,13 @@ export async function applyBleepsToVideo(
     const endTime = segment.end;
     const duration = endTime - startTime;
 
+    // Defensive check for null timestamps
+    const startStr = typeof startTime === 'number' ? startTime.toFixed(3) : 'N/A';
+    const endStr = typeof endTime === 'number' ? endTime.toFixed(3) : 'N/A';
+    const durationStr = typeof duration === 'number' ? duration.toFixed(3) : 'N/A';
+
     console.log(
-      `  Bleep ${index + 1}: "${segment.word}" at ${startTime.toFixed(3)}s - ${endTime.toFixed(3)}s (duration: ${duration.toFixed(3)}s)`
+      `  Bleep ${index + 1}: "${segment.word}" at ${startStr}s - ${endStr}s (duration: ${durationStr}s)`
     );
 
     // Duck the original audio

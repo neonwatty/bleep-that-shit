@@ -140,4 +140,34 @@ describe('groupIntoSentences', () => {
     expect(sentences).toHaveLength(1);
     expect(sentences[0].words).toHaveLength(51);
   });
+
+  it('handles chunks with null timestamps gracefully', () => {
+    const chunks: TranscriptChunk[] = [
+      { text: 'Hello', timestamp: [0, 0.5] },
+      { text: 'null1', timestamp: null as any }, // Should be skipped
+      { text: 'world', timestamp: [0.5, 1.0] },
+      { text: 'null2', timestamp: [null as any, 1.5] }, // Should be skipped
+      { text: 'test.', timestamp: [1.5, 2.0] },
+    ];
+
+    const sentences = groupIntoSentences(chunks);
+
+    expect(sentences).toHaveLength(1);
+    expect(sentences[0].words).toHaveLength(3);
+    expect(sentences[0].words[0].text).toBe('Hello');
+    expect(sentences[0].words[1].text).toBe('world');
+    expect(sentences[0].words[2].text).toBe('test.');
+  });
+
+  it('handles all chunks with null timestamps', () => {
+    const chunks: TranscriptChunk[] = [
+      { text: 'null1', timestamp: null as any },
+      { text: 'null2', timestamp: null as any },
+      { text: 'null3', timestamp: null as any },
+    ];
+
+    const sentences = groupIntoSentences(chunks);
+
+    expect(sentences).toHaveLength(0);
+  });
 });
