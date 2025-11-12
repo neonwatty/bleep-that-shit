@@ -725,12 +725,16 @@ export default function BleepPage() {
               onChange={e => setModel(e.target.value)}
               className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:p-2"
             >
-              <option value="Xenova/whisper-tiny.en">Tiny (English only, fastest)</option>
-              <option value="Xenova/whisper-base.en">Base (English only, fast)</option>
-              <option value="Xenova/whisper-small.en">Small (English only, balanced)</option>
-              <option value="Xenova/whisper-tiny">Tiny (Multilingual)</option>
-              <option value="Xenova/whisper-base">Base (Multilingual)</option>
-              <option value="Xenova/whisper-small">Small (Multilingual)</option>
+              <option value="Xenova/whisper-tiny.en">Tiny (~50 MB, fastest, lower accuracy)</option>
+              <option value="Xenova/whisper-base.en">Base (~85 MB, balanced, recommended)</option>
+              <option value="Xenova/whisper-small.en">
+                Small (~275 MB, best accuracy, slower)
+              </option>
+              <option value="Xenova/whisper-tiny">Tiny Multilingual (~50 MB, 90+ languages)</option>
+              <option value="Xenova/whisper-base">Base Multilingual (~85 MB, recommended)</option>
+              <option value="Xenova/whisper-small">
+                Small Multilingual (~275 MB, best accuracy)
+              </option>
             </select>
           </div>
         </div>
