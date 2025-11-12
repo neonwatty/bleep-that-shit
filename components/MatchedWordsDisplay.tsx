@@ -10,7 +10,10 @@ export function MatchedWordsDisplay({ matchedWords, isVisible }: MatchedWordsDis
     return null;
   }
 
-  const formatTimestamp = (seconds: number): string => {
+  const formatTimestamp = (seconds: number | null | undefined): string => {
+    if (seconds === null || seconds === undefined || isNaN(seconds)) {
+      return 'N/A';
+    }
     return seconds.toFixed(2) + 's';
   };
 

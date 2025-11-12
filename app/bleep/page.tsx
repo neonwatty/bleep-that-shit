@@ -49,13 +49,28 @@ export default function BleepPage() {
   const [hasBleeped, setHasBleeped] = useState(false);
   const [lastBleepVolume, setLastBleepVolume] = useState<number | null>(null);
   const [bleepBuffer, setBleepBuffer] = useState<number>(0); // 0-0.5 seconds buffer before/after each word
+  const [timestampWarning, setTimestampWarning] = useState<{ count: number; total: number } | null>(
+    null
+  );
 
   // Derived state: compute matchedWords from censoredWordIndices
   const matchedWords = useMemo(() => {
     if (!transcriptionResult) return [];
     return Array.from(censoredWordIndices)
       .map(idx => transcriptionResult.chunks[idx])
-      .filter(Boolean)
+      .filter(chunk => {
+        // Filter out chunks with null timestamps
+        if (
+          !chunk ||
+          !chunk.timestamp ||
+          chunk.timestamp[0] === null ||
+          chunk.timestamp[1] === null
+        ) {
+          console.warn('Skipping chunk with null timestamp:', chunk?.text);
+          return false;
+        }
+        return true;
+      })
       .map(chunk => ({
         word: chunk.text,
         start: chunk.timestamp[0],
@@ -159,6 +174,17 @@ export default function BleepPage() {
         }
         if (type === 'complete' && result) {
           setTranscriptionResult(result);
+
+          // Check for metadata about null timestamps
+          if (result.metadata && result.metadata.nullTimestampCount > 0) {
+            setTimestampWarning({
+              count: result.metadata.nullTimestampCount,
+              total: result.metadata.totalChunks,
+            });
+          } else {
+            setTimestampWarning(null);
+          }
+
           setIsTranscribing(false);
           setProgress(100);
           setProgressText('Transcription complete!');
@@ -785,6 +811,22 @@ export default function BleepPage() {
             <p className="mt-2 text-sm text-gray-600">
               Found {transcriptionResult.chunks.length} words with timestamps
             </p>
+          </div>
+        )}
+
+        {/* Timestamp Quality Warning */}
+        {timestampWarning && (
+          <div
+            data-testid="timestamp-warning"
+            className="mt-2 rounded border border-orange-400 bg-orange-100 p-3 text-orange-800"
+          >
+            <div className="flex items-start">
+              <span className="mr-2">⚠️</span>
+              <div>
+                <strong>Timestamp Quality Warning:</strong> {timestampWarning.count} out of{' '}
+                {timestampWarning.total} words had invalid timestamps and were filtered out.
+              </div>
+            </div>
           </div>
         )}
       </section>
