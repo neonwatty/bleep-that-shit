@@ -35,6 +35,7 @@ export function WaveformVisualization({
   const [loadError, setLoadError] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const isReadyRef = useRef(false);
 
   // Initialize Wavesurfer
   useEffect(() => {
@@ -90,6 +91,7 @@ export function WaveformVisualization({
     wavesurfer.on('ready', () => {
       setIsLoading(false);
       setDuration(wavesurfer.getDuration());
+      isReadyRef.current = true;
       onReady?.();
     });
 
@@ -148,14 +150,22 @@ export function WaveformVisualization({
 
     // Cleanup
     return () => {
-      try {
-        if (wavesurfer) {
+      isReadyRef.current = false;
+
+      // Only destroy if wavesurfer was fully initialized
+      if (wavesurfer) {
+        try {
+          // Unsubscribe from events first to prevent further callbacks
+          wavesurfer.unAll();
           wavesurfer.destroy();
+        } catch (error) {
+          // Ignore errors during cleanup - component is unmounting anyway
+          if (process.env.NODE_ENV === 'development') {
+            console.debug('Wavesurfer cleanup (safe to ignore):', error);
+          }
         }
-      } catch (error) {
-        // Ignore errors during cleanup (component may have unmounted during load)
-        console.debug('Wavesurfer cleanup error (safe to ignore):', error);
       }
+
       URL.revokeObjectURL(url);
     };
   }, [audioFile, onRegionCreate, onRegionUpdate, onRegionDelete, onReady, onError]);
