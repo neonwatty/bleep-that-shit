@@ -22,5 +22,13 @@
     "defaultVolume": 1.0,
     "defaultPrePaddingMs": 100,
     "defaultPostPaddingMs": 100
+  },
+  {
+    "name": "T-Rex Roar",
+    "filename": "trex.mp3",
+    "category": "monster",
+    "defaultVolume": 1.0,
+    "defaultPrePaddingMs": 100,
+    "defaultPostPaddingMs": 100
   }
 ]
