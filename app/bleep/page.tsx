@@ -984,6 +984,7 @@ export default function BleepPage() {
               <option value="bleep">Classic Bleep</option>
               <option value="brown">Brown Noise</option>
               <option value="dolphin">Dolphin Sounds Bleep</option>
+              <option value="trex">T-Rex Roar</option>
             </select>
           </div>
 
