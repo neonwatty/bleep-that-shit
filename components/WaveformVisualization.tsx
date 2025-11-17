@@ -94,6 +94,13 @@ export function WaveformVisualization({
     });
 
     wavesurfer.on('error', (error) => {
+      // Ignore abort errors (happen during normal cleanup)
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.debug('Waveform load aborted (safe to ignore)');
+        setIsLoading(false);
+        return;
+      }
+
       const errorMsg =
         'Failed to load audio waveform. The file may be corrupted or in an unsupported format.';
       setLoadError(errorMsg);
@@ -141,7 +148,14 @@ export function WaveformVisualization({
 
     // Cleanup
     return () => {
-      wavesurfer.destroy();
+      try {
+        if (wavesurfer) {
+          wavesurfer.destroy();
+        }
+      } catch (error) {
+        // Ignore errors during cleanup (component may have unmounted during load)
+        console.debug('Wavesurfer cleanup error (safe to ignore):', error);
+      }
       URL.revokeObjectURL(url);
     };
   }, [audioFile, onRegionCreate, onRegionUpdate, onRegionDelete, onReady, onError]);
