@@ -9,6 +9,8 @@ import { mergeOverlappingBleeps } from '@/lib/utils/bleepMerger';
 import { levenshteinDistance } from '@/lib/utils/stringMatching';
 import { TranscriptReview } from '@/components/TranscriptReview';
 import { MatchedWordsDisplay } from '@/components/MatchedWordsDisplay';
+import { WaveformEditor } from '@/components/WaveformEditor';
+import type { ManualRegion, BleepSegment } from '@/lib/types/bleep';
 
 interface TranscriptionResult {
   text: string;
@@ -52,6 +54,8 @@ export default function BleepPage() {
   const [timestampWarning, setTimestampWarning] = useState<{ count: number; total: number } | null>(
     null
   );
+  const [manualRegions, setManualRegions] = useState<ManualRegion[]>([]);
+  const [showWaveformEditor, setShowWaveformEditor] = useState(false);
 
   // Derived state: compute matchedWords from censoredWordIndices
   const matchedWords = useMemo(() => {
@@ -78,6 +82,27 @@ export default function BleepPage() {
       }))
       .sort((a, b) => a.start - b.start);
   }, [censoredWordIndices, transcriptionResult]);
+
+  // Derived state: combine word-based and manual bleeps
+  const allBleepSegments = useMemo(() => {
+    const wordBleeps: BleepSegment[] = matchedWords.map(w => ({
+      ...w,
+      source: 'word' as const,
+      id: `word-${w.start}-${w.end}`,
+      color: '#ec4899', // pink for word-based
+    }));
+
+    const manualBleeps: BleepSegment[] = manualRegions.map(r => ({
+      word: r.label || 'Manual',
+      start: r.start,
+      end: r.end,
+      source: 'manual' as const,
+      id: r.id,
+      color: '#3b82f6', // blue for manual
+    }));
+
+    return [...wordBleeps, ...manualBleeps];
+  }, [matchedWords, manualRegions]);
 
   const workerRef = useRef<Worker | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -370,8 +395,8 @@ export default function BleepPage() {
   };
 
   const handleBleep = async () => {
-    if (!file || matchedWords.length === 0) {
-      console.log('Cannot bleep: no file or no matched words');
+    if (!file || allBleepSegments.length === 0) {
+      console.log('Cannot bleep: no file or no bleep segments');
       return;
     }
 
@@ -384,8 +409,12 @@ export default function BleepPage() {
 
       console.log(
         'Bleeping',
+        allBleepSegments.length,
+        'segments (',
         matchedWords.length,
-        'words with',
+        'word-based +',
+        manualRegions.length,
+        'manual) with',
         bleepSound,
         'sound at',
         bleepVolume + '% volume'
@@ -396,17 +425,17 @@ export default function BleepPage() {
         `- Original word volume: ${Math.round(originalVolumeReduction * 100)}% (value: ${originalVolumeReduction})`
       );
       console.log(`- Bleep buffer: ${bleepBuffer}s`);
-      console.log('Original matched words (no buffer):', matchedWords);
+      console.log('Original bleep segments (no buffer):', allBleepSegments);
 
-      // Apply the current buffer to matched words
-      const wordsWithBuffer = matchedWords.map(word => ({
-        word: word.word,
-        start: Math.max(0, word.start - bleepBuffer),
-        end: word.end + bleepBuffer,
+      // Apply the current buffer to all bleep segments
+      const segmentsWithBuffer = allBleepSegments.map(segment => ({
+        word: segment.word,
+        start: Math.max(0, segment.start - bleepBuffer),
+        end: segment.end + bleepBuffer,
       }));
 
       // Merge overlapping bleeps (after buffer is applied)
-      const finalBleepSegments = mergeOverlappingBleeps(wordsWithBuffer);
+      const finalBleepSegments = mergeOverlappingBleeps(segmentsWithBuffer);
       console.log(`After applying ${bleepBuffer}s buffer and merging:`, finalBleepSegments);
 
       let censoredBlob: Blob;
@@ -957,11 +986,59 @@ export default function BleepPage() {
 
         {/* Matched Words Display */}
         <MatchedWordsDisplay matchedWords={matchedWords} isVisible={matchedWords.length > 0} />
+
+        {/* Manual Time Selection - Collapsible */}
+        <div className="mt-6 rounded-lg border border-gray-200 bg-white">
+          <button
+            onClick={() => setShowWaveformEditor(!showWaveformEditor)}
+            className="flex w-full items-center justify-between p-4 text-left hover:bg-gray-50"
+          >
+            <div>
+              <h3 className="text-sm font-bold text-gray-700 uppercase">
+                Manual Time Selection
+                {manualRegions.length > 0 && (
+                  <span className="ml-2 rounded-full bg-blue-500 px-2 py-0.5 text-xs text-white">
+                    {manualRegions.length}
+                  </span>
+                )}
+              </h3>
+              <p className="mt-1 text-xs text-gray-600">
+                For precise control or poor transcription, select time segments directly from the
+                waveform.
+              </p>
+            </div>
+            <span className="text-gray-400">{showWaveformEditor ? '▲' : '▼'}</span>
+          </button>
+
+          {showWaveformEditor && (
+            <div className="border-t border-gray-200 p-4">
+              <WaveformEditor
+                audioFile={file}
+                regions={manualRegions}
+                onRegionsChange={setManualRegions}
+                existingWordBleeps={matchedWords.map(w => ({
+                  ...w,
+                  source: 'word' as const,
+                  id: `word-${w.start}-${w.end}`,
+                  color: '#ec4899',
+                }))}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Combined Total */}
+        {allBleepSegments.length > 0 && (
+          <div className="mt-4 rounded-lg border border-purple-200 bg-purple-50 p-3 text-sm">
+            <strong>Total segments to bleep:</strong> {matchedWords.length} word-based +{' '}
+            {manualRegions.length} manual = {allBleepSegments.length} total
+          </div>
+        )}
       </section>
 
       {/* Step 5: Bleep Sound */}
       <section
-        className={`editorial-section mb-8 border-l-4 border-yellow-500 pl-3 sm:mb-12 sm:pl-4 ${matchedWords.length === 0 ? 'opacity-50' : ''}`}
+        className={`editorial-section mb-8 border-l-4 border-yellow-500 pl-3 sm:mb-12 sm:pl-4 ${allBleepSegments.length === 0 ? 'opacity-50' : ''}`}
       >
         <div className="mb-2 flex items-center">
           <span className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-yellow-500 text-base font-bold text-white">
