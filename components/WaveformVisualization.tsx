@@ -35,6 +35,7 @@ export function WaveformVisualization({
   const [loadError, setLoadError] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isWaveformReady, setIsWaveformReady] = useState(false);
   const isReadyRef = useRef(false);
 
   // Initialize Wavesurfer
@@ -92,6 +93,7 @@ export function WaveformVisualization({
       setIsLoading(false);
       setDuration(wavesurfer.getDuration());
       isReadyRef.current = true;
+      setIsWaveformReady(true);
       onReady?.();
     });
 
@@ -151,6 +153,7 @@ export function WaveformVisualization({
     // Cleanup
     return () => {
       isReadyRef.current = false;
+      setIsWaveformReady(false);
 
       // Only destroy if wavesurfer was fully initialized
       if (wavesurfer) {
@@ -159,9 +162,13 @@ export function WaveformVisualization({
           wavesurfer.unAll();
           wavesurfer.destroy();
         } catch (error) {
-          // Ignore errors during cleanup - component is unmounting anyway
+          // Silently ignore AbortErrors during cleanup
+          if (error instanceof DOMException && error.name === 'AbortError') {
+            return;
+          }
+          // Log other errors in development only
           if (process.env.NODE_ENV === 'development') {
-            console.debug('Wavesurfer cleanup (safe to ignore):', error);
+            console.debug('Wavesurfer cleanup:', error);
           }
         }
       }
@@ -173,6 +180,8 @@ export function WaveformVisualization({
   // Sync regions from props to wavesurfer
   useEffect(() => {
     if (!regionsPluginRef.current) return;
+    // Only sync regions after wavesurfer is ready
+    if (!isWaveformReady) return;
 
     const plugin = regionsPluginRef.current;
 
@@ -202,7 +211,7 @@ export function WaveformVisualization({
         resize: true,
       });
     });
-  }, [regions, wordBleepsOverlay]);
+  }, [regions, wordBleepsOverlay, isWaveformReady]);
 
   // Public methods for playback control
   const play = () => wavesurferRef.current?.play();
