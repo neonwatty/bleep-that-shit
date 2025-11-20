@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { WaveformVisualization } from './WaveformVisualization';
 import type { ManualRegion, BleepSegment } from '@/lib/types/bleep';
 
@@ -29,13 +29,11 @@ export function WaveformEditor({
   };
 
   const handleRegionUpdate = (id: string, updates: Partial<ManualRegion>) => {
-    onRegionsChange(
-      regions.map((r) => (r.id === id ? { ...r, ...updates } : r))
-    );
+    onRegionsChange(regions.map(r => (r.id === id ? { ...r, ...updates } : r)));
   };
 
   const handleRegionDelete = (id: string) => {
-    onRegionsChange(regions.filter((r) => r.id !== id));
+    onRegionsChange(regions.filter(r => r.id !== id));
     if (selectedRegionId === id) {
       setSelectedRegionId(null);
     }
@@ -48,9 +46,7 @@ export function WaveformEditor({
   };
 
   const handleClearAll = () => {
-    if (
-      confirm(`Are you sure you want to delete all ${regions.length} manual regions?`)
-    ) {
+    if (confirm(`Are you sure you want to delete all ${regions.length} manual regions?`)) {
       onRegionsChange([]);
       setSelectedRegionId(null);
     }
@@ -105,12 +101,27 @@ export function WaveformEditor({
     }, 100);
   };
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Delete key - remove selected region
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedRegionId && !disabled) {
+        // Prevent default browser behavior (e.g., going back in history)
+        e.preventDefault();
+        handleDeleteSelected();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedRegionId, disabled]);
+
   if (!audioFile) {
     return (
       <div className="rounded-lg border border-gray-300 bg-gray-50 p-8 text-center">
-        <p className="text-gray-600">
-          Upload an audio or video file to use the waveform editor
-        </p>
+        <p className="text-gray-600">Upload an audio or video file to use the waveform editor</p>
       </div>
     );
   }
@@ -127,14 +138,14 @@ export function WaveformEditor({
           onRegionDelete={disabled ? undefined : handleRegionDelete}
           onReady={() => setIsReady(true)}
           wordBleepsOverlay={existingWordBleeps}
+          selectedRegionId={selectedRegionId}
+          onRegionClick={setSelectedRegionId}
         />
       </div>
 
       {/* Playback Controls */}
       <div className="rounded-lg border border-gray-200 bg-white p-4">
-        <div className="mb-2 text-sm font-semibold text-gray-700">
-          Playback Controls
-        </div>
+        <div className="mb-2 text-sm font-semibold text-gray-700">Playback Controls</div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => skipBackward(10)}
@@ -164,9 +175,7 @@ export function WaveformEditor({
 
       {/* Region Tools */}
       <div className="rounded-lg border border-gray-200 bg-white p-4">
-        <div className="mb-2 text-sm font-semibold text-gray-700">
-          Region Tools
-        </div>
+        <div className="mb-2 text-sm font-semibold text-gray-700">Region Tools</div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleDeleteSelected}
@@ -227,7 +236,7 @@ export function WaveformEditor({
                       <td className="px-2 py-2">
                         <div className="flex gap-1">
                           <button
-                            onClick={(e) => {
+                            onClick={e => {
                               e.stopPropagation();
                               playRegion(region);
                             }}
@@ -237,7 +246,7 @@ export function WaveformEditor({
                             ▶
                           </button>
                           <button
-                            onClick={(e) => {
+                            onClick={e => {
                               e.stopPropagation();
                               handleRegionDelete(region.id);
                             }}

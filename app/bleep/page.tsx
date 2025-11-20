@@ -5,11 +5,12 @@ import { useDropzone } from 'react-dropzone';
 import { decodeAudioToMono16kHzPCM } from '@/lib/utils/audioDecode';
 import { applyBleeps, applyBleepsToVideo } from '@/lib/utils/audioProcessor';
 import { getPublicPath } from '@/lib/utils/paths';
-import { mergeOverlappingBleeps } from '@/lib/utils/bleepMerger';
+import { mergeOverlappingBleeps, applyBufferToSegment } from '@/lib/utils/bleepMerger';
 import { levenshteinDistance } from '@/lib/utils/stringMatching';
 import { TranscriptReview } from '@/components/TranscriptReview';
 import { MatchedWordsDisplay } from '@/components/MatchedWordsDisplay';
 import { WaveformEditor } from '@/components/WaveformEditor';
+import { BleepStatsDisplay } from '@/components/BleepStatsDisplay';
 import type { ManualRegion, BleepSegment } from '@/lib/types/bleep';
 
 interface TranscriptionResult {
@@ -83,6 +84,9 @@ export default function BleepPage() {
       .sort((a, b) => a.start - b.start);
   }, [censoredWordIndices, transcriptionResult]);
 
+  // Demo file URL
+  const DEMO_FILE_URL = 'https://raw.githubusercontent.com/neonwatty/readme_gifs/main/lemon.mp4';
+
   // Derived state: combine word-based and manual bleeps
   const allBleepSegments = useMemo(() => {
     const wordBleeps: BleepSegment[] = matchedWords.map(w => ({
@@ -151,6 +155,23 @@ export default function BleepPage() {
     },
     multiple: false,
   });
+
+  const handleLoadDemoFile = async () => {
+    try {
+      const response = await fetch(DEMO_FILE_URL);
+      const blob = await response.blob();
+      const demoFile = new File([blob], 'lemon.mp4', { type: 'video/mp4' });
+
+      setFile(demoFile);
+      const url = URL.createObjectURL(demoFile);
+      setFileUrl(url);
+      setShowFileWarning(false);
+      setFileDurationWarning(null);
+    } catch (error) {
+      console.error('Error loading demo file:', error);
+      setErrorMessage('Failed to load demo file. Please try uploading your own.');
+    }
+  };
 
   const handleTranscribe = async () => {
     if (!file) return;
@@ -428,11 +449,9 @@ export default function BleepPage() {
       console.log('Original bleep segments (no buffer):', allBleepSegments);
 
       // Apply the current buffer to all bleep segments
-      const segmentsWithBuffer = allBleepSegments.map(segment => ({
-        word: segment.word,
-        start: Math.max(0, segment.start - bleepBuffer),
-        end: segment.end + bleepBuffer,
-      }));
+      const segmentsWithBuffer = allBleepSegments.map(segment =>
+        applyBufferToSegment(segment, bleepBuffer)
+      );
 
       // Merge overlapping bleeps (after buffer is applied)
       const finalBleepSegments = mergeOverlappingBleeps(segmentsWithBuffer);
@@ -546,6 +565,13 @@ export default function BleepPage() {
   const handleClearAll = () => {
     setCensoredWordIndices(new Set());
   };
+
+  // Auto-expand waveform editor when words are selected
+  useEffect(() => {
+    if (matchedWords.length > 0 && !showWaveformEditor) {
+      setShowWaveformEditor(true);
+    }
+  }, [matchedWords.length]);
 
   useEffect(() => {
     // Cleanup
@@ -673,6 +699,17 @@ export default function BleepPage() {
             </p>
           )}
         </div>
+
+        {!file && (
+          <div className="mt-3 text-center">
+            <button
+              onClick={handleLoadDemoFile}
+              className="text-sm text-blue-600 underline hover:text-blue-800"
+            >
+              Don't have a file to test? Try this one now! 🍋
+            </button>
+          </div>
+        )}
 
         {showFileWarning && (
           <div
@@ -1027,11 +1064,10 @@ export default function BleepPage() {
           )}
         </div>
 
-        {/* Combined Total */}
+        {/* Combined Stats Display */}
         {allBleepSegments.length > 0 && (
-          <div className="mt-4 rounded-lg border border-purple-200 bg-purple-50 p-3 text-sm">
-            <strong>Total segments to bleep:</strong> {matchedWords.length} word-based +{' '}
-            {manualRegions.length} manual = {allBleepSegments.length} total
+          <div className="mt-4">
+            <BleepStatsDisplay allSegments={allBleepSegments} bleepBuffer={bleepBuffer} />
           </div>
         )}
       </section>

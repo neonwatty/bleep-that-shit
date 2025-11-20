@@ -2,18 +2,20 @@
 
 ## Executive Summary
 
-This document outlines the design and implementation plan for adding **manual time-based bleeping** to Bleep That Sh*t! This new feature allows users to select time segments directly from an audio waveform visualization, independent of transcription quality. It will work alongside the existing word-based bleeping system.
+This document outlines the design and implementation plan for adding **manual time-based bleeping** to Bleep That Sh\*t! This new feature allows users to select time segments directly from an audio waveform visualization, independent of transcription quality. It will work alongside the existing word-based bleeping system.
 
 ---
 
 ## 🎯 Feature Overview
 
 ### Current System
+
 - **Word Matching**: Pattern-based search (exact, partial, fuzzy)
 - **Manual Word Selection**: Click words in transcript
 - **Limitation**: Both depend on transcription quality
 
 ### New Feature: Manual Time Selection
+
 - **Visual Waveform Editor**: See audio waveform
 - **Drag-to-Select**: Create time regions by dragging on waveform
 - **Precise Control**: Play/pause/scrub to find exact moments
@@ -29,12 +31,12 @@ This document outlines the design and implementation plan for adding **manual ti
 ```typescript
 // Extended BleepSegment with source tracking
 interface BleepSegment {
-  word: string;           // Display label
-  start: number;          // Start time in seconds
-  end: number;            // End time in seconds
-  source: 'word' | 'manual' | 'merged';  // NEW: Origin tracking
-  id: string;             // NEW: Unique identifier
-  color?: string;         // NEW: Visual differentiation
+  word: string; // Display label
+  start: number; // Start time in seconds
+  end: number; // End time in seconds
+  source: 'word' | 'manual' | 'merged'; // NEW: Origin tracking
+  id: string; // NEW: Unique identifier
+  color?: string; // NEW: Visual differentiation
 }
 
 // Manual region definition
@@ -61,7 +63,7 @@ const allBleepSegments = useMemo(() => {
     ...w,
     source: 'word' as const,
     id: `word-${w.start}-${w.end}`,
-    color: '#ec4899' // pink for word-based
+    color: '#ec4899', // pink for word-based
   }));
 
   const manualBleeps = manualRegions.map(r => ({
@@ -70,7 +72,7 @@ const allBleepSegments = useMemo(() => {
     end: r.end,
     source: 'manual' as const,
     id: r.id,
-    color: '#3b82f6' // blue for manual
+    color: '#3b82f6', // blue for manual
   }));
 
   return mergeOverlappingBleeps([...wordBleeps, ...manualBleeps]);
@@ -373,18 +375,21 @@ app/bleep/page.tsx
 ### Key Components
 
 #### 1. WaveformVisualization.tsx
+
 - Wraps Wavesurfer.js with React
 - Manages regions plugin
 - Handles playback state
 - Emits region events
 
 #### 2. WaveformEditor.tsx
+
 - Container for waveform UI
 - Region state management
 - Playback controls
 - Region list table
 
 #### 3. CombinedBleepPreview.tsx
+
 - Shows merged segments visualization
 - Statistics breakdown
 - Timeline preview
@@ -446,17 +451,20 @@ await applyBleeps(audioBuffer, finalSegments, bleepSound, ...);
 ### Region Management
 
 **Create Regions:**
+
 - Click and drag on waveform (desktop)
 - Modal input form (mobile)
 - Keyboard shortcut: `N` at cursor position
 
 **Edit Regions:**
+
 - Drag edges to resize
 - Drag center to move
 - Double-click to edit label
 - Input precise times in table
 
 **Delete Regions:**
+
 - Click region + press Delete key
 - Click trash icon in table
 - Bulk: "Clear All" button
@@ -544,7 +552,7 @@ test('complete manual bleeping workflow', async ({ page }) => {
   const waveform = page.getByTestId('waveform');
   await waveform.dragTo(waveform, {
     sourcePosition: { x: 100, y: 50 },
-    targetPosition: { x: 300, y: 50 }
+    targetPosition: { x: 300, y: 50 },
   });
 
   // Verify region created
@@ -586,11 +594,13 @@ if (isLargeFile) {
 ### Browser Compatibility
 
 **Required:**
+
 - Web Audio API
 - ES6+ features
 - Modern browser (Chrome 90+, Firefox 88+, Safari 14+)
 
 **Fallback:**
+
 ```typescript
 if (!window.AudioContext) {
   return (
@@ -607,6 +617,7 @@ if (!window.AudioContext) {
 ## 📅 Implementation Phases
 
 ### Phase 1: Core Waveform (Week 1)
+
 - [ ] Install Wavesurfer.js
 - [ ] Create WaveformVisualization component
 - [ ] Basic playback controls
@@ -614,6 +625,7 @@ if (!window.AudioContext) {
 - [ ] Unit tests
 
 ### Phase 2: Region Management (Week 2)
+
 - [ ] Regions plugin integration
 - [ ] Create/resize/delete regions
 - [ ] Region list table
@@ -621,6 +633,7 @@ if (!window.AudioContext) {
 - [ ] State management
 
 ### Phase 3: Combined Mode (Week 3)
+
 - [ ] Merge word + manual bleeps
 - [ ] Visual color coding
 - [ ] Combined preview component
@@ -628,6 +641,7 @@ if (!window.AudioContext) {
 - [ ] E2E tests
 
 ### Phase 4: Polish & Mobile (Week 4)
+
 - [ ] Mobile-responsive layout
 - [ ] Touch gestures
 - [ ] Keyboard shortcuts
@@ -635,6 +649,7 @@ if (!window.AudioContext) {
 - [ ] Performance optimization
 
 ### Phase 5: Advanced (Future)
+
 - [ ] Export/import regions JSON
 - [ ] Undo/redo
 - [ ] Snap-to-zero-crossing
@@ -658,17 +673,20 @@ if (!window.AudioContext) {
 ## ✅ Success Metrics
 
 **Functional:**
+
 - ✓ Waveform loads <2s for files <5MB
 - ✓ Region creation <100ms latency
 - ✓ 100% accurate bleep merging
 - ✓ Zero audio processing regressions
 
 **User Experience:**
+
 - ✓ 90% users create first region in <30s
 - ✓ 50% reduction in steps for non-word bleeping
 - ✓ 80%+ rate mobile interaction as "easy"
 
 **Technical:**
+
 - ✓ Bundle size increase <70KB gzipped
 - ✓ No memory leaks after 100 operations
 - ✓ Works on 95%+ target browsers
@@ -679,6 +697,7 @@ if (!window.AudioContext) {
 ## 🎓 Documentation Needs
 
 ### User Docs
+
 - [ ] "How to use manual time selection" guide
 - [ ] Video tutorial (2-3 min)
 - [ ] FAQ section:
@@ -688,6 +707,7 @@ if (!window.AudioContext) {
 - [ ] Keyboard shortcuts reference
 
 ### Developer Docs
+
 - [ ] Component API reference
 - [ ] Architecture diagram showing collapsible sections
 - [ ] Integration guide
@@ -708,6 +728,7 @@ if (!window.AudioContext) {
 ### Why Collapsible Instead of Mode Selector?
 
 **Advantages:**
+
 - ✅ **Simpler UX**: No mode switching needed - both methods always available
 - ✅ **Less cognitive load**: Users don't need to choose a "mode" upfront
 - ✅ **Progressive disclosure**: Manual section hidden until needed
@@ -716,6 +737,7 @@ if (!window.AudioContext) {
 - ✅ **Better defaults**: Word-based section shown first (most common use case)
 
 **Implementation:**
+
 - Manual Time Selection section starts **collapsed** by default
 - Expands when user clicks "Expand" button
 - Shows region count even when collapsed (e.g., "Manual regions: 3")
@@ -744,19 +766,19 @@ const wavesurfer = WaveSurfer.create({
     TimelinePlugin.create({
       height: 32,
       timeInterval: 5,
-      primaryLabelInterval: 10
-    })
-  ]
+      primaryLabelInterval: 10,
+    }),
+  ],
 });
 
 wavesurfer.load(URL.createObjectURL(audioFile));
 
-wavesurfer.on('region-created', (region) => {
+wavesurfer.on('region-created', region => {
   onRegionCreate({
     id: region.id,
     start: region.start,
     end: region.end,
-    color: '#3b82f6'
+    color: '#3b82f6',
   });
 });
 ```
@@ -771,19 +793,20 @@ export function useManualRegions() {
   const [regions, setRegions] = useState<ManualRegion[]>([]);
 
   const addRegion = useCallback((start: number, end: number) => {
-    setRegions(prev => [...prev, {
-      id: uuidv4(),
-      start,
-      end,
-      label: 'Manual',
-      color: '#3b82f6'
-    }]);
+    setRegions(prev => [
+      ...prev,
+      {
+        id: uuidv4(),
+        start,
+        end,
+        label: 'Manual',
+        color: '#3b82f6',
+      },
+    ]);
   }, []);
 
   const updateRegion = useCallback((id: string, updates: Partial<ManualRegion>) => {
-    setRegions(prev => prev.map(r =>
-      r.id === id ? { ...r, ...updates } : r
-    ));
+    setRegions(prev => prev.map(r => (r.id === id ? { ...r, ...updates } : r)));
   }, []);
 
   const deleteRegion = useCallback((id: string) => {
