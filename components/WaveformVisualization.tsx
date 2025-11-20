@@ -1,32 +1,37 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import type { ManualRegion, BleepSegment } from '@/lib/types/bleep';
+import type { ManualRegion } from '@/lib/types/bleep';
+
+interface TranscriptWord {
+  text: string;
+  timestamp: [number, number];
+}
 
 interface WaveformVisualizationProps {
   audioFile: File | null;
   regions: ManualRegion[];
-  onRegionCreate?: (region: ManualRegion) => void;
-  onRegionUpdate?: (id: string, updates: Partial<ManualRegion>) => void;
-  onRegionDelete?: (id: string) => void;
   onReady?: () => void;
   onError?: (error: Error) => void;
-  wordBleepsOverlay?: BleepSegment[];
   selectedRegionId?: string | null;
   onRegionClick?: (id: string) => void;
+  selectedWordIndices?: Set<number>;
+  allTranscriptWords?: TranscriptWord[];
+  onWordClick?: (word: TranscriptWord) => void;
+  onRegionCreate?: (start: number, end: number) => void;
 }
 
 export function WaveformVisualization({
   audioFile,
   regions,
-  onRegionCreate,
-  onRegionUpdate,
-  onRegionDelete,
   onReady,
   onError,
-  wordBleepsOverlay = [],
   selectedRegionId = null,
   onRegionClick,
+  selectedWordIndices,
+  allTranscriptWords = [],
+  onWordClick,
+  onRegionCreate,
 }: WaveformVisualizationProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,9 +43,15 @@ export function WaveformVisualization({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isReady, setIsReady] = useState(false);
+
+  // Drag state for creating manual regions
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState<number | null>(null);
   const [dragEnd, setDragEnd] = useState<number | null>(null);
+
+  // Constants for timeline scaling
+  const PIXELS_PER_SECOND = 80; // 80 pixels per second for good word spacing
+  const CANVAS_HEIGHT = 160;
 
   // Extract audio waveform data using Web Audio API
   useEffect(() => {
@@ -123,37 +134,92 @@ export function WaveformVisualization({
       ctx.fillRect(x, middle - barHeight, barWidth - 1, barHeight * 2);
     }
 
-    // Draw word bleeps overlay (pink)
-    wordBleepsOverlay.forEach(bleep => {
-      const startX = (bleep.start / duration) * width;
-      const endX = (bleep.end / duration) * width;
-      ctx.fillStyle = 'rgba(236, 72, 153, 0.3)';
-      ctx.fillRect(startX, 0, endX - startX, height);
-    });
+    // Draw all transcript words first (in grey or colored based on selection)
+    if (allTranscriptWords.length > 0) {
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
 
-    // Draw manual regions (blue)
+      // Track vertical positions to avoid word overlap
+      const wordPositions: Array<{ x: number; width: number; y: number }> = [];
+
+      allTranscriptWords.forEach((word, idx) => {
+        const [start, end] = word.timestamp;
+        const centerX = ((start + end) / 2 / duration) * width;
+
+        // Check if this word index is selected
+        const isSelected = selectedWordIndices?.has(idx);
+
+        // Determine color
+        let textColor: string;
+        let bgColor: string;
+        if (isSelected) {
+          textColor = '#831843'; // dark pink
+          bgColor = 'rgba(236, 72, 153, 0.9)'; // pink
+        } else {
+          textColor = '#6b7280'; // grey
+          bgColor = 'rgba(156, 163, 175, 0.7)'; // light grey
+        }
+
+        // Measure text
+        const textMetrics = ctx.measureText(word.text);
+        const textWidth = textMetrics.width;
+        const padding = 4;
+
+        // Find non-overlapping vertical position
+        let yPos = 25; // Start below the top
+        let foundPosition = false;
+        while (!foundPosition && yPos < height - 40) {
+          const overlaps = wordPositions.some(
+            pos =>
+              Math.abs(centerX - pos.x) < (textWidth + pos.width) / 2 + 5 &&
+              Math.abs(yPos - pos.y) < 16
+          );
+          if (!overlaps) {
+            foundPosition = true;
+          } else {
+            yPos += 18; // Move down for next row
+          }
+        }
+
+        // Draw background for text
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(centerX - textWidth / 2 - padding, yPos, textWidth + padding * 2, 14);
+
+        // Draw text
+        ctx.fillStyle = textColor;
+        ctx.fillText(word.text, centerX, yPos + 2);
+
+        // Store position for overlap detection
+        wordPositions.push({ x: centerX, width: textWidth, y: yPos });
+      });
+    }
+
+    // Draw manual regions (pink for selected words)
     regions.forEach(region => {
       const isSelected = region.id === selectedRegionId;
       const startX = (region.start / duration) * width;
       const endX = (region.end / duration) * width;
-      ctx.fillStyle = isSelected ? 'rgba(59, 130, 246, 0.5)' : 'rgba(59, 130, 246, 0.3)';
+      ctx.fillStyle = isSelected ? 'rgba(236, 72, 153, 0.5)' : 'rgba(236, 72, 153, 0.3)';
       ctx.fillRect(startX, 0, endX - startX, height);
 
       // Draw region border
-      ctx.strokeStyle = isSelected ? '#2563eb' : '#3b82f6';
+      ctx.strokeStyle = isSelected ? '#ec4899' : '#f472b6';
       ctx.lineWidth = 2;
       ctx.strokeRect(startX, 0, endX - startX, height);
     });
 
-    // Draw drag selection
+    // Draw active drag selection
     if (isDragging && dragStart !== null && dragEnd !== null) {
-      const startX = Math.min(dragStart, dragEnd);
-      const width = Math.abs(dragEnd - dragStart);
-      ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
-      ctx.fillRect(startX, 0, width, height);
-      ctx.strokeStyle = '#3b82f6';
+      const startX = (Math.min(dragStart, dragEnd) / duration) * width;
+      const endX = (Math.max(dragStart, dragEnd) / duration) * width;
+      ctx.fillStyle = 'rgba(236, 72, 153, 0.4)'; // Pink with more opacity for drag
+      ctx.fillRect(startX, 0, endX - startX, height);
+
+      // Draw border
+      ctx.strokeStyle = '#ec4899';
       ctx.lineWidth = 2;
-      ctx.strokeRect(startX, 0, width, height);
+      ctx.strokeRect(startX, 0, endX - startX, height);
     }
 
     // Draw timestamp markers
@@ -184,30 +250,7 @@ export function WaveformVisualization({
       }
     }
 
-    // Draw word labels on word bleeps
-    wordBleepsOverlay.forEach(bleep => {
-      const startX = (bleep.start / duration) * width;
-      const endX = (bleep.end / duration) * width;
-      const centerX = (startX + endX) / 2;
-
-      // Draw word label
-      ctx.fillStyle = '#831843';
-      ctx.font = 'bold 11px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
-
-      // Draw background for text
-      const textMetrics = ctx.measureText(bleep.word);
-      const textWidth = textMetrics.width;
-      const padding = 4;
-
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-      ctx.fillRect(centerX - textWidth / 2 - padding, 5, textWidth + padding * 2, 14);
-
-      // Draw text
-      ctx.fillStyle = '#831843';
-      ctx.fillText(bleep.word, centerX, 7);
-    });
+    // Word labels are already drawn above with the transcript words
 
     // Draw playhead
     if (duration > 0) {
@@ -219,7 +262,7 @@ export function WaveformVisualization({
       ctx.lineTo(playheadX, height);
       ctx.stroke();
     }
-  }, [currentTime, duration, regions, wordBleepsOverlay, selectedRegionId, isDragging, dragStart, dragEnd]);
+  }, [currentTime, duration, regions, selectedRegionId, selectedWordIndices, allTranscriptWords, isDragging, dragStart, dragEnd]);
 
   // Redraw when dependencies change
   useEffect(() => {
@@ -233,15 +276,17 @@ export function WaveformVisualization({
       const container = containerRef.current;
       if (!canvas || !container) return;
 
-      canvas.width = container.clientWidth;
-      canvas.height = 160;
+      // Use duration-based width for horizontal scrolling
+      const calculatedWidth = duration > 0 ? duration * PIXELS_PER_SECOND : container.clientWidth;
+      canvas.width = calculatedWidth;
+      canvas.height = CANVAS_HEIGHT;
       drawWaveform();
     };
 
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [drawWaveform]);
+  }, [drawWaveform, duration, PIXELS_PER_SECOND, CANVAS_HEIGHT]);
 
   // Mouse event handlers for region creation
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -249,6 +294,36 @@ export function WaveformVisualization({
 
     const rect = canvasRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Check if clicking on a transcript word
+    if (allTranscriptWords.length > 0 && onWordClick) {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+
+        for (const word of allTranscriptWords) {
+          const [start, end] = word.timestamp;
+          const centerX = ((start + end) / 2 / duration) * canvas.width;
+          const textMetrics = ctx.measureText(word.text);
+          const textWidth = textMetrics.width;
+          const padding = 4;
+
+          // Check if click is within word bounds (with tolerance)
+          const wordLeft = centerX - textWidth / 2 - padding;
+          const wordRight = centerX + textWidth / 2 + padding;
+
+          // Approximate y position (we can't easily calculate exact y from click,
+          // so we check if y is in the word area range: 25-120)
+          if (x >= wordLeft && x <= wordRight && y >= 20 && y <= 120) {
+            onWordClick(word);
+            return; // Stop processing if word was clicked
+          }
+        }
+      }
+    }
 
     // Check if clicking on existing region
     const clickedRegion = regions.find(region => {
@@ -259,12 +334,14 @@ export function WaveformVisualization({
 
     if (clickedRegion && onRegionClick) {
       onRegionClick(clickedRegion.id);
-    } else {
-      // Start new region
-      setIsDragging(true);
-      setDragStart(x);
-      setDragEnd(x);
+      return;
     }
+
+    // Start dragging to create new region
+    const timeAtClick = (x / rect.width) * duration;
+    setIsDragging(true);
+    setDragStart(timeAtClick);
+    setDragEnd(timeAtClick);
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -272,30 +349,21 @@ export function WaveformVisualization({
 
     const rect = canvasRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    setDragEnd(x);
+    const timeAtMouse = (x / rect.width) * duration;
+    setDragEnd(timeAtMouse);
   };
 
   const handleMouseUp = () => {
-    if (!isDragging || dragStart === null || dragEnd === null || !canvasRef.current) {
-      setIsDragging(false);
-      return;
+    if (isDragging && dragStart !== null && dragEnd !== null && onRegionCreate) {
+      // Only create region if dragged at least 0.1 seconds
+      const start = Math.min(dragStart, dragEnd);
+      const end = Math.max(dragStart, dragEnd);
+      if (end - start >= 0.1) {
+        onRegionCreate(start, end);
+      }
     }
 
-    const rect = canvasRef.current.getBoundingClientRect();
-    const startTime = (Math.min(dragStart, dragEnd) / rect.width) * duration;
-    const endTime = (Math.max(dragStart, dragEnd) / rect.width) * duration;
-
-    // Only create region if drag is significant (> 0.1 seconds)
-    if (endTime - startTime > 0.1 && onRegionCreate) {
-      onRegionCreate({
-        id: `manual-${Date.now()}`,
-        start: startTime,
-        end: endTime,
-        label: 'Manual',
-        color: '#3b82f6',
-      });
-    }
-
+    // Reset drag state
     setIsDragging(false);
     setDragStart(null);
     setDragEnd(null);
@@ -377,20 +445,25 @@ export function WaveformVisualization({
       {/* Hidden audio element */}
       <audio ref={audioRef} style={{ display: 'none' }} />
 
-      {/* Canvas for waveform */}
-      <canvas
-        ref={canvasRef}
-        className="w-full cursor-crosshair rounded border border-gray-200 bg-white"
-        style={{ height: '160px' }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-      />
+      {/* Horizontal scrolling container for waveform */}
+      <div className="overflow-x-auto rounded border border-gray-200 bg-white">
+        <canvas
+          ref={canvasRef}
+          className="cursor-crosshair"
+          style={{ height: '160px', display: 'block' }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        />
+      </div>
 
       {duration > 0 && (
         <div className="mt-2 text-xs text-gray-500">
           {currentTime.toFixed(2)}s / {duration.toFixed(2)}s
+          {allTranscriptWords.length > 0 && (
+            <span className="ml-2">({allTranscriptWords.length} words)</span>
+          )}
         </div>
       )}
     </div>

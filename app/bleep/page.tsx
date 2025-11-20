@@ -55,8 +55,8 @@ export default function BleepPage() {
   const [timestampWarning, setTimestampWarning] = useState<{ count: number; total: number } | null>(
     null
   );
-  const [manualRegions, setManualRegions] = useState<ManualRegion[]>([]);
   const [showWaveformEditor, setShowWaveformEditor] = useState(false);
+  const [manualRegions, setManualRegions] = useState<ManualRegion[]>([]);
 
   // Derived state: compute matchedWords from censoredWordIndices
   const matchedWords = useMemo(() => {
@@ -87,22 +87,22 @@ export default function BleepPage() {
   // Demo file URL
   const DEMO_FILE_URL = 'https://raw.githubusercontent.com/neonwatty/readme_gifs/main/lemon.mp4';
 
-  // Derived state: combine word-based and manual bleeps
+  // Derived state: all bleep segments from selected words
   const allBleepSegments = useMemo(() => {
     const wordBleeps: BleepSegment[] = matchedWords.map(w => ({
       ...w,
       source: 'word' as const,
       id: `word-${w.start}-${w.end}`,
-      color: '#ec4899', // pink for word-based
+      color: '#ec4899', // pink for all selected words
     }));
 
     const manualBleeps: BleepSegment[] = manualRegions.map(r => ({
-      word: r.label || 'Manual',
+      word: r.label || `${r.start.toFixed(2)}s - ${r.end.toFixed(2)}s`,
       start: r.start,
       end: r.end,
       source: 'manual' as const,
       id: r.id,
-      color: '#3b82f6', // blue for manual
+      color: r.color,
     }));
 
     return [...wordBleeps, ...manualBleeps];
@@ -431,11 +431,7 @@ export default function BleepPage() {
       console.log(
         'Bleeping',
         allBleepSegments.length,
-        'segments (',
-        matchedWords.length,
-        'word-based +',
-        manualRegions.length,
-        'manual) with',
+        'selected words with',
         bleepSound,
         'sound at',
         bleepVolume + '% volume'
@@ -564,6 +560,41 @@ export default function BleepPage() {
 
   const handleClearAll = () => {
     setCensoredWordIndices(new Set());
+  };
+
+  const handleManualRegionCreate = (start: number, end: number) => {
+    const newRegion: ManualRegion = {
+      id: `manual-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      start,
+      end,
+      label: `${start.toFixed(2)}s - ${end.toFixed(2)}s`,
+      color: '#ec4899',
+    };
+    setManualRegions(prev => [...prev, newRegion]);
+
+    // Auto-select words that are completely subsumed by this region
+    if (transcriptionResult && transcriptionResult.chunks) {
+      const newCensoredIndices = new Set(censoredWordIndices);
+
+      transcriptionResult.chunks.forEach((chunk, index) => {
+        // Check if chunk timestamp is valid
+        if (chunk.timestamp && chunk.timestamp[0] !== null && chunk.timestamp[1] !== null) {
+          // Check if this word is completely subsumed by the region
+          if (chunk.timestamp[0] >= start && chunk.timestamp[1] <= end) {
+            newCensoredIndices.add(index);
+          }
+        }
+      });
+
+      // Update the censoredWordIndices if any words were found
+      if (newCensoredIndices.size > censoredWordIndices.size) {
+        setCensoredWordIndices(newCensoredIndices);
+      }
+    }
+  };
+
+  const handleManualRegionDelete = (id: string) => {
+    setManualRegions(prev => prev.filter(r => r.id !== id));
   };
 
   // Auto-expand waveform editor when words are selected
@@ -1021,8 +1052,11 @@ export default function BleepPage() {
           </div>
         )}
 
-        {/* Matched Words Display */}
-        <MatchedWordsDisplay matchedWords={matchedWords} isVisible={matchedWords.length > 0} />
+        {/* Matched Words Display - Hidden when waveform editor is open to prevent jitter */}
+        <MatchedWordsDisplay
+          matchedWords={matchedWords}
+          isVisible={matchedWords.length > 0 && !showWaveformEditor}
+        />
 
         {/* Manual Time Selection - Collapsible */}
         <div className="mt-6 rounded-lg border border-gray-200 bg-white">
@@ -1033,9 +1067,9 @@ export default function BleepPage() {
             <div>
               <h3 className="text-sm font-bold text-gray-700 uppercase">
                 Manual Time Selection
-                {manualRegions.length > 0 && (
-                  <span className="ml-2 rounded-full bg-blue-500 px-2 py-0.5 text-xs text-white">
-                    {manualRegions.length}
+                {censoredWordIndices.size > 0 && (
+                  <span className="ml-2 rounded-full bg-pink-500 px-2 py-0.5 text-xs text-white">
+                    {censoredWordIndices.size}
                   </span>
                 )}
               </h3>
@@ -1051,14 +1085,12 @@ export default function BleepPage() {
             <div className="border-t border-gray-200 p-4">
               <WaveformEditor
                 audioFile={file}
-                regions={manualRegions}
-                onRegionsChange={setManualRegions}
-                existingWordBleeps={matchedWords.map(w => ({
-                  ...w,
-                  source: 'word' as const,
-                  id: `word-${w.start}-${w.end}`,
-                  color: '#ec4899',
-                }))}
+                selectedWordIndices={censoredWordIndices}
+                onToggleWordIndex={handleToggleWord}
+                allTranscriptWords={transcriptionResult?.chunks || []}
+                manualRegions={manualRegions}
+                onManualRegionCreate={handleManualRegionCreate}
+                onManualRegionDelete={handleManualRegionDelete}
               />
             </div>
           )}

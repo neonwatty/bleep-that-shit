@@ -1,53 +1,92 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { WaveformVisualization } from './WaveformVisualization';
-import type { ManualRegion, BleepSegment } from '@/lib/types/bleep';
+import type { ManualRegion } from '@/lib/types/bleep';
+
+interface TranscriptWord {
+  text: string;
+  timestamp: [number, number];
+}
 
 interface WaveformEditorProps {
   audioFile: File | null;
-  regions: ManualRegion[];
-  onRegionsChange: (regions: ManualRegion[]) => void;
-  existingWordBleeps?: BleepSegment[];
+  selectedWordIndices: Set<number>;
+  onToggleWordIndex: (index: number) => void;
   disabled?: boolean;
+  allTranscriptWords?: TranscriptWord[];
+  manualRegions?: ManualRegion[];
+  onManualRegionCreate?: (start: number, end: number) => void;
+  onManualRegionDelete?: (id: string) => void;
 }
 
 export function WaveformEditor({
   audioFile,
-  regions,
-  onRegionsChange,
-  existingWordBleeps = [],
+  selectedWordIndices,
+  onToggleWordIndex,
   disabled = false,
+  allTranscriptWords = [],
+  manualRegions = [],
+  onManualRegionCreate,
+  onManualRegionDelete,
 }: WaveformEditorProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
   const [isReady, setIsReady] = useState(false);
   const waveformRef = useRef<HTMLDivElement>(null);
 
-  const handleRegionCreate = (region: ManualRegion) => {
-    onRegionsChange([...regions, region]);
-  };
+  // Combine word-based and manual regions
+  const regions = useMemo(() => {
+    const wordRegions = allTranscriptWords
+      .map((word, idx) => {
+        if (!selectedWordIndices.has(idx)) return null;
+        return {
+          id: `manual-word-${idx}`,
+          start: word.timestamp[0],
+          end: word.timestamp[1],
+          label: word.text,
+          color: '#ec4899', // Pink color
+          wordIndex: idx,
+        };
+      })
+      .filter(r => r !== null) as ManualRegion[];
 
-  const handleRegionUpdate = (id: string, updates: Partial<ManualRegion>) => {
-    onRegionsChange(regions.map(r => (r.id === id ? { ...r, ...updates } : r)));
-  };
+    // Combine with manual regions (which don't have wordIndex)
+    return [...wordRegions, ...manualRegions];
+  }, [selectedWordIndices, allTranscriptWords, manualRegions]);
 
-  const handleRegionDelete = (id: string) => {
-    onRegionsChange(regions.filter(r => r.id !== id));
-    if (selectedRegionId === id) {
-      setSelectedRegionId(null);
+  const handleWordClick = (word: TranscriptWord) => {
+    if (disabled) return;
+
+    // Find the word index in transcript
+    const wordIndex = allTranscriptWords.findIndex(
+      w =>
+        Math.abs(w.timestamp[0] - word.timestamp[0]) < 0.01 &&
+        Math.abs(w.timestamp[1] - word.timestamp[1]) < 0.01
+    );
+
+    if (wordIndex !== -1) {
+      onToggleWordIndex(wordIndex);
     }
   };
 
   const handleDeleteSelected = () => {
     if (selectedRegionId) {
-      handleRegionDelete(selectedRegionId);
+      const region = regions.find(r => r.id === selectedRegionId);
+      if (region && region.wordIndex !== undefined) {
+        onToggleWordIndex(region.wordIndex);
+        setSelectedRegionId(null);
+      }
     }
   };
 
   const handleClearAll = () => {
-    if (confirm(`Are you sure you want to delete all ${regions.length} manual regions?`)) {
-      onRegionsChange([]);
+    if (confirm(`Are you sure you want to deselect all ${regions.length} words?`)) {
+      regions.forEach(r => {
+        if (r.wordIndex !== undefined) {
+          onToggleWordIndex(r.wordIndex);
+        }
+      });
       setSelectedRegionId(null);
     }
   };
@@ -133,13 +172,13 @@ export function WaveformEditor({
         <WaveformVisualization
           audioFile={audioFile}
           regions={regions}
-          onRegionCreate={disabled ? undefined : handleRegionCreate}
-          onRegionUpdate={disabled ? undefined : handleRegionUpdate}
-          onRegionDelete={disabled ? undefined : handleRegionDelete}
           onReady={() => setIsReady(true)}
-          wordBleepsOverlay={existingWordBleeps}
           selectedRegionId={selectedRegionId}
           onRegionClick={setSelectedRegionId}
+          selectedWordIndices={selectedWordIndices}
+          allTranscriptWords={allTranscriptWords}
+          onWordClick={disabled ? undefined : handleWordClick}
+          onRegionCreate={disabled ? undefined : onManualRegionCreate}
         />
       </div>
 
@@ -173,16 +212,16 @@ export function WaveformEditor({
         </div>
       </div>
 
-      {/* Region Tools */}
+      {/* Selection Tools */}
       <div className="rounded-lg border border-gray-200 bg-white p-4">
-        <div className="mb-2 text-sm font-semibold text-gray-700">Region Tools</div>
+        <div className="mb-2 text-sm font-semibold text-gray-700">Selection Tools</div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleDeleteSelected}
             disabled={!selectedRegionId || disabled}
             className="rounded bg-red-100 px-3 py-2 text-sm text-red-700 hover:bg-red-200 disabled:opacity-50"
           >
-            Delete Selected
+            Deselect Word
           </button>
           <button
             onClick={handleClearAll}
@@ -193,16 +232,16 @@ export function WaveformEditor({
           </button>
         </div>
         <p className="mt-2 text-xs text-gray-500">
-          Tip: Click and drag on the waveform to create a region
+          Tip: Click words on the waveform or in the transcript to select/deselect
         </p>
       </div>
 
-      {/* Region List */}
+      {/* Selected Words List */}
       {regions.length > 0 && (
         <div className="rounded-lg border border-gray-200 bg-white p-4">
           <div className="mb-3 flex items-center justify-between">
             <div className="text-sm font-semibold text-gray-700">
-              Manual Regions ({regions.length})
+              Selected Words ({regions.length})
             </div>
           </div>
           <div className="overflow-x-auto">
@@ -248,11 +287,13 @@ export function WaveformEditor({
                           <button
                             onClick={e => {
                               e.stopPropagation();
-                              handleRegionDelete(region.id);
+                              if (region.wordIndex !== undefined) {
+                                onToggleWordIndex(region.wordIndex);
+                              }
                             }}
                             disabled={disabled}
                             className="rounded bg-red-100 px-2 py-1 text-xs text-red-700 hover:bg-red-200 disabled:opacity-50"
-                            title="Delete this region"
+                            title="Deselect this word"
                           >
                             🗑
                           </button>
@@ -269,11 +310,7 @@ export function WaveformEditor({
           <div className="mt-3 space-y-1 border-t border-gray-200 pt-3 text-xs text-gray-600">
             <div className="flex items-center gap-2">
               <div className="h-3 w-8 rounded bg-pink-200"></div>
-              <span>Pink = Word-based bleeps (from transcript)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="h-3 w-8 rounded bg-blue-200"></div>
-              <span>Blue = Manual regions (editable)</span>
+              <span>Pink = Selected words (clickable on timeline or transcript)</span>
             </div>
           </div>
         </div>
@@ -283,9 +320,10 @@ export function WaveformEditor({
       <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm">
         <div className="font-semibold text-blue-900">Tips:</div>
         <ul className="mt-1 list-inside list-disc space-y-1 text-blue-800">
-          <li>Click and drag on waveform to create a region</li>
-          <li>Drag region edges to resize</li>
-          <li>Click a region to select it, then press Delete to remove</li>
+          <li>Click any word in the transcript or on the timeline to select it</li>
+          <li>Click a selected word again to deselect it</li>
+          <li>Selected words appear in pink in both locations</li>
+          <li>Use playback controls to preview selected sections</li>
           <li>Press Space to play/pause</li>
         </ul>
       </div>

@@ -19,6 +19,7 @@ export interface ManualRegion {
   end: number;
   label?: string;
   color: string;
+  wordIndex?: number; // Track which transcript word this region represents
 }
 
 export interface RegionPluginRegion {
