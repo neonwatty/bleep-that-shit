@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 import { decodeAudioToMono16kHzPCM } from '@/lib/utils/audioDecode';
@@ -19,7 +19,7 @@ interface TranscriptionResult {
   }>;
 }
 
-export default function BleepPage() {
+function BleepPageContent() {
   const searchParams = useSearchParams();
   const [file, setFile] = useState<File | null>(null);
   const [fileUrl, setFileUrl] = useState<string | null>(null);
@@ -1255,5 +1255,13 @@ export default function BleepPage() {
         )}
       </section>
     </div>
+  );
+}
+
+export default function BleepPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+      <BleepPageContent />
+    </Suspense>
   );
 }
