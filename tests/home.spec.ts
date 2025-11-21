@@ -104,4 +104,35 @@ test.describe('Home Page Tests', () => {
     await navbar.goToHome();
     await expect(page).toHaveURL(/.*\//);
   });
+
+  test('should display sample video button in hero section', async ({ page }) => {
+    const homePage = new HomePage(page);
+    await homePage.expectHeroVisible();
+
+    // Check if sample video button exists
+    const sampleButton = page.locator('a[href="/bleep?sample=bob-ross"]').first();
+    await expect(sampleButton).toBeVisible();
+    await expect(sampleButton).toContainText('Bob Ross Video');
+  });
+
+  test('should have "Test Transcription" button text (not "Try the Sampler")', async ({ page }) => {
+    const homePage = new HomePage(page);
+    await homePage.expectHeroVisible();
+
+    // Check that button says "Test Transcription"
+    await expect(homePage.samplerButton).toContainText('Test Transcription');
+  });
+
+  test('sample video button should navigate to bleep page with query parameter', async ({
+    page,
+  }) => {
+    const homePage = new HomePage(page);
+    await homePage.goto();
+
+    const sampleButton = page.locator('a[href="/bleep?sample=bob-ross"]').first();
+    await sampleButton.click();
+
+    // Should include the sample parameter
+    await expect(page).toHaveURL(/\/bleep\?sample=bob-ross/);
+  });
 });

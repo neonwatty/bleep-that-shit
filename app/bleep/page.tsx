@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 import { decodeAudioToMono16kHzPCM } from '@/lib/utils/audioDecode';
 import { applyBleeps, applyBleepsToVideo } from '@/lib/utils/audioProcessor';
@@ -19,8 +20,10 @@ interface TranscriptionResult {
 }
 
 export default function BleepPage() {
+  const searchParams = useSearchParams();
   const [file, setFile] = useState<File | null>(null);
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const [isLoadingSample, setIsLoadingSample] = useState(false);
   const [language, setLanguage] = useState('en');
   const [model, setModel] = useState('Xenova/whisper-tiny.en');
   const [isTranscribing, setIsTranscribing] = useState(false);
@@ -126,6 +129,57 @@ export default function BleepPage() {
     },
     multiple: false,
   });
+
+  // Load sample video if specified in URL
+  useEffect(() => {
+    const sample = searchParams.get('sample');
+    if (sample === 'bob-ross' && !file && !isLoadingSample) {
+      setIsLoadingSample(true);
+      const loadSampleVideo = async () => {
+        try {
+          const videoUrl =
+            'https://raw.githubusercontent.com/neonwatty/readme_gifs/main/bob-ross-trim.mp4';
+          const response = await fetch(videoUrl);
+          const blob = await response.blob();
+          const sampleFile = new File([blob], 'bob-ross-trim.mp4', { type: 'video/mp4' });
+
+          setFile(sampleFile);
+          const url = URL.createObjectURL(sampleFile);
+          setFileUrl(url);
+          setShowFileWarning(false);
+          setFileDurationWarning(null);
+
+          // Check file duration
+          try {
+            const videoElement = document.createElement('video');
+            videoElement.src = url;
+
+            await new Promise(resolve => {
+              videoElement.addEventListener('loadedmetadata', () => {
+                const duration = videoElement.duration;
+                if (duration > 600) {
+                  const minutes = Math.floor(duration / 60);
+                  const seconds = Math.floor(duration % 60);
+                  setFileDurationWarning(
+                    `This file is ${minutes}:${seconds.toString().padStart(2, '0')} long. Files longer than 10 minutes may not process correctly.`
+                  );
+                }
+                resolve(null);
+              });
+            });
+          } catch (error) {
+            console.error('Error checking sample video duration:', error);
+          }
+        } catch (error) {
+          console.error('Error loading sample video:', error);
+          setShowFileWarning(true);
+        } finally {
+          setIsLoadingSample(false);
+        }
+      };
+      loadSampleVideo();
+    }
+  }, [searchParams, file, isLoadingSample]);
 
   const handleTranscribe = async () => {
     if (!file) return;
@@ -644,6 +698,24 @@ export default function BleepPage() {
             </p>
           )}
         </div>
+
+        {!file && !isLoadingSample && (
+          <div className="mt-4 text-center">
+            <p className="mb-2 text-sm text-gray-600">No video? Try our sample:</p>
+            <a
+              href="/bleep?sample=bob-ross"
+              className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+            >
+              🎨 Bob Ross Video
+            </a>
+          </div>
+        )}
+
+        {isLoadingSample && (
+          <div className="mt-3 rounded-lg border-l-4 border-blue-400 bg-blue-50 p-3">
+            <p className="text-sm text-gray-900 sm:text-base">⏳ Loading sample video...</p>
+          </div>
+        )}
 
         {showFileWarning && (
           <div
