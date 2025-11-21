@@ -150,6 +150,15 @@ export function MobileNav() {
               >
                 <i className="fas fa-globe text-2xl"></i>
               </a>
+              <a
+                href="https://discord.gg/8EUxqR93"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-700 hover:text-black"
+                aria-label="Discord"
+              >
+                <i className="fab fa-discord text-2xl"></i>
+              </a>
             </div>
           </div>
         </div>

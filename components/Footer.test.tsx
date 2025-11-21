@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Footer } from './Footer';
 
@@ -58,6 +58,14 @@ describe('Footer', () => {
     expect(blogLink).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
+  it('renders Discord link with correct attributes', () => {
+    render(<Footer />);
+    const discordLink = screen.getByLabelText('Join Discord community');
+    expect(discordLink).toHaveAttribute('href', 'https://discord.gg/8EUxqR93');
+    expect(discordLink).toHaveAttribute('target', '_blank');
+    expect(discordLink).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
   it('displays the current year in copyright', () => {
     render(<Footer />);
     expect(
@@ -70,29 +78,11 @@ describe('Footer', () => {
     const githubIcon = container.querySelector('.fa-github');
     const twitterIcon = container.querySelector('.fa-x-twitter');
     const blogIcon = container.querySelector('.fa-globe');
+    const discordIcon = container.querySelector('.fa-discord');
 
     expect(githubIcon).toBeInTheDocument();
     expect(twitterIcon).toBeInTheDocument();
     expect(blogIcon).toBeInTheDocument();
-  });
-
-  it('renders newsletter subscribe button with correct attributes', () => {
-    render(<Footer />);
-    const newsletterButton = screen.getByRole('link', {
-      name: /get updates on projects like this/i,
-    });
-    expect(newsletterButton).toHaveAttribute('href', 'https://neonwatty.com/newsletter/');
-    expect(newsletterButton).toHaveAttribute('target', '_blank');
-    expect(newsletterButton).toHaveAttribute('rel', 'noopener noreferrer');
-  });
-
-  it('displays newsletter button with emoji', () => {
-    render(<Footer />);
-    expect(screen.getByText(/📬/)).toBeInTheDocument();
-  });
-
-  it('displays newsletter subtitle text', () => {
-    render(<Footer />);
-    expect(screen.getByText(/Occasional updates • No spam/i)).toBeInTheDocument();
+    expect(discordIcon).toBeInTheDocument();
   });
 });

@@ -225,6 +225,35 @@ export default function Home() {
           </a>
         </div>
       </section>
+
+      {/* Divider */}
+      <div className="mx-auto my-10 h-0.5 w-24 rounded bg-black md:w-40"></div>
+
+      {/* Community Section */}
+      <section data-testid="community-section" className="editorial-section mb-16">
+        <div className="flex flex-col items-center text-center">
+          <h2
+            className="font-inter mb-4 text-2xl font-extrabold text-black uppercase sm:text-3xl md:text-4xl"
+            style={{ lineHeight: 1.1 }}
+          >
+            Join Our Community
+          </h2>
+          <p className="mb-6 max-w-xl text-base text-gray-800 sm:text-lg md:text-xl">
+            Have questions, feature requests, or found a bug? Join our Discord community to get
+            help, share feedback, and stay updated on new features and improvements.
+          </p>
+          <a
+            data-testid="discord-link"
+            href="https://discord.gg/8EUxqR93"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-3.5 text-base font-semibold text-white transition-all hover:from-indigo-700 hover:to-purple-700 hover:shadow-lg sm:text-lg"
+          >
+            <i className="fab fa-discord text-2xl"></i>
+            <span>Join Discord</span>
+          </a>
+        </div>
+      </section>
     </div>
   );
 }

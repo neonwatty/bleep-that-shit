@@ -661,7 +661,20 @@ export default function BleepPage() {
           >
             <div className="flex items-start">
               <span className="mr-2">⚠️</span>
-              <div>{fileDurationWarning}</div>
+              <div>
+                {fileDurationWarning}
+                <span className="ml-1 text-sm">
+                  Need help with longer files?{' '}
+                  <a
+                    href="https://discord.gg/8EUxqR93"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 underline hover:text-indigo-800"
+                  >
+                    Ask on Discord
+                  </a>
+                </span>
+              </div>
             </div>
           </div>
         )}
@@ -795,12 +808,22 @@ export default function BleepPage() {
               <div className="flex-1">
                 <p className="font-semibold text-red-800">Transcription Error</p>
                 <p className="mt-1 text-sm text-red-700">{errorMessage}</p>
-                <button
-                  onClick={() => setErrorMessage(null)}
-                  className="mt-2 text-sm text-red-600 underline hover:text-red-800"
-                >
-                  Dismiss
-                </button>
+                <div className="mt-2 flex items-center gap-3">
+                  <button
+                    onClick={() => setErrorMessage(null)}
+                    className="text-sm text-red-600 underline hover:text-red-800"
+                  >
+                    Dismiss
+                  </button>
+                  <a
+                    href="https://discord.gg/8EUxqR93"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-indigo-600 underline hover:text-indigo-800"
+                  >
+                    Get help on Discord
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -829,6 +852,17 @@ export default function BleepPage() {
               <div>
                 <strong>Timestamp Quality Warning:</strong> {timestampWarning.count} out of{' '}
                 {timestampWarning.total} words had invalid timestamps and were filtered out.
+                <div className="mt-2 text-sm">
+                  Having issues?{' '}
+                  <a
+                    href="https://discord.gg/8EUxqR93"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 underline hover:text-indigo-800"
+                  >
+                    Get help on Discord
+                  </a>
+                </div>
               </div>
             </div>
           </div>
