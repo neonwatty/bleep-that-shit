@@ -33,7 +33,18 @@ export default function Home() {
               Bleep Your Sh*t!
             </Link>
             <Link href="/sampler" data-testid="sampler-button" className="btn btn-pink">
-              Try the Sampler
+              Test Transcription
+            </Link>
+          </div>
+          <div className="mt-6 text-center">
+            <p className="mb-3 text-base font-medium text-gray-700 sm:text-lg">
+              No video? Try our sample:
+            </p>
+            <Link
+              href="/bleep?sample=bob-ross"
+              className="btn inline-flex items-center gap-2 rounded-full bg-indigo-600 px-6 py-3 text-base font-bold text-white shadow-md transition-all hover:scale-105 hover:bg-indigo-700 hover:shadow-lg sm:px-8 sm:py-4 sm:text-lg"
+            >
+              🎨 Bob Ross Video
             </Link>
           </div>
         </div>
