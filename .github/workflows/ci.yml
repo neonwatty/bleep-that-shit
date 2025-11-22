@@ -33,22 +33,29 @@ jobs:
       - name: Run TypeScript type check
         run: npm run typecheck
 
-      - name: Run unit tests
-        run: npm run test:unit
+      - name: Run unit tests with coverage
+        run: npm run test:unit:coverage
+
+      - name: Generate coverage summary
+        if: always()
+        run: |
+          echo "## Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          npm run test:unit:coverage -- --reporter=verbose 2>&1 | grep -A 20 "% Coverage report" || true
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Build Next.js app
         run: npm run build
         env:
           NEXT_PUBLIC_BASE_PATH: /bleep-that-shit
 
-      - name: Upload test results
+      - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: |
-            coverage/
-          retention-days: 7
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
 
   smoke-tests:
     name: Smoke Tests (UI Only)
