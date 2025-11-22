@@ -46,13 +46,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build with Next.js  
+      - name: Build with Next.js
         run: |
           echo "NODE_ENV: $NODE_ENV"
           echo "Removing any injected config files..."
           rm -f next.config.js next.config.mjs
           echo "Using our next.config.ts:"
           cat next.config.ts
+
+          # Check if CNAME file exists to determine basePath
+          if [ -f "public/CNAME" ]; then
+            echo "CNAME file detected - building for custom domain (no basePath)"
+            export NEXT_PUBLIC_BASE_PATH=""
+          else
+            echo "No CNAME file - building for GitHub Pages subdirectory"
+            export NEXT_PUBLIC_BASE_PATH="/bleep-that-shit"
+          fi
+
+          echo "NEXT_PUBLIC_BASE_PATH: $NEXT_PUBLIC_BASE_PATH"
           echo "Building Next.js app..."
           npm run build
           echo "Build complete. Checking for output directories..."
@@ -62,7 +73,6 @@ jobs:
           echo "Checking out directory:"
           ls -la out/ | head -5 || echo "out not found"
         env:
-          NEXT_PUBLIC_BASE_PATH: /bleep-that-shit
           NODE_ENV: production
 
       - name: Add .nojekyll file
