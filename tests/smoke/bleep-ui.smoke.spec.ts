@@ -12,20 +12,34 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     await expect(page.locator('h1').filter({ hasText: 'Bleep Your Sh*t!' })).toBeVisible();
   });
 
-  test('displays all workflow step sections', async ({ page }) => {
-    // Check all main section headings are present
-    const expectedSections = [
+  test('displays tab navigation and sections in active tab', async ({ page }) => {
+    // Check tab navigation is visible
+    await expect(page.locator('button[role="tab"]').filter({ hasText: 'Setup & Transcribe' })).toBeVisible();
+    await expect(page.locator('button[role="tab"]').filter({ hasText: 'Review & Match' })).toBeVisible();
+    await expect(page.locator('button[role="tab"]').filter({ hasText: 'Bleep & Download' })).toBeVisible();
+
+    // Check lock icon on disabled tabs
+    const reviewTab = page.locator('button[role="tab"]').filter({ hasText: 'Review & Match' });
+    await expect(reviewTab).toContainText('🔒');
+
+    const bleepTab = page.locator('button[role="tab"]').filter({ hasText: 'Bleep & Download' });
+    await expect(bleepTab).toContainText('🔒');
+
+    // Check sections in the active (Setup & Transcribe) tab are visible
+    const activeSections = [
       'Upload Your File',
       'Select Language & Model',
       'Transcribe',
-      'Review & Select Words to Bleep',
-      'Choose Bleep Sound & Volume',
-      'Bleep That Sh*t!',
     ];
 
-    for (const sectionTitle of expectedSections) {
+    for (const sectionTitle of activeSections) {
       await expect(page.locator('h2').filter({ hasText: sectionTitle })).toBeVisible();
     }
+
+    // Verify sections from other tabs are NOT visible
+    await expect(page.locator('h2').filter({ hasText: 'Review & Select Words to Bleep' })).not.toBeVisible();
+    await expect(page.locator('h2').filter({ hasText: 'Choose Bleep Sound & Volume' })).not.toBeVisible();
+    await expect(page.locator('h2').filter({ hasText: 'Bleep That Sh*t!' })).not.toBeVisible();
   });
 
   test('file dropzone is visible', async ({ page }) => {
