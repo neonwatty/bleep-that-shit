@@ -18,10 +18,14 @@ export function FileUpload({
   fileDurationWarning,
 }: FileUploadProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: async acceptedFiles => {
+    onDrop: async (acceptedFiles, fileRejections) => {
       const uploadedFile = acceptedFiles[0];
       if (uploadedFile) {
         onFileUpload(uploadedFile);
+      } else if (fileRejections.length > 0) {
+        // Handle rejected files (wrong type) by passing the rejected file
+        // This will trigger the showFileWarning in the parent
+        onFileUpload(fileRejections[0].file);
       }
     },
     accept: {
