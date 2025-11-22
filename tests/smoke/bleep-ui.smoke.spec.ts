@@ -160,10 +160,81 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
   });
 
   test('clear all button is not visible initially', async ({ page }) => {
-    const bleepPage = new BleepPage(page);
-
     // Clear All button should not be visible when no words are selected
     const clearAllButton = page.getByTestId('clear-all-button');
     await expect(clearAllButton).not.toBeVisible();
+  });
+
+  test('sample video button is visible when no file uploaded', async ({ page }) => {
+    // Sample video link should be visible in initial state
+    const sampleLink = page.locator('a[href="/bleep?sample=bob-ross"]');
+    await expect(sampleLink).toBeVisible();
+    await expect(sampleLink).toContainText('Bob Ross');
+  });
+
+  test('locked tabs show lock icon', async ({ page }) => {
+    const reviewTab = page.locator('button[role="tab"]').filter({ hasText: 'Review & Match' });
+    const bleepTab = page.locator('button[role="tab"]').filter({ hasText: 'Bleep & Download' });
+
+    // Both locked tabs should have lock emoji
+    await expect(reviewTab).toContainText('🔒');
+    await expect(bleepTab).toContainText('🔒');
+  });
+
+  test('active tab has correct aria-selected attribute', async ({ page }) => {
+    const setupTab = page.locator('button[role="tab"]').filter({ hasText: 'Setup & Transcribe' });
+    const reviewTab = page.locator('button[role="tab"]').filter({ hasText: 'Review & Match' });
+
+    // Setup tab should be selected
+    await expect(setupTab).toHaveAttribute('aria-selected', 'true');
+
+    // Review tab should not be selected
+    await expect(reviewTab).toHaveAttribute('aria-selected', 'false');
+  });
+
+  test('file dropzone shows correct placeholder text', async ({ page }) => {
+    const dropzoneText = page.locator('text=/Drag and drop your audio or video file/i');
+    await expect(dropzoneText).toBeVisible();
+  });
+
+  test('transcribe button has disabled styling when no file', async ({ page }) => {
+    const bleepPage = new BleepPage(page);
+    const button = bleepPage.transcribeButton;
+
+    // Check disabled state
+    await expect(button).toBeDisabled();
+
+    // Verify button has disabled opacity class
+    const classes = await button.getAttribute('class');
+    expect(classes).toContain('opacity-50');
+  });
+
+  test('language select defaults to English', async ({ page }) => {
+    const bleepPage = new BleepPage(page);
+    const value = await bleepPage.languageSelect.inputValue();
+
+    expect(value).toBe('en');
+  });
+
+  test('model select has default value', async ({ page }) => {
+    const bleepPage = new BleepPage(page);
+    const value = await bleepPage.modelSelect.inputValue();
+
+    // Should have a default model selected
+    expect(value).toBeTruthy();
+    expect(value).toContain('Xenova/whisper');
+  });
+
+  test('navbar is visible on bleep page', async ({ page }) => {
+    // Check that at least one navbar is visible (mobile or desktop)
+    const navbars = page.locator('nav');
+    const count = await navbars.count();
+    expect(count).toBeGreaterThan(0);
+  });
+
+  test('footer is visible on bleep page', async ({ page }) => {
+    // Use first() to handle multiple footer elements if present
+    const footer = page.locator('footer').first();
+    await expect(footer).toBeVisible();
   });
 });

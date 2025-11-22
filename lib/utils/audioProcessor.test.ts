@@ -134,4 +134,113 @@ describe('audioProcessor', () => {
       expect(result.size).toBeGreaterThanOrEqual(44);
     });
   });
+
+  describe('Edge cases', () => {
+    it('should handle overlapping segments', async () => {
+      const mockFile = new File([new ArrayBuffer(1000)], 'test.mp3', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = [
+        { word: 'first', start: 1.0, end: 2.0 },
+        { word: 'second', start: 1.5, end: 2.5 },
+      ];
+
+      const result = await applyBleeps(mockFile, segments);
+
+      expect(result).toBeInstanceOf(Blob);
+      expect(result.type).toBe('audio/wav');
+    });
+
+    it('should handle segments with negative start time (defensive)', async () => {
+      const mockFile = new File([new ArrayBuffer(1000)], 'test.mp3', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = [{ word: 'negative', start: -0.5, end: 0.5 }];
+
+      const result = await applyBleeps(mockFile, segments);
+
+      expect(result).toBeInstanceOf(Blob);
+    });
+
+    it('should handle segments in non-chronological order', async () => {
+      const mockFile = new File([new ArrayBuffer(2000)], 'test.mp3', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = [
+        { word: 'third', start: 5.0, end: 5.5 },
+        { word: 'first', start: 1.0, end: 1.5 },
+        { word: 'second', start: 3.0, end: 3.5 },
+      ];
+
+      const result = await applyBleeps(mockFile, segments);
+
+      expect(result).toBeInstanceOf(Blob);
+      expect(result.type).toBe('audio/wav');
+    });
+
+    it('should handle very large volume value', async () => {
+      const mockFile = new File([new ArrayBuffer(1000)], 'test.mp3', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = [{ word: 'loud', start: 1.0, end: 1.5 }];
+
+      const result = await applyBleeps(mockFile, segments, 'bleep', 2.0);
+
+      expect(result).toBeInstanceOf(Blob);
+    });
+
+    it('should handle zero volume', async () => {
+      const mockFile = new File([new ArrayBuffer(1000)], 'test.mp3', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = [{ word: 'silent', start: 1.0, end: 1.5 }];
+
+      const result = await applyBleeps(mockFile, segments, 'bleep', 0);
+
+      expect(result).toBeInstanceOf(Blob);
+      expect(result.type).toBe('audio/wav');
+    });
+
+    it('should handle segments with very long duration', async () => {
+      const mockFile = new File([new ArrayBuffer(10000)], 'long.mp3', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = [{ word: 'long', start: 0.0, end: 10.0 }];
+
+      const result = await applyBleeps(mockFile, segments);
+
+      expect(result).toBeInstanceOf(Blob);
+      expect(result.type).toBe('audio/wav');
+    });
+
+    it('should handle segments with very short duration', async () => {
+      const mockFile = new File([new ArrayBuffer(1000)], 'test.mp3', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = [{ word: 'quick', start: 1.0, end: 1.001 }];
+
+      const result = await applyBleeps(mockFile, segments);
+
+      expect(result).toBeInstanceOf(Blob);
+    });
+
+    it('should handle many consecutive segments', async () => {
+      const mockFile = new File([new ArrayBuffer(10000)], 'test.mp3', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = Array.from({ length: 20 }, (_, i) => ({
+        word: `word${i}`,
+        start: i * 0.5,
+        end: i * 0.5 + 0.3,
+      }));
+
+      const result = await applyBleeps(mockFile, segments);
+
+      expect(result).toBeInstanceOf(Blob);
+      expect(result.type).toBe('audio/wav');
+    });
+
+    it('should handle segments with end before start (invalid)', async () => {
+      const mockFile = new File([new ArrayBuffer(1000)], 'test.mp3', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = [{ word: 'backwards', start: 2.0, end: 1.0 }];
+
+      const result = await applyBleeps(mockFile, segments);
+
+      expect(result).toBeInstanceOf(Blob);
+    });
+
+    it('should handle empty file name', async () => {
+      const mockFile = new File([new ArrayBuffer(1000)], '', { type: 'audio/mp3' });
+      const segments: BleepSegment[] = [{ word: 'test', start: 1.0, end: 1.5 }];
+
+      const result = await applyBleeps(mockFile, segments);
+
+      expect(result).toBeInstanceOf(Blob);
+      expect(result.type).toBe('audio/wav');
+    });
+  });
 });
