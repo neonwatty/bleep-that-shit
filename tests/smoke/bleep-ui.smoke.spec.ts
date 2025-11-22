@@ -12,20 +12,40 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     await expect(page.locator('h1').filter({ hasText: 'Bleep Your Sh*t!' })).toBeVisible();
   });
 
-  test('displays all workflow step sections', async ({ page }) => {
-    // Check all main section headings are present
-    const expectedSections = [
-      'Upload Your File',
-      'Select Language & Model',
-      'Transcribe',
-      'Review & Select Words to Bleep',
-      'Choose Bleep Sound & Volume',
-      'Bleep That Sh*t!',
-    ];
+  test('displays tab navigation and sections in active tab', async ({ page }) => {
+    // Check tab navigation is visible
+    await expect(
+      page.locator('button[role="tab"]').filter({ hasText: 'Setup & Transcribe' })
+    ).toBeVisible();
+    await expect(
+      page.locator('button[role="tab"]').filter({ hasText: 'Review & Match' })
+    ).toBeVisible();
+    await expect(
+      page.locator('button[role="tab"]').filter({ hasText: 'Bleep & Download' })
+    ).toBeVisible();
 
-    for (const sectionTitle of expectedSections) {
+    // Check lock icon on disabled tabs
+    const reviewTab = page.locator('button[role="tab"]').filter({ hasText: 'Review & Match' });
+    await expect(reviewTab).toContainText('🔒');
+
+    const bleepTab = page.locator('button[role="tab"]').filter({ hasText: 'Bleep & Download' });
+    await expect(bleepTab).toContainText('🔒');
+
+    // Check sections in the active (Setup & Transcribe) tab are visible
+    const activeSections = ['Upload Your File', 'Select Language & Model', 'Transcribe'];
+
+    for (const sectionTitle of activeSections) {
       await expect(page.locator('h2').filter({ hasText: sectionTitle })).toBeVisible();
     }
+
+    // Verify sections from other tabs are NOT visible
+    await expect(
+      page.locator('h2').filter({ hasText: 'Review & Select Words to Bleep' })
+    ).not.toBeVisible();
+    await expect(
+      page.locator('h2').filter({ hasText: 'Choose Bleep Sound & Volume' })
+    ).not.toBeVisible();
+    await expect(page.locator('h2').filter({ hasText: 'Bleep That Sh*t!' })).not.toBeVisible();
   });
 
   test('file dropzone is visible', async ({ page }) => {
@@ -67,54 +87,43 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     await expect(bleepPage.transcribeButton).toBeDisabled();
   });
 
-  test('words to match input is visible', async ({ page }) => {
+  test('words to match input is not visible in setup tab', async ({ page }) => {
     const bleepPage = new BleepPage(page);
-    await expect(bleepPage.wordsToMatchInput).toBeVisible();
-
-    // Check placeholder text
-    await expect(bleepPage.wordsToMatchInput).toHaveAttribute(
-      'placeholder',
-      'e.g., bad, word, curse'
-    );
+    // Element is in Review & Match tab, which is locked initially
+    await expect(bleepPage.wordsToMatchInput).not.toBeVisible();
   });
 
-  test('matching checkboxes are visible', async ({ page }) => {
+  test('matching checkboxes are not visible in setup tab', async ({ page }) => {
     const bleepPage = new BleepPage(page);
-
-    // All three matching types should be visible
-    await expect(bleepPage.exactMatchCheckbox).toBeVisible();
-    await expect(bleepPage.partialMatchCheckbox).toBeVisible();
-    await expect(bleepPage.fuzzyMatchCheckbox).toBeVisible();
+    // Elements are in Review & Match tab, which is locked initially
+    await expect(bleepPage.exactMatchCheckbox).not.toBeVisible();
+    await expect(bleepPage.partialMatchCheckbox).not.toBeVisible();
+    await expect(bleepPage.fuzzyMatchCheckbox).not.toBeVisible();
   });
 
-  test('bleep sound selector is visible with options', async ({ page }) => {
+  test('bleep sound selector is not visible in setup tab', async ({ page }) => {
     const bleepPage = new BleepPage(page);
-    await expect(bleepPage.bleepSoundSelect).toBeVisible();
-
-    // Check it has bleep sound options
-    await expect(bleepPage.bleepSoundSelect).toContainText('Classic Bleep');
-    await expect(bleepPage.bleepSoundSelect).toContainText('Brown Noise');
-    await expect(bleepPage.bleepSoundSelect).toContainText('Dolphin');
+    // Element is in Bleep & Download tab, which is locked initially
+    await expect(bleepPage.bleepSoundSelect).not.toBeVisible();
   });
 
-  test('volume sliders are visible', async ({ page }) => {
+  test('volume sliders are not visible in setup tab', async ({ page }) => {
     const bleepPage = new BleepPage(page);
-
-    // Both volume sliders should be visible
-    await expect(bleepPage.bleepVolumeSlider).toBeVisible();
-    await expect(bleepPage.originalVolumeSlider).toBeVisible();
+    // Elements are in Bleep & Download tab, which is locked initially
+    await expect(bleepPage.bleepVolumeSlider).not.toBeVisible();
+    await expect(bleepPage.originalVolumeSlider).not.toBeVisible();
   });
 
-  test('preview bleep button is visible and enabled initially', async ({ page }) => {
+  test('preview bleep button is not visible in setup tab', async ({ page }) => {
     const bleepPage = new BleepPage(page);
-    await expect(bleepPage.previewBleepButton).toBeVisible();
-    await expect(bleepPage.previewBleepButton).toBeEnabled();
+    // Element is in Bleep & Download tab, which is locked initially
+    await expect(bleepPage.previewBleepButton).not.toBeVisible();
   });
 
-  test('apply bleeps button is visible but disabled initially', async ({ page }) => {
+  test('apply bleeps button is not visible in setup tab', async ({ page }) => {
     const bleepPage = new BleepPage(page);
-    await expect(bleepPage.applyBleepsButton).toBeVisible();
-    await expect(bleepPage.applyBleepsButton).toBeDisabled();
+    // Element is in Bleep & Download tab, which is locked initially
+    await expect(bleepPage.applyBleepsButton).not.toBeVisible();
   });
 
   test('download button is not visible initially', async ({ page }) => {
@@ -130,25 +139,24 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     await expect(bleepPage.fuzzyDistanceSlider).not.toBeVisible();
   });
 
-  test('bleep buffer slider is visible', async ({ page }) => {
+  test('bleep buffer slider is not visible in setup tab', async ({ page }) => {
     const bleepPage = new BleepPage(page);
-    await expect(bleepPage.bleepBufferSlider).toBeVisible();
+    // Element is in Bleep & Download tab, which is locked initially
+    await expect(bleepPage.bleepBufferSlider).not.toBeVisible();
   });
 
-  test('all volume controls have proper labels', async ({ page }) => {
-    // Check for volume-related labels
-    await expect(page.locator('text=/Bleep Volume/i')).toBeVisible();
-    await expect(page.locator('text=/Original Word Volume/i')).toBeVisible();
+  test('volume control labels are not visible in setup tab', async ({ page }) => {
+    // Labels are in Bleep & Download tab, which is locked initially
+    await expect(page.locator('text=/Bleep Volume/i')).not.toBeVisible();
+    await expect(page.locator('text=/Original Word Volume/i')).not.toBeVisible();
   });
 
-  test('pattern matching section has proper labels', async ({ page }) => {
-    // Check for Pattern Matching section heading
-    await expect(page.locator('text=/Pattern Matching \\(Optional\\)/i')).toBeVisible();
-
-    // Check for matching type labels
-    await expect(page.locator('text=/Exact Match/i')).toBeVisible();
-    await expect(page.locator('text=/Partial Match/i')).toBeVisible();
-    await expect(page.locator('text=/Fuzzy Match/i')).toBeVisible();
+  test('pattern matching labels are not visible in setup tab', async ({ page }) => {
+    // Labels are in Review & Match tab, which is locked initially
+    await expect(page.locator('text=/Pattern Matching \\(Optional\\)/i')).not.toBeVisible();
+    await expect(page.locator('text=/Exact Match/i')).not.toBeVisible();
+    await expect(page.locator('text=/Partial Match/i')).not.toBeVisible();
+    await expect(page.locator('text=/Fuzzy Match/i')).not.toBeVisible();
   });
 
   test('clear all button is not visible initially', async ({ page }) => {
