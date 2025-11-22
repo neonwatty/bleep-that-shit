@@ -5,11 +5,21 @@ on:
     branches: [main]
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: 'Runner to use'
+        required: false
+        default: 'self-hosted'
+        type: choice
+        options:
+          - self-hosted
+          - ubuntu-latest
 
 jobs:
   lint-and-test:
     name: Lint, Type Check & Test
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner || 'self-hosted' }}
 
     steps:
       - name: Checkout code
@@ -52,7 +62,7 @@ jobs:
 
   smoke-tests:
     name: Smoke Tests (UI Only)
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner || 'self-hosted' }}
 
     steps:
       - name: Checkout code
