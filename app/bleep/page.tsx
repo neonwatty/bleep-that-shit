@@ -159,6 +159,8 @@ function BleepPageContent() {
             searchQuery={bleepState.wordSelection.searchQuery}
             transcriptExpanded={bleepState.wordSelection.transcriptExpanded}
             matchedWords={bleepState.wordSelection.matchedWords}
+            activeWordsets={bleepState.wordSelection.activeWordsets}
+            wordSource={bleepState.wordSelection.wordSource}
             onWordsToMatchChange={bleepState.wordSelection.setWordsToMatch}
             onMatchModeChange={bleepState.wordSelection.setMatchMode}
             onFuzzyDistanceChange={bleepState.wordSelection.setFuzzyDistance}
@@ -167,6 +169,8 @@ function BleepPageContent() {
             onMatch={bleepState.wordSelection.handleMatch}
             onToggleWord={bleepState.wordSelection.handleToggleWord}
             onClearAll={bleepState.wordSelection.handleClearAll}
+            onApplyWordsets={bleepState.wordSelection.handleApplyWordsets}
+            onRemoveWordset={bleepState.wordSelection.handleRemoveWordset}
           />
         )}
 

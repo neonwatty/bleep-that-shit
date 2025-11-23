@@ -4,7 +4,10 @@ import { useState, useRef } from 'react';
 import type { ImportResult } from '@/lib/types/wordset';
 
 interface WordsetImportExportProps {
-  onImport: (csvData: string, merge: boolean) => Promise<{
+  onImport: (
+    csvData: string,
+    merge: boolean
+  ) => Promise<{
     success: boolean;
     data?: ImportResult;
     error?: string;
@@ -13,11 +16,7 @@ interface WordsetImportExportProps {
   onClose: () => void;
 }
 
-export function WordsetImportExport({
-  onImport,
-  onExportAll,
-  onClose,
-}: WordsetImportExportProps) {
+export function WordsetImportExport({ onImport, onExportAll, onClose }: WordsetImportExportProps) {
   const [isImporting, setIsImporting] = useState(false);
   const [importMode, setImportMode] = useState<'merge' | 'skip'>('merge');
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
@@ -191,7 +190,7 @@ Brands,Competitor names,Nike;Adidas;Puma,false,true,false,0,#3B82F6`;
               {importResult.errors.length > 0 && (
                 <li className="text-red-700">
                   ⚠️ Errors: {importResult.errors.length}
-                  <ul className="ml-4 mt-1 list-disc">
+                  <ul className="mt-1 ml-4 list-disc">
                     {importResult.errors.slice(0, 3).map((err, i) => (
                       <li key={i} className="text-xs">
                         {err}

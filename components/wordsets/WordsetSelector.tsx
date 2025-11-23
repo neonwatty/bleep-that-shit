@@ -51,7 +51,7 @@ export function WordsetSelector({
 
   return (
     <div className="wordset-selector rounded-lg border border-purple-200 bg-purple-50 p-4">
-      <h3 className="mb-3 text-sm font-bold uppercase text-gray-700">
+      <h3 className="mb-3 text-sm font-bold text-gray-700 uppercase">
         Quick Apply Wordsets (Optional)
       </h3>
 
@@ -126,7 +126,7 @@ export function WordsetSelector({
       {/* Active Wordsets Display */}
       {activeWordsetsArray.length > 0 && (
         <div className="mt-4 border-t border-purple-200 pt-3">
-          <p className="mb-2 text-xs font-semibold uppercase text-gray-700">
+          <p className="mb-2 text-xs font-semibold text-gray-700 uppercase">
             Active Wordsets ({activeWordsetsArray.length}):
           </p>
           <div className="flex flex-wrap gap-2">

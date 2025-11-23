@@ -12,9 +12,7 @@ import type {
 /**
  * Validation helper
  */
-function validateWordset(
-  wordset: WordsetCreateInput | WordsetUpdateInput
-): string | null {
+function validateWordset(wordset: WordsetCreateInput | WordsetUpdateInput): string | null {
   if ('name' in wordset && wordset.name !== undefined) {
     const trimmedName = wordset.name.trim();
     if (trimmedName.length === 0) {
@@ -53,9 +51,7 @@ function validateWordset(
  * Normalizes and deduplicates words
  */
 function normalizeWords(words: string[]): string[] {
-  return Array.from(
-    new Set(words.map(w => w.trim().toLowerCase()).filter(Boolean))
-  );
+  return Array.from(new Set(words.map(w => w.trim().toLowerCase()).filter(Boolean)));
 }
 
 /**
@@ -80,9 +76,7 @@ export async function initializeDefaultWordsets(): Promise<void> {
 /**
  * Creates a new wordset
  */
-export async function createWordset(
-  input: WordsetCreateInput
-): Promise<OperationResult<number>> {
+export async function createWordset(input: WordsetCreateInput): Promise<OperationResult<number>> {
   try {
     // Validate input
     const validationError = validateWordset(input);
@@ -143,9 +137,7 @@ export async function getAllWordsets(): Promise<OperationResult<Wordset[]>> {
 /**
  * Retrieves a single wordset by ID
  */
-export async function getWordsetById(
-  id: number
-): Promise<OperationResult<Wordset>> {
+export async function getWordsetById(id: number): Promise<OperationResult<Wordset>> {
   try {
     const wordset = await db.wordsets.get(id);
 
@@ -186,9 +178,7 @@ export async function updateWordset(
     // Check for duplicate name if name is being updated
     if (updates.name && updates.name !== existing.name) {
       const duplicate = await db.wordsets
-        .filter(
-          ws => ws.id !== id && ws.name.toLowerCase() === updates.name!.toLowerCase()
-        )
+        .filter(ws => ws.id !== id && ws.name.toLowerCase() === updates.name!.toLowerCase())
         .first();
 
       if (duplicate) {
@@ -253,9 +243,7 @@ export async function deleteWordset(id: number): Promise<OperationResult<void>> 
 /**
  * Duplicates a wordset with a new name
  */
-export async function duplicateWordset(
-  id: number
-): Promise<OperationResult<number>> {
+export async function duplicateWordset(id: number): Promise<OperationResult<number>> {
   try {
     const original = await db.wordsets.get(id);
     if (!original) {
@@ -266,9 +254,7 @@ export async function duplicateWordset(
     let copyName = `${original.name} (Copy)`;
     let counter = 2;
     while (
-      await db.wordsets
-        .filter(ws => ws.name.toLowerCase() === copyName.toLowerCase())
-        .first()
+      await db.wordsets.filter(ws => ws.name.toLowerCase() === copyName.toLowerCase()).first()
     ) {
       copyName = `${original.name} (Copy ${counter})`;
       counter++;
@@ -293,9 +279,7 @@ export async function duplicateWordset(
 /**
  * Searches wordsets by query string
  */
-export async function searchWordsets(
-  query: string
-): Promise<OperationResult<Wordset[]>> {
+export async function searchWordsets(query: string): Promise<OperationResult<Wordset[]>> {
   try {
     const queryLower = query.toLowerCase();
     const wordsets = await db.wordsets
@@ -345,7 +329,10 @@ function csvRowToWordset(row: WordsetCSVRow): Omit<Wordset, 'id' | 'createdAt' |
   return {
     name: row.name.trim(),
     description: row.description.trim() || undefined,
-    words: row.words.split(';').map(w => w.trim()).filter(Boolean),
+    words: row.words
+      .split(';')
+      .map(w => w.trim())
+      .filter(Boolean),
     matchMode: {
       exact: row.exact.toLowerCase() === 'true',
       partial: row.partial.toLowerCase() === 'true',
@@ -518,9 +505,7 @@ export async function importWordsetsCSV(
           errors.push(`${wordset.name}: ${result.error}`);
         }
       } catch (error) {
-        errors.push(
-          `Line ${i + 1}: ${error instanceof Error ? error.message : 'Parse error'}`
-        );
+        errors.push(`Line ${i + 1}: ${error instanceof Error ? error.message : 'Parse error'}`);
       }
     }
 

@@ -16,7 +16,19 @@ interface WordsetManagerProps {
 type View = 'list' | 'create' | 'edit' | 'import-export' | 'delete-confirm';
 
 export function WordsetManager({ onClose, onWordsetUpdated }: WordsetManagerProps) {
-  const { wordsets, searchQuery, setSearchQuery, create, update, remove, duplicate, exportCSV, importCSV, error, clearError } = useWordsets();
+  const {
+    wordsets,
+    searchQuery,
+    setSearchQuery,
+    create,
+    update,
+    remove,
+    duplicate,
+    exportCSV,
+    importCSV,
+    error,
+    clearError,
+  } = useWordsets();
 
   const [currentView, setCurrentView] = useState<View>('list');
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -59,9 +71,10 @@ export function WordsetManager({ onClose, onWordsetUpdated }: WordsetManagerProp
 
     if (result.success && result.data) {
       const wordsetResult = await getWordsetById(id);
-      const wordsetName = wordsetResult.success && wordsetResult.data
-        ? wordsetResult.data.name.toLowerCase().replace(/\s+/g, '-')
-        : 'wordset';
+      const wordsetName =
+        wordsetResult.success && wordsetResult.data
+          ? wordsetResult.data.name.toLowerCase().replace(/\s+/g, '-')
+          : 'wordset';
 
       const blob = new Blob([result.data], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);

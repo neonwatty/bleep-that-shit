@@ -31,7 +31,7 @@ export function WordsetList({
       {/* Custom Wordsets */}
       {customWordsets.length > 0 && (
         <div>
-          <h3 className="mb-3 text-sm font-bold uppercase text-gray-700">
+          <h3 className="mb-3 text-sm font-bold text-gray-700 uppercase">
             Your Wordsets ({customWordsets.length})
           </h3>
           <div className="space-y-3">
@@ -53,7 +53,7 @@ export function WordsetList({
       {/* Default Wordsets */}
       {defaultWordsets.length > 0 && (
         <div>
-          <h3 className="mb-3 text-sm font-bold uppercase text-gray-700">
+          <h3 className="mb-3 text-sm font-bold text-gray-700 uppercase">
             Default Wordsets (Read-only)
           </h3>
           <div className="space-y-3">

@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import { TranscriptReview } from '@/components/TranscriptReview';
 import { MatchedWordsDisplay } from '@/components/MatchedWordsDisplay';
+import { WordsetSelector } from '@/components/wordsets/WordsetSelector';
+import { WordsetManager } from '@/components/wordsets/WordsetManager';
 import type { TranscriptionResult, MatchedWord } from '../hooks/useBleepState';
 
 interface ReviewMatchTabProps {
@@ -15,6 +18,8 @@ interface ReviewMatchTabProps {
   searchQuery: string;
   transcriptExpanded: boolean;
   matchedWords: MatchedWord[];
+  activeWordsets?: Set<number>;
+  wordSource?: Map<number, 'manual' | number>;
   onWordsToMatchChange: (words: string) => void;
   onMatchModeChange: (mode: { exact: boolean; partial: boolean; fuzzy: boolean }) => void;
   onFuzzyDistanceChange: (distance: number) => void;
@@ -23,6 +28,8 @@ interface ReviewMatchTabProps {
   onMatch: () => void;
   onToggleWord: (index: number) => void;
   onClearAll: () => void;
+  onApplyWordsets?: (wordsetIds: number[]) => void;
+  onRemoveWordset?: (wordsetId: number) => void;
 }
 
 export function ReviewMatchTab({
@@ -34,6 +41,8 @@ export function ReviewMatchTab({
   searchQuery,
   transcriptExpanded,
   matchedWords,
+  activeWordsets,
+  wordSource: _wordSource,
   onWordsToMatchChange,
   onMatchModeChange,
   onFuzzyDistanceChange,
@@ -42,7 +51,11 @@ export function ReviewMatchTab({
   onMatch,
   onToggleWord,
   onClearAll,
+  onApplyWordsets,
+  onRemoveWordset,
 }: ReviewMatchTabProps) {
+  const [showWordsetManager, setShowWordsetManager] = useState(false);
+
   return (
     <div className="space-y-6">
       <section className="border-l-4 border-purple-500 pl-3 sm:pl-4">
@@ -55,10 +68,34 @@ export function ReviewMatchTab({
           </h2>
         </div>
 
-        {/* Pattern Matching Controls */}
+        {/* Wordset Selector */}
+        {onApplyWordsets && (
+          <>
+            <div className="mb-4">
+              <WordsetSelector
+                onApplyWordsets={onApplyWordsets}
+                onManageClick={() => setShowWordsetManager(true)}
+                activeWordsets={activeWordsets}
+                onRemoveWordset={onRemoveWordset}
+              />
+            </div>
+
+            {/* OR Separator */}
+            <div className="relative mb-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-gray-50 px-4 font-semibold text-gray-500">OR</span>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Manual Pattern Matching Controls */}
         <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4">
           <h3 className="mb-3 text-sm font-bold text-gray-700 uppercase">
-            Pattern Matching (Optional)
+            Manual Pattern Matching (Optional)
           </h3>
 
           <div className="mb-4">
@@ -174,6 +211,16 @@ export function ReviewMatchTab({
           </div>
         )}
       </section>
+
+      {/* Wordset Manager Modal */}
+      {showWordsetManager && (
+        <WordsetManager
+          onClose={() => setShowWordsetManager(false)}
+          onWordsetUpdated={() => {
+            // Optionally trigger a refresh or notification
+          }}
+        />
+      )}
     </div>
   );
 }

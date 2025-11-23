@@ -134,9 +134,7 @@ export function WordsetEditor({ wordset, onSave, onCancel, isSubmitting }: Words
       {/* Words Management */}
       <div className="border-t border-gray-200 pt-6">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-gray-900">
-            Manage Words ({words.length})
-          </h3>
+          <h3 className="text-lg font-bold text-gray-900">Manage Words ({words.length})</h3>
           <button
             type="button"
             onClick={() => setBulkEditMode(!bulkEditMode)}
@@ -194,9 +192,7 @@ export function WordsetEditor({ wordset, onSave, onCancel, isSubmitting }: Words
             <div className="max-h-64 space-y-1 overflow-y-auto rounded border border-gray-200 bg-gray-50 p-2">
               {filteredWords.length === 0 ? (
                 <p className="py-4 text-center text-sm text-gray-500">
-                  {searchFilter
-                    ? 'No words match your filter'
-                    : 'No words yet. Add words above.'}
+                  {searchFilter ? 'No words match your filter' : 'No words yet. Add words above.'}
                 </p>
               ) : (
                 filteredWords.map(word => (
@@ -231,11 +227,7 @@ export function WordsetEditor({ wordset, onSave, onCancel, isSubmitting }: Words
               className="w-full rounded-lg border border-gray-300 p-3 font-mono text-sm focus:border-transparent focus:ring-2 focus:ring-purple-500"
               data-testid="bulk-edit-textarea"
             />
-            <button
-              type="button"
-              onClick={handleBulkEditDone}
-              className="btn btn-secondary mt-2"
-            >
+            <button type="button" onClick={handleBulkEditDone} className="btn btn-secondary mt-2">
               ✓ Done Editing
             </button>
           </div>
