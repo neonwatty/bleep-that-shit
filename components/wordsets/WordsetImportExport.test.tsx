@@ -17,7 +17,7 @@ describe('WordsetImportExport', () => {
 
     // Mock File class to properly return text content
     const OriginalFile = global.File;
-    // @ts-ignore - We're extending File for testing
+    // @ts-expect-error - We're extending File for testing
     global.File = class File extends OriginalFile {
       private _content: string;
 
