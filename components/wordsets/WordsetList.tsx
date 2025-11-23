@@ -22,42 +22,16 @@ export function WordsetList({
   onView,
   emptyMessage = 'No wordsets found.',
 }: WordsetListProps) {
-  // Separate default and custom wordsets
-  const defaultWordsets = wordsets.filter(ws => ws.isDefault);
-  const customWordsets = wordsets.filter(ws => !ws.isDefault);
-
   return (
     <div className="space-y-6">
-      {/* Custom Wordsets */}
-      {customWordsets.length > 0 && (
+      {/* Wordsets */}
+      {wordsets.length > 0 && (
         <div>
           <h3 className="mb-3 text-sm font-bold text-gray-700 uppercase">
-            Your Wordsets ({customWordsets.length})
+            Your Word Lists ({wordsets.length})
           </h3>
           <div className="space-y-3">
-            {customWordsets.map(wordset => (
-              <WordsetCard
-                key={wordset.id}
-                wordset={wordset}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onDuplicate={onDuplicate}
-                onExport={onExport}
-                onView={onView}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Default Wordsets */}
-      {defaultWordsets.length > 0 && (
-        <div>
-          <h3 className="mb-3 text-sm font-bold text-gray-700 uppercase">
-            Default Wordsets (Read-only)
-          </h3>
-          <div className="space-y-3">
-            {defaultWordsets.map(wordset => (
+            {wordsets.map(wordset => (
               <WordsetCard
                 key={wordset.id}
                 wordset={wordset}

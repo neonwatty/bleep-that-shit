@@ -45,7 +45,7 @@ describe('ReviewMatchTab', () => {
     it('renders pattern matching section heading', () => {
       render(<ReviewMatchTab {...defaultProps} />);
 
-      expect(screen.getByText('Pattern Matching (Optional)')).toBeInTheDocument();
+      expect(screen.getByText('Manual Pattern Matching (Optional)')).toBeInTheDocument();
     });
   });
 

@@ -17,10 +17,6 @@ export function WordsetEditor({ wordset, onSave, onCancel, isSubmitting }: Words
   const [name, setName] = useState(wordset?.name || '');
   const [description, setDescription] = useState(wordset?.description || '');
   const [words, setWords] = useState<string[]>(wordset?.words || []);
-  const [matchMode, setMatchMode] = useState(
-    wordset?.matchMode || { exact: true, partial: false, fuzzy: false }
-  );
-  const [fuzzyDistance, setFuzzyDistance] = useState(wordset?.fuzzyDistance || 1);
   const [color, setColor] = useState(wordset?.color || '#3B82F6');
 
   // Word input state
@@ -65,8 +61,8 @@ export function WordsetEditor({ wordset, onSave, onCancel, isSubmitting }: Words
       name,
       description: description || undefined,
       words,
-      matchMode,
-      fuzzyDistance,
+      matchMode: { exact: true, partial: false, fuzzy: false }, // Default to exact match
+      fuzzyDistance: 0,
       color: color || undefined,
       isDefault: false,
     };
@@ -230,83 +226,6 @@ export function WordsetEditor({ wordset, onSave, onCancel, isSubmitting }: Words
             <button type="button" onClick={handleBulkEditDone} className="btn btn-secondary mt-2">
               ✓ Done Editing
             </button>
-          </div>
-        )}
-      </div>
-
-      {/* Match Settings */}
-      <div className="border-t border-gray-200 pt-6">
-        <h3 className="mb-3 text-lg font-bold text-gray-900">Match Settings</h3>
-
-        <div className="mb-4 space-y-2">
-          <label className="flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
-            <input
-              type="checkbox"
-              checked={matchMode.exact}
-              onChange={e => setMatchMode({ ...matchMode, exact: e.target.checked })}
-              className="mr-3 h-5 w-5"
-              data-testid="exact-match-toggle"
-            />
-            <div>
-              <span className="font-medium">Exact match</span>
-              <p className="text-sm text-gray-600">
-                Matches whole words only (e.g., "hell" matches "hell" but not "hello")
-              </p>
-            </div>
-          </label>
-
-          <label className="flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
-            <input
-              type="checkbox"
-              checked={matchMode.partial}
-              onChange={e => setMatchMode({ ...matchMode, partial: e.target.checked })}
-              className="mr-3 h-5 w-5"
-              data-testid="partial-match-toggle"
-            />
-            <div>
-              <span className="font-medium">Partial match</span>
-              <p className="text-sm text-gray-600">
-                Matches words that contain the text (e.g., "hell" matches "hello")
-              </p>
-            </div>
-          </label>
-
-          <label className="flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
-            <input
-              type="checkbox"
-              checked={matchMode.fuzzy}
-              onChange={e => setMatchMode({ ...matchMode, fuzzy: e.target.checked })}
-              className="mr-3 h-5 w-5"
-              data-testid="fuzzy-match-toggle"
-            />
-            <div>
-              <span className="font-medium">Fuzzy match</span>
-              <p className="text-sm text-gray-600">
-                Matches similar words (e.g., "hell" might match "hall")
-              </p>
-            </div>
-          </label>
-        </div>
-
-        {matchMode.fuzzy && (
-          <div>
-            <label className="mb-2 block text-sm font-semibold text-gray-700">
-              Fuzzy Distance: {fuzzyDistance}
-            </label>
-            <input
-              type="range"
-              min="1"
-              max="5"
-              step="1"
-              value={fuzzyDistance}
-              onChange={e => setFuzzyDistance(Number(e.target.value))}
-              className="h-2 w-full cursor-pointer rounded-lg sm:max-w-xs"
-              data-testid="fuzzy-distance-input"
-            />
-            <div className="mt-1 flex w-full justify-between text-xs text-gray-600 sm:max-w-xs">
-              <span>Strict (1)</span>
-              <span>Loose (5)</span>
-            </div>
           </div>
         )}
       </div>

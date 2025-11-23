@@ -1,40 +1,44 @@
 'use client';
 
-import { Suspense, useState, useMemo } from 'react';
+import { Suspense, useState } from 'react';
 import { useBleepState } from './hooks/useBleepState';
 import { BleepTabs } from './components/BleepTabs';
 import { SetupTranscribeTab } from './components/SetupTranscribeTab';
 import { ReviewMatchTab } from './components/ReviewMatchTab';
+import { WordsetTab } from './components/WordsetTab';
 import { BleepDownloadTab } from './components/BleepDownloadTab';
 
 function BleepPageContent() {
   const [activeTab, setActiveTab] = useState('setup');
   const bleepState = useBleepState();
 
-  // Define tabs with conditional enabling
-  const tabs = useMemo(
-    () => [
-      {
-        id: 'setup',
-        label: 'Setup & Transcribe',
-        icon: '📋',
-        enabled: true,
-      },
-      {
-        id: 'review',
-        label: 'Review & Match',
-        icon: '📝',
-        enabled: bleepState.transcription.transcriptionResult !== null,
-      },
-      {
-        id: 'bleep',
-        label: 'Bleep & Download',
-        icon: '🔊',
-        enabled: bleepState.wordSelection.matchedWords.length > 0,
-      },
-    ],
-    [bleepState.transcription.transcriptionResult, bleepState.wordSelection.matchedWords.length]
-  );
+  // Define tabs - all always accessible
+  const tabs = [
+    {
+      id: 'setup',
+      label: 'Setup & Transcribe',
+      icon: '📋',
+      enabled: true,
+    },
+    {
+      id: 'review',
+      label: 'Review & Match',
+      icon: '📝',
+      enabled: true,
+    },
+    {
+      id: 'bleep',
+      label: 'Bleep & Download',
+      icon: '🔊',
+      enabled: true,
+    },
+    {
+      id: 'wordsets',
+      label: 'Manage Word Lists',
+      icon: '📚',
+      enabled: true,
+    },
+  ];
 
   return (
     <div className="editorial-section px-2 sm:px-4">
@@ -157,7 +161,6 @@ function BleepPageContent() {
             fuzzyDistance={bleepState.wordSelection.fuzzyDistance}
             censoredWordIndices={bleepState.wordSelection.censoredWordIndices}
             searchQuery={bleepState.wordSelection.searchQuery}
-            transcriptExpanded={bleepState.wordSelection.transcriptExpanded}
             matchedWords={bleepState.wordSelection.matchedWords}
             activeWordsets={bleepState.wordSelection.activeWordsets}
             wordSource={bleepState.wordSelection.wordSource}
@@ -165,14 +168,16 @@ function BleepPageContent() {
             onMatchModeChange={bleepState.wordSelection.setMatchMode}
             onFuzzyDistanceChange={bleepState.wordSelection.setFuzzyDistance}
             onSearchQueryChange={bleepState.wordSelection.setSearchQuery}
-            onTranscriptExpandedChange={bleepState.wordSelection.setTranscriptExpanded}
             onMatch={bleepState.wordSelection.handleMatch}
             onToggleWord={bleepState.wordSelection.handleToggleWord}
             onClearAll={bleepState.wordSelection.handleClearAll}
             onApplyWordsets={bleepState.wordSelection.handleApplyWordsets}
             onRemoveWordset={bleepState.wordSelection.handleRemoveWordset}
+            onSwitchToWordsetsTab={() => setActiveTab('wordsets')}
           />
         )}
+
+        {activeTab === 'wordsets' && <WordsetTab />}
 
         {activeTab === 'bleep' && (
           <BleepDownloadTab

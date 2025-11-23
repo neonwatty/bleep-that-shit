@@ -60,12 +60,44 @@ function normalizeWords(words: string[]): string[] {
 export async function initializeDefaultWordsets(): Promise<void> {
   try {
     const count = await db.wordsets.count();
+
+    // Get all existing default wordsets
+    const existingDefaults = await db.wordsets.filter(ws => ws.isDefault).toArray();
+
     if (count === 0) {
+      // First-time initialization: add all default wordsets
       console.log('[DB] First-time initialization: loading default wordsets');
       await db.wordsets.bulkAdd(DEFAULT_WORDSETS);
       console.log(`[DB] Initialized with ${DEFAULT_WORDSETS.length} default wordsets`);
+    } else if (existingDefaults.length > 0) {
+      // Database has existing default wordsets - sync them
+      console.log(`[DB] Syncing default wordsets (found ${existingDefaults.length} existing)`);
+
+      // Get names of current default wordsets
+      const currentDefaultNames = new Set(DEFAULT_WORDSETS.map(ws => ws.name.toLowerCase()));
+
+      // Remove old default wordsets that are no longer in DEFAULT_WORDSETS
+      for (const existing of existingDefaults) {
+        if (!currentDefaultNames.has(existing.name.toLowerCase())) {
+          console.log(`[DB] Removing old default wordset: ${existing.name}`);
+          await db.wordsets.delete(existing.id!);
+        }
+      }
+
+      // Add new default wordsets that don't exist yet
+      for (const defaultWs of DEFAULT_WORDSETS) {
+        const exists = existingDefaults.some(
+          ws => ws.name.toLowerCase() === defaultWs.name.toLowerCase()
+        );
+        if (!exists) {
+          console.log(`[DB] Adding new default wordset: ${defaultWs.name}`);
+          await db.wordsets.add(defaultWs);
+        }
+      }
+
+      console.log('[DB] Default wordsets synced');
     } else {
-      console.log(`[DB] Database already initialized (${count} wordsets)`);
+      console.log(`[DB] Database already initialized (${count} wordsets, no defaults)`);
     }
   } catch (error) {
     console.error('[DB] Initialization error:', error);
@@ -219,14 +251,6 @@ export async function deleteWordset(id: number): Promise<OperationResult<void>> 
     const existing = await db.wordsets.get(id);
     if (!existing) {
       return { success: false, error: 'Wordset not found' };
-    }
-
-    // Prevent deletion of default wordsets
-    if (existing.isDefault) {
-      return {
-        success: false,
-        error: 'Cannot delete default wordsets. You can duplicate and modify them instead.',
-      };
     }
 
     await db.wordsets.delete(id);

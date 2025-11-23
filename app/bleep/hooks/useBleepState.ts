@@ -413,6 +413,16 @@ export function useBleepState() {
 
   // Wordset handlers
   const handleApplyWordsets = async (wordsetIds: number[]) => {
+    // Batch all wordset updates
+    const newActiveWordsets = new Set(activeWordsets);
+    const newWordsetWords = new Map(wordsetWords);
+    const wordsetsToMatch: {
+      id: number;
+      words: string[];
+      matchMode: { exact: boolean; partial: boolean; fuzzy: boolean };
+      fuzzyDistance: number;
+    }[] = [];
+
     for (const wordsetId of wordsetIds) {
       const result = await getWordsetById(wordsetId);
       if (!result.success || !result.data) continue;
@@ -420,33 +430,83 @@ export function useBleepState() {
       const wordset = result.data;
 
       // Add to active wordsets
-      const newActiveWordsets = new Set(activeWordsets);
       newActiveWordsets.add(wordsetId);
-      setActiveWordsets(newActiveWordsets);
 
       // Store wordset words
-      const newWordsetWords = new Map(wordsetWords);
       newWordsetWords.set(wordsetId, wordset.words);
-      setWordsetWords(newWordsetWords);
 
-      // Apply match mode from wordset if specified
+      // Collect wordsets to match with their match settings
+      wordsetsToMatch.push({
+        id: wordsetId,
+        words: wordset.words,
+        matchMode: wordset.matchMode,
+        fuzzyDistance: wordset.fuzzyDistance,
+      });
+
+      // Apply match mode from wordset if specified (use last wordset's settings)
       if (wordset.matchMode) {
         setMatchMode(wordset.matchMode);
       }
       if (wordset.fuzzyDistance !== undefined) {
         setFuzzyDistance(wordset.fuzzyDistance);
       }
+    }
 
-      // Temporarily set wordsToMatch to wordset words and match
-      const previousWords = wordsToMatch;
-      setWordsToMatch(wordset.words.join(', '));
+    // Update state
+    setActiveWordsets(newActiveWordsets);
+    setWordsetWords(newWordsetWords);
 
-      // Use setTimeout to ensure state is updated before matching
-      setTimeout(() => {
-        handleMatch(wordsetId);
-        // Restore previous manual words
-        setWordsToMatch(previousWords);
-      }, 0);
+    // Populate wordsToMatch input field with all words from applied wordsets
+    const allWordsetWords = wordsetsToMatch.flatMap(ws => ws.words);
+    const uniqueWords = Array.from(new Set(allWordsetWords));
+    setWordsToMatch(uniqueWords.join(', '));
+
+    // Only try to match if transcription exists
+    if (transcriptionResult) {
+      // Start with current indices and sources
+      const newIndices = new Set(censoredWordIndices);
+      const newSource = new Map(wordSource);
+
+      // Match each wordset's words using its own match settings
+      for (const wordset of wordsetsToMatch) {
+        // Perform matching inline using wordset's match settings
+        const words = wordset.words.map(w => w.toLowerCase().trim());
+
+        transcriptionResult.chunks.forEach((chunk, index) => {
+          const chunkText = chunk.text.toLowerCase().trim();
+          const chunkTextClean = chunkText.replace(/[.,!?;:'"]/g, '');
+          let isMatch = false;
+
+          for (const word of words) {
+            if (wordset.matchMode.exact) {
+              if (chunkText === word || chunkTextClean === word) {
+                isMatch = true;
+                break;
+              }
+            }
+            if (wordset.matchMode.partial && chunkText.includes(word)) {
+              isMatch = true;
+              break;
+            }
+            if (wordset.matchMode.fuzzy) {
+              const distance = levenshteinDistance(chunkText, word);
+              if (distance <= wordset.fuzzyDistance) {
+                isMatch = true;
+                break;
+              }
+            }
+          }
+
+          if (isMatch) {
+            newIndices.add(index);
+            newSource.set(index, wordset.id); // Track wordset as source
+          }
+        });
+      }
+
+      // Update censored indices with all matches
+      setCensoredWordIndices(newIndices);
+      setWordSource(newSource);
     }
   };
 
@@ -474,6 +534,14 @@ export function useBleepState() {
 
     setCensoredWordIndices(newIndices);
     setWordSource(newSource);
+
+    // Recalculate wordsToMatch based on remaining active wordsets
+    const remainingWords: string[] = [];
+    newWordsetWords.forEach(words => {
+      remainingWords.push(...words);
+    });
+    const uniqueWords = Array.from(new Set(remainingWords));
+    setWordsToMatch(uniqueWords.join(', '));
   };
 
   // Bleep handlers
@@ -630,6 +698,7 @@ export function useBleepState() {
       setLanguage,
       setModel,
       setErrorMessage,
+      setTranscriptionResult, // Exposed for testing
       handleTranscribe,
     },
     wordSelection: {

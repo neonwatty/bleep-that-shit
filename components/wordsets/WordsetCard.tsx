@@ -61,7 +61,7 @@ export function WordsetCard({
           <h3 className="text-lg font-bold text-gray-900">{wordset.name}</h3>
           {wordset.isDefault && (
             <span className="rounded bg-yellow-100 px-2 py-1 text-xs font-semibold text-yellow-800">
-              DEFAULT
+              EXAMPLE
             </span>
           )}
         </div>
@@ -119,20 +119,13 @@ export function WordsetCard({
         >
           📤 Export
         </button>
-        {!wordset.isDefault && (
-          <button
-            onClick={() => onDelete(wordset.id!)}
-            className="flex items-center gap-1 rounded bg-red-100 px-3 py-1 text-sm font-medium text-red-700 transition-colors hover:bg-red-200"
-            data-testid="delete-button"
-          >
-            🗑 Delete
-          </button>
-        )}
-        {wordset.isDefault && (
-          <span className="flex items-center gap-1 rounded bg-gray-100 px-3 py-1 text-sm font-medium text-gray-500">
-            🔒 Cannot Delete
-          </span>
-        )}
+        <button
+          onClick={() => onDelete(wordset.id!)}
+          className="flex items-center gap-1 rounded bg-red-100 px-3 py-1 text-sm font-medium text-red-700 transition-colors hover:bg-red-200"
+          data-testid="delete-button"
+        >
+          🗑 Delete
+        </button>
       </div>
     </div>
   );

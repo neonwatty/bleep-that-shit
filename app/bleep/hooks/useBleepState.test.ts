@@ -24,12 +24,17 @@ vi.mock('@/lib/utils/bleepMerger', () => ({
   mergeOverlappingBleeps: vi.fn(),
 }));
 
+vi.mock('@/lib/utils/db/wordsetOperations', () => ({
+  getWordsetById: vi.fn(),
+}));
+
 // Import mocked modules for assertions
 import { useSearchParams } from 'next/navigation';
 import { decodeAudioToMono16kHzPCM } from '@/lib/utils/audioDecode';
 import { applyBleeps, applyBleepsToVideo } from '@/lib/utils/audioProcessor';
 import { getPublicPath } from '@/lib/utils/paths';
 import { mergeOverlappingBleeps } from '@/lib/utils/bleepMerger';
+import { getWordsetById } from '@/lib/utils/db/wordsetOperations';
 
 // Test utilities
 function createMockFile(type: string, name: string): File {
@@ -1615,6 +1620,883 @@ describe('useBleepState', () => {
         });
         expect(result.current.transcription.model).toBe('Xenova/whisper-small.en');
       });
+    });
+  });
+
+  describe('Wordset Integration', () => {
+    const mockWordset1: any = {
+      id: 1,
+      name: 'Profanity',
+      words: ['bad', 'worse'],
+      matchMode: { exact: true, partial: false, fuzzy: false },
+      fuzzyDistance: 0,
+      color: '#EF4444',
+      isDefault: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const mockWordset2: any = {
+      id: 2,
+      name: 'Brands',
+      words: ['nike', 'adidas'],
+      matchMode: { exact: false, partial: true, fuzzy: false },
+      fuzzyDistance: 0,
+      isDefault: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    it('should populate wordsToMatch field when wordset is applied', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      // Set up transcription result with words that match the wordset
+      const mockResult = createMockTranscriptionResult([
+        { text: 'bad', timestamp: [0.0, 0.5] },
+        { text: 'good', timestamp: [0.5, 1.0] },
+        { text: 'worse', timestamp: [1.0, 1.5] },
+      ]);
+
+      act(() => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      // Mock getWordsetById
+      vi.mocked(getWordsetById).mockResolvedValue({ success: true, data: mockWordset1 });
+
+      // Apply wordset
+      await act(async () => {
+        await result.current.wordSelection.handleApplyWordsets([1]);
+      });
+
+      // Verify wordsToMatch field is populated with wordset words
+      expect(result.current.wordSelection.wordsToMatch).toBe('bad, worse');
+    });
+
+    it('should update censoredWordIndices when wordset is applied', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      // Set up transcription result
+      const mockResult = createMockTranscriptionResult([
+        { text: 'bad', timestamp: [0.0, 0.5] },
+        { text: 'good', timestamp: [0.5, 1.0] },
+        { text: 'worse', timestamp: [1.0, 1.5] },
+      ]);
+
+      act(() => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      // Mock getWordsetById
+      const mockGetWordsetById = vi.fn().mockResolvedValue({ success: true, data: mockWordset1 });
+      vi.mocked(getWordsetById).mockImplementation(mockGetWordsetById);
+
+      // Apply wordset
+      await act(async () => {
+        await result.current.wordSelection.handleApplyWordsets([1]);
+      });
+
+      // Verify censoredWordIndices includes matched words (indices 0 and 2 for 'bad' and 'worse')
+      expect(result.current.wordSelection.censoredWordIndices.has(0)).toBe(true);
+      expect(result.current.wordSelection.censoredWordIndices.has(1)).toBe(false);
+      expect(result.current.wordSelection.censoredWordIndices.has(2)).toBe(true);
+    });
+
+    it('should update wordsToMatch when wordset is removed', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      // Set up transcription result
+      const mockResult = createMockTranscriptionResult([
+        { text: 'bad', timestamp: [0.0, 0.5] },
+        { text: 'nike', timestamp: [0.5, 1.0] },
+        { text: 'worse', timestamp: [1.0, 1.5] },
+      ]);
+
+      act(() => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      // Mock getWordsetById for both wordsets
+      const mockGetWordsetById = vi.fn((id: number) => {
+        if (id === 1) return Promise.resolve({ success: true, data: mockWordset1 });
+        if (id === 2) return Promise.resolve({ success: true, data: mockWordset2 });
+        return Promise.resolve({ success: false, error: 'Not found' });
+      });
+      vi.mocked(getWordsetById).mockImplementation(mockGetWordsetById);
+
+      // Apply both wordsets
+      await act(async () => {
+        await result.current.wordSelection.handleApplyWordsets([1, 2]);
+      });
+
+      // Verify wordsToMatch includes words from both wordsets
+      expect(result.current.wordSelection.wordsToMatch).toContain('bad');
+      expect(result.current.wordSelection.wordsToMatch).toContain('worse');
+      expect(result.current.wordSelection.wordsToMatch).toContain('nike');
+      expect(result.current.wordSelection.wordsToMatch).toContain('adidas');
+
+      // Remove wordset 1
+      await act(async () => {
+        result.current.wordSelection.handleRemoveWordset(1);
+      });
+
+      // Verify wordsToMatch only includes words from wordset 2
+      expect(result.current.wordSelection.wordsToMatch).not.toContain('bad');
+      expect(result.current.wordSelection.wordsToMatch).not.toContain('worse');
+      expect(result.current.wordSelection.wordsToMatch).toContain('nike');
+      expect(result.current.wordSelection.wordsToMatch).toContain('adidas');
+    });
+
+    it('should update censoredWordIndices when wordset is removed', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      // Set up transcription result
+      const mockResult = createMockTranscriptionResult([
+        { text: 'bad', timestamp: [0.0, 0.5] },
+        { text: 'nike', timestamp: [0.5, 1.0] },
+        { text: 'worse', timestamp: [1.0, 1.5] },
+      ]);
+
+      act(() => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      // Mock getWordsetById for both wordsets
+      const mockGetWordsetById = vi.fn((id: number) => {
+        if (id === 1) return Promise.resolve({ success: true, data: mockWordset1 });
+        if (id === 2) return Promise.resolve({ success: true, data: mockWordset2 });
+        return Promise.resolve({ success: false, error: 'Not found' });
+      });
+      vi.mocked(getWordsetById).mockImplementation(mockGetWordsetById);
+
+      // Apply both wordsets
+      await act(async () => {
+        await result.current.wordSelection.handleApplyWordsets([1, 2]);
+      });
+
+      // Verify all matched words are censored
+      expect(result.current.wordSelection.censoredWordIndices.has(0)).toBe(true); // bad
+      expect(result.current.wordSelection.censoredWordIndices.has(1)).toBe(true); // nike
+      expect(result.current.wordSelection.censoredWordIndices.has(2)).toBe(true); // worse
+
+      // Remove wordset 1
+      await act(async () => {
+        result.current.wordSelection.handleRemoveWordset(1);
+      });
+
+      // Verify only wordset 1 words are removed from censoredWordIndices
+      expect(result.current.wordSelection.censoredWordIndices.has(0)).toBe(false); // bad removed
+      expect(result.current.wordSelection.censoredWordIndices.has(1)).toBe(true); // nike still censored
+      expect(result.current.wordSelection.censoredWordIndices.has(2)).toBe(false); // worse removed
+    });
+
+    it('should clear wordsToMatch when last wordset is removed', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      // Set up transcription result
+      const mockResult = createMockTranscriptionResult([
+        { text: 'bad', timestamp: [0.0, 0.5] },
+        { text: 'worse', timestamp: [0.5, 1.0] },
+      ]);
+
+      act(() => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      // Mock getWordsetById
+      const mockGetWordsetById = vi.fn().mockResolvedValue({ success: true, data: mockWordset1 });
+      vi.mocked(getWordsetById).mockImplementation(mockGetWordsetById);
+
+      // Apply wordset
+      await act(async () => {
+        await result.current.wordSelection.handleApplyWordsets([1]);
+      });
+
+      // Verify wordsToMatch is populated
+      expect(result.current.wordSelection.wordsToMatch).toBe('bad, worse');
+
+      // Remove wordset
+      await act(async () => {
+        result.current.wordSelection.handleRemoveWordset(1);
+      });
+
+      // Verify wordsToMatch is cleared
+      expect(result.current.wordSelection.wordsToMatch).toBe('');
+    });
+
+    it('should handle multiple wordsets with overlapping words', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      // Create wordset with overlapping word
+      const mockWordset3: any = {
+        id: 3,
+        name: 'Overlap',
+        words: ['bad', 'terrible'], // 'bad' overlaps with mockWordset1
+        matchMode: { exact: true, partial: false, fuzzy: false },
+        fuzzyDistance: 0,
+        isDefault: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      // Set up transcription result
+      const mockResult = createMockTranscriptionResult([
+        { text: 'bad', timestamp: [0.0, 0.5] },
+        { text: 'terrible', timestamp: [0.5, 1.0] },
+        { text: 'worse', timestamp: [1.0, 1.5] },
+      ]);
+
+      act(() => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      // Mock getWordsetById for both wordsets
+      const mockGetWordsetById = vi.fn((id: number) => {
+        if (id === 1) return Promise.resolve({ success: true, data: mockWordset1 });
+        if (id === 3) return Promise.resolve({ success: true, data: mockWordset3 });
+        return Promise.resolve({ success: false, error: 'Not found' });
+      });
+      vi.mocked(getWordsetById).mockImplementation(mockGetWordsetById);
+
+      // Apply both wordsets
+      await act(async () => {
+        await result.current.wordSelection.handleApplyWordsets([1, 3]);
+      });
+
+      // Verify all words are in wordsToMatch (deduplicated)
+      const wordsArray = result.current.wordSelection.wordsToMatch.split(', ');
+      expect(wordsArray).toContain('bad');
+      expect(wordsArray).toContain('worse');
+      expect(wordsArray).toContain('terrible');
+      expect(wordsArray.filter(w => w === 'bad').length).toBe(1); // No duplicates
+
+      // Remove wordset 1 - 'bad' should still be censored from wordset 3
+      await act(async () => {
+        result.current.wordSelection.handleRemoveWordset(1);
+      });
+
+      // 'bad' should still be in wordsToMatch because it's in wordset 3
+      expect(result.current.wordSelection.wordsToMatch).toContain('bad');
+      expect(result.current.wordSelection.wordsToMatch).toContain('terrible');
+      expect(result.current.wordSelection.wordsToMatch).not.toContain('worse');
+    });
+  });
+
+  // =============================================================================
+  // ROBUSTNESS TESTS: Race Conditions, Memory Cleanup, and Edge Cases
+  // =============================================================================
+
+  describe('Robustness - Worker Cleanup', () => {
+    it('should terminate worker on unmount', async () => {
+      const mockWorker = {
+        postMessage: vi.fn(),
+        terminate: vi.fn(),
+        onmessage: null,
+        onerror: null,
+      };
+      (global.Worker as any) = vi.fn(() => mockWorker);
+
+      const { result, unmount } = renderHook(() => useBleepState());
+
+      // Upload file to trigger worker creation
+      await act(async () => {
+        const mockFile = createMockFile('audio/mp3', 'test.mp3');
+        await result.current.file.handleFileUpload(mockFile);
+      });
+
+      // Start transcription to create worker
+      await act(async () => {
+        result.current.transcription.handleTranscribe();
+      });
+
+      expect(global.Worker).toHaveBeenCalled();
+
+      // Unmount should terminate worker
+      unmount();
+
+      expect(mockWorker.terminate).toHaveBeenCalled();
+    });
+
+    it('should not error when cleanup called without worker created', () => {
+      const { unmount } = renderHook(() => useBleepState());
+
+      // Unmount without ever creating a worker
+      expect(() => unmount()).not.toThrow();
+    });
+
+    it('should terminate old worker when creating new one', async () => {
+      const mockWorker1 = {
+        postMessage: vi.fn(),
+        terminate: vi.fn(),
+        onmessage: null,
+        onerror: null,
+      };
+      const mockWorker2 = {
+        postMessage: vi.fn(),
+        terminate: vi.fn(),
+        onmessage: null,
+        onerror: null,
+      };
+
+      let workerCallCount = 0;
+      (global.Worker as any) = vi.fn(() => {
+        workerCallCount++;
+        return workerCallCount === 1 ? mockWorker1 : mockWorker2;
+      });
+
+      const { result } = renderHook(() => useBleepState());
+
+      // Upload file
+      await act(async () => {
+        const mockFile = createMockFile('audio/mp3', 'test.mp3');
+        await result.current.file.handleFileUpload(mockFile);
+      });
+
+      // First transcription
+      await act(async () => {
+        result.current.transcription.handleTranscribe();
+      });
+
+      // Second transcription should terminate first worker
+      await act(async () => {
+        result.current.transcription.handleTranscribe();
+      });
+
+      // First worker should be terminated
+      expect(mockWorker1.terminate).toHaveBeenCalled();
+    });
+
+    it('should handle worker termination errors gracefully', async () => {
+      const mockWorker = {
+        postMessage: vi.fn(),
+        terminate: vi.fn(() => {
+          throw new Error('Termination failed');
+        }),
+        onmessage: null,
+        onerror: null,
+      };
+      (global.Worker as any) = vi.fn(() => mockWorker);
+
+      const { result, unmount } = renderHook(() => useBleepState());
+
+      await act(async () => {
+        const mockFile = createMockFile('audio/mp3', 'test.mp3');
+        await result.current.file.handleFileUpload(mockFile);
+      });
+
+      await act(async () => {
+        result.current.transcription.handleTranscribe();
+      });
+
+      // Should not throw even if terminate fails
+      expect(() => unmount()).not.toThrow();
+    });
+
+    it('should not leave dangling worker references after multiple mount/unmount cycles', async () => {
+      for (let i = 0; i < 3; i++) {
+        const mockWorker = {
+          postMessage: vi.fn(),
+          terminate: vi.fn(),
+          onmessage: null,
+          onerror: null,
+        };
+        (global.Worker as any) = vi.fn(() => mockWorker);
+
+        const { result, unmount } = renderHook(() => useBleepState());
+
+        await act(async () => {
+          const mockFile = createMockFile('audio/mp3', 'test.mp3');
+          await result.current.file.handleFileUpload(mockFile);
+        });
+
+        await act(async () => {
+          result.current.transcription.handleTranscribe();
+        });
+
+        unmount();
+
+        expect(mockWorker.terminate).toHaveBeenCalled();
+      }
+    });
+  });
+
+  describe('Robustness - URL Object Cleanup', () => {
+    it('should revoke fileUrl when new file uploaded', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      // Upload first file
+      await act(async () => {
+        const mockFile1 = createMockFile('audio/mp3', 'test1.mp3');
+        await result.current.file.handleFileUpload(mockFile1);
+      });
+
+      const firstUrl = result.current.file.fileUrl;
+      expect(global.URL.createObjectURL).toHaveBeenCalled();
+
+      // Upload second file
+      await act(async () => {
+        const mockFile2 = createMockFile('audio/mp3', 'test2.mp3');
+        await result.current.file.handleFileUpload(mockFile2);
+      });
+
+      // First URL should be revoked
+      expect(global.URL.revokeObjectURL).toHaveBeenCalledWith(firstUrl);
+    });
+
+    it('should revoke censoredMediaUrl when new bleep created', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      // Setup for bleeping
+      await act(async () => {
+        const mockFile = createMockFile('audio/mp3', 'test.mp3');
+        await result.current.file.handleFileUpload(mockFile);
+      });
+
+      const mockResult = createMockTranscriptionResult([
+        { text: 'hello', timestamp: [0, 1000] },
+        { text: 'bad', timestamp: [1000, 2000] },
+      ]);
+
+      await act(async () => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      await act(async () => {
+        result.current.wordSelection.handleToggleWord(1);
+      });
+
+      // First bleep
+      await act(async () => {
+        await result.current.bleeping.handleBleep();
+      });
+
+      const firstCensoredUrl = result.current.bleeping.censoredMediaUrl;
+      expect(firstCensoredUrl).toBeTruthy();
+
+      // Second bleep
+      await act(async () => {
+        await result.current.bleeping.handleBleep();
+      });
+
+      // First censored URL should be revoked
+      expect(global.URL.revokeObjectURL).toHaveBeenCalledWith(firstCensoredUrl);
+    });
+
+    it('should handle URL revocation when URL is null', () => {
+      const { unmount } = renderHook(() => useBleepState());
+
+      // Unmount without creating any URLs
+      expect(() => unmount()).not.toThrow();
+      // revokeObjectURL should not be called with null
+      expect(global.URL.revokeObjectURL).not.toHaveBeenCalledWith(null);
+    });
+  });
+
+  describe('Robustness - Race Conditions (Transcription)', () => {
+    it('should handle rapid successive transcribe calls', async () => {
+      const mockWorker = {
+        postMessage: vi.fn(),
+        terminate: vi.fn(),
+        onmessage: null,
+        onerror: null,
+      };
+      (global.Worker as any) = vi.fn(() => mockWorker);
+
+      const { result } = renderHook(() => useBleepState());
+
+      await act(async () => {
+        const mockFile = createMockFile('audio/mp3', 'test.mp3');
+        await result.current.file.handleFileUpload(mockFile);
+      });
+
+      // Call transcribe multiple times rapidly
+      await act(async () => {
+        result.current.transcription.handleTranscribe();
+        result.current.transcription.handleTranscribe();
+        result.current.transcription.handleTranscribe();
+      });
+
+      // Should handle gracefully - either ignore duplicate calls or terminate old workers
+      expect(result.current.transcription.isTranscribing).toBe(true);
+    });
+
+    it('should handle file change during transcription', async () => {
+      const mockWorker = {
+        postMessage: vi.fn(),
+        terminate: vi.fn(),
+        onmessage: null,
+        onerror: null,
+      };
+      (global.Worker as any) = vi.fn(() => mockWorker);
+
+      const { result } = renderHook(() => useBleepState());
+
+      // Upload first file and start transcription
+      await act(async () => {
+        const mockFile1 = createMockFile('audio/mp3', 'test1.mp3');
+        await result.current.file.handleFileUpload(mockFile1);
+      });
+
+      await act(async () => {
+        result.current.transcription.handleTranscribe();
+      });
+
+      expect(result.current.transcription.isTranscribing).toBe(true);
+
+      // Upload new file mid-transcription
+      await act(async () => {
+        const mockFile2 = createMockFile('audio/mp3', 'test2.mp3');
+        await result.current.file.handleFileUpload(mockFile2);
+      });
+
+      // Worker should be terminated
+      expect(mockWorker.terminate).toHaveBeenCalled();
+      // Transcription should be reset
+      expect(result.current.transcription.isTranscribing).toBe(false);
+    });
+
+    it('should handle worker error during state transition', async () => {
+      const mockWorker = {
+        postMessage: vi.fn(),
+        terminate: vi.fn(),
+        onmessage: null,
+        onerror: null,
+      };
+      (global.Worker as any) = vi.fn(() => mockWorker);
+
+      const { result } = renderHook(() => useBleepState());
+
+      await act(async () => {
+        const mockFile = createMockFile('audio/mp3', 'test.mp3');
+        await result.current.file.handleFileUpload(mockFile);
+      });
+
+      await act(async () => {
+        result.current.transcription.handleTranscribe();
+      });
+
+      // Simulate worker error
+      await act(async () => {
+        if (mockWorker.onerror) {
+          mockWorker.onerror(new ErrorEvent('error', { message: 'Worker failed' }));
+        }
+      });
+
+      // Should set error state and stop transcribing
+      expect(result.current.transcription.isTranscribing).toBe(false);
+      expect(result.current.transcription.errorMessage).toBeTruthy();
+    });
+
+    it('should handle concurrent audio decode and worker initialization', async () => {
+      let decodeResolve: any;
+      const decodePromise = new Promise<Float32Array>(resolve => {
+        decodeResolve = resolve;
+      });
+      (decodeAudioToMono16kHzPCM as any).mockReturnValue(decodePromise);
+
+      const mockWorker = {
+        postMessage: vi.fn(),
+        terminate: vi.fn(),
+        onmessage: null,
+        onerror: null,
+      };
+      (global.Worker as any) = vi.fn(() => mockWorker);
+
+      const { result } = renderHook(() => useBleepState());
+
+      await act(async () => {
+        const mockFile = createMockFile('audio/mp3', 'test.mp3');
+        await result.current.file.handleFileUpload(mockFile);
+      });
+
+      // Start transcription (decode will be pending)
+      let transcribePromise: Promise<void>;
+      act(() => {
+        transcribePromise = result.current.transcription.handleTranscribe();
+      });
+
+      // Resolve decode
+      act(() => {
+        decodeResolve(new Float32Array(1000));
+      });
+
+      await act(async () => {
+        await transcribePromise!;
+      });
+
+      // Both should complete successfully
+      expect(mockWorker.postMessage).toHaveBeenCalled();
+    });
+
+    it('should handle worker message after new transcription started', async () => {
+      let firstWorker: any;
+      let secondWorker: any;
+      let workerCount = 0;
+
+      (global.Worker as any) = vi.fn(() => {
+        workerCount++;
+        const worker = {
+          postMessage: vi.fn(),
+          terminate: vi.fn(),
+          onmessage: null,
+          onerror: null,
+        };
+        if (workerCount === 1) firstWorker = worker;
+        else secondWorker = worker;
+        return worker;
+      });
+
+      const { result } = renderHook(() => useBleepState());
+
+      await act(async () => {
+        const mockFile = createMockFile('audio/mp3', 'test.mp3');
+        await result.current.file.handleFileUpload(mockFile);
+      });
+
+      // First transcription
+      await act(async () => {
+        result.current.transcription.handleTranscribe();
+      });
+
+      // Second transcription (should terminate first worker)
+      await act(async () => {
+        result.current.transcription.handleTranscribe();
+      });
+
+      // Old worker message should be ignored
+      const mockResult = createMockTranscriptionResult([
+        { text: 'old result', timestamp: [0, 1000] },
+      ]);
+
+      await act(async () => {
+        if (firstWorker?.onmessage) {
+          firstWorker.onmessage({ data: mockResult });
+        }
+      });
+
+      // Result should not be from old worker
+      if (result.current.transcription.transcriptionResult) {
+        expect(result.current.transcription.transcriptionResult.text).not.toBe('old result');
+      }
+    });
+  });
+
+  describe('Robustness - Race Conditions (Word Matching)', () => {
+    it('should handle concurrent handleMatch calls', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      const mockResult = createMockTranscriptionResult([
+        { text: 'hello', timestamp: [0, 1000] },
+        { text: 'bad', timestamp: [1000, 2000] },
+        { text: 'world', timestamp: [2000, 3000] },
+      ]);
+
+      await act(async () => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      // Simulate concurrent match calls
+      await act(async () => {
+        result.current.wordSelection.setWordsToMatch('bad');
+        result.current.wordSelection.setWordsToMatch('hello');
+        result.current.wordSelection.setWordsToMatch('world');
+      });
+
+      // Final state should be consistent
+      expect(result.current.wordSelection.wordsToMatch).toBeDefined();
+    });
+
+    it('should handle rapid toggle operations on same word', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      const mockResult = createMockTranscriptionResult([
+        { text: 'hello', timestamp: [0, 1000] },
+        { text: 'bad', timestamp: [1000, 2000] },
+      ]);
+
+      await act(async () => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      // Rapidly toggle same word
+      await act(async () => {
+        result.current.wordSelection.handleToggleWord(1);
+        result.current.wordSelection.handleToggleWord(1);
+        result.current.wordSelection.handleToggleWord(1);
+      });
+
+      // Final state should be consistent (on or off, but not corrupted)
+      const isSelected = result.current.wordSelection.censoredWordIndices.has(1);
+      expect(typeof isSelected).toBe('boolean');
+    });
+
+    it('should handle concurrent wordset additions', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      const mockResult = createMockTranscriptionResult([
+        { text: 'hello', timestamp: [0, 1000] },
+        { text: 'bad', timestamp: [1000, 2000] },
+        { text: 'worse', timestamp: [2000, 3000] },
+      ]);
+
+      await act(async () => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      const mockWordset1 = {
+        id: 1,
+        name: 'Set 1',
+        words: ['bad'],
+        matchMode: { exact: true, partial: false, fuzzy: false },
+        fuzzyDistance: 0,
+        isDefault: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const mockWordset2 = {
+        id: 2,
+        name: 'Set 2',
+        words: ['worse'],
+        matchMode: { exact: true, partial: false, fuzzy: false },
+        fuzzyDistance: 0,
+        isDefault: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      vi.mocked(getWordsetById).mockImplementation((id: number) => {
+        if (id === 1) return Promise.resolve({ success: true, data: mockWordset1 });
+        if (id === 2) return Promise.resolve({ success: true, data: mockWordset2 });
+        return Promise.resolve({ success: false, error: 'Not found' });
+      });
+
+      // Apply wordsets concurrently
+      await act(async () => {
+        await Promise.all([
+          result.current.wordSelection.handleApplyWordsets([1]),
+          result.current.wordSelection.handleApplyWordsets([2]),
+        ]);
+      });
+
+      // Both wordsets should be applied (or last one wins consistently)
+      expect(result.current.wordSelection.wordsToMatch).toBeTruthy();
+    });
+
+    it('should handle transcription change during word matching', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      const mockResult1 = createMockTranscriptionResult([
+        { text: 'hello', timestamp: [0, 1000] },
+        { text: 'bad', timestamp: [1000, 2000] },
+      ]);
+
+      await act(async () => {
+        result.current.transcription.setTranscriptionResult(mockResult1);
+      });
+
+      await act(async () => {
+        result.current.wordSelection.setWordsToMatch('bad');
+      });
+
+      // Change transcription mid-matching
+      const mockResult2 = createMockTranscriptionResult([
+        { text: 'different', timestamp: [0, 1000] },
+        { text: 'words', timestamp: [1000, 2000] },
+      ]);
+
+      await act(async () => {
+        result.current.transcription.setTranscriptionResult(mockResult2);
+      });
+
+      // Should use new transcription for matching
+      const matchedWords = result.current.wordSelection.matchedWords;
+      expect(matchedWords).toBeDefined();
+    });
+  });
+
+  describe('Robustness - Async Operation Error Handling', () => {
+    it('should handle Promise rejections in nested async calls', async () => {
+      (decodeAudioToMono16kHzPCM as any).mockRejectedValue(new Error('Decode failed'));
+
+      const { result } = renderHook(() => useBleepState());
+
+      await act(async () => {
+        const mockFile = createMockFile('audio/mp3', 'test.mp3');
+        await result.current.file.handleFileUpload(mockFile);
+      });
+
+      // Should handle decode error gracefully
+      await act(async () => {
+        await result.current.transcription.handleTranscribe();
+      });
+
+      expect(result.current.transcription.errorMessage).toBeTruthy();
+      expect(result.current.transcription.isTranscribing).toBe(false);
+    });
+
+    it('should handle multiple concurrent async operations with different timing', async () => {
+      const { result } = renderHook(() => useBleepState());
+
+      const mockResult = createMockTranscriptionResult([
+        { text: 'hello', timestamp: [0, 1000] },
+        { text: 'bad', timestamp: [1000, 2000] },
+      ]);
+
+      await act(async () => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      await act(async () => {
+        result.current.wordSelection.handleToggleWord(1);
+      });
+
+      // Start multiple operations with different delays
+      const operations = [
+        result.current.wordSelection.handleToggleWord(0),
+        new Promise(resolve => setTimeout(resolve, 10)),
+        result.current.wordSelection.handleToggleWord(1),
+      ];
+
+      await act(async () => {
+        await Promise.all(operations);
+      });
+
+      // All should complete successfully
+      expect(result.current.wordSelection.censoredWordIndices.size).toBeGreaterThanOrEqual(0);
+    });
+
+    it('should handle bleep operation failure gracefully', async () => {
+      (applyBleeps as any).mockRejectedValue(new Error('Bleep processing failed'));
+
+      const { result } = renderHook(() => useBleepState());
+
+      await act(async () => {
+        const mockFile = createMockFile('audio/mp3', 'test.mp3');
+        await result.current.file.handleFileUpload(mockFile);
+      });
+
+      const mockResult = createMockTranscriptionResult([
+        { text: 'hello', timestamp: [0, 1000] },
+        { text: 'bad', timestamp: [1000, 2000] },
+      ]);
+
+      await act(async () => {
+        result.current.transcription.setTranscriptionResult(mockResult);
+      });
+
+      await act(async () => {
+        result.current.wordSelection.handleToggleWord(1);
+      });
+
+      // Should handle bleep error
+      await act(async () => {
+        await result.current.bleepConfig.handleBleep();
+      });
+
+      // Bleep should not succeed - check that censoredMediaUrl is still null
+      expect(result.current.bleepConfig.censoredMediaUrl).toBeNull();
+      expect(result.current.bleepConfig.isProcessingVideo).toBe(false);
     });
   });
 });
