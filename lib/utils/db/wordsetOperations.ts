@@ -62,7 +62,7 @@ export async function initializeDefaultWordsets(): Promise<void> {
     const count = await db.wordsets.count();
 
     // Get all existing default wordsets
-    const existingDefaults = await db.wordsets.filter(ws => ws.isDefault).toArray();
+    const existingDefaults = await db.wordsets.filter(ws => ws.isDefault === true).toArray();
 
     if (count === 0) {
       // First-time initialization: add all default wordsets

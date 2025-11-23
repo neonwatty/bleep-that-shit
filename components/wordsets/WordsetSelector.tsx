@@ -6,7 +6,7 @@ import type { Wordset } from '@/lib/types/wordset';
 
 interface WordsetSelectorProps {
   onApplyWordsets: (wordsetIds: number[]) => void;
-  onManageClick: () => void;
+  onManageClick?: () => void;
   activeWordsets?: Set<number>;
   onRemoveWordset?: (wordsetId: number) => void;
 }
@@ -58,12 +58,14 @@ export function WordsetSelector({
       {wordsets.length === 0 ? (
         <div className="text-sm text-gray-600">
           No wordsets available.{' '}
-          <button
-            onClick={onManageClick}
-            className="font-medium text-purple-600 hover:text-purple-800 hover:underline"
-          >
-            Create your first wordset
-          </button>
+          {onManageClick && (
+            <button
+              onClick={onManageClick}
+              className="font-medium text-purple-600 hover:text-purple-800 hover:underline"
+            >
+              Create your first wordset
+            </button>
+          )}
         </div>
       ) : (
         <>
@@ -116,9 +118,11 @@ export function WordsetSelector({
             >
               Apply Selected ({selectedWordsets.size})
             </button>
-            <button onClick={onManageClick} className="btn btn-secondary">
-              Manage Wordsets
-            </button>
+            {onManageClick && (
+              <button onClick={onManageClick} className="btn btn-secondary">
+                Manage Wordsets
+              </button>
+            )}
           </div>
         </>
       )}

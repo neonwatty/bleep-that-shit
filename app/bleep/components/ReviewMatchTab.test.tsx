@@ -326,7 +326,6 @@ describe('ReviewMatchTab', () => {
         <ReviewMatchTab
           {...defaultProps}
           transcriptionResult={mockTranscript}
-          transcriptExpanded={true}
         />
       );
 

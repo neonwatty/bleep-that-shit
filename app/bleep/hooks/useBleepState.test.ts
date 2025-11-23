@@ -2075,15 +2075,15 @@ describe('useBleepState', () => {
 
       // First bleep
       await act(async () => {
-        await result.current.bleeping.handleBleep();
+        await result.current.bleepConfig.handleBleep();
       });
 
-      const firstCensoredUrl = result.current.bleeping.censoredMediaUrl;
+      const firstCensoredUrl = result.current.bleepConfig.censoredMediaUrl;
       expect(firstCensoredUrl).toBeTruthy();
 
       // Second bleep
       await act(async () => {
-        await result.current.bleeping.handleBleep();
+        await result.current.bleepConfig.handleBleep();
       });
 
       // First censored URL should be revoked
@@ -2187,8 +2187,10 @@ describe('useBleepState', () => {
 
       // Simulate worker error
       await act(async () => {
-        if (mockWorker.onerror) {
-          mockWorker.onerror(new ErrorEvent('error', { message: 'Worker failed' }));
+        if (mockWorker.onerror && typeof mockWorker.onerror === 'function') {
+          (mockWorker.onerror as (event: ErrorEvent) => void)(
+            new ErrorEvent('error', { message: 'Worker failed' })
+          );
         }
       });
 
