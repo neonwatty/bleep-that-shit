@@ -108,6 +108,7 @@ export class BleepPage {
    */
   async goto() {
     await this.page.goto('/bleep');
+    await this.page.waitForLoadState('networkidle');
   }
 
   /**

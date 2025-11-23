@@ -33,6 +33,9 @@ jobs:
       - name: Run TypeScript type check
         run: npm run typecheck
 
+      - name: Run Knip (unused code detection)
+        run: npm run knip:production
+
       - name: Run unit tests with coverage
         run: npm run test:unit:coverage
 

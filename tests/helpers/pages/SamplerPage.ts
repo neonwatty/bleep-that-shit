@@ -51,6 +51,7 @@ export class SamplerPage {
    */
   async goto() {
     await this.page.goto('/sampler');
+    await this.page.waitForLoadState('networkidle');
   }
 
   /**

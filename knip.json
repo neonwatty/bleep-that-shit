@@ -1,0 +1,31 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "app/**/{error,layout,page,route}.{js,jsx,ts,tsx}",
+    "app/workers/**/*.ts"
+  ],
+  "project": ["**/*.{js,jsx,ts,tsx}"],
+  "ignore": [
+    "**/*.test.{ts,tsx}",
+    "**/*.spec.{ts,tsx}",
+    "tests/archived/**"
+  ],
+  "ignoreDependencies": [
+    "@ffmpeg/core",
+    "@ffmpeg/ffmpeg",
+    "@ffmpeg/util",
+    "dexie",
+    "file-type",
+    "plyr",
+    "plyr-react",
+    "@typescript-eslint/eslint-plugin",
+    "@typescript-eslint/parser",
+    "eslint-config-next",
+    "eslint-config-prettier",
+    "eslint-plugin-prettier"
+  ],
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true
+  }
+}
