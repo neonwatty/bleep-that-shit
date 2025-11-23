@@ -465,7 +465,7 @@ describe('useBleepState', () => {
       it('should load bob-ross sample when sample=bob-ross in URL', async () => {
         (useSearchParams as any).mockReturnValue(new URLSearchParams('sample=bob-ross'));
 
-        const { result } = renderHook(() => useBleepState());
+        renderHook(() => useBleepState());
 
         await waitFor(() => {
           expect(global.fetch).toHaveBeenCalledWith(
