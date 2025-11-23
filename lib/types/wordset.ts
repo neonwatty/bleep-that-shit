@@ -48,15 +48,6 @@ export interface WordsetCSVRow {
 }
 
 /**
- * JSON export format for wordsets (legacy support)
- */
-export interface WordsetExportFormat {
-  version: string; // Schema version (e.g., "1.0.0")
-  exportedAt: string; // ISO timestamp
-  wordsets: Omit<Wordset, 'id' | 'createdAt' | 'updatedAt'>[];
-}
-
-/**
  * Result type for operations that can fail
  */
 export interface OperationResult<T> {

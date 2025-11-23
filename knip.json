@@ -5,9 +5,6 @@
   "ignore": ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}", "tests/archived/**"],
   "ignoreDependencies": [
     "@ffmpeg/core",
-    "@ffmpeg/ffmpeg",
-    "@ffmpeg/util",
-    "dexie",
     "file-type",
     "plyr",
     "plyr-react",
