@@ -322,12 +322,7 @@ describe('ReviewMatchTab', () => {
     });
 
     it('renders search input when transcript is expanded', () => {
-      render(
-        <ReviewMatchTab
-          {...defaultProps}
-          transcriptionResult={mockTranscript}
-        />
-      );
+      render(<ReviewMatchTab {...defaultProps} transcriptionResult={mockTranscript} />);
 
       expect(screen.getByTestId('search-transcript-input')).toBeInTheDocument();
       expect(screen.getByPlaceholderText(/Search for words in transcript/i)).toBeInTheDocument();
