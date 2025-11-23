@@ -210,12 +210,12 @@ describe('SetupTranscribeTab', () => {
       const mockResult = {
         text: 'Hello world this is a test',
         chunks: [
-          { text: 'Hello', timestamp: [0, 0.5] },
-          { text: 'world', timestamp: [0.5, 1.0] },
-          { text: 'this', timestamp: [1.0, 1.3] },
-          { text: 'is', timestamp: [1.3, 1.5] },
-          { text: 'a', timestamp: [1.5, 1.6] },
-          { text: 'test', timestamp: [1.6, 2.0] },
+          { text: 'Hello', timestamp: [0, 0.5] as [number, number] },
+          { text: 'world', timestamp: [0.5, 1.0] as [number, number] },
+          { text: 'this', timestamp: [1.0, 1.3] as [number, number] },
+          { text: 'is', timestamp: [1.3, 1.5] as [number, number] },
+          { text: 'a', timestamp: [1.5, 1.6] as [number, number] },
+          { text: 'test', timestamp: [1.6, 2.0] as [number, number] },
         ],
       };
       render(<SetupTranscribeTab {...defaultProps} transcriptionResult={mockResult} />);
@@ -227,7 +227,7 @@ describe('SetupTranscribeTab', () => {
     it('displays transcript text', () => {
       const mockResult = {
         text: 'This is the full transcript text',
-        chunks: [{ text: 'test', timestamp: [0, 1] }],
+        chunks: [{ text: 'test', timestamp: [0, 1] as [number, number] }],
       };
       render(<SetupTranscribeTab {...defaultProps} transcriptionResult={mockResult} />);
 
@@ -240,8 +240,8 @@ describe('SetupTranscribeTab', () => {
       const mockResult = {
         text: 'Hello world',
         chunks: [
-          { text: 'Hello', timestamp: [0, 0.5] },
-          { text: 'world', timestamp: [0.5, 1.0] },
+          { text: 'Hello', timestamp: [0, 0.5] as [number, number] },
+          { text: 'world', timestamp: [0.5, 1.0] as [number, number] },
         ],
       };
       render(<SetupTranscribeTab {...defaultProps} transcriptionResult={mockResult} />);
@@ -252,7 +252,7 @@ describe('SetupTranscribeTab', () => {
     it('shows success message when transcription is complete', () => {
       const mockResult = {
         text: 'Test',
-        chunks: [{ text: 'Test', timestamp: [0, 1] }],
+        chunks: [{ text: 'Test', timestamp: [0, 1] as [number, number] }],
       };
       render(<SetupTranscribeTab {...defaultProps} transcriptionResult={mockResult} />);
 
@@ -332,7 +332,7 @@ describe('SetupTranscribeTab', () => {
     it('can show both transcription result and timestamp warning together', () => {
       const mockResult = {
         text: 'Test transcript',
-        chunks: [{ text: 'Test', timestamp: [0, 1] }],
+        chunks: [{ text: 'Test', timestamp: [0, 1] as [number, number] }],
       };
       render(
         <SetupTranscribeTab

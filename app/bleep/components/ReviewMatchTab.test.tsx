@@ -6,12 +6,12 @@ describe('ReviewMatchTab', () => {
   const mockTranscript = {
     text: 'Hello world this is a test',
     chunks: [
-      { text: 'Hello', timestamp: [0, 0.5] },
-      { text: 'world', timestamp: [0.5, 1.0] },
-      { text: 'this', timestamp: [1.0, 1.3] },
-      { text: 'is', timestamp: [1.3, 1.5] },
-      { text: 'a', timestamp: [1.5, 1.6] },
-      { text: 'test', timestamp: [1.6, 2.0] },
+      { text: 'Hello', timestamp: [0, 0.5] as [number, number] },
+      { text: 'world', timestamp: [0.5, 1.0] as [number, number] },
+      { text: 'this', timestamp: [1.0, 1.3] as [number, number] },
+      { text: 'is', timestamp: [1.3, 1.5] as [number, number] },
+      { text: 'a', timestamp: [1.5, 1.6] as [number, number] },
+      { text: 'test', timestamp: [1.6, 2.0] as [number, number] },
     ],
   };
 
