@@ -15,10 +15,22 @@ describe('WordsetImportExport', () => {
     global.URL.createObjectURL = mockCreateObjectURL;
     global.URL.revokeObjectURL = mockRevokeObjectURL;
 
-    // Mock File.prototype.text to return the file content
-    File.prototype.text = vi.fn(async function (this: File) {
-      return await new Response(this).text();
-    });
+    // Mock File class to properly return text content
+    const OriginalFile = global.File;
+    // @ts-ignore - We're extending File for testing
+    global.File = class File extends OriginalFile {
+      private _content: string;
+
+      constructor(fileBits: BlobPart[], fileName: string, options?: FilePropertyBag) {
+        super(fileBits, fileName, options);
+        // Store the content for the text() method
+        this._content = typeof fileBits[0] === 'string' ? fileBits[0] : '';
+      }
+
+      async text(): Promise<string> {
+        return this._content;
+      }
+    };
 
     // Mock document.createElement for anchor elements
     mockClick = vi.fn();

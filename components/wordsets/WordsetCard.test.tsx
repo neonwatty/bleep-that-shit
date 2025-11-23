@@ -13,8 +13,8 @@ describe('WordsetCard', () => {
     fuzzyDistance: 0,
     color: '#FF0000',
     isDefault: false,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-02'),
+    createdAt: new Date(2024, 0, 1), // Month is 0-indexed, this is Jan 1, 2024 in local time
+    updatedAt: new Date(2024, 0, 2), // Jan 2, 2024 in local time
   };
 
   const defaultProps = {
@@ -141,8 +141,10 @@ describe('WordsetCard', () => {
     });
 
     it('formats creation date correctly', () => {
-      render(<WordsetCard {...defaultProps} />);
-      expect(screen.getByText(/Created: Jan 1, 2024/)).toBeInTheDocument();
+      const { container } = render(<WordsetCard {...defaultProps} />);
+      const dateElement = container.querySelector('.created-date');
+      expect(dateElement).toBeInTheDocument();
+      expect(dateElement?.textContent).toMatch(/Created: Jan\.?\s+1,\s+2024/);
     });
   });
 
@@ -262,13 +264,15 @@ describe('WordsetCard', () => {
       const longDesc = 'Description '.repeat(50);
       const longDescWordset = { ...mockWordset, description: longDesc };
       render(<WordsetCard {...defaultProps} wordset={longDescWordset} />);
-      expect(screen.getByText(longDesc)).toBeInTheDocument();
+      expect(screen.getByText(longDesc.trim())).toBeInTheDocument();
     });
 
     it('handles different date formats', () => {
-      const futureWordset = { ...mockWordset, createdAt: new Date('2025-12-31') };
-      render(<WordsetCard {...defaultProps} wordset={futureWordset} />);
-      expect(screen.getByText(/Created: Dec 31, 2025/)).toBeInTheDocument();
+      const futureWordset = { ...mockWordset, createdAt: new Date(2025, 11, 31) }; // Dec 31, 2025 in local time
+      const { container } = render(<WordsetCard {...defaultProps} wordset={futureWordset} />);
+      const dateElement = container.querySelector('.created-date');
+      expect(dateElement).toBeInTheDocument();
+      expect(dateElement?.textContent).toMatch(/Created: Dec\.?\s+31,\s+2025/);
     });
   });
 
