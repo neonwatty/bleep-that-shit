@@ -34,7 +34,10 @@ test.describe('Wordsets E2E Tests', () => {
       const testFilePath = path.join(__dirname, 'fixtures', 'test-audio.mp3');
 
       // Navigate to Setup tab
-      await page.locator('button').filter({ hasText: /Setup & Transcribe/i }).click();
+      await page
+        .locator('button')
+        .filter({ hasText: /Setup & Transcribe/i })
+        .click();
 
       await bleepPage.uploadFile({
         fileName: 'test-audio.mp3',

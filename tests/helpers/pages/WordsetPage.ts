@@ -111,11 +111,14 @@ export class WordsetPage {
   /**
    * Edit an existing wordset
    */
-  async editWordset(wordsetId: number, options: {
-    name?: string;
-    description?: string;
-    words?: string[];
-  }) {
+  async editWordset(
+    wordsetId: number,
+    options: {
+      name?: string;
+      description?: string;
+      words?: string[];
+    }
+  ) {
     const editButton = this.page.getByTestId(`edit-button`);
     await editButton.first().click();
 

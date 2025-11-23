@@ -160,7 +160,9 @@ describe('WordsetCard', () => {
         words: ['word1', 'word2', 'word3', 'word4', 'word5', 'word6', 'word7'],
       };
       render(<WordsetCard {...defaultProps} wordset={manyWordsWordset} />);
-      expect(screen.getByText(/word1, word2, word3, word4, word5 \+2 more\.\.\./)).toBeInTheDocument();
+      expect(
+        screen.getByText(/word1, word2, word3, word4, word5 \+2 more\.\.\./)
+      ).toBeInTheDocument();
     });
 
     it('shows correct count of remaining words', () => {

@@ -215,9 +215,7 @@ describe('WordsetList', () => {
 
   describe('Edge cases', () => {
     it('handles wordset with undefined id gracefully', () => {
-      const wordsetsWithUndefinedId = [
-        { ...mockWordsets[0], id: undefined },
-      ];
+      const wordsetsWithUndefinedId = [{ ...mockWordsets[0], id: undefined }];
       render(<WordsetList {...defaultProps} wordsets={wordsetsWithUndefinedId} />);
       expect(screen.getByText('Wordset 1')).toBeInTheDocument();
     });

@@ -247,7 +247,9 @@ describe('WordsetImportExport', () => {
     });
 
     it('shows importing state while importing', async () => {
-      const onImport = vi.fn().mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)));
+      const onImport = vi
+        .fn()
+        .mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)));
       render(<WordsetImportExport {...defaultProps} onImport={onImport} />);
 
       const fileInput = screen.getByTestId('import-file-input') as HTMLInputElement;
@@ -259,7 +261,9 @@ describe('WordsetImportExport', () => {
     });
 
     it('disables file input while importing', async () => {
-      const onImport = vi.fn().mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)));
+      const onImport = vi
+        .fn()
+        .mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)));
       render(<WordsetImportExport {...defaultProps} onImport={onImport} />);
 
       const fileInput = screen.getByTestId('import-file-input') as HTMLInputElement;
@@ -502,7 +506,8 @@ describe('WordsetImportExport', () => {
     });
 
     it('clears previous import results when new file is selected', async () => {
-      const onImport = vi.fn()
+      const onImport = vi
+        .fn()
         .mockResolvedValueOnce({
           success: true,
           data: { imported: 1, skipped: 0, errors: [] },
@@ -534,7 +539,8 @@ describe('WordsetImportExport', () => {
     });
 
     it('clears previous errors when new file is selected', async () => {
-      const onImport = vi.fn()
+      const onImport = vi
+        .fn()
         .mockResolvedValueOnce({
           success: false,
           error: 'First error',
