@@ -5,6 +5,7 @@ import { applyBleeps, applyBleepsToVideo } from '@/lib/utils/audioProcessor';
 import { getPublicPath } from '@/lib/utils/paths';
 import { mergeOverlappingBleeps } from '@/lib/utils/bleepMerger';
 import { levenshteinDistance } from '@/lib/utils/stringMatching';
+import { getWordsetById } from '@/lib/utils/db/wordsetOperations';
 
 export interface TranscriptionResult {
   text: string;
@@ -22,6 +23,7 @@ export interface MatchedWord {
   word: string;
   start: number;
   end: number;
+  source?: 'manual' | number; // 'manual' or wordset ID
 }
 
 export function useBleepState() {
@@ -58,6 +60,11 @@ export function useBleepState() {
   const [searchQuery, setSearchQuery] = useState('');
   const [transcriptExpanded, setTranscriptExpanded] = useState(true);
 
+  // Wordset state
+  const [activeWordsets, setActiveWordsets] = useState<Set<number>>(new Set());
+  const [wordsetWords, setWordsetWords] = useState<Map<number, string[]>>(new Map());
+  const [wordSource, setWordSource] = useState<Map<number, 'manual' | number>>(new Map());
+
   // Bleep configuration state
   const [bleepSound, setBleepSound] = useState('bleep');
   const [bleepVolume, setBleepVolume] = useState(80);
@@ -73,12 +80,16 @@ export function useBleepState() {
   const workerRef = useRef<Worker | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
-  // Derived state: compute matchedWords from censoredWordIndices
+  // Derived state: compute matchedWords from censoredWordIndices with source tracking
   const matchedWords = useMemo(() => {
     if (!transcriptionResult) return [];
     return Array.from(censoredWordIndices)
-      .map(idx => transcriptionResult.chunks[idx])
-      .filter(chunk => {
+      .map(idx => {
+        const chunk = transcriptionResult.chunks[idx];
+        const source = wordSource.get(idx) || 'manual';
+        return { chunk, idx, source };
+      })
+      .filter(({ chunk }) => {
         if (
           !chunk ||
           !chunk.timestamp ||
@@ -90,13 +101,14 @@ export function useBleepState() {
         }
         return true;
       })
-      .map(chunk => ({
+      .map(({ chunk, source }) => ({
         word: chunk.text,
         start: chunk.timestamp[0],
         end: chunk.timestamp[1],
+        source,
       }))
       .sort((a, b) => a.start - b.start);
-  }, [censoredWordIndices, transcriptionResult]);
+  }, [censoredWordIndices, transcriptionResult, wordSource]);
 
   // File handlers
   const handleFileUpload = async (uploadedFile: File) => {
@@ -317,12 +329,13 @@ export function useBleepState() {
   };
 
   // Word matching handlers
-  const handleMatch = () => {
+  const handleMatch = (source: 'manual' | number = 'manual') => {
     if (!transcriptionResult || !wordsToMatch) return;
 
     console.log('Starting matching with transcription result:', transcriptionResult);
     console.log('Words to match:', wordsToMatch);
     console.log('Match mode:', matchMode);
+    console.log('Source:', source);
 
     const words = wordsToMatch
       .toLowerCase()
@@ -331,6 +344,7 @@ export function useBleepState() {
       .filter(Boolean);
 
     const newIndices = new Set(censoredWordIndices);
+    const newSource = new Map(wordSource);
 
     transcriptionResult.chunks.forEach((chunk, index) => {
       const chunkText = chunk.text.toLowerCase().trim();
@@ -360,14 +374,16 @@ export function useBleepState() {
 
       if (isMatch) {
         newIndices.add(index);
+        newSource.set(index, source); // Track source
         const start = chunk.timestamp ? chunk.timestamp[0] : 0;
         const end = chunk.timestamp ? chunk.timestamp[1] : 0;
-        console.log(`Match found: "${chunk.text}" at [${start}, ${end}]`);
+        console.log(`Match found: "${chunk.text}" at [${start}, ${end}] (source: ${source})`);
       }
     });
 
     console.log('Total censored words:', newIndices.size);
     setCensoredWordIndices(newIndices);
+    setWordSource(newSource);
 
     if (newIndices.size === 0) {
       console.log('No matches found. Check if words exist in transcription.');
@@ -376,16 +392,88 @@ export function useBleepState() {
 
   const handleToggleWord = (index: number) => {
     const newIndices = new Set(censoredWordIndices);
+    const newSource = new Map(wordSource);
+
     if (newIndices.has(index)) {
       newIndices.delete(index);
+      newSource.delete(index);
     } else {
       newIndices.add(index);
+      newSource.set(index, 'manual'); // Manual toggle
     }
+
     setCensoredWordIndices(newIndices);
+    setWordSource(newSource);
   };
 
   const handleClearAll = () => {
     setCensoredWordIndices(new Set());
+    setWordSource(new Map());
+  };
+
+  // Wordset handlers
+  const handleApplyWordsets = async (wordsetIds: number[]) => {
+    for (const wordsetId of wordsetIds) {
+      const result = await getWordsetById(wordsetId);
+      if (!result.success || !result.data) continue;
+
+      const wordset = result.data;
+
+      // Add to active wordsets
+      const newActiveWordsets = new Set(activeWordsets);
+      newActiveWordsets.add(wordsetId);
+      setActiveWordsets(newActiveWordsets);
+
+      // Store wordset words
+      const newWordsetWords = new Map(wordsetWords);
+      newWordsetWords.set(wordsetId, wordset.words);
+      setWordsetWords(newWordsetWords);
+
+      // Apply match mode from wordset if specified
+      if (wordset.matchMode) {
+        setMatchMode(wordset.matchMode);
+      }
+      if (wordset.fuzzyDistance !== undefined) {
+        setFuzzyDistance(wordset.fuzzyDistance);
+      }
+
+      // Temporarily set wordsToMatch to wordset words and match
+      const previousWords = wordsToMatch;
+      setWordsToMatch(wordset.words.join(', '));
+
+      // Use setTimeout to ensure state is updated before matching
+      setTimeout(() => {
+        handleMatch(wordsetId);
+        // Restore previous manual words
+        setWordsToMatch(previousWords);
+      }, 0);
+    }
+  };
+
+  const handleRemoveWordset = (wordsetId: number) => {
+    // Remove from active wordsets
+    const newActiveWordsets = new Set(activeWordsets);
+    newActiveWordsets.delete(wordsetId);
+    setActiveWordsets(newActiveWordsets);
+
+    // Remove wordset words
+    const newWordsetWords = new Map(wordsetWords);
+    newWordsetWords.delete(wordsetId);
+    setWordsetWords(newWordsetWords);
+
+    // Remove all censoredWordIndices from this wordset
+    const newIndices = new Set(censoredWordIndices);
+    const newSource = new Map(wordSource);
+
+    wordSource.forEach((source, idx) => {
+      if (source === wordsetId) {
+        newIndices.delete(idx);
+        newSource.delete(idx);
+      }
+    });
+
+    setCensoredWordIndices(newIndices);
+    setWordSource(newSource);
   };
 
   // Bleep handlers
@@ -552,6 +640,9 @@ export function useBleepState() {
       searchQuery,
       transcriptExpanded,
       matchedWords,
+      activeWordsets,
+      wordsetWords,
+      wordSource,
       setWordsToMatch,
       setMatchMode,
       setFuzzyDistance,
@@ -560,6 +651,8 @@ export function useBleepState() {
       handleMatch,
       handleToggleWord,
       handleClearAll,
+      handleApplyWordsets,
+      handleRemoveWordset,
     },
     bleepConfig: {
       bleepSound,
