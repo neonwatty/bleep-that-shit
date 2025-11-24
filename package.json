@@ -27,7 +27,10 @@
     "typecheck": "tsc --noEmit",
     "knip": "knip",
     "knip:production": "knip --production",
-    "validate": "npm run lint && npm run format:check && npm run typecheck && npm run test:unit && npm run test:smoke && npm run build"
+    "validate": "npm run lint && npm run format:check && npm run typecheck && npm run test:unit && npm run test:smoke && npm run build",
+    "pre-push": "./scripts/pre-push.sh",
+    "pre-push:quick": "./scripts/pre-push.sh --skip-smoke",
+    "ci": "./scripts/pre-push.sh"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.12.6",
