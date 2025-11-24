@@ -116,6 +116,11 @@ if [ "$SKIP_SMOKE" = false ]; then
     npx playwright install chromium --with-deps
   fi
 
+  # Clean up any lingering Node.js processes and wait for cleanup
+  echo "Cleaning up processes..."
+  pkill -9 -f "node.*next" 2>/dev/null || true
+  sleep 2
+
   # Run smoke tests (without CI=true so it uses dev server instead of serve)
   if npm run test:smoke; then
     print_success "Smoke tests passed"
