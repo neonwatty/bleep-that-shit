@@ -116,8 +116,8 @@ if [ "$SKIP_SMOKE" = false ]; then
     npx playwright install chromium --with-deps
   fi
 
-  # Run smoke tests
-  if CI=true npm run test:smoke; then
+  # Run smoke tests (without CI=true so it uses dev server instead of serve)
+  if npm run test:smoke; then
     print_success "Smoke tests passed"
   else
     print_error "Smoke tests failed"
