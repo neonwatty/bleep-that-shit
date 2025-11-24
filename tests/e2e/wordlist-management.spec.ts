@@ -1,0 +1,301 @@
+/**
+ * E2E Test: Wordlist Management (CRUD Operations)
+ *
+ * Tests creating, reading, updating, and deleting word lists (wordsets):
+ * - Create new wordlist with multiple words
+ * - Edit existing wordlist
+ * - Delete wordlist with confirmation
+ * - Duplicate wordlist
+ * - Search/filter wordlists
+ * - Import/export wordlists as CSV
+ * - Persistence across page reloads
+ */
+
+import { test, expect } from '@playwright/test';
+import { BleepPage } from '../helpers/pages/BleepPage';
+import { WordsetPage } from '../helpers/pages/WordsetPage';
+
+test.describe('Wordlist Management - CRUD Operations', () => {
+  let bleepPage: BleepPage;
+  let wordsetPage: WordsetPage;
+
+  test.beforeEach(async ({ page }) => {
+    bleepPage = new BleepPage(page);
+    wordsetPage = new WordsetPage(page);
+    await bleepPage.goto();
+    await bleepPage.switchToWordsetTab();
+  });
+
+  test('should create a new wordlist', async () => {
+    // Click create button
+    await wordsetPage.createButton.click();
+
+    // Fill in wordlist details
+    await wordsetPage.nameInput.fill('Test Profanity');
+    await wordsetPage.descriptionInput.fill('Common profanity words for testing');
+    await wordsetPage.wordsInput.fill('damn, hell, crap');
+
+    // Save wordlist
+    await wordsetPage.saveButton.click();
+
+    // Verify wordlist appears in list
+    await expect(wordsetPage.page.getByText('Test Profanity')).toBeVisible({ timeout: 5000 });
+    await expect(wordsetPage.page.getByText(/3 words/i)).toBeVisible();
+  });
+
+  test('should edit an existing wordlist', async ({ page }) => {
+    // Create a wordlist first
+    await wordsetPage.createWordset({
+      name: 'Edit Test',
+      description: 'To be edited',
+      words: ['word1', 'word2'],
+    });
+
+    // Wait for it to appear
+    await expect(page.getByText('Edit Test')).toBeVisible({ timeout: 5000 });
+
+    // Click edit button
+    const editButton = page.getByRole('button', { name: /edit.*Edit Test/i });
+    if (await editButton.isVisible()) {
+      await editButton.click();
+    } else {
+      // Alternative: click on wordlist card
+      await page.getByText('Edit Test').click();
+      await page.getByRole('button', { name: /edit/i }).click();
+    }
+
+    // Modify name and words
+    await wordsetPage.nameInput.clear();
+    await wordsetPage.nameInput.fill('Edited Wordlist');
+    await wordsetPage.wordsInput.fill('word1, word2, word3, word4');
+
+    // Save changes
+    await wordsetPage.saveButton.click();
+
+    // Verify changes
+    await expect(page.getByText('Edited Wordlist')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/4 words/i)).toBeVisible();
+  });
+
+  test('should delete wordlist with confirmation', async ({ page }) => {
+    // Create a wordlist to delete
+    await wordsetPage.createWordset({
+      name: 'To Delete',
+      description: 'Will be deleted',
+      words: ['temp1', 'temp2'],
+    });
+
+    await expect(page.getByText('To Delete')).toBeVisible({ timeout: 5000 });
+
+    // Click delete button
+    const deleteButton = page.getByRole('button', { name: /delete.*To Delete/i });
+    if (await deleteButton.isVisible()) {
+      await deleteButton.click();
+    } else {
+      // Alternative approach
+      await page.getByText('To Delete').click();
+      await page.getByRole('button', { name: /delete/i }).click();
+    }
+
+    // Verify confirmation dialog appears
+    await expect(page.getByText(/are you sure|confirm delete/i)).toBeVisible({ timeout: 5000 });
+
+    // Confirm deletion
+    const confirmButton = page.getByRole('button', { name: /confirm|yes|delete/i });
+    await confirmButton.click();
+
+    // Verify wordlist is removed
+    await expect(page.getByText('To Delete')).not.toBeVisible({ timeout: 5000 });
+  });
+
+  test('should cancel deletion', async ({ page }) => {
+    // Create wordlist
+    await wordsetPage.createWordset({
+      name: 'Keep Me',
+      description: 'Should not be deleted',
+      words: ['keep1', 'keep2'],
+    });
+
+    await expect(page.getByText('Keep Me')).toBeVisible({ timeout: 5000 });
+
+    // Start delete process
+    const deleteButton = page.getByRole('button', { name: /delete.*Keep Me/i });
+    if (await deleteButton.isVisible()) {
+      await deleteButton.click();
+    }
+
+    // Cancel in confirmation dialog
+    const cancelButton = page.getByRole('button', { name: /cancel|no/i });
+    await cancelButton.click();
+
+    // Verify wordlist still exists
+    await expect(page.getByText('Keep Me')).toBeVisible();
+  });
+
+  test('should duplicate wordlist', async ({ page }) => {
+    // Create original wordlist
+    await wordsetPage.createWordset({
+      name: 'Original',
+      description: 'To be duplicated',
+      words: ['word1', 'word2', 'word3'],
+    });
+
+    await expect(page.getByText('Original')).toBeVisible({ timeout: 5000 });
+
+    // Click duplicate button
+    const duplicateButton = page.getByRole('button', { name: /duplicate.*Original/i });
+    if (await duplicateButton.isVisible()) {
+      await duplicateButton.click();
+    }
+
+    // Verify copy appears with "(copy)" suffix
+    await expect(page.getByText('Original (copy)')).toBeVisible({ timeout: 5000 });
+
+    // Verify both have same word count
+    const originalWords = page.locator('[data-wordset="Original"]').getByText(/3 words/i);
+    const copyWords = page.locator('[data-wordset="Original (copy)"]').getByText(/3 words/i);
+    await expect(originalWords).toBeVisible();
+    await expect(copyWords).toBeVisible();
+  });
+
+  test('should search and filter wordlists', async ({ page }) => {
+    // Create multiple wordlists
+    await wordsetPage.createWordset({
+      name: 'Profanity List',
+      description: 'Bad words',
+      words: ['damn', 'hell'],
+    });
+
+    await wordsetPage.createWordset({
+      name: 'Family Friendly',
+      description: 'Clean words',
+      words: ['gosh', 'darn'],
+    });
+
+    // Search for specific wordlist
+    const searchInput = wordsetPage.searchInput;
+    await searchInput.fill('Profanity');
+
+    // Verify only matching wordlist is shown
+    await expect(page.getByText('Profanity List')).toBeVisible();
+    await expect(page.getByText('Family Friendly')).not.toBeVisible();
+
+    // Clear search
+    await searchInput.clear();
+
+    // Verify both wordlists reappear
+    await expect(page.getByText('Profanity List')).toBeVisible();
+    await expect(page.getByText('Family Friendly')).toBeVisible();
+  });
+
+  test('should prevent duplicate wordlist names', async ({ page }) => {
+    // Create first wordlist
+    await wordsetPage.createWordset({
+      name: 'Unique Name',
+      description: 'First one',
+      words: ['word1'],
+    });
+
+    await expect(page.getByText('Unique Name')).toBeVisible({ timeout: 5000 });
+
+    // Try to create second wordlist with same name
+    await wordsetPage.createButton.click();
+    await wordsetPage.nameInput.fill('Unique Name');
+    await wordsetPage.wordsInput.fill('word2');
+    await wordsetPage.saveButton.click();
+
+    // Verify error message appears
+    await expect(page.getByText(/already exists|duplicate name/i)).toBeVisible({ timeout: 5000 });
+
+    // Verify second wordlist was not created
+    const uniqueNameElements = page.getByText('Unique Name');
+    const count = await uniqueNameElements.count();
+    expect(count).toBeLessThanOrEqual(1); // Should only have one
+  });
+
+  test('should prevent empty wordlists', async ({ page }) => {
+    // Try to create wordlist without words
+    await wordsetPage.createButton.click();
+    await wordsetPage.nameInput.fill('Empty List');
+    await wordsetPage.descriptionInput.fill('No words');
+    // Leave wordsInput empty
+
+    // Try to save
+    await wordsetPage.saveButton.click();
+
+    // Verify error or save button disabled
+    const saveButton = wordsetPage.saveButton;
+    const isDisabled = await saveButton.isDisabled();
+    if (!isDisabled) {
+      // Check for error message
+      await expect(page.getByText(/must add.*words|cannot be empty/i)).toBeVisible({
+        timeout: 5000,
+      });
+    } else {
+      expect(isDisabled).toBeTruthy();
+    }
+  });
+
+  test('should persist wordlists across page reload', async ({ page }) => {
+    // Create wordlist
+    await wordsetPage.createWordset({
+      name: 'Persistent',
+      description: 'Should survive reload',
+      words: ['test1', 'test2'],
+    });
+
+    await expect(page.getByText('Persistent')).toBeVisible({ timeout: 5000 });
+
+    // Reload page
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Navigate back to wordset tab
+    await bleepPage.switchToWordsetTab();
+
+    // Verify wordlist still exists
+    await expect(page.getByText('Persistent')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/2 words/i)).toBeVisible();
+  });
+
+  test('should export wordlists to CSV', async ({ page }) => {
+    // Create wordlist to export
+    await wordsetPage.createWordset({
+      name: 'Export Test',
+      description: 'To be exported',
+      words: ['export1', 'export2', 'export3'],
+    });
+
+    // Click export button
+    const downloadPromise = page.waitForEvent('download');
+    const exportButton = page.getByRole('button', { name: /export/i });
+    await exportButton.click();
+
+    const download = await downloadPromise;
+
+    // Verify file was downloaded
+    expect(download.suggestedFilename()).toMatch(/\.csv$/i);
+  });
+
+  test('should import wordlists from CSV', async ({ page }) => {
+    // Prepare CSV content
+    const csvContent = 'name,description,words\n' + 'Imported List,From CSV,"word1,word2,word3"';
+
+    // Create temporary CSV file
+    const csvPath = '/tmp/test-wordlists.csv';
+    const fs = require('fs');
+    fs.writeFileSync(csvPath, csvContent);
+
+    // Click import button
+    const importButton = page.getByRole('button', { name: /import/i });
+    await importButton.click();
+
+    // Upload file
+    const fileInput = page.locator('input[type="file"]');
+    await fileInput.setInputFiles(csvPath);
+
+    // Verify wordlist was imported
+    await expect(page.getByText('Imported List')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/3 words/i)).toBeVisible();
+  });
+});
