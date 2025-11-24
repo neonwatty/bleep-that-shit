@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useBleepState } from './hooks/useBleepState';
 import { BleepTabs } from './components/BleepTabs';
 import { SetupTranscribeTab } from './components/SetupTranscribeTab';
@@ -12,7 +12,10 @@ function BleepPageContent() {
   const [activeTab, setActiveTab] = useState('setup');
   const bleepState = useBleepState();
 
-  // Define tabs - all always accessible
+  // Check if transcript exists to enable/disable tabs
+  const hasTranscript = bleepState.transcription.transcriptionResult !== null;
+
+  // Define tabs - Review & Bleep tabs locked until transcript created
   const tabs = [
     {
       id: 'setup',
@@ -23,14 +26,14 @@ function BleepPageContent() {
     {
       id: 'review',
       label: 'Review & Match',
-      icon: '📝',
-      enabled: true,
+      icon: hasTranscript ? '📝' : '📝', // memo icon (same when enabled or locked)
+      enabled: hasTranscript,
     },
     {
       id: 'bleep',
       label: 'Bleep & Download',
-      icon: '🔊',
-      enabled: true,
+      icon: hasTranscript ? '🔊' : '📝', // speaker icon when enabled, memo when locked
+      enabled: hasTranscript,
     },
     {
       id: 'wordsets',
@@ -39,6 +42,13 @@ function BleepPageContent() {
       enabled: true,
     },
   ];
+
+  // Auto-redirect to setup tab if user is on a locked tab
+  useEffect(() => {
+    if (!hasTranscript && (activeTab === 'review' || activeTab === 'bleep')) {
+      setActiveTab('setup');
+    }
+  }, [hasTranscript, activeTab]);
 
   return (
     <div className="editorial-section px-2 sm:px-4">

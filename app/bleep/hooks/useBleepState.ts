@@ -470,7 +470,11 @@ export function useBleepState() {
       // Match each wordset's words using its own match settings
       for (const wordset of wordsetsToMatch) {
         // Perform matching inline using wordset's match settings
-        const words = wordset.words.map(w => w.toLowerCase().trim());
+        // Handle both array of words and comma-separated strings
+        const words = wordset.words
+          .flatMap(w => w.split(','))
+          .map(w => w.toLowerCase().trim())
+          .filter(Boolean);
 
         transcriptionResult.chunks.forEach((chunk, index) => {
           const chunkText = chunk.text.toLowerCase().trim();

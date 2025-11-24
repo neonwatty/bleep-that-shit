@@ -39,7 +39,7 @@ export function ReviewMatchTab({
   searchQuery,
   matchedWords,
   activeWordsets,
-  wordSource: _wordSource,
+  wordSource,
   onWordsToMatchChange,
   onMatchModeChange,
   onFuzzyDistanceChange,
@@ -235,6 +235,8 @@ export function ReviewMatchTab({
                   onToggleWord={onToggleWord}
                   searchQuery={searchQuery}
                   onSearchChange={onSearchQueryChange}
+                  wordSource={wordSource}
+                  activeWordsets={activeWordsets}
                 />
               </div>
             )}
