@@ -27,13 +27,14 @@ export default defineConfig({
       },
     },
 
-    // E2E tests - comprehensive workflow tests with real transcription
-    // These tests run locally only (not in CI) and use Bob Ross test fixtures
+    // E2E tests - comprehensive workflow tests
+    // In CI: Uses network mocks (ML models blocked), FFmpeg still loads for audio processing
+    // Locally: Uses real network for full integration testing
     {
       name: 'e2e',
       testMatch: /e2e\/.*\.spec\.ts/,
       testIgnore: /smoke.*\.spec\.ts/,
-      timeout: 90000, // 90 seconds per test (transcription can take time)
+      timeout: 180000, // 3 min per test - video processing can take time
       use: {
         ...devices['Desktop Chrome'],
         headless: true, // Headless by default for speed

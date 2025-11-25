@@ -669,6 +669,32 @@ export function useBleepState() {
     }
   };
 
+  // Test hook for loading pre-generated transcripts
+  useEffect(() => {
+    const handleTestTranscript = (event: Event) => {
+      const customEvent = event as CustomEvent<TranscriptionResult>;
+      console.log('[Test Hook] Loading pre-generated transcript:', customEvent.detail);
+
+      setTranscriptionResult(customEvent.detail);
+      setIsTranscribing(false);
+      setProgress(100);
+      setProgressText('Transcription complete!');
+
+      // Handle timestamp warnings if present in metadata
+      if (customEvent.detail.metadata && customEvent.detail.metadata.nullTimestampCount > 0) {
+        setTimestampWarning({
+          count: customEvent.detail.metadata.nullTimestampCount,
+          total: customEvent.detail.metadata.totalChunks,
+        });
+      } else {
+        setTimestampWarning(null);
+      }
+    };
+
+    window.addEventListener('test:loadTranscript', handleTestTranscript);
+    return () => window.removeEventListener('test:loadTranscript', handleTestTranscript);
+  }, []);
+
   // Cleanup
   useEffect(() => {
     return () => {

@@ -50,17 +50,54 @@ export class WordsetPage {
 
     // Editor
     this.wordsetNameInput = page.getByTestId('wordset-name-input');
-    this.wordsetDescriptionInput = page.locator('textarea[placeholder*="description"]');
-    this.wordInput = page.locator('input[placeholder*="Enter a word"]');
-    this.addWordButton = page.locator('button').filter({ hasText: /Add/i }).first();
+    this.wordsetDescriptionInput = page.getByTestId('wordset-description-input');
+    this.wordInput = page.getByTestId('new-word-input');
+    this.addWordButton = page.getByTestId('add-word-button');
     this.bulkEditButton = page.locator('button').filter({ hasText: /Bulk Edit/i });
-    this.bulkEditTextarea = page.locator('textarea[placeholder*="Enter words"]');
-    this.saveWordsetButton = page.locator('button').filter({ hasText: /Save/i }).first();
-    this.cancelButton = page.locator('button').filter({ hasText: /Cancel/i });
+    // The bulk edit textarea appears after clicking bulk edit button
+    // It's a sibling to the "Done Editing" button
+    this.bulkEditTextarea = page.locator('textarea').first();
+    this.saveWordsetButton = page.getByTestId('save-wordset-button');
+    this.cancelButton = page.getByTestId('cancel-button');
 
     // Delete confirmation
     this.confirmDeleteButton = page.getByTestId('confirm-delete-button');
     this.cancelDeleteButton = page.getByTestId('cancel-delete-button');
+  }
+
+  /**
+   * Alias for newWordsetButton - for backward compatibility
+   */
+  get createButton() {
+    return this.newWordsetButton;
+  }
+
+  /**
+   * Alias for wordsetNameInput - for backward compatibility
+   */
+  get nameInput() {
+    return this.wordsetNameInput;
+  }
+
+  /**
+   * Alias for wordsetDescriptionInput - for backward compatibility
+   */
+  get descriptionInput() {
+    return this.wordsetDescriptionInput;
+  }
+
+  /**
+   * Alias for wordInput - for backward compatibility
+   */
+  get wordsInput() {
+    return this.wordInput;
+  }
+
+  /**
+   * Alias for saveWordsetButton - for backward compatibility
+   */
+  get saveButton() {
+    return this.saveWordsetButton;
   }
 
   /**
@@ -95,14 +132,19 @@ export class WordsetPage {
       await this.wordsetDescriptionInput.fill(options.description);
     }
 
-    if (options.useBulkEdit) {
+    // The form may already be in bulk edit mode by default
+    // If bulk edit button is visible, click it; otherwise we're already in edit mode
+    if (await this.bulkEditButton.isVisible()) {
       await this.bulkEditButton.click();
-      await this.bulkEditTextarea.fill(options.words.join('\n'));
-    } else {
-      for (const word of options.words) {
-        await this.wordInput.fill(word);
-        await this.addWordButton.click();
-      }
+    }
+
+    // Fill words in the textarea
+    await this.bulkEditTextarea.fill(options.words.join(', '));
+
+    // Click Done Editing if visible
+    const doneBtn = this.page.getByRole('button', { name: /Done Editing/i });
+    if (await doneBtn.isVisible()) {
+      await doneBtn.click();
     }
 
     await this.saveWordsetButton.click();

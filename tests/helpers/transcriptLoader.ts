@@ -40,7 +40,7 @@ export async function loadTranscript(page: Page, transcriptFilename: string): Pr
 
   // Inject transcript into page using window object
   // This approach uses a global test helper that we'll add to the app
-  await page.evaluate((transcript) => {
+  await page.evaluate(transcript => {
     // Store in window for test access
     (window as any).__TEST_TRANSCRIPT__ = transcript;
 
@@ -54,12 +54,13 @@ export async function loadTranscript(page: Page, transcriptFilename: string): Pr
 
   // Alternative approach: Use localStorage
   // This is more reliable if the app doesn't have the event listener
-  await page.evaluate((transcript) => {
+  await page.evaluate(transcript => {
     localStorage.setItem('__TEST_TRANSCRIPT__', JSON.stringify(transcript));
   }, transcriptData);
 
-  // Wait a moment for React to process
-  await page.waitForTimeout(500);
+  // Wait for React to process and update state
+  // Increased timeout to ensure state updates complete
+  await page.waitForTimeout(1500);
 }
 
 /**
@@ -115,7 +116,7 @@ export async function injectTranscriptIntoState(
   page: Page,
   transcript: TranscriptionResult
 ): Promise<void> {
-  await page.evaluate((transcriptData) => {
+  await page.evaluate(transcriptData => {
     // Try to find the React Fiber node and update state
     // This is a bit hacky but works for testing purposes
 
@@ -163,10 +164,7 @@ export async function verifyTabsUnlocked(page: Page): Promise<boolean> {
  * @param page - Playwright page object
  * @param timeout - Maximum wait time in milliseconds
  */
-export async function waitForTranscriptLoaded(
-  page: Page,
-  timeout = 10000
-): Promise<void> {
+export async function waitForTranscriptLoaded(page: Page, timeout = 10000): Promise<void> {
   await page.waitForFunction(
     () => {
       // Check if transcript data exists in any form

@@ -8,7 +8,7 @@
  * - Tab lock icons display correctly
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './e2e-setup';
 import { join } from 'path';
 import { BleepPage } from '../helpers/pages/BleepPage';
 import { loadTranscript } from '../helpers/transcriptLoader';
@@ -98,13 +98,13 @@ test.describe('Tab State Transitions', () => {
     await expect(bleepPage.reviewTab).toBeEnabled({ timeout: 5000 });
 
     await bleepPage.switchToReviewTab();
-    const wordsInput = bleepPage.page.locator('input[placeholder*="Words to match"]');
+    const wordsInput = bleepPage.wordsToMatchInput;
     await wordsInput.fill('happy,tree');
     await bleepPage.page.getByRole('button', { name: /match words/i }).click();
     await page.waitForTimeout(1000);
 
     // Verify matches exist
-    await expect(bleepPage.page.getByText(/matched words|selected words/i)).toBeVisible();
+    await expect(bleepPage.page.getByText(/matched words|selected words/i).first()).toBeVisible();
 
     // Switch to Bleep tab
     await bleepPage.switchToBleepTab();
@@ -115,7 +115,7 @@ test.describe('Tab State Transitions', () => {
     await page.waitForTimeout(500);
 
     // Matched words should still be there
-    await expect(bleepPage.page.getByText(/matched words|selected words/i)).toBeVisible();
+    await expect(bleepPage.page.getByText(/matched words|selected words/i).first()).toBeVisible();
 
     // Input should still have values
     const inputValue = await wordsInput.inputValue();
@@ -129,10 +129,10 @@ test.describe('Tab State Transitions', () => {
 
     // Set bleep settings
     await bleepPage.switchToBleepTab();
-    const bleepSelector = bleepPage.page.locator('select[aria-label*="bleep sound" i]');
-    await bleepSelector.selectOption({ label: /dolphin/i });
+    const bleepSelector = bleepPage.bleepSoundSelect;
+    await bleepSelector.selectOption('dolphin'); // Fixed: removed regex syntax
 
-    const volumeSlider = bleepPage.page.locator('input[type="range"][aria-label*="volume" i]');
+    const volumeSlider = bleepPage.bleepVolumeSlider;
     await volumeSlider.fill('90');
 
     // Switch away and back

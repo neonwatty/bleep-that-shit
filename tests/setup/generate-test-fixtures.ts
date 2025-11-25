@@ -56,10 +56,7 @@ async function extractAudio(): Promise<void> {
   console.log(`✅ Audio saved to: ${AUDIO_FIXTURE}`);
 }
 
-async function transcribeFile(
-  filePath: string,
-  fileType: 'audio' | 'video'
-): Promise<object> {
+async function transcribeFile(filePath: string, fileType: 'audio' | 'video'): Promise<object> {
   console.log(`🎤 Transcribing ${fileType} file with Tiny Whisper model...`);
   console.log('   This may take 30-60 seconds...');
 
@@ -69,7 +66,7 @@ async function transcribeFile(
 
   try {
     // Navigate to bleep page
-    await page.goto('http://localhost:3000/bleep');
+    await page.goto('http://localhost:3004/bleep');
     await page.waitForLoadState('networkidle');
 
     // Upload file
@@ -78,8 +75,8 @@ async function transcribeFile(
     await page.waitForTimeout(1000);
 
     // Select Tiny model (should be default)
-    const modelSelector = page.locator('select[aria-label="Select model"]');
-    await modelSelector.selectOption({ label: /tiny/i });
+    const modelSelector = page.getByTestId('model-select');
+    await modelSelector.selectOption('Xenova/whisper-tiny.en');
 
     // Start transcription
     const transcribeButton = page.getByRole('button', { name: /start transcription/i });
@@ -162,13 +159,15 @@ async function main(): Promise<void> {
       await execAsync('ffmpeg -version');
     } catch (error) {
       console.error('❌ ERROR: ffmpeg is not installed');
-      console.error('   Install with: brew install ffmpeg (macOS) or apt-get install ffmpeg (Linux)');
+      console.error(
+        '   Install with: brew install ffmpeg (macOS) or apt-get install ffmpeg (Linux)'
+      );
       process.exit(1);
     }
 
     // Check if dev server is running
     try {
-      const response = await fetch('http://localhost:3000/bleep');
+      const response = await fetch('http://localhost:3004/bleep');
       if (!response.ok) throw new Error('Server not responding');
     } catch (error) {
       console.error('❌ ERROR: Development server is not running');

@@ -11,7 +11,10 @@ import { BleepPage } from '../helpers/pages/BleepPage';
 
 const VIDEO_FIXTURE = join(__dirname, '../fixtures/files/bob-ross-15s.mp4');
 
+// Skip real transcription tests in CI - they require actual ML model downloads
+// Run locally to validate full transcription workflow
 test.describe('Video Transcription with Tiny Model', () => {
+  test.skip(process.env.CI === 'true', 'Real transcription tests run locally only');
   let bleepPage: BleepPage;
 
   test.beforeEach(async ({ page }) => {
@@ -28,13 +31,13 @@ test.describe('Video Transcription with Tiny Model', () => {
     await expect(bleepPage.page.locator('video')).toBeVisible();
 
     // Select Tiny model
-    await bleepPage.modelSelector.selectOption({ label: /tiny/i });
+    await bleepPage.selectModel('Xenova/whisper-tiny.en');
 
     // Start transcription
     await bleepPage.transcribeButton.click();
 
     // Wait for completion (video transcription uses extracted audio)
-    await expect(bleepPage.transcriptionResult).toBeVisible({ timeout: 60000 });
+    await expect(bleepPage.transcriptResult).toBeVisible({ timeout: 60000 });
     await expect(bleepPage.page.getByText(/transcription complete/i)).toBeVisible({
       timeout: 60000,
     });
@@ -44,7 +47,7 @@ test.describe('Video Transcription with Tiny Model', () => {
     await expect(bleepPage.bleepTab).toBeEnabled();
 
     // Verify transcript has content
-    const transcriptText = await bleepPage.transcriptionResult.textContent();
+    const transcriptText = await bleepPage.transcriptResult.textContent();
     expect(transcriptText).toBeTruthy();
     expect(transcriptText!.length).toBeGreaterThan(0);
   });

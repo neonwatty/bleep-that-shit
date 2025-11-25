@@ -6,7 +6,7 @@
 
 ## Overview
 
-Implement a comprehensive Playwright E2E test suite covering all critical user workflows in the Bleep That Sh*t! application. Tests will run locally only (not in CI) and use real transcription with the Tiny Whisper model for maximum speed.
+Implement a comprehensive Playwright E2E test suite covering all critical user workflows in the Bleep That Sh\*t! application. Tests will run locally only (not in CI) and use real transcription with the Tiny Whisper model for maximum speed.
 
 ## Goals
 
@@ -21,6 +21,7 @@ Implement a comprehensive Playwright E2E test suite covering all critical user w
 ### Transcription Optimization
 
 Instead of transcribing in every test (slow), we:
+
 1. Generate transcript fixtures once from Bob Ross sample
 2. Load pre-generated transcripts in tests that need them
 3. Dedicated transcription tests verify the actual transcription works
@@ -64,6 +65,7 @@ tests/
 **Purpose**: One-time generation of test fixtures
 
 **Functionality**:
+
 - Extract first 15 seconds from Bob Ross video → save as `bob-ross-15s.mp4`
 - Extract audio track from video → save as `bob-ross-15s.mp3`
 - Transcribe both files using Tiny model
@@ -77,11 +79,13 @@ tests/
 **Purpose**: Inject pre-generated transcripts into app state
 
 **Key Function**:
+
 ```typescript
-async function loadTranscript(page: Page, transcriptFile: string): Promise<void>
+async function loadTranscript(page: Page, transcriptFile: string): Promise<void>;
 ```
 
 **Behavior**:
+
 - Loads transcript JSON from fixtures
 - Injects into app state (bypasses actual transcription)
 - Sets state as if transcription completed successfully
@@ -95,6 +99,7 @@ async function loadTranscript(page: Page, transcriptFile: string): Promise<void>
 **Purpose**: Verify transcription works with Tiny model
 
 **Files**:
+
 1. `tests/e2e/transcription-audio.spec.ts`
    - Upload bob-ross-15s.mp3
    - Transcribe with Tiny English model
@@ -306,6 +311,7 @@ async function loadTranscript(page: Page, transcriptFile: string): Promise<void>
 **File**: `playwright.config.ts`
 
 **Changes**:
+
 ```typescript
 // Add E2E test project
 export default defineConfig({
@@ -329,6 +335,7 @@ export default defineConfig({
 #### 3.2 Package.json Scripts
 
 **Add new npm scripts**:
+
 ```json
 {
   "scripts": {
@@ -344,12 +351,14 @@ export default defineConfig({
 #### 3.3 Enhanced Page Objects
 
 **Updates to `tests/helpers/pages/BleepPage.ts`**:
+
 - Add `loadTranscript(transcriptFile)` method
 - Add `waitForBleepComplete()` helper
 - Add `downloadCensoredAudio()` and `downloadCensoredVideo()` helpers
 - Add assertion helpers for verifying audio/video processing results
 
 **Updates to `tests/helpers/pages/WordsetPage.ts`**:
+
 - Already has comprehensive CRUD methods
 - May need enhancements based on test requirements
 
@@ -362,6 +371,7 @@ export default defineConfig({
 ### Phase 4: Documentation
 
 **Update `tests/README.md`**:
+
 - Document E2E test strategy
 - Explain transcription optimization approach
 - Document fixture generation process
@@ -411,6 +421,7 @@ npm test              # Unit tests (~few seconds)
 ## Deliverables
 
 ### 1. Test Fixtures (4 files)
+
 - ✅ `tests/fixtures/files/bob-ross-15s.mp4`
 - ✅ `tests/fixtures/files/bob-ross-15s.mp3`
 - ✅ `tests/fixtures/transcripts/bob-ross-15s-video.transcript.json`
@@ -419,10 +430,12 @@ npm test              # Unit tests (~few seconds)
 ### 2. Test Files (15 spec files, ~55-65 tests)
 
 **Group A: Transcription** (2 files)
+
 - ✅ `tests/e2e/transcription-audio.spec.ts`
 - ✅ `tests/e2e/transcription-video.spec.ts`
 
 **Group B: Workflows** (6 files)
+
 - ✅ `tests/e2e/audio-bleep-workflow.spec.ts`
 - ✅ `tests/e2e/video-bleep-workflow.spec.ts`
 - ✅ `tests/e2e/wordset-workflow.spec.ts`
@@ -431,57 +444,66 @@ npm test              # Unit tests (~few seconds)
 - ✅ `tests/e2e/transcript-interaction.spec.ts`
 
 **Group C: Features** (4 files)
+
 - ✅ `tests/e2e/bleep-customization.spec.ts`
 - ✅ `tests/e2e/tab-transitions.spec.ts`
 - ✅ `tests/e2e/wordlist-management.spec.ts`
 - ✅ `tests/e2e/multi-file-sequence.spec.ts`
 
 **Group D: Validation** (3 files)
+
 - ✅ `tests/e2e/file-validation.spec.ts`
 - ✅ `tests/e2e/transcription-errors.spec.ts`
 - ✅ `tests/e2e/bleep-validation.spec.ts`
 
 ### 3. Infrastructure (3 files)
+
 - ✅ `tests/setup/generate-test-fixtures.ts` - Fixture generation script
 - ✅ `tests/helpers/transcriptLoader.ts` - Transcript loader helper
 - ✅ Enhanced page objects with new helper methods
 
 ### 4. Configuration (2 files)
+
 - ✅ Updated `playwright.config.ts` - E2E project configuration (headless by default)
 - ✅ Updated `package.json` - New test scripts
 
 ### 5. Documentation (2 files)
+
 - ✅ `plans/08-e2e-test-suite.md` - This implementation plan
 - ✅ Updated `tests/README.md` - Test strategy and usage documentation
 
 ## Time Estimates
 
-| Test Group | Files | Tests | Duration |
-|------------|-------|-------|----------|
-| Transcription | 2 | 2 | ~20-30s |
-| Workflows | 6 | 20-25 | ~6-8 min |
-| Features | 4 | 20-25 | ~4-5 min |
-| Validation | 3 | 12-15 | ~3 min |
-| **Total** | **15** | **~55-65** | **~10-12 min** |
+| Test Group    | Files  | Tests      | Duration       |
+| ------------- | ------ | ---------- | -------------- |
+| Transcription | 2      | 2          | ~20-30s        |
+| Workflows     | 6      | 20-25      | ~6-8 min       |
+| Features      | 4      | 20-25      | ~4-5 min       |
+| Validation    | 3      | 12-15      | ~3 min         |
+| **Total**     | **15** | **~55-65** | **~10-12 min** |
 
 ## Benefits
 
 ### Performance
+
 - ✅ **Fast**: Transcribe 2x with Tiny model (~20s), reuse in 55+ tests
 - ✅ **Optimized**: Only 2 tests run actual transcription, rest use pre-loaded data
 - ✅ **Headless**: All tests run headless by default for maximum speed
 
 ### Quality
+
 - ✅ **Realistic**: Uses actual Bob Ross content from the app
 - ✅ **Comprehensive**: Covers all critical user workflows
 - ✅ **Reliable**: Pre-generated fixtures = consistent test results
 
 ### Maintainability
+
 - ✅ **Simple**: No complex mocking, just load real transcript data
 - ✅ **Clear**: Well-organized test groups by purpose
 - ✅ **Documented**: Detailed plan and README documentation
 
 ### Developer Experience
+
 - ✅ **Fast feedback**: 10-12 minute full suite run time
 - ✅ **Flexible**: Can run individual test groups or files
 - ✅ **Debuggable**: UI mode and headed mode available
@@ -499,6 +521,7 @@ npm test              # Unit tests (~few seconds)
 ## Future Enhancements
 
 ### Potential Future Improvements (Not in Scope)
+
 - Add tests for additional models (Base, Small) if needed
 - Add browser compatibility tests (Firefox, Safari)
 - Add accessibility testing (keyboard navigation, ARIA)
