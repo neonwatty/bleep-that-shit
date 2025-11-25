@@ -255,7 +255,7 @@ test.describe('Wordlist Management - CRUD Operations', () => {
     await expect(page.getByText(/2 words/i)).toBeVisible();
   });
 
-  test.skip('should export wordlists to CSV', async ({ page }) => {
+  test('should export wordlists to CSV', async ({ page }) => {
     // Create wordlist to export
     await wordsetPage.createWordset({
       name: 'Export Test',
@@ -263,9 +263,11 @@ test.describe('Wordlist Management - CRUD Operations', () => {
       words: ['export1', 'export2', 'export3'],
     });
 
-    // Click export all button (use specific test ID to avoid matching individual export buttons)
+    await expect(page.getByText('Export Test')).toBeVisible({ timeout: 5000 });
+
+    // Click direct export button on list view (not in import-export view)
     const downloadPromise = page.waitForEvent('download');
-    await wordsetPage.exportAllButton.click();
+    await page.getByRole('button', { name: /Export All CSV/i }).click();
 
     const download = await downloadPromise;
 
@@ -273,20 +275,33 @@ test.describe('Wordlist Management - CRUD Operations', () => {
     expect(download.suggestedFilename()).toMatch(/\.csv$/i);
   });
 
-  test.skip('should import wordlists from CSV', async ({ page }) => {
-    // Prepare CSV content
-    const csvContent = 'name,description,words\n' + 'Imported List,From CSV,"word1,word2,word3"';
+  test('should import wordlists from CSV', async ({ page }) => {
+    // Navigate to import-export view first
+    await page.getByRole('button', { name: /Import CSV/i }).click();
 
-    // Create temporary CSV file
-    const csvPath = '/tmp/test-wordlists.csv';
-    const fs = require('fs');
-    fs.writeFileSync(csvPath, csvContent);
+    // Wait for import-export view to load (look for the label, not the hidden input)
+    await expect(page.getByText('Click to browse or drag and drop')).toBeVisible({ timeout: 5000 });
 
-    // Upload file directly using the file input (test ID)
-    await wordsetPage.importFileInput.setInputFiles(csvPath);
+    // Prepare CSV content (words separated by semicolons per expected format)
+    const csvContent =
+      'name,description,words,exact,partial,fuzzy,fuzzyDistance,color\n' +
+      'Imported List,From CSV,word1;word2;word3,true,false,false,0,#EF4444';
 
-    // Verify wordlist was imported
-    await expect(page.getByText('Imported List')).toBeVisible({ timeout: 10000 });
+    // Upload file directly to hidden input (Playwright can interact with hidden inputs)
+    await page.getByTestId('import-file-input').setInputFiles({
+      name: 'test-wordlists.csv',
+      mimeType: 'text/csv',
+      buffer: Buffer.from(csvContent),
+    });
+
+    // Wait for success message
+    await expect(page.getByText(/✅ Imported:/i)).toBeVisible({ timeout: 10000 });
+
+    // Click Close to return to list view
+    await page.getByRole('button', { name: 'Close' }).click();
+
+    // Verify wordlist appears in list
+    await expect(page.getByText('Imported List')).toBeVisible({ timeout: 5000 });
     await expect(page.getByText(/3 words/i)).toBeVisible();
   });
 });
