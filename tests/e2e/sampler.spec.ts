@@ -133,7 +133,9 @@ test.describe('Sampler Page - UI Tests', () => {
 
   test('should not show configuration without file', async ({ page }) => {
     // Without file upload, Step 2 and Step 3 should not be visible
-    await expect(page.getByRole('heading', { name: /Step 2: Configure Sample/i })).not.toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /Step 2: Configure Sample/i })
+    ).not.toBeVisible();
     await expect(page.getByRole('heading', { name: /Step 3: Run Comparison/i })).not.toBeVisible();
     await expect(page.getByTestId('compare-all-button')).not.toBeVisible();
   });

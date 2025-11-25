@@ -44,9 +44,7 @@ test.describe('Home Page - Sections', () => {
 
   test('should display Privacy section', async ({ page }) => {
     await expect(page.getByTestId('privacy-section')).toBeVisible();
-    await expect(
-      page.getByRole('heading', { name: /Privacy & Local Processing/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Privacy & Local Processing/i })).toBeVisible();
     await expect(page.getByText(/Your files never leave your device/i)).toBeVisible();
   });
 

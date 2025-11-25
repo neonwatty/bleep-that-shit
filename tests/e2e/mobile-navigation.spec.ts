@@ -37,9 +37,10 @@ test.describe('Mobile Navigation - Hamburger Menu', () => {
     await page.getByRole('button', { name: /toggle menu/i }).click();
 
     // Menu drawer should be visible - look for the drawer element
-    const menuDrawer = page.locator('[data-testid="mobile-menu-drawer"]').or(
-      page.locator('div[role="dialog"]')
-    ).or(page.locator('.fixed.inset-0'));
+    const menuDrawer = page
+      .locator('[data-testid="mobile-menu-drawer"]')
+      .or(page.locator('div[role="dialog"]'))
+      .or(page.locator('.fixed.inset-0'));
     await expect(menuDrawer.first()).toBeVisible();
 
     // Menu items should be visible (use role-based selectors in menu context)
