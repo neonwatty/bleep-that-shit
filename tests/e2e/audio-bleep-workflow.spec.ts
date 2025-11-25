@@ -159,7 +159,9 @@ test.describe('Audio Bleeping Complete Workflow', () => {
     await bleepPage.page.getByRole('button', { name: /match words/i }).click();
 
     // Wait for matched words to appear (use .first() to avoid strict mode violation)
-    await expect(bleepPage.page.getByText(/words selected/i).first()).toBeVisible({ timeout: 10000 });
+    await expect(bleepPage.page.getByText(/words selected/i).first()).toBeVisible({
+      timeout: 10000,
+    });
 
     // Apply bleeps first time
     await bleepPage.switchToBleepTab();
