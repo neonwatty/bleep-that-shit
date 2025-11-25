@@ -54,9 +54,7 @@ export class WordsetPage {
     this.wordInput = page.getByTestId('new-word-input');
     this.addWordButton = page.getByTestId('add-word-button');
     this.bulkEditButton = page.locator('button').filter({ hasText: /Bulk Edit/i });
-    // The bulk edit textarea appears after clicking bulk edit button
-    // It's a sibling to the "Done Editing" button
-    this.bulkEditTextarea = page.locator('textarea').first();
+    this.bulkEditTextarea = page.getByTestId('bulk-edit-textarea');
     this.saveWordsetButton = page.getByTestId('save-wordset-button');
     this.cancelButton = page.getByTestId('cancel-button');
 
@@ -139,20 +137,18 @@ export class WordsetPage {
       await this.wordsetDescriptionInput.fill(options.description);
     }
 
-    // The form may already be in bulk edit mode by default
-    // If bulk edit button is visible, click it; otherwise we're already in edit mode
-    if (await this.bulkEditButton.isVisible()) {
-      await this.bulkEditButton.click();
-    }
+    // Click Bulk Edit to enter bulk edit mode
+    await this.bulkEditButton.click();
 
-    // Fill words in the textarea
+    // Wait for textarea to be visible and fill words
+    await expect(this.bulkEditTextarea).toBeVisible();
     await this.bulkEditTextarea.fill(options.words.join(', '));
 
-    // Click Done Editing if visible
-    const doneBtn = this.page.getByRole('button', { name: /Done Editing/i });
-    if (await doneBtn.isVisible()) {
-      await doneBtn.click();
-    }
+    // Click Done Editing to parse words
+    await this.page.getByRole('button', { name: /Done Editing/i }).click();
+
+    // Wait for save button to be enabled
+    await expect(this.saveWordsetButton).toBeEnabled({ timeout: 5000 });
 
     await this.saveWordsetButton.click();
   }
@@ -183,9 +179,12 @@ export class WordsetPage {
 
     if (options.words) {
       await this.bulkEditButton.click();
+      await expect(this.bulkEditTextarea).toBeVisible();
       await this.bulkEditTextarea.fill(options.words.join('\n'));
+      await this.page.getByRole('button', { name: /Done Editing/i }).click();
     }
 
+    await expect(this.saveWordsetButton).toBeEnabled({ timeout: 5000 });
     await this.saveWordsetButton.click();
   }
 
