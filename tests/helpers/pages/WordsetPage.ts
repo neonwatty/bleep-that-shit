@@ -101,6 +101,13 @@ export class WordsetPage {
   }
 
   /**
+   * Alias for searchWordsetsInput - for backward compatibility
+   */
+  get searchInput() {
+    return this.searchWordsetsInput;
+  }
+
+  /**
    * Navigate to the Wordsets tab
    */
   async gotoWordsetsTab() {
