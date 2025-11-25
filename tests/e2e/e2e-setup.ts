@@ -10,11 +10,11 @@ const isCI = process.env.CI === 'true';
  * Locally: Allows real network requests for full integration testing.
  */
 export const test = base.extend({
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   page: async ({ page }, use) => {
     if (isCI) {
       await setupNetworkMocks(page);
     }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(page);
   },
 });
