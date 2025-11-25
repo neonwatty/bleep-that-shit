@@ -5,6 +5,16 @@ import { waitForTranscription, waitForVideoProcessing } from '../waitHelpers';
 export class BleepPage {
   readonly page: Page;
 
+  // Tab Elements
+  readonly setupTab: Locator;
+  readonly reviewTab: Locator;
+  readonly bleepTab: Locator;
+  readonly wordsetTab: Locator;
+
+  // Media Players
+  readonly audioPlayer: Locator;
+  readonly videoPlayer: Locator;
+
   // File Upload Elements
   readonly fileDropzone: Locator;
   readonly fileInput: Locator;
@@ -54,6 +64,16 @@ export class BleepPage {
 
   constructor(page: Page) {
     this.page = page;
+
+    // Tabs
+    this.setupTab = page.getByRole('tab', { name: /setup/i });
+    this.reviewTab = page.getByRole('tab', { name: /review/i });
+    this.bleepTab = page.getByRole('tab', { name: /bleep/i });
+    this.wordsetTab = page.getByRole('tab', { name: /word.*list/i });
+
+    // Media Players
+    this.audioPlayer = page.locator('audio').first();
+    this.videoPlayer = page.locator('video').first();
 
     // File Upload
     this.fileDropzone = page.getByTestId('file-dropzone');
@@ -112,15 +132,63 @@ export class BleepPage {
   }
 
   /**
-   * Upload a file using the file input
+   * Switch to Setup tab
    */
-  async uploadFile(options: {
-    fileName: string;
-    mimeType: string;
-    buffer?: Buffer;
-    filePath?: string;
-  }) {
-    await uploadFile(this.page, options);
+  async switchToSetupTab() {
+    await this.setupTab.click();
+  }
+
+  /**
+   * Switch to Review tab
+   */
+  async switchToReviewTab() {
+    await this.reviewTab.click();
+  }
+
+  /**
+   * Switch to Bleep tab
+   */
+  async switchToBleepTab() {
+    await this.bleepTab.click();
+  }
+
+  /**
+   * Switch to Wordset tab
+   */
+  async switchToWordsetTab() {
+    await this.wordsetTab.click();
+  }
+
+  /**
+   * Upload a file using the file input
+   * Can accept either a file path string or an options object
+   */
+  async uploadFile(
+    pathOrOptions:
+      | string
+      | {
+          fileName: string;
+          mimeType: string;
+          buffer?: Buffer;
+          filePath?: string;
+        }
+  ) {
+    // If string path is provided, convert to options object
+    if (typeof pathOrOptions === 'string') {
+      const filePath = pathOrOptions;
+      const fileName = filePath.split('/').pop() || 'file';
+      const mimeType = fileName.endsWith('.mp4')
+        ? 'video/mp4'
+        : fileName.endsWith('.mp3')
+          ? 'audio/mpeg'
+          : fileName.endsWith('.wav')
+            ? 'audio/wav'
+            : 'application/octet-stream';
+
+      await uploadFile(this.page, { fileName, mimeType, filePath });
+    } else {
+      await uploadFile(this.page, pathOrOptions);
+    }
   }
 
   /**

@@ -10,6 +10,7 @@ interface WordWrapperProps {
   isCensored: boolean;
   isHighlighted?: boolean;
   onClick: (index: number) => void;
+  wordsetColor?: string;
 }
 
 export function WordWrapper({
@@ -20,6 +21,7 @@ export function WordWrapper({
   isCensored,
   isHighlighted = false,
   onClick,
+  wordsetColor,
 }: WordWrapperProps) {
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const wordRef = useRef<HTMLSpanElement>(null);
@@ -44,10 +46,12 @@ export function WordWrapper({
     }
   };
 
+  const wordsetHighlightClass = wordsetColor ? 'wordset-highlighted' : '';
+
   return (
     <span
       ref={wordRef}
-      className={`word-wrapper ${isCensored ? 'censored' : 'uncensored'} ${isHighlighted ? 'highlighted' : ''}`}
+      className={`word-wrapper ${isCensored ? 'censored' : 'uncensored'} ${isHighlighted ? 'highlighted' : ''} ${wordsetHighlightClass}`}
       onClick={() => onClick(index)}
       onMouseEnter={handleMouseEnter}
       role="button"
@@ -59,6 +63,14 @@ export function WordWrapper({
           onClick(index);
         }
       }}
+      style={
+        wordsetColor
+          ? {
+              borderBottom: `2px solid ${wordsetColor}`,
+              backgroundColor: `${wordsetColor}20`, // 20 is for 12.5% opacity
+            }
+          : undefined
+      }
     >
       <span className="word-text">{word}</span>
       <span

@@ -15,17 +15,3 @@ export interface Sentence {
   startTime: number;
   endTime: number;
 }
-
-export interface MatchedWord {
-  word: string;
-  start: number;
-  end: number;
-}
-
-export type MatchMode = 'exact' | 'partial' | 'fuzzy';
-
-export interface MatchOptions {
-  mode: MatchMode;
-  fuzzyDistance?: number;
-  caseSensitive?: boolean;
-}

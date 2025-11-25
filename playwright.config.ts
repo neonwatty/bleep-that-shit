@@ -5,7 +5,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 4 : undefined,
   reporter: 'html',
   use: {
     baseURL: 'http://localhost:3004',
@@ -27,30 +27,46 @@ export default defineConfig({
       },
     },
 
-    // Standard E2E tests (excluding smoke tests)
+    // E2E tests - comprehensive workflow tests
+    // In CI: Uses network mocks (ML models blocked), FFmpeg still loads for audio processing
+    // Locally: Uses real network for full integration testing
+    {
+      name: 'e2e',
+      testMatch: /e2e\/.*\.spec\.ts/,
+      testIgnore: /smoke.*\.spec\.ts/,
+      timeout: 180000, // 3 min per test - video processing can take time
+      use: {
+        ...devices['Desktop Chrome'],
+        headless: true, // Headless by default for speed
+        actionTimeout: 30000,
+        navigationTimeout: 60000,
+      },
+    },
+
+    // Standard E2E tests (excluding smoke tests and new e2e directory)
     {
       name: 'chromium',
-      testIgnore: /smoke.*\.spec\.ts/,
+      testIgnore: [/smoke.*\.spec\.ts/, /e2e\/.*\.spec\.ts/],
       use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'firefox',
-      testIgnore: /smoke.*\.spec\.ts/,
+      testIgnore: [/smoke.*\.spec\.ts/, /e2e\/.*\.spec\.ts/],
       use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
-      testIgnore: /smoke.*\.spec\.ts/,
+      testIgnore: [/smoke.*\.spec\.ts/, /e2e\/.*\.spec\.ts/],
       use: { ...devices['Desktop Safari'] },
     },
     {
       name: 'Mobile Chrome',
-      testIgnore: /smoke.*\.spec\.ts/,
+      testIgnore: [/smoke.*\.spec\.ts/, /e2e\/.*\.spec\.ts/],
       use: { ...devices['Pixel 5'] },
     },
     {
       name: 'Mobile Safari',
-      testIgnore: /smoke.*\.spec\.ts/,
+      testIgnore: [/smoke.*\.spec\.ts/, /e2e\/.*\.spec\.ts/],
       use: { ...devices['iPhone 12'] },
     },
   ],

@@ -204,14 +204,24 @@ export function SetupTranscribeTab({
           </div>
         )}
 
-        {transcriptionResult && (
-          <div className="mt-4 rounded border-l-4 border-green-400 bg-green-50 p-3 text-sm">
-            <p className="text-green-900">
-              ✅ <strong>Transcription complete!</strong> Continue to the Review & Match tab to
-              select words.
-            </p>
-          </div>
-        )}
+        {transcriptionResult &&
+          (() => {
+            const wordCount = transcriptionResult.chunks.length;
+            const sentenceCount = transcriptionResult.text
+              .split(/[.!?]+/)
+              .filter(s => s.trim().length > 0).length;
+
+            return (
+              <div className="mt-4 rounded border-l-4 border-green-400 bg-green-50 p-3 text-sm">
+                <p className="text-green-900">
+                  ✅ <strong>Transcription complete!</strong> {wordCount} word
+                  {wordCount !== 1 ? 's' : ''} in {sentenceCount} sentence
+                  {sentenceCount !== 1 ? 's' : ''}. Continue to the Review & Match tab to select
+                  words.
+                </p>
+              </div>
+            );
+          })()}
       </section>
     </div>
   );

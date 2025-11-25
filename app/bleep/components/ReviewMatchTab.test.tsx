@@ -45,7 +45,7 @@ describe('ReviewMatchTab', () => {
     it('renders pattern matching section heading', () => {
       render(<ReviewMatchTab {...defaultProps} />);
 
-      expect(screen.getByText('Pattern Matching (Optional)')).toBeInTheDocument();
+      expect(screen.getByText('Manual Pattern Matching (Optional)')).toBeInTheDocument();
     });
   });
 
@@ -322,13 +322,7 @@ describe('ReviewMatchTab', () => {
     });
 
     it('renders search input when transcript is expanded', () => {
-      render(
-        <ReviewMatchTab
-          {...defaultProps}
-          transcriptionResult={mockTranscript}
-          transcriptExpanded={true}
-        />
-      );
+      render(<ReviewMatchTab {...defaultProps} transcriptionResult={mockTranscript} />);
 
       expect(screen.getByTestId('search-transcript-input')).toBeInTheDocument();
       expect(screen.getByPlaceholderText(/Search for words in transcript/i)).toBeInTheDocument();

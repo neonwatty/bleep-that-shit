@@ -186,6 +186,17 @@ h6 {
   border-bottom-color: #d1d5db;
 }
 
+/* Wordset highlighting (applied via inline styles for color) */
+.word-wrapper.wordset-highlighted .word-text {
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.word-wrapper.wordset-highlighted:hover .word-text {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 /* Hover timestamp tooltip */
 .timestamp {
   position: fixed;

@@ -96,3 +96,43 @@ jobs:
           name: smoke-test-report
           path: playwright-report/
           retention-days: 7
+
+  e2e-tests:
+    name: E2E Tests (Shard ${{ matrix.shard }}/3)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js app (static export)
+        run: npm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run E2E tests (shard ${{ matrix.shard }}/3)
+        run: npx playwright test --project=e2e --shard=${{ matrix.shard }}/3
+        env:
+          CI: 'true'
+
+      - name: Upload E2E test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-report-shard-${{ matrix.shard }}
+          path: playwright-report/
+          retention-days: 7

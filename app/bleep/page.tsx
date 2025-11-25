@@ -1,40 +1,54 @@
 'use client';
 
-import { Suspense, useState, useMemo } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useBleepState } from './hooks/useBleepState';
 import { BleepTabs } from './components/BleepTabs';
 import { SetupTranscribeTab } from './components/SetupTranscribeTab';
 import { ReviewMatchTab } from './components/ReviewMatchTab';
+import { WordsetTab } from './components/WordsetTab';
 import { BleepDownloadTab } from './components/BleepDownloadTab';
 
 function BleepPageContent() {
   const [activeTab, setActiveTab] = useState('setup');
   const bleepState = useBleepState();
 
-  // Define tabs with conditional enabling
-  const tabs = useMemo(
-    () => [
-      {
-        id: 'setup',
-        label: 'Setup & Transcribe',
-        icon: '📋',
-        enabled: true,
-      },
-      {
-        id: 'review',
-        label: 'Review & Match',
-        icon: '📝',
-        enabled: bleepState.transcription.transcriptionResult !== null,
-      },
-      {
-        id: 'bleep',
-        label: 'Bleep & Download',
-        icon: '🔊',
-        enabled: bleepState.wordSelection.matchedWords.length > 0,
-      },
-    ],
-    [bleepState.transcription.transcriptionResult, bleepState.wordSelection.matchedWords.length]
-  );
+  // Check if transcript exists to enable/disable tabs
+  const hasTranscript = bleepState.transcription.transcriptionResult !== null;
+
+  // Define tabs - Review & Bleep tabs locked until transcript created
+  const tabs = [
+    {
+      id: 'setup',
+      label: 'Setup & Transcribe',
+      icon: '📋',
+      enabled: true,
+    },
+    {
+      id: 'review',
+      label: 'Review & Match',
+      icon: hasTranscript ? '📝' : '📝', // memo icon (same when enabled or locked)
+      enabled: hasTranscript,
+    },
+    {
+      id: 'bleep',
+      label: 'Bleep & Download',
+      icon: hasTranscript ? '🔊' : '📝', // speaker icon when enabled, memo when locked
+      enabled: hasTranscript,
+    },
+    {
+      id: 'wordsets',
+      label: 'Manage Word Lists',
+      icon: '📚',
+      enabled: true,
+    },
+  ];
+
+  // Auto-redirect to setup tab if user is on a locked tab
+  useEffect(() => {
+    if (!hasTranscript && (activeTab === 'review' || activeTab === 'bleep')) {
+      setActiveTab('setup');
+    }
+  }, [hasTranscript, activeTab]);
 
   return (
     <div className="editorial-section px-2 sm:px-4">
@@ -157,18 +171,23 @@ function BleepPageContent() {
             fuzzyDistance={bleepState.wordSelection.fuzzyDistance}
             censoredWordIndices={bleepState.wordSelection.censoredWordIndices}
             searchQuery={bleepState.wordSelection.searchQuery}
-            transcriptExpanded={bleepState.wordSelection.transcriptExpanded}
             matchedWords={bleepState.wordSelection.matchedWords}
+            activeWordsets={bleepState.wordSelection.activeWordsets}
+            wordSource={bleepState.wordSelection.wordSource}
             onWordsToMatchChange={bleepState.wordSelection.setWordsToMatch}
             onMatchModeChange={bleepState.wordSelection.setMatchMode}
             onFuzzyDistanceChange={bleepState.wordSelection.setFuzzyDistance}
             onSearchQueryChange={bleepState.wordSelection.setSearchQuery}
-            onTranscriptExpandedChange={bleepState.wordSelection.setTranscriptExpanded}
             onMatch={bleepState.wordSelection.handleMatch}
             onToggleWord={bleepState.wordSelection.handleToggleWord}
             onClearAll={bleepState.wordSelection.handleClearAll}
+            onApplyWordsets={bleepState.wordSelection.handleApplyWordsets}
+            onRemoveWordset={bleepState.wordSelection.handleRemoveWordset}
+            onSwitchToWordsetsTab={() => setActiveTab('wordsets')}
           />
         )}
+
+        {activeTab === 'wordsets' && <WordsetTab />}
 
         {activeTab === 'bleep' && (
           <BleepDownloadTab

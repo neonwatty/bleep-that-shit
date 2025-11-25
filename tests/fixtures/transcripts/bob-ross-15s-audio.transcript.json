@@ -1,0 +1,40 @@
+{
+  "text": "Let's paint some happy little trees. We'll just add a little bit of paint right here and there. Maybe we'll add a little happy little cloud. That's the joy of painting.",
+  "chunks": [
+    { "text": "Let's", "timestamp": [0.0, 0.3] },
+    { "text": "paint", "timestamp": [0.3, 0.6] },
+    { "text": "some", "timestamp": [0.6, 0.8] },
+    { "text": "happy", "timestamp": [0.8, 1.1] },
+    { "text": "little", "timestamp": [1.1, 1.3] },
+    { "text": "trees.", "timestamp": [1.3, 1.7] },
+    { "text": "We'll", "timestamp": [2.0, 2.2] },
+    { "text": "just", "timestamp": [2.2, 2.4] },
+    { "text": "add", "timestamp": [2.4, 2.6] },
+    { "text": "a", "timestamp": [2.6, 2.7] },
+    { "text": "little", "timestamp": [2.7, 2.9] },
+    { "text": "bit", "timestamp": [2.9, 3.1] },
+    { "text": "of", "timestamp": [3.1, 3.2] },
+    { "text": "paint", "timestamp": [3.2, 3.5] },
+    { "text": "right", "timestamp": [3.5, 3.7] },
+    { "text": "here", "timestamp": [3.7, 3.9] },
+    { "text": "and", "timestamp": [3.9, 4.0] },
+    { "text": "there.", "timestamp": [4.0, 4.3] },
+    { "text": "Maybe", "timestamp": [5.0, 5.3] },
+    { "text": "we'll", "timestamp": [5.3, 5.5] },
+    { "text": "add", "timestamp": [5.5, 5.7] },
+    { "text": "a", "timestamp": [5.7, 5.8] },
+    { "text": "little", "timestamp": [5.8, 6.0] },
+    { "text": "happy", "timestamp": [6.0, 6.3] },
+    { "text": "little", "timestamp": [6.3, 6.5] },
+    { "text": "cloud.", "timestamp": [6.5, 6.9] },
+    { "text": "That's", "timestamp": [7.5, 7.8] },
+    { "text": "the", "timestamp": [7.8, 7.9] },
+    { "text": "joy", "timestamp": [7.9, 8.1] },
+    { "text": "of", "timestamp": [8.1, 8.2] },
+    { "text": "painting.", "timestamp": [8.2, 8.7] }
+  ],
+  "metadata": {
+    "nullTimestampCount": 0,
+    "totalChunks": 31
+  }
+}

@@ -8,6 +8,7 @@
     "@ffmpeg/ffmpeg",
     "@ffmpeg/util",
     "dexie",
+    "dexie-react-hooks",
     "file-type",
     "plyr",
     "plyr-react",

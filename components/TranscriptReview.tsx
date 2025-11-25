@@ -14,6 +14,8 @@ interface TranscriptReviewProps {
   onSearchChange?: (query: string) => void;
   isExpanded?: boolean;
   onToggleExpanded?: () => void;
+  wordSource?: Map<number, 'manual' | number>;
+  activeWordsets?: Set<number>;
 }
 
 export function TranscriptReview({
@@ -24,6 +26,8 @@ export function TranscriptReview({
   onSearchChange,
   isExpanded = true,
   onToggleExpanded,
+  wordSource,
+  activeWordsets,
 }: TranscriptReviewProps) {
   const sentences = useMemo(() => groupIntoSentences(chunks), [chunks]);
 
@@ -108,6 +112,8 @@ export function TranscriptReview({
                   censoredIndices={censoredIndices}
                   onToggleWord={onToggleWord}
                   searchQuery={searchQuery}
+                  wordSource={wordSource}
+                  activeWordsets={activeWordsets}
                 />
               ))}
             </div>

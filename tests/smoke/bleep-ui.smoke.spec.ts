@@ -24,11 +24,13 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
       page.locator('button[role="tab"]').filter({ hasText: 'Bleep & Download' })
     ).toBeVisible();
 
-    // Check lock icon on disabled tabs
+    // Check icons on tabs (locked tabs show memo + lock since no transcript in smoke tests)
     const reviewTab = page.locator('button[role="tab"]').filter({ hasText: 'Review & Match' });
+    await expect(reviewTab).toContainText('📝');
     await expect(reviewTab).toContainText('🔒');
 
     const bleepTab = page.locator('button[role="tab"]').filter({ hasText: 'Bleep & Download' });
+    await expect(bleepTab).toContainText('📝');
     await expect(bleepTab).toContainText('🔒');
 
     // Check sections in the active (Setup & Transcribe) tab are visible
@@ -172,11 +174,15 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     await expect(sampleLink).toContainText('Bob Ross');
   });
 
-  test('locked tabs show lock icon', async ({ page }) => {
+  test('tabs show correct icons', async ({ page }) => {
     const reviewTab = page.locator('button[role="tab"]').filter({ hasText: 'Review & Match' });
     const bleepTab = page.locator('button[role="tab"]').filter({ hasText: 'Bleep & Download' });
 
-    // Both locked tabs should have lock emoji
+    // Check that locked tabs have memo icons (no transcript in smoke tests)
+    await expect(reviewTab).toContainText('📝');
+    await expect(bleepTab).toContainText('📝');
+
+    // Locked tabs should also show lock emoji
     await expect(reviewTab).toContainText('🔒');
     await expect(bleepTab).toContainText('🔒');
   });
