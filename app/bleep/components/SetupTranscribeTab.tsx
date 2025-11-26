@@ -1,5 +1,6 @@
 import { FileUpload } from '@/components/FileUpload';
 import { TranscriptionControls } from '@/components/TranscriptionControls';
+import { TranscriptExport } from '@/components/TranscriptExport';
 import type { TranscriptionResult } from '../hooks/useBleepState';
 
 interface SetupTranscribeTabProps {
@@ -175,6 +176,12 @@ export function SetupTranscribeTab({
             <p className="mt-2 text-sm text-gray-600">
               Found {transcriptionResult.chunks.length} words with timestamps
             </p>
+            <div className="mt-4 border-t border-gray-200 pt-4">
+              <TranscriptExport
+                transcriptData={transcriptionResult}
+                filename={file?.name?.replace(/\.[^/.]+$/, '') || 'transcript'}
+              />
+            </div>
           </div>
         )}
 

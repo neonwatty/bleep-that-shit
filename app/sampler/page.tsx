@@ -2,10 +2,12 @@
 
 import { useState, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { TranscriptExport } from '@/components/TranscriptExport';
 
 interface ModelResult {
   model: string;
   text: string;
+  chunks?: Array<{ text: string; timestamp: [number, number] }>;
   time: number;
   status: 'pending' | 'processing' | 'complete' | 'error';
   error?: string;
@@ -119,6 +121,7 @@ export default function SamplerPage() {
                     ? {
                         ...r,
                         text: result.text,
+                        chunks: result.chunks || [],
                         time: (endTime - startTime) / 1000,
                         status: 'complete' as const,
                       }
@@ -399,6 +402,14 @@ export default function SamplerPage() {
                 {result.text && (
                   <div className="mt-2 rounded border border-gray-200 bg-white p-3">
                     <p className="text-sm">{result.text}</p>
+                    {result.status === 'complete' && result.chunks && result.chunks.length > 0 && (
+                      <div className="mt-3 border-t border-gray-100 pt-3">
+                        <TranscriptExport
+                          transcriptData={{ text: result.text, chunks: result.chunks }}
+                          filename={`${file?.name?.replace(/\.[^/.]+$/, '') || 'sample'}-${result.model.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
 
