@@ -315,17 +315,28 @@ function SamplerPageContent() {
         {file && (
           <div className="mt-4">
             <p className="mb-2 font-semibold text-green-700">File loaded: {file.name}</p>
-            {fileUrl && (
-              <audio
-                ref={audioRef}
-                data-testid="audio-player"
-                controls
-                className="w-full"
-                onTimeUpdate={handleTimeUpdate}
-              >
-                <source src={fileUrl} type={file.type} />
-              </audio>
-            )}
+            {fileUrl &&
+              (file.type.includes('video') ? (
+                <video
+                  ref={audioRef as React.RefObject<HTMLVideoElement>}
+                  data-testid="audio-player"
+                  controls
+                  className="w-full"
+                  onTimeUpdate={handleTimeUpdate}
+                >
+                  <source src={fileUrl} type={file.type} />
+                </video>
+              ) : (
+                <audio
+                  ref={audioRef}
+                  data-testid="audio-player"
+                  controls
+                  className="w-full"
+                  onTimeUpdate={handleTimeUpdate}
+                >
+                  <source src={fileUrl} type={file.type} />
+                </audio>
+              ))}
           </div>
         )}
       </section>
