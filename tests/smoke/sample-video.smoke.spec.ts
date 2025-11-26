@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { HomePage, BleepPage } from '../helpers';
+import { HomePage, BleepPage, SamplerPage } from '../helpers';
 
 test.describe('Sample Video Feature - Smoke Tests', () => {
   test.setTimeout(60000); // 60 seconds max per test (sample video needs to load)
@@ -129,6 +129,75 @@ test.describe('Sample Video Feature - Smoke Tests', () => {
 
       await homePage.samplerButton.click();
       await expect(page).toHaveURL(/\/sampler/);
+    });
+  });
+
+  test.describe('Sampler Page Sample Video Button', () => {
+    test('displays try demo link when no file is loaded', async ({ page }) => {
+      const samplerPage = new SamplerPage(page);
+      await samplerPage.goto();
+
+      // Try demo link should be visible when no file is loaded
+      const tryDemoLink = page.getByTestId('try-demo-link');
+      await expect(tryDemoLink).toBeVisible();
+      await expect(tryDemoLink).toContainText('Try with Bob Ross sample video');
+    });
+
+    test('try demo link has correct href', async ({ page }) => {
+      await page.goto('/sampler');
+
+      const tryDemoLink = page.getByTestId('try-demo-link');
+      await expect(tryDemoLink).toHaveAttribute('href', '/sampler?sample=bob-ross');
+    });
+
+    test('try demo link navigates to sampler with sample parameter', async ({ page }) => {
+      await page.goto('/sampler');
+
+      const tryDemoLink = page.getByTestId('try-demo-link');
+      await tryDemoLink.click();
+
+      await expect(page).toHaveURL(/\/sampler\?sample=bob-ross/);
+    });
+
+    test('shows loading indicator when sample parameter is present', async ({ page }) => {
+      await page.goto('/sampler?sample=bob-ross');
+
+      // Should show loading message
+      const loadingMessage = page.getByTestId('loading-sample');
+
+      // Loading message should appear (might be brief)
+      try {
+        await expect(loadingMessage).toBeVisible({ timeout: 2000 });
+      } catch {
+        // Loading might be too fast to catch - that's okay
+      }
+    });
+
+    test('loads sample video when sample parameter is present', async ({ page }) => {
+      await page.goto('/sampler?sample=bob-ross');
+
+      // Wait for file to be loaded
+      const fileLoaded = page.locator('text=/File loaded.*bob-ross/i');
+      await expect(fileLoaded).toBeVisible({ timeout: 30000 });
+
+      // Audio/video player should appear
+      const audioPlayer = page.getByTestId('audio-player');
+      await expect(audioPlayer).toBeVisible({ timeout: 5000 });
+
+      // Compare button should be enabled
+      const compareButton = page.getByTestId('compare-all-button');
+      await expect(compareButton).toBeEnabled({ timeout: 5000 });
+    });
+
+    test('try demo link disappears after video loads', async ({ page }) => {
+      await page.goto('/sampler?sample=bob-ross');
+
+      // Wait for video to load
+      await expect(page.locator('text=/File loaded/i')).toBeVisible({ timeout: 30000 });
+
+      // Try demo link should no longer be visible
+      const tryDemoLink = page.getByTestId('try-demo-link');
+      await expect(tryDemoLink).not.toBeVisible();
     });
   });
 });

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 import { TranscriptExport } from '@/components/TranscriptExport';
 
@@ -13,7 +14,8 @@ interface ModelResult {
   error?: string;
 }
 
-export default function SamplerPage() {
+function SamplerPageContent() {
+  const searchParams = useSearchParams();
   const [file, setFile] = useState<File | null>(null);
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [sampleStart, setSampleStart] = useState(0);
@@ -22,8 +24,37 @@ export default function SamplerPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [results, setResults] = useState<ModelResult[]>([]);
   const [fileDurationWarning, setFileDurationWarning] = useState<string | null>(null);
+  const [isLoadingSample, setIsLoadingSample] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Load sample video if specified in URL
+  useEffect(() => {
+    const sample = searchParams.get('sample');
+    if (sample === 'bob-ross' && !file && !isLoadingSample) {
+      setIsLoadingSample(true);
+      const loadSampleVideo = async () => {
+        try {
+          const videoUrl =
+            'https://raw.githubusercontent.com/neonwatty/readme_gifs/main/bob-ross-trim.mp4';
+          const response = await fetch(videoUrl);
+          const blob = await response.blob();
+          const sampleFile = new File([blob], 'bob-ross-trim.mp4', { type: 'video/mp4' });
+
+          setFile(sampleFile);
+          const url = URL.createObjectURL(sampleFile);
+          setFileUrl(url);
+          setResults([]);
+          setFileDurationWarning(null);
+        } catch (error) {
+          console.error('Error loading sample video:', error);
+        } finally {
+          setIsLoadingSample(false);
+        }
+      };
+      loadSampleVideo();
+    }
+  }, [searchParams, file, isLoadingSample]);
 
   const models = [
     { id: 'Xenova/whisper-tiny.en', name: 'Tiny (fastest, lower accuracy)', size: '~50 MB' },
@@ -262,20 +293,50 @@ export default function SamplerPage() {
           </div>
         )}
 
+        {!file && !isLoadingSample && (
+          <div className="mt-4 text-center">
+            <p className="mb-2 text-sm text-gray-600">Don't have a file handy?</p>
+            <a
+              href="/sampler?sample=bob-ross"
+              data-testid="try-demo-link"
+              className="inline-flex items-center gap-2 font-medium text-blue-600 underline hover:text-blue-800"
+            >
+              Try with Bob Ross sample video
+            </a>
+          </div>
+        )}
+
+        {isLoadingSample && (
+          <div className="mt-4 text-center" data-testid="loading-sample">
+            <p className="text-gray-600">Loading sample video...</p>
+          </div>
+        )}
+
         {file && (
           <div className="mt-4">
             <p className="mb-2 font-semibold text-green-700">File loaded: {file.name}</p>
-            {fileUrl && (
-              <audio
-                ref={audioRef}
-                data-testid="audio-player"
-                controls
-                className="w-full"
-                onTimeUpdate={handleTimeUpdate}
-              >
-                <source src={fileUrl} type={file.type} />
-              </audio>
-            )}
+            {fileUrl &&
+              (file.type.includes('video') ? (
+                <video
+                  ref={audioRef as React.RefObject<HTMLVideoElement>}
+                  data-testid="audio-player"
+                  controls
+                  className="w-full"
+                  onTimeUpdate={handleTimeUpdate}
+                >
+                  <source src={fileUrl} type={file.type} />
+                </video>
+              ) : (
+                <audio
+                  ref={audioRef}
+                  data-testid="audio-player"
+                  controls
+                  className="w-full"
+                  onTimeUpdate={handleTimeUpdate}
+                >
+                  <source src={fileUrl} type={file.type} />
+                </audio>
+              ))}
           </div>
         )}
       </section>
@@ -443,5 +504,13 @@ export default function SamplerPage() {
         </section>
       )}
     </div>
+  );
+}
+
+export default function SamplerPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+      <SamplerPageContent />
+    </Suspense>
   );
 }
