@@ -232,12 +232,6 @@ export function ReviewMatchTab({
   // Build navigation items based on available sections
   const navItems: { id: SectionId; label: string; count?: number; visible: boolean }[] = [
     {
-      id: 'timeline',
-      label: 'Timeline',
-      count: manualCensorSegments.length > 0 ? manualCensorSegments.length : undefined,
-      visible: hasFile,
-    },
-    {
       id: 'wordsets',
       label: 'Word Lists',
       visible: hasTranscription && !!onApplyWordsets,
@@ -257,6 +251,12 @@ export function ReviewMatchTab({
       label: 'Selected',
       count: matchedWords.length > 0 ? matchedWords.length : undefined,
       visible: hasTranscription && matchedWords.length > 0,
+    },
+    {
+      id: 'timeline',
+      label: 'Timeline',
+      count: manualCensorSegments.length > 0 ? manualCensorSegments.length : undefined,
+      visible: hasFile,
     },
   ];
 
