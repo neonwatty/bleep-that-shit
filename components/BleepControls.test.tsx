@@ -109,14 +109,29 @@ describe('BleepControls', () => {
     render(<BleepControls {...defaultProps} isPreviewingBleep={false} />);
 
     const button = screen.getByTestId('preview-bleep-button');
-    expect(button).toHaveTextContent('🔊 Preview Bleep');
+    expect(button).toHaveTextContent('Preview Bleep');
   });
 
   it('shows "Playing..." text when previewing', () => {
     render(<BleepControls {...defaultProps} isPreviewingBleep={true} />);
 
     const button = screen.getByTestId('preview-bleep-button');
-    expect(button).toHaveTextContent('🔊 Playing...');
+    expect(button).toHaveTextContent('Playing...');
+  });
+
+  it('shows "Silence Mode" text when silence is selected', () => {
+    render(<BleepControls {...defaultProps} bleepSound="silence" />);
+
+    const button = screen.getByTestId('preview-bleep-button');
+    expect(button).toHaveTextContent('Silence Mode');
+    expect(button).toBeDisabled();
+  });
+
+  it('disables bleep volume slider when silence is selected', () => {
+    render(<BleepControls {...defaultProps} bleepSound="silence" />);
+
+    const slider = screen.getByTestId('bleep-volume-slider');
+    expect(slider).toBeDisabled();
   });
 
   it('calls onPreviewBleep when preview button is clicked', () => {
