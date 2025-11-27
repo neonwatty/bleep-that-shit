@@ -93,8 +93,12 @@ export function ReviewMatchTab({
   const [transcriptSectionExpanded, setTranscriptSectionExpanded] = useState(true);
   const [matchedWordsExpanded, setMatchedWordsExpanded] = useState(true);
 
-  // Sidebar navigation state
-  const [activeSection, setActiveSection] = useState<SectionId>('timeline');
+  // Sidebar navigation state - default to first visible section
+  const [activeSection, setActiveSection] = useState<SectionId>(() => {
+    if (hasTranscription && onApplyWordsets) return 'wordsets';
+    if (hasTranscription) return 'pattern';
+    return 'timeline';
+  });
   const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
     timeline: null,
     wordsets: null,
@@ -232,12 +236,6 @@ export function ReviewMatchTab({
   // Build navigation items based on available sections
   const navItems: { id: SectionId; label: string; count?: number; visible: boolean }[] = [
     {
-      id: 'timeline',
-      label: 'Timeline',
-      count: manualCensorSegments.length > 0 ? manualCensorSegments.length : undefined,
-      visible: hasFile,
-    },
-    {
       id: 'wordsets',
       label: 'Word Lists',
       visible: hasTranscription && !!onApplyWordsets,
@@ -257,6 +255,12 @@ export function ReviewMatchTab({
       label: 'Selected',
       count: matchedWords.length > 0 ? matchedWords.length : undefined,
       visible: hasTranscription && matchedWords.length > 0,
+    },
+    {
+      id: 'timeline',
+      label: 'Timeline',
+      count: manualCensorSegments.length > 0 ? manualCensorSegments.length : undefined,
+      visible: hasFile,
     },
   ];
 
@@ -325,136 +329,6 @@ export function ReviewMatchTab({
 
           {/* Main Content */}
           <div className="min-w-0 flex-1">
-            {/* Manual Timeline Section */}
-            {hasFile && (
-              <div
-                id="timeline"
-                ref={el => {
-                  sectionRefs.current.timeline = el;
-                }}
-                className="mb-6 rounded-lg border border-gray-200 bg-white"
-                data-testid="timeline-section"
-              >
-                <button
-                  onClick={() => setTimelineExpanded(!timelineExpanded)}
-                  className="flex w-full items-center justify-between p-4 text-left hover:bg-gray-50"
-                  data-testid="timeline-section-toggle"
-                >
-                  <h3 className="text-sm font-bold text-gray-700 uppercase">
-                    Manual Timeline
-                    {manualCensorSegments.length > 0 ? ` (${manualCensorSegments.length})` : ''}
-                  </h3>
-                  <span
-                    className={`text-xl transition-transform duration-200 ${timelineExpanded ? '' : '-rotate-90'}`}
-                  >
-                    ▼
-                  </span>
-                </button>
-                {timelineExpanded && (
-                  <div className="border-t border-gray-200 p-4">
-                    {/* Media Player */}
-                    {fileUrl && (
-                      <div className="mb-4">
-                        <label className="mb-2 block text-sm font-medium text-gray-700">
-                          Preview
-                        </label>
-                        <div className="overflow-hidden rounded-lg bg-black">
-                          {isVideo ? (
-                            <video
-                              ref={mediaRef as React.RefObject<HTMLVideoElement>}
-                              src={fileUrl}
-                              className="w-full"
-                              controls
-                              onLoadedMetadata={handleLoadedMetadata}
-                              onPlay={handlePlay}
-                              onPause={handlePause}
-                              onSeeked={() => setCurrentTime(mediaRef.current?.currentTime || 0)}
-                            />
-                          ) : (
-                            <audio
-                              ref={mediaRef as React.RefObject<HTMLAudioElement>}
-                              src={fileUrl}
-                              className="w-full"
-                              controls
-                              onLoadedMetadata={handleLoadedMetadata}
-                              onPlay={handlePlay}
-                              onPause={handlePause}
-                              onSeeked={() => setCurrentTime(mediaRef.current?.currentTime || 0)}
-                            />
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Timeline Bar */}
-                    {mediaDuration > 0 && (
-                      <div className="mb-4">
-                        <label className="mb-2 block text-sm font-medium text-gray-700">
-                          Timeline
-                        </label>
-                        <TimelineBar
-                          duration={mediaDuration}
-                          currentTime={currentTime}
-                          segments={manualCensorSegments}
-                          onSeek={handleSeek}
-                          onSegmentUpdate={handleSegmentUpdate}
-                          onCreateSegment={onAddManualCensor}
-                        />
-                        <p className="mt-2 text-xs text-gray-500">
-                          <strong>Hold Shift + drag</strong> to add a censor. Drag segment edges to
-                          resize. Click to seek.
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Segment Chips */}
-                    {manualCensorSegments.length > 0 && (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-700">
-                            {manualCensorSegments.length} censor point
-                            {manualCensorSegments.length !== 1 ? 's' : ''}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={onClearManualCensors}
-                            className="text-sm text-red-600 hover:text-red-800"
-                          >
-                            Clear all
-                          </button>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {manualCensorSegments.map(segment => (
-                            <div
-                              key={segment.id}
-                              className="flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-sm"
-                            >
-                              <button
-                                type="button"
-                                onClick={() => handleSeek(segment.start)}
-                                className="font-mono text-red-700 hover:text-red-900"
-                                title="Click to seek"
-                              >
-                                {formatTime(segment.start)} - {formatTime(segment.end)}
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => onRemoveManualCensor(segment.id)}
-                                className="ml-1 text-red-400 hover:text-red-600"
-                                title="Remove"
-                              >
-                                ✕
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* Info message when no transcription */}
             {hasFile && !hasTranscription && (
               <div className="mb-6 rounded-md border-l-4 border-blue-400 bg-blue-50 p-4 text-sm text-blue-700">
@@ -703,6 +577,136 @@ export function ReviewMatchTab({
                   </div>
                 )}
               </>
+            )}
+
+            {/* Manual Timeline Section */}
+            {hasFile && (
+              <div
+                id="timeline"
+                ref={el => {
+                  sectionRefs.current.timeline = el;
+                }}
+                className="mt-6 rounded-lg border border-gray-200 bg-white"
+                data-testid="timeline-section"
+              >
+                <button
+                  onClick={() => setTimelineExpanded(!timelineExpanded)}
+                  className="flex w-full items-center justify-between p-4 text-left hover:bg-gray-50"
+                  data-testid="timeline-section-toggle"
+                >
+                  <h3 className="text-sm font-bold text-gray-700 uppercase">
+                    Manual Timeline
+                    {manualCensorSegments.length > 0 ? ` (${manualCensorSegments.length})` : ''}
+                  </h3>
+                  <span
+                    className={`text-xl transition-transform duration-200 ${timelineExpanded ? '' : '-rotate-90'}`}
+                  >
+                    ▼
+                  </span>
+                </button>
+                {timelineExpanded && (
+                  <div className="border-t border-gray-200 p-4">
+                    {/* Media Player */}
+                    {fileUrl && (
+                      <div className="mb-4">
+                        <label className="mb-2 block text-sm font-medium text-gray-700">
+                          Preview
+                        </label>
+                        <div className="overflow-hidden rounded-lg bg-black">
+                          {isVideo ? (
+                            <video
+                              ref={mediaRef as React.RefObject<HTMLVideoElement>}
+                              src={fileUrl}
+                              className="w-full"
+                              controls
+                              onLoadedMetadata={handleLoadedMetadata}
+                              onPlay={handlePlay}
+                              onPause={handlePause}
+                              onSeeked={() => setCurrentTime(mediaRef.current?.currentTime || 0)}
+                            />
+                          ) : (
+                            <audio
+                              ref={mediaRef as React.RefObject<HTMLAudioElement>}
+                              src={fileUrl}
+                              className="w-full"
+                              controls
+                              onLoadedMetadata={handleLoadedMetadata}
+                              onPlay={handlePlay}
+                              onPause={handlePause}
+                              onSeeked={() => setCurrentTime(mediaRef.current?.currentTime || 0)}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Timeline Bar */}
+                    {mediaDuration > 0 && (
+                      <div className="mb-4">
+                        <label className="mb-2 block text-sm font-medium text-gray-700">
+                          Timeline
+                        </label>
+                        <TimelineBar
+                          duration={mediaDuration}
+                          currentTime={currentTime}
+                          segments={manualCensorSegments}
+                          onSeek={handleSeek}
+                          onSegmentUpdate={handleSegmentUpdate}
+                          onCreateSegment={onAddManualCensor}
+                        />
+                        <p className="mt-2 text-xs text-gray-500">
+                          <strong>Hold Shift + drag</strong> to add a censor. Drag segment edges to
+                          resize. Click to seek.
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Segment Chips */}
+                    {manualCensorSegments.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-700">
+                            {manualCensorSegments.length} censor point
+                            {manualCensorSegments.length !== 1 ? 's' : ''}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={onClearManualCensors}
+                            className="text-sm text-red-600 hover:text-red-800"
+                          >
+                            Clear all
+                          </button>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {manualCensorSegments.map(segment => (
+                            <div
+                              key={segment.id}
+                              className="flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-sm"
+                            >
+                              <button
+                                type="button"
+                                onClick={() => handleSeek(segment.start)}
+                                className="font-mono text-red-700 hover:text-red-900"
+                                title="Click to seek"
+                              >
+                                {formatTime(segment.start)} - {formatTime(segment.end)}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => onRemoveManualCensor(segment.id)}
+                                className="ml-1 text-red-400 hover:text-red-600"
+                                title="Remove"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
