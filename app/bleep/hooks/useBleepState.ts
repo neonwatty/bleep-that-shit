@@ -67,10 +67,18 @@ export function useBleepState() {
   const [wordSource, setWordSource] = useState<Map<number, 'manual' | number>>(new Map());
 
   // Bleep configuration state
-  const [bleepSound, setBleepSound] = useState('bleep');
+  const [bleepSound, setBleepSoundInternal] = useState('bleep');
   const [bleepVolume, setBleepVolume] = useState(80);
   const [originalVolumeReduction, setOriginalVolumeReduction] = useState(0.0);
   const [bleepBuffer, setBleepBuffer] = useState<number>(0);
+
+  // Handler to auto-set volume when silence is selected
+  const setBleepSound = useCallback((sound: string) => {
+    setBleepSoundInternal(sound);
+    if (sound === 'silence') {
+      setOriginalVolumeReduction(0);
+    }
+  }, []);
   const [censoredMediaUrl, setCensoredMediaUrl] = useState<string | null>(null);
   const [isProcessingVideo, setIsProcessingVideo] = useState(false);
   const [isPreviewingBleep, setIsPreviewingBleep] = useState(false);

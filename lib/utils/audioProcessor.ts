@@ -43,10 +43,13 @@ export async function applyBleeps(
   source.connect(gainNode);
   gainNode.connect(offlineContext.destination);
 
-  // Load bleep sound
-  const bleepResponse = await fetch(getPublicPath(`/bleeps/${bleepSound}.mp3`));
-  const bleepArrayBuffer = await bleepResponse.arrayBuffer();
-  const bleepBuffer = await audioContext.decodeAudioData(bleepArrayBuffer);
+  // Load bleep sound (skip for silence mode)
+  let bleepBuffer: AudioBuffer | null = null;
+  if (bleepSound !== 'silence') {
+    const bleepResponse = await fetch(getPublicPath(`/bleeps/${bleepSound}.mp3`));
+    const bleepArrayBuffer = await bleepResponse.arrayBuffer();
+    bleepBuffer = await audioContext.decodeAudioData(bleepArrayBuffer);
+  }
 
   // Schedule gain automation and bleeps
   const now = offlineContext.currentTime;
@@ -54,7 +57,10 @@ export async function applyBleeps(
   // Set initial gain
   gainNode.gain.setValueAtTime(1, now);
 
-  console.log(`[Audio Processing] Applying ${bleepSegments.length} bleeps with:`);
+  console.log(
+    `[Audio Processing] Applying ${bleepSegments.length} ${bleepSound === 'silence' ? 'silences' : 'bleeps'} with:`
+  );
+  console.log(`- Bleep sound: ${bleepSound}`);
   console.log(`- Bleep volume: ${bleepVolume}`);
   console.log(`- Original volume during bleeps: ${originalVolumeReduction}`);
 
@@ -70,33 +76,35 @@ export async function applyBleeps(
     const durationStr = typeof duration === 'number' ? duration.toFixed(3) : 'N/A';
 
     console.log(
-      `  Bleep ${index + 1}: "${segment.word}" at ${startStr}s - ${endStr}s (duration: ${durationStr}s)`
+      `  ${bleepSound === 'silence' ? 'Silence' : 'Bleep'} ${index + 1}: "${segment.word}" at ${startStr}s - ${endStr}s (duration: ${durationStr}s)`
     );
 
     // Duck the original audio
     gainNode.gain.setValueAtTime(1, Math.max(0, startTime - 0.01));
-    gainNode.gain.linearRampToValueAtTime(originalVolumeReduction, startTime); // Use new parameter
-    gainNode.gain.setValueAtTime(originalVolumeReduction, endTime); // Use new parameter
+    gainNode.gain.linearRampToValueAtTime(originalVolumeReduction, startTime);
+    gainNode.gain.setValueAtTime(originalVolumeReduction, endTime);
     gainNode.gain.linearRampToValueAtTime(1, endTime + 0.01);
 
-    // Add bleep sound
-    const bleepSource = offlineContext.createBufferSource();
-    bleepSource.buffer = bleepBuffer;
+    // Add bleep sound (skip for silence mode)
+    if (bleepBuffer) {
+      const bleepSource = offlineContext.createBufferSource();
+      bleepSource.buffer = bleepBuffer;
 
-    // Create gain node for bleep to adjust volume
-    const bleepGain = offlineContext.createGain();
-    bleepGain.gain.value = bleepVolume;
+      // Create gain node for bleep to adjust volume
+      const bleepGain = offlineContext.createGain();
+      bleepGain.gain.value = bleepVolume;
 
-    bleepSource.connect(bleepGain);
-    bleepGain.connect(offlineContext.destination);
+      bleepSource.connect(bleepGain);
+      bleepGain.connect(offlineContext.destination);
 
-    // Loop the bleep if needed for longer segments
-    if (duration > bleepBuffer.duration) {
-      bleepSource.loop = true;
-      bleepSource.loopEnd = bleepBuffer.duration;
+      // Loop the bleep if needed for longer segments
+      if (duration > bleepBuffer.duration) {
+        bleepSource.loop = true;
+        bleepSource.loopEnd = bleepBuffer.duration;
+      }
+
+      bleepSource.start(startTime, 0, duration);
     }
-
-    bleepSource.start(startTime, 0, duration);
   });
 
   // Start the original audio
@@ -234,10 +242,13 @@ export async function applyBleepsToVideo(
   source.connect(gainNode);
   gainNode.connect(offlineContext.destination);
 
-  // Load bleep sound
-  const bleepResponse = await fetch(getPublicPath(`/bleeps/${bleepSound}.mp3`));
-  const bleepArrayBuffer = await bleepResponse.arrayBuffer();
-  const bleepBuffer = await audioContext.decodeAudioData(bleepArrayBuffer);
+  // Load bleep sound (skip for silence mode)
+  let bleepBuffer: AudioBuffer | null = null;
+  if (bleepSound !== 'silence') {
+    const bleepResponse = await fetch(getPublicPath(`/bleeps/${bleepSound}.mp3`));
+    const bleepArrayBuffer = await bleepResponse.arrayBuffer();
+    bleepBuffer = await audioContext.decodeAudioData(bleepArrayBuffer);
+  }
 
   // Schedule gain automation and bleeps
   const now = offlineContext.currentTime;
@@ -245,7 +256,10 @@ export async function applyBleepsToVideo(
   // Set initial gain
   gainNode.gain.setValueAtTime(1, now);
 
-  console.log(`[Audio Processing] Applying ${bleepSegments.length} bleeps with:`);
+  console.log(
+    `[Audio Processing] Applying ${bleepSegments.length} ${bleepSound === 'silence' ? 'silences' : 'bleeps'} with:`
+  );
+  console.log(`- Bleep sound: ${bleepSound}`);
   console.log(`- Bleep volume: ${bleepVolume}`);
   console.log(`- Original volume during bleeps: ${originalVolumeReduction}`);
 
@@ -261,33 +275,35 @@ export async function applyBleepsToVideo(
     const durationStr = typeof duration === 'number' ? duration.toFixed(3) : 'N/A';
 
     console.log(
-      `  Bleep ${index + 1}: "${segment.word}" at ${startStr}s - ${endStr}s (duration: ${durationStr}s)`
+      `  ${bleepSound === 'silence' ? 'Silence' : 'Bleep'} ${index + 1}: "${segment.word}" at ${startStr}s - ${endStr}s (duration: ${durationStr}s)`
     );
 
     // Duck the original audio
     gainNode.gain.setValueAtTime(1, Math.max(0, startTime - 0.01));
-    gainNode.gain.linearRampToValueAtTime(originalVolumeReduction, startTime); // Use new parameter
-    gainNode.gain.setValueAtTime(originalVolumeReduction, endTime); // Use new parameter
+    gainNode.gain.linearRampToValueAtTime(originalVolumeReduction, startTime);
+    gainNode.gain.setValueAtTime(originalVolumeReduction, endTime);
     gainNode.gain.linearRampToValueAtTime(1, endTime + 0.01);
 
-    // Add bleep sound
-    const bleepSource = offlineContext.createBufferSource();
-    bleepSource.buffer = bleepBuffer;
+    // Add bleep sound (skip for silence mode)
+    if (bleepBuffer) {
+      const bleepSource = offlineContext.createBufferSource();
+      bleepSource.buffer = bleepBuffer;
 
-    // Create gain node for bleep to adjust volume
-    const bleepGain = offlineContext.createGain();
-    bleepGain.gain.value = bleepVolume;
+      // Create gain node for bleep to adjust volume
+      const bleepGain = offlineContext.createGain();
+      bleepGain.gain.value = bleepVolume;
 
-    bleepSource.connect(bleepGain);
-    bleepGain.connect(offlineContext.destination);
+      bleepSource.connect(bleepGain);
+      bleepGain.connect(offlineContext.destination);
 
-    // Loop the bleep if needed for longer segments
-    if (duration > bleepBuffer.duration) {
-      bleepSource.loop = true;
-      bleepSource.loopEnd = bleepBuffer.duration;
+      // Loop the bleep if needed for longer segments
+      if (duration > bleepBuffer.duration) {
+        bleepSource.loop = true;
+        bleepSource.loopEnd = bleepBuffer.duration;
+      }
+
+      bleepSource.start(startTime, 0, duration);
     }
-
-    bleepSource.start(startTime, 0, duration);
   });
 
   // Start the original audio

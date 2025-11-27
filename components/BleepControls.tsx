@@ -37,12 +37,20 @@ export function BleepControls({
           <option value="brown">Brown Noise</option>
           <option value="dolphin">Dolphin Sounds Bleep</option>
           <option value="trex">T-Rex Roar</option>
+          <option value="silence">Silence (No Sound)</option>
         </select>
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
-          Bleep Volume: <span className="font-bold text-yellow-600">{bleepVolume}%</span>
+        <label
+          className={`mb-2 block text-sm font-semibold ${bleepSound === 'silence' ? 'text-gray-400' : ''}`}
+        >
+          Bleep Volume:{' '}
+          <span
+            className={`font-bold ${bleepSound === 'silence' ? 'text-gray-400' : 'text-yellow-600'}`}
+          >
+            {bleepSound === 'silence' ? 'N/A' : `${bleepVolume}%`}
+          </span>
         </label>
         <input
           data-testid="bleep-volume-slider"
@@ -52,7 +60,8 @@ export function BleepControls({
           step="5"
           value={bleepVolume}
           onChange={e => onBleepVolumeChange(Number(e.target.value))}
-          className="h-2 w-full cursor-pointer rounded-lg sm:max-w-xs"
+          disabled={bleepSound === 'silence'}
+          className={`h-2 w-full rounded-lg sm:max-w-xs ${bleepSound === 'silence' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
         />
         <div className="mt-1 flex w-full justify-between text-xs text-gray-600 sm:max-w-xs">
           <span>Quiet</span>
@@ -109,10 +118,14 @@ export function BleepControls({
         <button
           data-testid="preview-bleep-button"
           onClick={onPreviewBleep}
-          disabled={isPreviewingBleep}
+          disabled={isPreviewingBleep || bleepSound === 'silence'}
           className="min-h-touch mt-3 w-full rounded-lg bg-yellow-500 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-4 sm:py-2 sm:text-sm"
         >
-          {isPreviewingBleep ? '🔊 Playing...' : '🔊 Preview Bleep'}
+          {bleepSound === 'silence'
+            ? 'Silence Mode'
+            : isPreviewingBleep
+              ? 'Playing...'
+              : 'Preview Bleep'}
         </button>
       </div>
     </div>
