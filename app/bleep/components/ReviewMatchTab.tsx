@@ -6,6 +6,7 @@ import { MatchedWordsDisplay } from '@/components/MatchedWordsDisplay';
 import { WordsetSelector } from '@/components/wordsets/WordsetSelector';
 import { TimelineBar } from '@/components/timeline/TimelineBar';
 import { formatTime } from '@/lib/utils/timeFormat';
+import { FloatingNavArrows } from './FloatingNavArrows';
 import type { TranscriptionResult, MatchedWord } from '../hooks/useBleepState';
 import type { ManualCensorSegment } from '@/lib/types/manualCensor';
 
@@ -48,6 +49,9 @@ interface ReviewMatchTabProps {
   // Context flags
   hasFile: boolean;
   hasTranscription: boolean;
+
+  // Navigation
+  onNavigate: (tabId: string) => void;
 }
 
 type SectionId = 'timeline' | 'wordsets' | 'pattern' | 'transcript' | 'selected';
@@ -85,6 +89,8 @@ export function ReviewMatchTab({
   // Context flags
   hasFile,
   hasTranscription,
+  // Navigation
+  onNavigate,
 }: ReviewMatchTabProps) {
   // Collapse states - default to expanded
   const [timelineExpanded, setTimelineExpanded] = useState(true);
@@ -711,6 +717,15 @@ export function ReviewMatchTab({
           </div>
         </div>
       </section>
+
+      <FloatingNavArrows
+        showBack={true}
+        showForward={matchedWords.length > 0}
+        onBack={() => onNavigate('setup')}
+        onForward={() => onNavigate('bleep')}
+        backLabel="Back to Setup & Transcribe"
+        forwardLabel="Continue to Bleep & Download"
+      />
     </div>
   );
 }

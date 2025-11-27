@@ -1,4 +1,5 @@
 import { BleepControls } from '@/components/BleepControls';
+import { FloatingNavArrows } from './FloatingNavArrows';
 import type { MatchedWord } from '../hooks/useBleepState';
 
 interface BleepDownloadTabProps {
@@ -19,6 +20,7 @@ interface BleepDownloadTabProps {
   onBleepBufferChange: (buffer: number) => void;
   onPreviewBleep: () => void;
   onBleep: () => void;
+  onNavigate: (tabId: string) => void;
 }
 
 export function BleepDownloadTab({
@@ -39,6 +41,7 @@ export function BleepDownloadTab({
   onBleepBufferChange,
   onPreviewBleep,
   onBleep,
+  onNavigate,
 }: BleepDownloadTabProps) {
   return (
     <div className="space-y-8">
@@ -175,6 +178,14 @@ export function BleepDownloadTab({
           </div>
         )}
       </section>
+
+      <FloatingNavArrows
+        showBack={true}
+        showForward={false}
+        onBack={() => onNavigate('review')}
+        onForward={() => {}}
+        backLabel="Back to Review & Match"
+      />
     </div>
   );
 }
