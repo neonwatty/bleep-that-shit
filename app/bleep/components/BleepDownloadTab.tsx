@@ -78,6 +78,36 @@ export function BleepDownloadTab({
           </h2>
         </div>
 
+        {/* Censor Summary */}
+        {matchedWords.length > 0 && (
+          <div className="mb-4 rounded-md bg-gray-50 p-3 text-sm">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <span className="font-medium text-gray-700">
+                <strong className="text-lg">{matchedWords.length}</strong> censor point
+                {matchedWords.length !== 1 ? 's' : ''} ready
+              </span>
+              {(() => {
+                const fromTranscription = matchedWords.filter(
+                  w => w.source !== 'manual-timeline'
+                ).length;
+                const fromTimeline = matchedWords.filter(
+                  w => w.source === 'manual-timeline'
+                ).length;
+                return (
+                  <>
+                    {fromTranscription > 0 && (
+                      <span className="text-pink-600">{fromTranscription} from transcription</span>
+                    )}
+                    {fromTimeline > 0 && (
+                      <span className="text-orange-600">{fromTimeline} from timeline</span>
+                    )}
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+        )}
+
         <button
           data-testid="apply-bleeps-button"
           onClick={onBleep}

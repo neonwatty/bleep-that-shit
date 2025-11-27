@@ -89,7 +89,8 @@ test.describe('Audio Transcription with Tiny Model', () => {
 
     // Look for word/sentence count in success message
     // Example: "Transcription complete! 45 words in 3 sentences"
-    const successMessage = bleepPage.page.getByText(/transcription complete/i);
+    // Use locator targeting the parent <p> element, not the <strong> child
+    const successMessage = bleepPage.page.locator('p:has-text("Transcription complete")');
     await expect(successMessage).toBeVisible();
 
     const messageText = await successMessage.textContent();

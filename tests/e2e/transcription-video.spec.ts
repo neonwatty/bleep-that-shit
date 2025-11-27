@@ -62,8 +62,9 @@ test.describe('Video Transcription with Tiny Model', () => {
     // Verify player has controls
     await expect(videoPlayer).toHaveAttribute('controls');
 
-    // Verify we can see video source
-    const videoSrc = await videoPlayer.getAttribute('src');
+    // Verify we can see video source (source is in nested <source> element)
+    const sourceElement = videoPlayer.locator('source');
+    const videoSrc = await sourceElement.getAttribute('src');
     expect(videoSrc).toBeTruthy();
   });
 });

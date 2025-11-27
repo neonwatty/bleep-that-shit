@@ -6,7 +6,7 @@ interface MatchedWord {
   word: string;
   start: number;
   end: number;
-  source?: 'manual' | number;
+  source?: 'manual' | 'manual-timeline' | number;
 }
 
 interface MatchedWordsDisplayProps {
@@ -28,17 +28,23 @@ export function MatchedWordsDisplay({ matchedWords, isVisible }: MatchedWordsDis
     return seconds.toFixed(2) + 's';
   };
 
-  const getSourceColor = (source?: 'manual' | number): string => {
+  const getSourceColor = (source?: 'manual' | 'manual-timeline' | number): string => {
     if (!source || source === 'manual') {
       return '#EC4899'; // Pink for manual selections
+    }
+    if (source === 'manual-timeline') {
+      return '#F97316'; // Orange for timeline manual censors
     }
     const wordset = wordsets.find(ws => ws.id === source);
     return wordset?.color || '#EC4899';
   };
 
-  const getSourceName = (source?: 'manual' | number): string => {
+  const getSourceName = (source?: 'manual' | 'manual-timeline' | number): string => {
     if (!source || source === 'manual') {
       return 'Manual';
+    }
+    if (source === 'manual-timeline') {
+      return 'Timeline';
     }
     const wordset = wordsets.find(ws => ws.id === source);
     return wordset?.name || 'Unknown';

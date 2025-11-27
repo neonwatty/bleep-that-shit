@@ -50,15 +50,16 @@ test.describe('Tab State Transitions', () => {
     // Upload file
     await bleepPage.uploadFile(AUDIO_FIXTURE);
 
-    // Verify tabs still locked (no transcript yet)
-    await expect(bleepPage.reviewTab).toBeDisabled();
+    // Review tab is enabled after file upload (for manual timeline)
+    await expect(bleepPage.reviewTab).toBeEnabled();
+    // Bleep tab still locked (no transcript or manual censors yet)
     await expect(bleepPage.bleepTab).toBeDisabled();
 
     // Load transcript
     await loadTranscript(page, AUDIO_TRANSCRIPT);
     await page.waitForTimeout(1000);
 
-    // Now tabs should be unlocked
+    // Now both tabs should be unlocked
     await expect(bleepPage.reviewTab).toBeEnabled({ timeout: 5000 });
     await expect(bleepPage.bleepTab).toBeEnabled({ timeout: 5000 });
 
