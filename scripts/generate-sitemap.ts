@@ -125,7 +125,7 @@ function getBlogPosts(): SitemapEntry[] {
       // content/blog/[slug]/index.md format
       const indexFile = fs
         .readdirSync(fullPath)
-        .find((f) => f.startsWith('index.') && (f.endsWith('.mdx') || f.endsWith('.md')));
+        .find(f => f.startsWith('index.') && (f.endsWith('.mdx') || f.endsWith('.md')));
       if (!indexFile) continue;
 
       slug = item.name;
@@ -166,7 +166,7 @@ function getBlogPosts(): SitemapEntry[] {
 function generateSitemapXml(entries: SitemapEntry[]): string {
   const urlElements = entries
     .map(
-      (entry) => `  <url>
+      entry => `  <url>
     <loc>${entry.loc}</loc>
     <lastmod>${entry.lastmod}</lastmod>
     <changefreq>${entry.changefreq}</changefreq>
@@ -207,7 +207,7 @@ function main() {
 
   console.log(`  Sitemap written to ${OUTPUT_PATH}`);
   console.log('  URLs included:');
-  allEntries.forEach((e) => console.log(`    - ${e.loc} (priority: ${e.priority})`));
+  allEntries.forEach(e => console.log(`    - ${e.loc} (priority: ${e.priority})`));
 }
 
 main();

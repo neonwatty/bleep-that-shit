@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { JsonLd } from '@/components/JsonLd';
-import { SITE_URL, browserRequirements, createBreadcrumbSchema } from '@/lib/constants/structuredData';
+import {
+  SITE_URL,
+  browserRequirements,
+  createBreadcrumbSchema,
+} from '@/lib/constants/structuredData';
 
 export const metadata: Metadata = {
   title: 'Transcription Sampler - Compare Whisper Models',
