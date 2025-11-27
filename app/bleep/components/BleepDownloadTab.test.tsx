@@ -26,6 +26,7 @@ describe('BleepDownloadTab', () => {
     onBleepBufferChange: vi.fn(),
     onPreviewBleep: vi.fn(),
     onBleep: vi.fn(),
+    onNavigate: vi.fn(),
   };
 
   describe('Section rendering', () => {

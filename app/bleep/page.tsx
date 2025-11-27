@@ -168,6 +168,7 @@ function BleepPageContent() {
             onModelChange={bleepState.transcription.setModel}
             onTranscribe={bleepState.transcription.handleTranscribe}
             onDismissError={() => bleepState.transcription.setErrorMessage(null)}
+            onNavigate={setActiveTab}
           />
         )}
 
@@ -205,6 +206,7 @@ function BleepPageContent() {
             // Context flags
             hasFile={hasFile}
             hasTranscription={hasTranscript}
+            onNavigate={setActiveTab}
           />
         )}
 
@@ -229,6 +231,7 @@ function BleepPageContent() {
             onBleepBufferChange={bleepState.bleepConfig.setBleepBuffer}
             onPreviewBleep={bleepState.bleepConfig.handlePreviewBleep}
             onBleep={bleepState.bleepConfig.handleBleep}
+            onNavigate={setActiveTab}
           />
         )}
       </div>

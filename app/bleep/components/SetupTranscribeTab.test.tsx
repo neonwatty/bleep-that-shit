@@ -22,6 +22,7 @@ describe('SetupTranscribeTab', () => {
     onModelChange: vi.fn(),
     onTranscribe: vi.fn(),
     onDismissError: vi.fn(),
+    onNavigate: vi.fn(),
   };
 
   describe('Section rendering', () => {

@@ -1,6 +1,7 @@
 import { FileUpload } from '@/components/FileUpload';
 import { TranscriptionControls } from '@/components/TranscriptionControls';
 import { TranscriptExport } from '@/components/TranscriptExport';
+import { FloatingNavArrows } from './FloatingNavArrows';
 import type { TranscriptionResult } from '../hooks/useBleepState';
 
 interface SetupTranscribeTabProps {
@@ -24,6 +25,7 @@ interface SetupTranscribeTabProps {
   onModelChange: (model: string) => void;
   onTranscribe: () => void;
   onDismissError: () => void;
+  onNavigate: (tabId: string) => void;
 }
 
 export function SetupTranscribeTab({
@@ -45,6 +47,7 @@ export function SetupTranscribeTab({
   onModelChange,
   onTranscribe,
   onDismissError,
+  onNavigate,
 }: SetupTranscribeTabProps) {
   return (
     <div className="space-y-8">
@@ -230,6 +233,14 @@ export function SetupTranscribeTab({
             );
           })()}
       </section>
+
+      <FloatingNavArrows
+        showBack={false}
+        showForward={transcriptionResult !== null}
+        onBack={() => {}}
+        onForward={() => onNavigate('review')}
+        forwardLabel="Continue to Review & Match"
+      />
     </div>
   );
 }

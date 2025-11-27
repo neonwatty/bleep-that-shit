@@ -43,6 +43,8 @@ describe('ReviewMatchTab', () => {
     // Context flags
     hasFile: false,
     hasTranscription: true,
+    // Navigation
+    onNavigate: vi.fn(),
   };
 
   describe('Section rendering', () => {
