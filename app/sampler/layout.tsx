@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/sampler`,
     images: [
       {
-        url: `${SITE_URL}/og-image.svg`,
+        url: `${SITE_URL}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'Transcription Sampler - Compare Whisper AI Models',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: 'Transcription Sampler - Compare Whisper Models',
     description:
       'Compare different Whisper AI transcription models. Test accuracy and speed to find the best model for your needs.',
-    images: [`${SITE_URL}/og-image.svg`],
+    images: [`${SITE_URL}/og-image.png`],
   },
   alternates: {
     canonical: `${SITE_URL}/sampler`,

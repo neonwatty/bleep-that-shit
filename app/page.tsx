@@ -24,7 +24,7 @@ const homePageSchemas = [
       priceCurrency: 'USD',
     },
     featureList: applicationFeatures,
-    screenshot: `${SITE_URL}/og-image.svg`,
+    screenshot: `${SITE_URL}/og-image.png`,
     author: {
       '@id': `${SITE_URL}/#organization`,
     },

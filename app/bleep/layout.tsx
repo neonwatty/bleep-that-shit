@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/bleep`,
     images: [
       {
-        url: `${SITE_URL}/og-image.svg`,
+        url: `${SITE_URL}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'Bleep Your Audio & Video - Censorship Tool',
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     title: 'Bleep Your Audio & Video | Bleep That Sh*t!',
     description:
       'Upload your MP3 or MP4 file, transcribe with AI, and censor any words. 100% private browser processing.',
-    images: [`${SITE_URL}/og-image.svg`],
+    images: [`${SITE_URL}/og-image.png`],
   },
   alternates: {
     canonical: `${SITE_URL}/bleep`,

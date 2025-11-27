@@ -73,7 +73,7 @@ export const metadata: Metadata = {
       'Effortlessly bleep out any words or phrases from your audio or video files. 100% private in-browser processing with AI-powered transcription.',
     images: [
       {
-        url: `${siteUrl}/og-image.svg`,
+        url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'Bleep That Sh*t! - Audio & Video Censorship Tool',
@@ -85,7 +85,7 @@ export const metadata: Metadata = {
     title: 'Bleep That Sh*t! - Free Audio & Video Censorship Tool',
     description:
       'Effortlessly bleep out any words or phrases from your audio or video files. 100% private in-browser processing.',
-    images: [`${siteUrl}/og-image.svg`],
+    images: [`${siteUrl}/og-image.png`],
   },
   robots: {
     index: true,
