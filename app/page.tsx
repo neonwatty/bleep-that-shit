@@ -1,8 +1,91 @@
 import Link from 'next/link';
+import { JsonLd } from '@/components/JsonLd';
+import {
+  SITE_URL,
+  applicationFeatures,
+  browserRequirements,
+  createBreadcrumbSchema,
+} from '@/lib/constants/structuredData';
+
+const homePageSchemas = [
+  {
+    '@type': 'WebApplication',
+    '@id': `${SITE_URL}/#application`,
+    name: 'Bleep That Sh*t!',
+    url: SITE_URL,
+    description:
+      'Effortlessly bleep out any words or phrases from your audio or video. 100% private in-browser processing.',
+    applicationCategory: 'MultimediaApplication',
+    operatingSystem: 'Any (Web Browser)',
+    browserRequirements: browserRequirements,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    featureList: applicationFeatures,
+    screenshot: `${SITE_URL}/og-image.svg`,
+    author: {
+      '@id': `${SITE_URL}/#organization`,
+    },
+  },
+  {
+    '@type': 'HowTo',
+    name: 'How to Censor Audio and Video with Bleep That Sh*t!',
+    description:
+      'Learn how to use Bleep That Sh*t! to censor words in your audio or video files with automatic transcription and customizable bleep sounds.',
+    totalTime: 'PT5M',
+    tool: [
+      {
+        '@type': 'HowToTool',
+        name: 'Modern web browser (Chrome, Firefox, Safari, or Edge)',
+      },
+    ],
+    supply: [
+      {
+        '@type': 'HowToSupply',
+        name: 'Audio file (MP3) or Video file (MP4)',
+      },
+    ],
+    step: [
+      {
+        '@type': 'HowToStep',
+        position: 1,
+        name: 'Upload',
+        text: 'Upload your audio (MP3) or video (MP4) file to the application.',
+        url: `${SITE_URL}/bleep`,
+      },
+      {
+        '@type': 'HowToStep',
+        position: 2,
+        name: 'Transcribe',
+        text: 'Choose a Whisper model and transcribe your file to generate a word-level transcript.',
+        url: `${SITE_URL}/bleep`,
+      },
+      {
+        '@type': 'HowToStep',
+        position: 3,
+        name: 'Censor',
+        text: 'Pick words to bleep using exact, partial, or fuzzy matching modes.',
+        url: `${SITE_URL}/bleep`,
+      },
+      {
+        '@type': 'HowToStep',
+        position: 4,
+        name: 'Preview & Download',
+        text: 'Preview the censored result and download your processed file.',
+        url: `${SITE_URL}/bleep`,
+      },
+    ],
+  },
+  createBreadcrumbSchema([{ name: 'Home', url: SITE_URL }]),
+];
 
 export default function Home() {
   return (
-    <div className="editorial-section font-merriweather">
+    <>
+      <JsonLd data={homePageSchemas} />
+      <div className="editorial-section font-merriweather">
       {/* Hero Section */}
       <div
         data-testid="hero-section"
@@ -265,6 +348,7 @@ export default function Home() {
           </a>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

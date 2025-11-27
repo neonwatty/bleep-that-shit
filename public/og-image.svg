@@ -1,0 +1,44 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef9c3"/>
+      <stop offset="100%" style="stop-color:#fce7f3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Pattern dots -->
+  <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+    <circle cx="20" cy="20" r="2" fill="#00000010"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+
+  <!-- Main content area -->
+  <rect x="60" y="60" width="1080" height="510" rx="24" fill="white" fill-opacity="0.9"/>
+
+  <!-- Emoji -->
+  <text x="600" y="200" text-anchor="middle" font-size="100">🙊</text>
+
+  <!-- Title -->
+  <text x="600" y="320" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="800" fill="#111827">
+    Bleep That Sh*t!
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="400" text-anchor="middle" font-family="Georgia, serif" font-size="32" fill="#374151">
+    Free Audio &amp; Video Censorship Tool
+  </text>
+
+  <!-- Tagline -->
+  <rect x="380" y="440" width="440" height="50" rx="25" fill="#fef08a"/>
+  <text x="600" y="475" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24" font-weight="600" fill="#111827">
+    100% Private. In-Browser Processing.
+  </text>
+
+  <!-- URL -->
+  <text x="600" y="540" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24" fill="#6b7280">
+    bleep-that-sht.com
+  </text>
+</svg>
