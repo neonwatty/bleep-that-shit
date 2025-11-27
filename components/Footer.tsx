@@ -1,3 +1,5 @@
+import { version } from '../package.json';
+
 export function Footer() {
   return (
     <footer className="mx-auto mt-12 w-full max-w-4xl border-t-2 border-black px-2 py-8 md:px-0">
@@ -54,6 +56,7 @@ export function Footer() {
         <div className="text-center text-xs text-gray-600">
           © {new Date().getFullYear()} Bleep That Sh*t! All rights reserved.
         </div>
+        <div className="text-xs text-gray-500">v{version}</div>
       </div>
     </footer>
   );

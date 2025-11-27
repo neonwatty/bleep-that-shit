@@ -22,16 +22,27 @@ describe('ReviewMatchTab', () => {
     fuzzyDistance: 1,
     censoredWordIndices: new Set<number>(),
     searchQuery: '',
-    transcriptExpanded: false,
     matchedWords: [],
     onWordsToMatchChange: vi.fn(),
     onMatchModeChange: vi.fn(),
     onFuzzyDistanceChange: vi.fn(),
     onSearchQueryChange: vi.fn(),
-    onTranscriptExpandedChange: vi.fn(),
     onMatch: vi.fn(),
     onToggleWord: vi.fn(),
     onClearAll: vi.fn(),
+    // Timeline props
+    file: null,
+    fileUrl: null,
+    manualCensorSegments: [],
+    mediaDuration: 0,
+    onSetMediaDuration: vi.fn(),
+    onAddManualCensor: vi.fn(),
+    onUpdateManualCensor: vi.fn(),
+    onRemoveManualCensor: vi.fn(),
+    onClearManualCensors: vi.fn(),
+    // Context flags
+    hasFile: false,
+    hasTranscription: true,
   };
 
   describe('Section rendering', () => {

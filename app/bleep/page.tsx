@@ -12,10 +12,15 @@ function BleepPageContent() {
   const [activeTab, setActiveTab] = useState('setup');
   const bleepState = useBleepState();
 
-  // Check if transcript exists to enable/disable tabs
+  // Check if transcript exists and if file is uploaded
   const hasTranscript = bleepState.transcription.transcriptionResult !== null;
+  const hasFile = bleepState.file.file !== null;
+  const hasManualCensors = bleepState.manualTimeline.manualCensorSegments.length > 0;
 
-  // Define tabs - Review & Bleep tabs locked until transcript created
+  // Bleep tab enabled if we have transcript matches OR manual censors
+  const canBleep = hasTranscript || hasManualCensors;
+
+  // Define tabs - Review available once file uploaded (for manual timeline) or transcript exists
   const tabs = [
     {
       id: 'setup',
@@ -26,14 +31,14 @@ function BleepPageContent() {
     {
       id: 'review',
       label: 'Review & Match',
-      icon: hasTranscript ? '📝' : '📝', // memo icon (same when enabled or locked)
-      enabled: hasTranscript,
+      icon: '📝',
+      enabled: hasFile || hasTranscript,
     },
     {
       id: 'bleep',
       label: 'Bleep & Download',
-      icon: hasTranscript ? '🔊' : '📝', // speaker icon when enabled, memo when locked
-      enabled: hasTranscript,
+      icon: canBleep ? '🔊' : '📝',
+      enabled: canBleep,
     },
     {
       id: 'wordsets',
@@ -45,10 +50,13 @@ function BleepPageContent() {
 
   // Auto-redirect to setup tab if user is on a locked tab
   useEffect(() => {
-    if (!hasTranscript && (activeTab === 'review' || activeTab === 'bleep')) {
+    if (!hasFile && !hasTranscript && activeTab === 'review') {
       setActiveTab('setup');
     }
-  }, [hasTranscript, activeTab]);
+    if (!canBleep && activeTab === 'bleep') {
+      setActiveTab('setup');
+    }
+  }, [hasTranscript, canBleep, hasFile, activeTab]);
 
   return (
     <div className="editorial-section px-2 sm:px-4">
@@ -184,6 +192,19 @@ function BleepPageContent() {
             onApplyWordsets={bleepState.wordSelection.handleApplyWordsets}
             onRemoveWordset={bleepState.wordSelection.handleRemoveWordset}
             onSwitchToWordsetsTab={() => setActiveTab('wordsets')}
+            // Timeline props
+            file={bleepState.file.file}
+            fileUrl={bleepState.file.fileUrl}
+            manualCensorSegments={bleepState.manualTimeline.manualCensorSegments}
+            mediaDuration={bleepState.manualTimeline.mediaDuration}
+            onSetMediaDuration={bleepState.manualTimeline.setMediaDuration}
+            onAddManualCensor={bleepState.manualTimeline.handleAddManualCensor}
+            onUpdateManualCensor={bleepState.manualTimeline.handleUpdateManualCensor}
+            onRemoveManualCensor={bleepState.manualTimeline.handleRemoveManualCensor}
+            onClearManualCensors={bleepState.manualTimeline.handleClearManualCensors}
+            // Context flags
+            hasFile={hasFile}
+            hasTranscription={hasTranscript}
           />
         )}
 

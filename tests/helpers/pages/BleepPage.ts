@@ -11,6 +11,14 @@ export class BleepPage {
   readonly bleepTab: Locator;
   readonly wordsetTab: Locator;
 
+  // Manual Timeline Section Elements (in Review tab)
+  readonly timelineSection: Locator;
+  readonly timelineSectionToggle: Locator;
+  readonly timelineBar: Locator;
+  readonly timelineSegments: Locator;
+  readonly timelineChips: Locator;
+  readonly timelineClearAll: Locator;
+
   // Media Players
   readonly audioPlayer: Locator;
   readonly videoPlayer: Locator;
@@ -70,6 +78,14 @@ export class BleepPage {
     this.reviewTab = page.getByRole('tab', { name: /review/i });
     this.bleepTab = page.getByRole('tab', { name: /bleep/i });
     this.wordsetTab = page.getByRole('tab', { name: /word.*list/i });
+
+    // Manual Timeline Section (in Review tab)
+    this.timelineSection = page.getByTestId('timeline-section');
+    this.timelineSectionToggle = page.getByTestId('timeline-section-toggle');
+    this.timelineBar = page.getByTestId('timeline-bar');
+    this.timelineSegments = page.locator('[class*="bg-red-400"], [class*="bg-red-500"]');
+    this.timelineChips = page.locator('[class*="rounded-full"][class*="bg-red-100"]');
+    this.timelineClearAll = page.getByRole('button', { name: /clear all/i });
 
     // Media Players
     this.audioPlayer = page.locator('audio').first();
@@ -136,6 +152,31 @@ export class BleepPage {
    */
   async switchToSetupTab() {
     await this.setupTab.click();
+  }
+
+  /**
+   * Switch to Review tab and expand timeline section
+   */
+  async switchToTimelineSection() {
+    await this.reviewTab.click();
+    // Ensure the timeline section is expanded
+    await this.expandTimelineSection();
+  }
+
+  /**
+   * Expand the timeline section if collapsed
+   */
+  async expandTimelineSection() {
+    // Check if the section exists and if it's collapsed (toggle has -rotate-90)
+    const toggle = this.timelineSectionToggle;
+    if (await toggle.isVisible()) {
+      // Check if collapsed by looking for the rotation class on the arrow span
+      const arrowSpan = toggle.locator('span').last();
+      const classList = await arrowSpan.getAttribute('class');
+      if (classList?.includes('-rotate-90')) {
+        await toggle.click();
+      }
+    }
   }
 
   /**
@@ -417,5 +458,112 @@ export class BleepPage {
     const statsText = await this.transcriptStats.textContent();
     const match = statsText?.match(/(\d+) of \d+ words selected/i);
     return match ? parseInt(match[1], 10) : 0;
+  }
+
+  /**
+   * Create a censor segment using Shift+drag on the timeline
+   * @param startPercent - Starting position as percentage (0-100)
+   * @param endPercent - Ending position as percentage (0-100)
+   */
+  async createTimelineSegment(startPercent: number, endPercent: number) {
+    const box = await this.timelineBar.boundingBox();
+    if (!box) throw new Error('Timeline bar not found');
+
+    const startX = box.x + (box.width * startPercent) / 100;
+    const endX = box.x + (box.width * endPercent) / 100;
+    const y = box.y + box.height / 2;
+
+    // Hold Shift and wait for the visual indicator (orange border appears when Shift is held)
+    await this.page.keyboard.down('Shift');
+    await expect(this.timelineBar).toHaveClass(/border-orange-400/, { timeout: 2000 });
+
+    // Move mouse to start position first
+    await this.page.mouse.move(startX, y);
+    await this.page.waitForTimeout(50);
+
+    // Click on the timeline bar element directly to ensure proper event routing
+    await this.timelineBar.dispatchEvent('mousedown', {
+      bubbles: true,
+      button: 0,
+      clientX: startX,
+      clientY: y,
+    });
+
+    // Wait for React to process the mousedown and set createDrag state
+    await this.page.waitForTimeout(100);
+
+    // Dispatch mousemove on document to update endTime (global listener is on document)
+    await this.page.evaluate(
+      ({ clientX, clientY }) => {
+        const event = new MouseEvent('mousemove', {
+          bubbles: true,
+          cancelable: true,
+          clientX,
+          clientY,
+        });
+        document.dispatchEvent(event);
+      },
+      { clientX: endX, clientY: y }
+    );
+    await this.page.waitForTimeout(50);
+
+    // Release mouse using document event as well (global listener is on document)
+    await this.page.evaluate(
+      ({ clientX, clientY }) => {
+        const event = new MouseEvent('mouseup', {
+          bubbles: true,
+          cancelable: true,
+          clientX,
+          clientY,
+        });
+        document.dispatchEvent(event);
+      },
+      { clientX: endX, clientY: y }
+    );
+
+    // Release Shift
+    await this.page.keyboard.up('Shift');
+    // Wait for segment chip to appear
+    await this.page.waitForTimeout(200);
+  }
+
+  /**
+   * Get count of timeline censor segments
+   */
+  async getTimelineSegmentCount(): Promise<number> {
+    const chips = await this.timelineChips.all();
+    return chips.length;
+  }
+
+  /**
+   * Clear all timeline segments
+   */
+  async clearTimelineSegments() {
+    if ((await this.timelineChips.count()) > 0) {
+      await this.timelineClearAll.click();
+    }
+  }
+
+  /**
+   * Delete a specific timeline segment by index
+   */
+  async deleteTimelineSegment(index: number) {
+    const chip = this.timelineChips.nth(index);
+    const deleteButton = chip.locator('button').filter({ hasText: '✕' });
+    await deleteButton.click();
+  }
+
+  /**
+   * Verify review tab is enabled (which contains the timeline section)
+   */
+  async expectReviewTabEnabled() {
+    await expect(this.reviewTab).not.toBeDisabled();
+  }
+
+  /**
+   * Verify timeline section is visible
+   */
+  async expectTimelineSectionVisible() {
+    await expect(this.timelineSection).toBeVisible();
   }
 }

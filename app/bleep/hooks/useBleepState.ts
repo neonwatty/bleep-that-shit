@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { decodeAudioToMono16kHzPCM } from '@/lib/utils/audioDecode';
 import { applyBleeps, applyBleepsToVideo } from '@/lib/utils/audioProcessor';
@@ -6,6 +6,7 @@ import { getPublicPath } from '@/lib/utils/paths';
 import { mergeOverlappingBleeps } from '@/lib/utils/bleepMerger';
 import { levenshteinDistance } from '@/lib/utils/stringMatching';
 import { getWordsetById } from '@/lib/utils/db/wordsetOperations';
+import { ManualCensorSegment, createManualCensorSegment } from '@/lib/types/manualCensor';
 
 export interface TranscriptionResult {
   text: string;
@@ -23,7 +24,7 @@ export interface MatchedWord {
   word: string;
   start: number;
   end: number;
-  source?: 'manual' | number; // 'manual' or wordset ID
+  source?: 'manual' | 'manual-timeline' | number; // 'manual', 'manual-timeline', or wordset ID
 }
 
 export function useBleepState() {
@@ -76,39 +77,55 @@ export function useBleepState() {
   const [hasBleeped, setHasBleeped] = useState(false);
   const [lastBleepVolume, setLastBleepVolume] = useState<number | null>(null);
 
+  // Manual timeline state
+  const [manualCensorSegments, setManualCensorSegments] = useState<ManualCensorSegment[]>([]);
+  const [mediaDuration, setMediaDuration] = useState<number>(0);
+
   // Refs
   const workerRef = useRef<Worker | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
-  // Derived state: compute matchedWords from censoredWordIndices with source tracking
+  // Derived state: compute matchedWords from censoredWordIndices AND manual timeline segments
   const matchedWords = useMemo(() => {
-    if (!transcriptionResult) return [];
-    return Array.from(censoredWordIndices)
-      .map(idx => {
-        const chunk = transcriptionResult.chunks[idx];
-        const source = wordSource.get(idx) || 'manual';
-        return { chunk, idx, source };
-      })
-      .filter(({ chunk }) => {
-        if (
-          !chunk ||
-          !chunk.timestamp ||
-          chunk.timestamp[0] === null ||
-          chunk.timestamp[1] === null
-        ) {
-          console.warn('Skipping chunk with null timestamp:', chunk?.text);
-          return false;
-        }
-        return true;
-      })
-      .map(({ chunk, source }) => ({
-        word: chunk.text,
-        start: chunk.timestamp[0],
-        end: chunk.timestamp[1],
-        source,
-      }))
-      .sort((a, b) => a.start - b.start);
-  }, [censoredWordIndices, transcriptionResult, wordSource]);
+    // Get transcription-based matches
+    const transcriptionMatches: MatchedWord[] = transcriptionResult
+      ? Array.from(censoredWordIndices)
+          .map(idx => {
+            const chunk = transcriptionResult.chunks[idx];
+            const source = wordSource.get(idx) || 'manual';
+            return { chunk, idx, source };
+          })
+          .filter(({ chunk }) => {
+            if (
+              !chunk ||
+              !chunk.timestamp ||
+              chunk.timestamp[0] === null ||
+              chunk.timestamp[1] === null
+            ) {
+              console.warn('Skipping chunk with null timestamp:', chunk?.text);
+              return false;
+            }
+            return true;
+          })
+          .map(({ chunk, source }) => ({
+            word: chunk.text,
+            start: chunk.timestamp[0],
+            end: chunk.timestamp[1],
+            source,
+          }))
+      : [];
+
+    // Get manual timeline censor segments
+    const manualTimelineMatches: MatchedWord[] = manualCensorSegments.map(segment => ({
+      word: `${segment.start.toFixed(1)}s - ${segment.end.toFixed(1)}s`,
+      start: segment.start,
+      end: segment.end,
+      source: 'manual-timeline' as const,
+    }));
+
+    // Combine and sort by start time
+    return [...transcriptionMatches, ...manualTimelineMatches].sort((a, b) => a.start - b.start);
+  }, [censoredWordIndices, transcriptionResult, wordSource, manualCensorSegments]);
 
   // File handlers
   const handleFileUpload = async (uploadedFile: File) => {
@@ -548,6 +565,31 @@ export function useBleepState() {
     setWordsToMatch(uniqueWords.join(', '));
   };
 
+  // Manual timeline handlers
+  const handleAddManualCensor = useCallback((start: number, end: number) => {
+    const newSegment = createManualCensorSegment(start, end);
+    setManualCensorSegments(prev => [...prev, newSegment].sort((a, b) => a.start - b.start));
+  }, []);
+
+  const handleUpdateManualCensor = useCallback(
+    (id: string, updates: Partial<Omit<ManualCensorSegment, 'id'>>) => {
+      setManualCensorSegments(prev =>
+        prev
+          .map(segment => (segment.id === id ? { ...segment, ...updates } : segment))
+          .sort((a, b) => a.start - b.start)
+      );
+    },
+    []
+  );
+
+  const handleRemoveManualCensor = useCallback((id: string) => {
+    setManualCensorSegments(prev => prev.filter(segment => segment.id !== id));
+  }, []);
+
+  const handleClearManualCensors = useCallback(() => {
+    setManualCensorSegments([]);
+  }, []);
+
   // Bleep handlers
   const handleBleep = async () => {
     if (!file || matchedWords.length === 0) {
@@ -769,6 +811,15 @@ export function useBleepState() {
       setBleepBuffer,
       handleBleep,
       handlePreviewBleep,
+    },
+    manualTimeline: {
+      manualCensorSegments,
+      mediaDuration,
+      setMediaDuration,
+      handleAddManualCensor,
+      handleUpdateManualCensor,
+      handleRemoveManualCensor,
+      handleClearManualCensors,
     },
   };
 }

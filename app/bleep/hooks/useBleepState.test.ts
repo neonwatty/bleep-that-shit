@@ -2512,4 +2512,273 @@ describe('useBleepState', () => {
       expect(result.current.bleepConfig.isProcessingVideo).toBe(false);
     });
   });
+
+  describe('Manual Timeline', () => {
+    describe('Initialization', () => {
+      it('should initialize with empty manual censor segments', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        expect(result.current.manualTimeline.manualCensorSegments).toEqual([]);
+      });
+
+      it('should initialize with zero media duration', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        expect(result.current.manualTimeline.mediaDuration).toBe(0);
+      });
+
+      it('should provide all required manual timeline handler functions', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        expect(typeof result.current.manualTimeline.handleAddManualCensor).toBe('function');
+        expect(typeof result.current.manualTimeline.handleUpdateManualCensor).toBe('function');
+        expect(typeof result.current.manualTimeline.handleRemoveManualCensor).toBe('function');
+        expect(typeof result.current.manualTimeline.handleClearManualCensors).toBe('function');
+        expect(typeof result.current.manualTimeline.setMediaDuration).toBe('function');
+      });
+    });
+
+    describe('handleAddManualCensor', () => {
+      it('should add a new manual censor segment', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(1.5, 3.5);
+        });
+
+        expect(result.current.manualTimeline.manualCensorSegments).toHaveLength(1);
+        expect(result.current.manualTimeline.manualCensorSegments[0].start).toBe(1.5);
+        expect(result.current.manualTimeline.manualCensorSegments[0].end).toBe(3.5);
+      });
+
+      it('should generate unique IDs for each segment', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(0, 1);
+          result.current.manualTimeline.handleAddManualCensor(2, 3);
+        });
+
+        const ids = result.current.manualTimeline.manualCensorSegments.map(s => s.id);
+        expect(new Set(ids).size).toBe(2);
+      });
+
+      it('should sort segments by start time', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(5, 6);
+          result.current.manualTimeline.handleAddManualCensor(1, 2);
+          result.current.manualTimeline.handleAddManualCensor(3, 4);
+        });
+
+        const starts = result.current.manualTimeline.manualCensorSegments.map(s => s.start);
+        expect(starts).toEqual([1, 3, 5]);
+      });
+    });
+
+    describe('handleUpdateManualCensor', () => {
+      it('should update segment start and end times', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(1, 2);
+        });
+
+        const segmentId = result.current.manualTimeline.manualCensorSegments[0].id;
+
+        act(() => {
+          result.current.manualTimeline.handleUpdateManualCensor(segmentId, { start: 1.5, end: 3 });
+        });
+
+        expect(result.current.manualTimeline.manualCensorSegments[0].start).toBe(1.5);
+        expect(result.current.manualTimeline.manualCensorSegments[0].end).toBe(3);
+      });
+
+      it('should re-sort segments after update', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(1, 2);
+          result.current.manualTimeline.handleAddManualCensor(5, 6);
+        });
+
+        const firstId = result.current.manualTimeline.manualCensorSegments[0].id;
+
+        // Move first segment to after second
+        act(() => {
+          result.current.manualTimeline.handleUpdateManualCensor(firstId, { start: 10, end: 11 });
+        });
+
+        const starts = result.current.manualTimeline.manualCensorSegments.map(s => s.start);
+        expect(starts).toEqual([5, 10]);
+      });
+
+      it('should not update non-existent segment', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(1, 2);
+        });
+
+        act(() => {
+          result.current.manualTimeline.handleUpdateManualCensor('non-existent-id', {
+            start: 10,
+            end: 11,
+          });
+        });
+
+        // Original segment should be unchanged
+        expect(result.current.manualTimeline.manualCensorSegments[0].start).toBe(1);
+        expect(result.current.manualTimeline.manualCensorSegments[0].end).toBe(2);
+      });
+    });
+
+    describe('handleRemoveManualCensor', () => {
+      it('should remove a segment by ID', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(1, 2);
+          result.current.manualTimeline.handleAddManualCensor(3, 4);
+        });
+
+        const firstId = result.current.manualTimeline.manualCensorSegments[0].id;
+
+        act(() => {
+          result.current.manualTimeline.handleRemoveManualCensor(firstId);
+        });
+
+        expect(result.current.manualTimeline.manualCensorSegments).toHaveLength(1);
+        expect(result.current.manualTimeline.manualCensorSegments[0].start).toBe(3);
+      });
+
+      it('should handle removing non-existent segment', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(1, 2);
+        });
+
+        act(() => {
+          result.current.manualTimeline.handleRemoveManualCensor('non-existent-id');
+        });
+
+        // Should still have the original segment
+        expect(result.current.manualTimeline.manualCensorSegments).toHaveLength(1);
+      });
+    });
+
+    describe('handleClearManualCensors', () => {
+      it('should clear all segments', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(1, 2);
+          result.current.manualTimeline.handleAddManualCensor(3, 4);
+          result.current.manualTimeline.handleAddManualCensor(5, 6);
+        });
+
+        expect(result.current.manualTimeline.manualCensorSegments).toHaveLength(3);
+
+        act(() => {
+          result.current.manualTimeline.handleClearManualCensors();
+        });
+
+        expect(result.current.manualTimeline.manualCensorSegments).toHaveLength(0);
+      });
+
+      it('should work when already empty', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.handleClearManualCensors();
+        });
+
+        expect(result.current.manualTimeline.manualCensorSegments).toHaveLength(0);
+      });
+    });
+
+    describe('setMediaDuration', () => {
+      it('should set the media duration', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.setMediaDuration(120);
+        });
+
+        expect(result.current.manualTimeline.mediaDuration).toBe(120);
+      });
+    });
+
+    describe('matchedWords integration', () => {
+      it('should include manual timeline segments in matchedWords', () => {
+        const { result } = renderHook(() => useBleepState());
+
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(1, 2);
+          result.current.manualTimeline.handleAddManualCensor(5, 6);
+        });
+
+        expect(result.current.wordSelection.matchedWords).toHaveLength(2);
+        expect(result.current.wordSelection.matchedWords[0].source).toBe('manual-timeline');
+        expect(result.current.wordSelection.matchedWords[1].source).toBe('manual-timeline');
+      });
+
+      it('should combine transcription and manual timeline matches', async () => {
+        const { result } = renderHook(() => useBleepState());
+
+        // Add transcription result
+        const mockResult = createMockTranscriptionResult([
+          { text: 'hello', timestamp: [0, 1] },
+          { text: 'world', timestamp: [2, 3] },
+        ]);
+
+        await act(async () => {
+          result.current.transcription.setTranscriptionResult(mockResult);
+        });
+
+        // Select a word from transcription
+        await act(async () => {
+          result.current.wordSelection.handleToggleWord(0);
+        });
+
+        // Add manual censor
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(10, 11);
+        });
+
+        // Should have both
+        expect(result.current.wordSelection.matchedWords.length).toBe(2);
+
+        const sources = result.current.wordSelection.matchedWords.map(m => m.source);
+        expect(sources).toContain('manual');
+        expect(sources).toContain('manual-timeline');
+      });
+
+      it('should sort combined matchedWords by start time', async () => {
+        const { result } = renderHook(() => useBleepState());
+
+        // Add transcription result
+        const mockResult = createMockTranscriptionResult([{ text: 'middle', timestamp: [5, 6] }]);
+
+        await act(async () => {
+          result.current.transcription.setTranscriptionResult(mockResult);
+        });
+
+        await act(async () => {
+          result.current.wordSelection.handleToggleWord(0);
+        });
+
+        // Add manual censors before and after
+        act(() => {
+          result.current.manualTimeline.handleAddManualCensor(10, 11);
+          result.current.manualTimeline.handleAddManualCensor(1, 2);
+        });
+
+        const starts = result.current.wordSelection.matchedWords.map(m => m.start);
+        expect(starts).toEqual([1, 5, 10]);
+      });
+    });
+  });
 });
