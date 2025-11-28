@@ -53,9 +53,7 @@ describe('Footer', () => {
   it('renders blog link with correct attributes', () => {
     render(<Footer />);
     const blogLink = screen.getByLabelText('Visit blog');
-    expect(blogLink).toHaveAttribute('href', 'https://neonwatty.com/');
-    expect(blogLink).toHaveAttribute('target', '_blank');
-    expect(blogLink).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(blogLink).toHaveAttribute('href', '/blog');
   });
 
   it('renders Discord link with correct attributes', () => {
@@ -77,7 +75,7 @@ describe('Footer', () => {
     const { container } = render(<Footer />);
     const githubIcon = container.querySelector('.fa-github');
     const twitterIcon = container.querySelector('.fa-x-twitter');
-    const blogIcon = container.querySelector('.fa-globe');
+    const blogIcon = container.querySelector('.fa-blog');
     const discordIcon = container.querySelector('.fa-discord');
 
     expect(githubIcon).toBeInTheDocument();
