@@ -38,9 +38,13 @@ With Bleep That Sh\*t!, the process is much simpler:
 
 Simply drag and drop your MP4 video file (or MP3 audio) into the browser. Your file never leaves your device - all processing happens locally.
 
+![Upload your video file](/images/blog/step1-upload.png)
+
 ### Step 2: Transcribe
 
 Choose a Whisper AI model and click "Transcribe". The AI will automatically generate a word-level transcript of your audio, including precise timestamps for each word.
+
+![Select language and model, then transcribe](/images/blog/step2-transcribe.png)
 
 ### Step 3: Select Words to Bleep
 
@@ -50,9 +54,13 @@ Review the transcript and select the words you want to censor. You can:
 - **Partial match**: Bleep words containing a specific string
 - **Fuzzy match**: Bleep words that sound similar (great for catching variations)
 
+![Select words to bleep using word lists or manual entry](/images/blog/step3-select-words.png)
+
 ### Step 4: Preview and Download
 
 Listen to the preview to make sure everything sounds right, then download your censored video. It's that simple!
+
+![Choose bleep sound and volume, then apply bleeps](/images/blog/step4-preview.png)
 
 ## Tips for Best Results
 
@@ -64,6 +72,8 @@ Listen to the preview to make sure everything sounds right, then download your c
 ## Privacy First
 
 Unlike online video editors that upload your files to remote servers, Bleep That Sh\*t! processes everything in your browser. Your videos never leave your device, so you can censor sensitive content with complete peace of mind.
+
+![Your files never leave your device](/images/blog/privacy.png)
 
 ## Get Started
 
