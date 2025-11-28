@@ -6,6 +6,7 @@ author: 'Bleep That Team'
 tags: ['youtube', 'monetization', 'ad-friendly', 'tutorial']
 readingTime: 4
 featured: true
+featuredImage: '/images/blog/thumbnails/youtube-monetization.svg'
 ---
 
 You've spent hours creating great content, but one slip of the tongue can cost you ad revenue. YouTube's ad-friendly content guidelines are strict about profanity, and even a single uncensored word can limit your monetization. Here's how to protect your revenue by bleeping profanity before you upload.

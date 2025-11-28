@@ -6,6 +6,7 @@ author: 'Bleep That Team'
 tags: ['tutorial', 'video editing', 'censoring']
 readingTime: 5
 featured: true
+featuredImage: '/images/blog/thumbnails/how-to-bleep-video.svg'
 ---
 
 Whether you're creating content for YouTube, editing a podcast, or preparing a video for work, there are times when you need to bleep out certain words. This guide will show you how to do it quickly and easily, right in your browser.

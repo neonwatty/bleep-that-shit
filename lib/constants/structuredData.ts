@@ -67,32 +67,22 @@ export const homepageFAQItems: FAQItem[] = [
   {
     question: 'How do I bleep out words in a video?',
     answer:
-      'Upload your MP4 video file to our browser-based tool, click "Transcribe" to generate an AI-powered word-level transcript, select the words you want to censor using our exact, partial, or fuzzy matching modes, then preview and download your censored video. The entire process takes just a few minutes and works entirely in your browser.',
+      'Upload your MP4 video file, click "Transcribe" to generate an AI-powered transcript, select words to censor, then preview and download. The entire process takes minutes and works entirely in your browser.',
   },
   {
-    question: 'Is my data uploaded to a server?',
+    question: 'Is my data private?',
     answer:
-      'No. All processing happens 100% locally in your browser using WebAssembly and Web Workers technology. Your audio and video files never leave your device, and no data is sent to any server. This ensures complete privacy for your content.',
+      'Yes! All processing happens 100% locally in your browser. Your files never leave your device and no data is sent to any server.',
   },
   {
-    question: 'What file formats are supported?',
+    question: 'Can teachers use this for classroom videos?',
     answer:
-      'Bleep That Sh*t! supports MP4 video files and MP3 audio files. We currently support files up to 10 minutes in length. The tool works with any modern web browser that supports WebAssembly, including Chrome, Firefox, Safari, and Edge.',
-  },
-  {
-    question: 'Is this tool free?',
-    answer:
-      'Yes, Bleep That Sh*t! is completely free to use with no subscription fees, premium tiers, or limits. The tool is open source and runs entirely in your browser, so there are no server costs to pass on to users.',
-  },
-  {
-    question: 'Can I use this for classroom videos?',
-    answer:
-      'Absolutely! Teachers commonly use Bleep That Sh*t! to censor inappropriate language from documentaries, YouTube videos, TED Talks, and other educational content. Since the tool runs locally in your browser with no uploads, it helps maintain FERPA compliance and student privacy.',
+      'Absolutely! Teachers use Bleep That Sh*t! to censor inappropriate language from documentaries, YouTube videos, and TED Talks. Since it runs locally with no uploads, it helps maintain FERPA compliance.',
   },
   {
     question: 'Will this help avoid YouTube demonetization?',
     answer:
-      "Yes! Censoring profanity before uploading to YouTube can help maintain full ad monetization. YouTube's algorithm flags videos with profanity, especially in the first 30 seconds, for limited or no ads. By bleeping inappropriate words before upload, you can protect your revenue while keeping your content style.",
+      "Yes! YouTube's algorithm flags videos with profanity for limited ads. By bleeping inappropriate words before upload, you can protect your revenue while keeping your content style.",
   },
 ];
 

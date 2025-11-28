@@ -6,6 +6,7 @@ author: 'Bleep That Team'
 tags: ['education', 'teachers', 'classroom', 'video editing', 'censoring']
 readingTime: 4
 featured: true
+featuredImage: '/images/blog/thumbnails/classroom-teacher.svg'
 ---
 
 Teachers know the struggle: you find the perfect documentary, TED Talk, or YouTube video for your lesson plan, but there's one problem—a few inappropriate words make it unsuitable for your students. Rather than abandoning great educational content, you can quickly censor those words yourself. This guide shows educators how to make any video classroom-appropriate in minutes.

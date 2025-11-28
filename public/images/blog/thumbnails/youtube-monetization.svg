@@ -1,0 +1,28 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fee2e2"/>
+      <stop offset="100%" style="stop-color:#fef3c7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg3)"/>
+  <!-- YouTube play button -->
+  <g transform="translate(450, 180)">
+    <rect x="0" y="0" width="300" height="200" rx="40" fill="#dc2626"/>
+    <polygon points="115,60 115,140 200,100" fill="white"/>
+  </g>
+  <!-- Dollar signs -->
+  <g transform="translate(280, 200)">
+    <circle cx="40" cy="40" r="35" fill="#22c55e"/>
+    <text x="40" y="55" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="white" text-anchor="middle">$</text>
+  </g>
+  <g transform="translate(880, 200)">
+    <circle cx="40" cy="40" r="35" fill="#22c55e"/>
+    <text x="40" y="55" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="white" text-anchor="middle">$</text>
+  </g>
+  <!-- Checkmark badge -->
+  <g transform="translate(540, 400)">
+    <circle cx="60" cy="40" r="45" fill="#22c55e"/>
+    <polyline points="35,40 55,60 90,25" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
