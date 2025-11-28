@@ -38,8 +38,6 @@ With Bleep That Sh\*t!, the process is much simpler:
 
 Simply drag and drop your MP4 video file (or MP3 audio) into the browser. Your file never leaves your device - all processing happens locally.
 
-![Upload your video file](/images/blog/step1-upload.png)
-
 ### Step 2: Transcribe
 
 Choose a Whisper AI model and click "Transcribe". The AI will automatically generate a word-level transcript of your audio, including precise timestamps for each word.
@@ -48,17 +46,44 @@ Choose a Whisper AI model and click "Transcribe". The AI will automatically gene
 
 ### Step 3: Select Words to Bleep
 
-Review the transcript and select the words you want to censor. You can:
+We provide four powerful ways to select which words to censor:
 
+#### Word Lists
+
+Apply pre-built or custom word lists with one click. Perfect for common profanity or creating reusable lists for your content.
+
+![Quick apply word lists](/images/blog/step3-wordlists.png)
+
+#### Pattern Match
+
+Enter words manually with three matching modes:
 - **Exact match**: Bleep only exact matches of a word
 - **Partial match**: Bleep words containing a specific string
 - **Fuzzy match**: Bleep words that sound similar (great for catching variations)
 
-![Select words to bleep using word lists or manual entry](/images/blog/step3-select-words.png)
+![Pattern matching with exact, partial, and fuzzy modes](/images/blog/step3-pattern.png)
 
-### Step 4: Preview and Download
+#### Transcript View
 
-Listen to the preview to make sure everything sounds right, then download your censored video. It's that simple!
+Click directly on words in the transcript to toggle them for censoring. Matched words appear highlighted in pink.
+
+![Click words directly in the transcript](/images/blog/step3-transcript.png)
+
+#### Timeline
+
+Visualize your audio and select precise time ranges to censor - useful for bleeping entire sections or sounds that aren't words.
+
+![Timeline view for precise selection](/images/blog/step3-timeline.png)
+
+### Step 4: Choose Your Bleep Sound
+
+Pick from our selection of bleep sounds:
+- **Classic Bleep**: The traditional TV censor tone
+- **Brown Noise**: A softer, less jarring alternative
+- **Dolphin Sounds**: For a comedic touch
+- **T-Rex Roar**: When you want to make a statement!
+
+Adjust the volume and buffer settings, preview your changes, then download your censored video.
 
 ![Choose bleep sound and volume, then apply bleeps](/images/blog/step4-preview.png)
 
@@ -72,8 +97,6 @@ Listen to the preview to make sure everything sounds right, then download your c
 ## Privacy First
 
 Unlike online video editors that upload your files to remote servers, Bleep That Sh\*t! processes everything in your browser. Your videos never leave your device, so you can censor sensitive content with complete peace of mind.
-
-![Your files never leave your device](/images/blog/privacy.png)
 
 ## Get Started
 
