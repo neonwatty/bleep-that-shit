@@ -43,9 +43,11 @@ test.describe('Home Page - Sections', () => {
   });
 
   test('should display Privacy section', async ({ page }) => {
-    await expect(page.getByTestId('privacy-section')).toBeVisible();
+    const privacySection = page.getByTestId('privacy-section');
+    await expect(privacySection).toBeVisible();
     await expect(page.getByRole('heading', { name: /Privacy & Local Processing/i })).toBeVisible();
-    await expect(page.getByText(/Your files never leave your device/i)).toBeVisible();
+    // Scope to privacy section to avoid matching FAQ schema JSON-LD
+    await expect(privacySection.getByText(/Your files never leave your device/i)).toBeVisible();
   });
 
   test('should display Technology section', async ({ page }) => {
