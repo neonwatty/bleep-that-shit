@@ -57,6 +57,7 @@ Apply pre-built or custom word lists with one click. Perfect for common profanit
 #### Pattern Match
 
 Enter words manually with three matching modes:
+
 - **Exact match**: Bleep only exact matches of a word
 - **Partial match**: Bleep words containing a specific string
 - **Fuzzy match**: Bleep words that sound similar (great for catching variations)
@@ -78,6 +79,7 @@ Visualize your audio and select precise time ranges to censor - useful for bleep
 ### Step 4: Choose Your Bleep Sound
 
 Pick from our selection of bleep sounds:
+
 - **Classic Bleep**: The traditional TV censor tone
 - **Brown Noise**: A softer, less jarring alternative
 - **Dolphin Sounds**: For a comedic touch

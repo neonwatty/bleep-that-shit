@@ -25,7 +25,7 @@ Traditionally, teachers had two options: skip the video entirely or spend hours 
 
 ## Why Browser-Based Video Censoring Works for Teachers
 
-Bleep That Sh*t! solves this problem with a free, browser-based tool designed for quick edits:
+Bleep That Sh\*t! solves this problem with a free, browser-based tool designed for quick edits:
 
 ### No Software Installation Required
 
@@ -50,15 +50,17 @@ No subscription fees, no premium tiers, no limits on video length. The tool is c
 Drag and drop your MP4 video file directly into the browser. The file stays on your computer throughout the entire process.
 
 **Supported formats:**
+
 - MP4 video files (most common for downloaded content)
 - MP3 audio files (for podcasts or audio-only content)
 
 ![Transcription in progress](/images/blog/step2-transcribe.png)
-*The transcription interface showing your video being processed*
+_The transcription interface showing your video being processed_
 
 ### Step 2: Generate an Automatic Transcript
 
 Select your transcription model and click "Transcribe." The AI will:
+
 - Convert speech to text automatically
 - Identify individual words with precise timestamps
 - Work with multiple languages and accents
@@ -74,31 +76,32 @@ You have several options for identifying inappropriate content:
 Apply pre-built profanity lists with one click. This catches common inappropriate words automatically, saving you the time of manually reviewing the entire transcript.
 
 ![Word lists selection](/images/blog/step3-wordlists.png)
-*Quick apply word lists for common profanity filtering*
+_Quick apply word lists for common profanity filtering_
 
 #### Manual Selection
 
 Click directly on words in the transcript to mark them for censoring. This gives you precise control—useful when context matters (the same word might be fine in one sentence but inappropriate in another).
 
 ![Interactive transcript](/images/blog/step3-transcript.png)
-*Click on words in the transcript to select them for censoring*
+_Click on words in the transcript to select them for censoring_
 
 #### Pattern Matching
 
 Enter specific words to find and censor throughout the video:
+
 - **Exact match**: Catches only that specific word
 - **Partial match**: Catches variations (e.g., entering "damn" also catches "dammit")
 - **Fuzzy match**: Catches similar-sounding words, helpful for catching variations the AI might have transcribed differently
 
 ![Pattern matching](/images/blog/step3-pattern.png)
-*Enter words to match with different matching modes*
+_Enter words to match with different matching modes_
 
 ### Step 4: Preview and Download
 
 Choose your bleep sound (the classic TV censor tone works well for classroom settings), preview the censored sections, and download your edited video. The original video file remains unchanged.
 
 ![Preview and download](/images/blog/step4-preview.png)
-*Preview your censored video and download when ready*
+_Preview your censored video and download when ready_
 
 ## Practical Use Cases for Educators
 
@@ -131,6 +134,7 @@ Choose your bleep sound (the classic TV censor tone works well for classroom set
 ### Preview Before Class
 
 Always preview your censored video before showing it to students. Check that:
+
 - All inappropriate words are covered
 - The bleeps don't obscure important content
 - The audio sounds natural
@@ -147,7 +151,7 @@ If your school requires documentation of modified materials, note which videos y
 
 Editing a video for classroom use typically falls under educational fair use, but check your school's policies on modifying copyrighted content for instruction.
 
-## Why Teachers Choose Bleep That Sh*t!
+## Why Teachers Choose Bleep That Sh\*t!
 
 **"I found an amazing documentary about the Civil Rights Movement, but there was one interview with language I couldn't show my 8th graders. This tool let me edit it out in under 5 minutes."** — Middle School History Teacher
 
@@ -189,4 +193,4 @@ Your students deserve access to the best educational content. Don't let a few in
 
 ---
 
-*Bleep That Sh*t! is a free, privacy-focused tool for censoring audio and video content. Perfect for teachers, content creators, and anyone who needs to quickly clean up media files.*
+*Bleep That Sh*t! is a free, privacy-focused tool for censoring audio and video content. Perfect for teachers, content creators, and anyone who needs to quickly clean up media files.\*
