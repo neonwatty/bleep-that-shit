@@ -78,6 +78,26 @@ Apply pre-built profanity lists with one click. This catches common inappropriat
 ![Word lists selection](/images/blog/step3-wordlists.png)
 _Quick apply word lists for common profanity filtering_
 
+#### Create Custom Word Lists for Your Classroom
+
+One of the most powerful features for educators is the ability to **create and save custom word lists**. This is especially valuable when you:
+
+- Work with content that uses the same problematic words repeatedly
+- Need to censor specific terms for different grade levels
+- Want to prepare multiple videos for the same unit or lesson
+- Share resources with other teachers in your department
+
+**How to create a custom word list:**
+
+1. Click "Manage Word Lists" in the Word Lists tab
+2. Create a new list with a descriptive name (e.g., "Middle School History" or "Science Documentary Terms")
+3. Add words you commonly need to censor
+4. Save the list—it's stored in your browser and available for all future videos
+
+**Word lists are saved locally in your browser**, so they persist between sessions. Create lists once and reuse them throughout the school year. This is perfect for teachers who regularly show educational videos and want a consistent, quick workflow.
+
+**Tip:** Create grade-level-specific lists. What's appropriate for high school seniors might not be suitable for middle schoolers. Having separate lists lets you quickly apply the right filter for each class.
+
 #### Manual Selection
 
 Click directly on words in the transcript to mark them for censoring. This gives you precise control—useful when context matters (the same word might be fine in one sentence but inappropriate in another).
