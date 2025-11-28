@@ -4,7 +4,7 @@ description: 'Free guide for educators on censoring inappropriate language from 
 date: '2025-01-20'
 author: 'Bleep That Team'
 tags: ['education', 'teachers', 'classroom', 'video editing', 'censoring']
-readingTime: 5
+readingTime: 4
 featured: true
 ---
 
@@ -122,28 +122,6 @@ Choose your bleep sound (the classic TV censor tone works well for classroom set
 
 ![Preview and download](/images/blog/step4-preview.png)
 _Preview your censored video and download when ready_
-
-## Best Practices for Classroom Video Editing
-
-### Preview Before Class
-
-Always preview your censored video before showing it to students. Check that:
-
-- All inappropriate words are covered
-- The bleeps don't obscure important content
-- The audio sounds natural
-
-### Keep Original Files
-
-Save both the original and censored versions. You might need to re-edit if you missed something, or you may want to use the original for different audiences.
-
-### Document Your Edits
-
-If your school requires documentation of modified materials, note which videos you've edited and what content was censored. This protects you if questions arise about educational material modifications.
-
-### Check Copyright Considerations
-
-Editing a video for classroom use typically falls under educational fair use, but check your school's policies on modifying copyrighted content for instruction.
 
 ## Get Started Today
 
