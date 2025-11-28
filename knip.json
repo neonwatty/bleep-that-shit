@@ -1,6 +1,10 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "entry": ["app/**/{error,layout,page,route}.{js,jsx,ts,tsx}", "app/workers/**/*.ts", "lib/blog/*.ts"],
+  "entry": [
+    "app/**/{error,layout,page,route}.{js,jsx,ts,tsx}",
+    "app/workers/**/*.ts",
+    "lib/blog/*.ts"
+  ],
   "project": ["**/*.{js,jsx,ts,tsx}"],
   "ignore": ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}", "tests/archived/**"],
   "ignoreDependencies": [
