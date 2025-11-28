@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { version } from '../package.json';
 
 export function Footer() {
@@ -34,15 +35,13 @@ export function Footer() {
           >
             <i className="fab fa-x-twitter text-2xl"></i>
           </a>
-          <a
-            href="https://neonwatty.com/"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/blog"
             className="text-gray-700 transition-colors hover:text-black"
             aria-label="Visit blog"
           >
-            <i className="fas fa-globe text-2xl"></i>
-          </a>
+            <i className="fas fa-blog text-2xl"></i>
+          </Link>
           <a
             href="https://discord.gg/8EUxqR93"
             target="_blank"
