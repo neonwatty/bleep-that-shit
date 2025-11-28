@@ -107,39 +107,16 @@ function BleepPageContent() {
       </div>
       <ol className="mb-8 list-decimal pl-4 text-sm text-gray-900 sm:text-base md:pl-6 md:text-lg">
         <li>
-          <span className="rounded bg-blue-100 px-2 py-1 text-blue-900">Upload your file</span>{' '}
-          (audio or video).
+          <span className="rounded bg-blue-100 px-2 py-1 text-blue-900">Upload & Transcribe</span>{' '}
+          your audio or video file.
         </li>
         <li>
-          <span className="rounded bg-green-100 px-2 py-1 text-green-900">
-            Select language and model
-          </span>{' '}
-          for transcription.
-        </li>
-        <li>
-          <span className="rounded bg-indigo-100 px-2 py-1 text-indigo-900">Transcribe</span> your
-          file to generate a word-level transcript.
-        </li>
-        <li>
-          <span className="rounded bg-purple-100 px-2 py-1 text-purple-900">
-            Enter words and matching modes
-          </span>{' '}
-          (exact, partial, fuzzy).
-        </li>
-        <li>
-          <span className="rounded bg-pink-100 px-2 py-1 text-pink-900">Run matching</span> to find
+          <span className="rounded bg-purple-100 px-2 py-1 text-purple-900">Review & Match</span>{' '}
           words to censor.
         </li>
         <li>
-          <span className="rounded bg-yellow-100 px-2 py-1 text-yellow-900">
-            Choose bleep sound and volume
-          </span>{' '}
-          for censorship.
-        </li>
-        <li>
-          <span className="rounded bg-violet-100 px-2 py-1 text-violet-900">
-            Bleep That Sh*t! and preview/download the censored result.
-          </span>
+          <span className="rounded bg-pink-100 px-2 py-1 text-pink-900">Bleep & Download</span> your
+          censored file.
         </li>
       </ol>
 
