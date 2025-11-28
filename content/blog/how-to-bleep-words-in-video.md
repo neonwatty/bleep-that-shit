@@ -1,12 +1,12 @@
 ---
 title: 'How to Bleep Out Words in Video: Complete Guide'
 description: 'Learn how to censor words from videos for free, directly in your browser. No software installation required.'
-date: '2025-01-15'
+date: '2025-11-22'
 author: 'Bleep That Team'
 tags: ['tutorial', 'video editing', 'censoring']
 readingTime: 5
 featured: true
-featuredImage: '/images/blog/thumbnails/how-to-bleep-video.svg'
+featuredImage: '/images/blog/thumbnails/how-to-bleep-video.png'
 ---
 
 Whether you're creating content for YouTube, editing a podcast, or preparing a video for work, there are times when you need to bleep out certain words. This guide will show you how to do it quickly and easily, right in your browser.

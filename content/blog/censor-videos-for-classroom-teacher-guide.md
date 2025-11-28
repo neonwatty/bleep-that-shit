@@ -1,12 +1,12 @@
 ---
 title: 'How Teachers Can Censor Videos for Classroom Use: Free Online Tool'
 description: 'Free guide for educators on censoring inappropriate language from documentaries, YouTube videos, and educational content for classroom use. No software installation required.'
-date: '2025-01-20'
+date: '2025-11-25'
 author: 'Bleep That Team'
 tags: ['education', 'teachers', 'classroom', 'video editing', 'censoring']
 readingTime: 4
 featured: true
-featuredImage: '/images/blog/thumbnails/classroom-teacher.svg'
+featuredImage: '/images/blog/thumbnails/classroom-teacher.png'
 ---
 
 Teachers know the struggle: you find the perfect documentary, TED Talk, or YouTube video for your lesson plan, but there's one problem—a few inappropriate words make it unsuitable for your students. Rather than abandoning great educational content, you can quickly censor those words yourself. This guide shows educators how to make any video classroom-appropriate in minutes.
