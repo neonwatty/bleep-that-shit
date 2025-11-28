@@ -4,7 +4,7 @@ description: 'Free guide for educators on censoring inappropriate language from 
 date: '2025-01-20'
 author: 'Bleep That Team'
 tags: ['education', 'teachers', 'classroom', 'video editing', 'censoring']
-readingTime: 7
+readingTime: 5
 featured: true
 ---
 
@@ -123,32 +123,6 @@ Choose your bleep sound (the classic TV censor tone works well for classroom set
 ![Preview and download](/images/blog/step4-preview.png)
 _Preview your censored video and download when ready_
 
-## Practical Use Cases for Educators
-
-### Elementary School (K-5)
-
-- Censoring mild language in educational YouTube videos
-- Preparing animated content for younger audiences
-- Editing news clips for current events discussions
-
-### Middle School (6-8)
-
-- Preparing documentary clips on sensitive historical topics
-- Editing TED-Ed and Crash Course videos with occasional language
-- Creating classroom-safe versions of science content
-
-### High School (9-12)
-
-- Preparing film clips for English and Literature classes
-- Editing primary source historical footage
-- Censoring interview segments for social studies
-
-### Higher Education
-
-- Preparing guest lecture recordings
-- Editing content for online course modules
-- Creating accessible versions of conference presentations
-
 ## Best Practices for Classroom Video Editing
 
 ### Preview Before Class
@@ -170,40 +144,6 @@ If your school requires documentation of modified materials, note which videos y
 ### Check Copyright Considerations
 
 Editing a video for classroom use typically falls under educational fair use, but check your school's policies on modifying copyrighted content for instruction.
-
-## Why Teachers Choose Bleep That Sh\*t!
-
-**"I found an amazing documentary about the Civil Rights Movement, but there was one interview with language I couldn't show my 8th graders. This tool let me edit it out in under 5 minutes."** — Middle School History Teacher
-
-**"As a special education teacher, I need to carefully control the content my students see. Being able to quickly clean up educational videos has been a game-changer for my lesson planning."** — Special Education Specialist
-
-**"Our school Chromebooks can't install editing software. Having a browser-based option that actually works is exactly what we needed."** — Technology Integration Specialist
-
-## Frequently Asked Questions
-
-### Is this tool really free for teachers?
-
-Yes, completely free with no limits. No account registration required.
-
-### Will this work on school computers?
-
-Yes. The tool runs entirely in your web browser and requires no software installation. It works on Chromebooks, Windows PCs, Macs, and most tablets.
-
-### How long does it take to censor a video?
-
-For a typical 10-minute educational video with clear audio, expect about 2-3 minutes total: roughly 1 minute for transcription and 1-2 minutes to review and select words.
-
-### Can I censor YouTube videos?
-
-You'll need to download the YouTube video first (many free tools exist for this, or use a browser extension). Then upload the downloaded MP4 file to our tool.
-
-### Is my video data private?
-
-Absolutely. Your video file never leaves your device. All processing happens locally in your browser, not on remote servers.
-
-### Can I censor videos in languages other than English?
-
-Yes. Our AI transcription supports multiple languages. Select your language before transcribing for best results.
 
 ## Get Started Today
 
