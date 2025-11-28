@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3004",
+    "sitemap": "tsx scripts/generate-sitemap.ts",
+    "prebuild": "npm run sitemap",
     "build": "next build",
     "start": "next start",
-    "export": "next build && mkdir -p out && touch out/.nojekyll",
+    "export": "npm run sitemap && next build && mkdir -p out && touch out/.nojekyll",
     "test": "vitest run",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",

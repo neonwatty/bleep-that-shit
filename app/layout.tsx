@@ -1,9 +1,11 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Merriweather } from 'next/font/google';
 import './globals.css';
 import { MobileNav } from '@/components/MobileNav';
 import { Footer } from '@/components/Footer';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
+import { JsonLd } from '@/components/JsonLd';
+import { organizationSchema, websiteSchema } from '@/lib/constants/structuredData';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -19,14 +21,85 @@ const merriweather = Merriweather({
 
 // Get base path for production
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const siteUrl = 'https://bleep-that-sht.com';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#ffffff',
+};
 
 export const metadata: Metadata = {
-  title: 'Bleep That Sh*t!',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'Bleep That Sh*t! - Free Audio & Video Censorship Tool',
+    template: '%s | Bleep That Sh*t!',
+  },
   description:
-    'Effortlessly bleep out any words or phrases from your audio or video. 100% private in-browser processing.',
+    'Effortlessly bleep out any words or phrases from your audio or video files. 100% private in-browser processing with AI-powered transcription. No uploads required.',
+  keywords: [
+    'audio censorship',
+    'video censorship',
+    'bleep audio',
+    'censor words',
+    'profanity filter',
+    'content moderation',
+    'audio editing',
+    'video editing',
+    'browser-based',
+    'privacy-focused',
+    'Whisper transcription',
+    'free audio editor',
+  ],
+  authors: [{ name: 'Bleep That Sh*t!' }],
+  creator: 'Bleep That Sh*t!',
+  publisher: 'Bleep That Sh*t!',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   icons: {
-    icon: `${basePath}/icon.png`,
+    icon: [{ url: `${basePath}/favicon.ico` }, { url: `${basePath}/icon.png`, type: 'image/png' }],
     apple: `${basePath}/icon.png`,
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: siteUrl,
+    siteName: 'Bleep That Sh*t!',
+    title: 'Bleep That Sh*t! - Free Audio & Video Censorship Tool',
+    description:
+      'Effortlessly bleep out any words or phrases from your audio or video files. 100% private in-browser processing with AI-powered transcription.',
+    images: [
+      {
+        url: `${siteUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'Bleep That Sh*t! - Audio & Video Censorship Tool',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Bleep That Sh*t! - Free Audio & Video Censorship Tool',
+    description:
+      'Effortlessly bleep out any words or phrases from your audio or video files. 100% private in-browser processing.',
+    images: [`${siteUrl}/og-image.png`],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: siteUrl,
   },
 };
 
@@ -43,6 +116,7 @@ export default function RootLayout({
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
           crossOrigin="anonymous"
         />
+        <JsonLd data={[organizationSchema, websiteSchema]} />
       </head>
       <body className="font-merriweather bg-pattern text-dark min-h-screen">
         <MobileNav />
