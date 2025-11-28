@@ -5,6 +5,10 @@ import {
   applicationFeatures,
   browserRequirements,
   createBreadcrumbSchema,
+  createFAQPageSchema,
+  createVideoSchema,
+  homepageFAQItems,
+  DEMO_VIDEO_CONFIG,
 } from '@/lib/constants/structuredData';
 
 const homePageSchemas = [
@@ -79,6 +83,8 @@ const homePageSchemas = [
     ],
   },
   createBreadcrumbSchema([{ name: 'Home', url: SITE_URL }]),
+  createVideoSchema(DEMO_VIDEO_CONFIG),
+  createFAQPageSchema(homepageFAQItems),
 ];
 
 export default function Home() {
@@ -348,6 +354,49 @@ export default function Home() {
               <i className="fab fa-discord text-2xl"></i>
               <span>Join Discord</span>
             </a>
+          </div>
+        </section>
+
+        {/* Divider */}
+        <div className="mx-auto my-10 h-0.5 w-24 rounded bg-black md:w-40"></div>
+
+        {/* FAQ Section */}
+        <section data-testid="faq-section" className="editorial-section mb-16">
+          <h2
+            className="font-inter mb-6 text-left text-2xl font-extrabold text-black uppercase sm:text-3xl md:text-4xl"
+            style={{ lineHeight: 1.1 }}
+          >
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-4">
+            {homepageFAQItems.map((item, index) => (
+              <details
+                key={index}
+                className="group rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-gray-300"
+              >
+                <summary className="font-inter cursor-pointer list-none font-bold text-black">
+                  <span className="flex items-center justify-between">
+                    <span>{item.question}</span>
+                    <span className="ml-4 text-gray-400 transition-transform group-open:rotate-180">
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                </summary>
+                <p className="mt-3 text-gray-700">{item.answer}</p>
+              </details>
+            ))}
           </div>
         </section>
       </div>

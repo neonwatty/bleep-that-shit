@@ -34,6 +34,7 @@ export function getAllPosts(): BlogPostMeta[] {
         tags: data.tags || [],
         readingTime: data.readingTime || 5,
         featured: data.featured || false,
+        featuredImage: data.featuredImage || undefined,
       } as BlogPostMeta;
     })
     .sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -65,6 +66,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     tags: data.tags || [],
     readingTime: data.readingTime || 5,
     featured: data.featured || false,
+    featuredImage: data.featuredImage || undefined,
     content: contentHtml,
   };
 }

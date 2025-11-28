@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPostBySlug, getAllSlugs } from '@/lib/blog/posts';
 import { BlogCTA } from '@/components/blog/BlogCTA';
@@ -26,6 +27,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const imageUrl = post.featuredImage
+    ? `${SITE_URL}${post.featuredImage}`
+    : `${SITE_URL}/og-image.png`;
+
   return {
     title: post.title,
     description: post.description,
@@ -38,10 +43,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       publishedTime: post.date,
       authors: [post.author],
       tags: post.tags,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
     },
     twitter: {
+      card: 'summary_large_image',
       title: post.title,
       description: post.description,
+      images: [imageUrl],
     },
     alternates: {
       canonical: `${SITE_URL}/blog/${post.slug}`,
@@ -57,11 +72,16 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
 
+  const imageUrl = post.featuredImage
+    ? `${SITE_URL}${post.featuredImage}`
+    : `${SITE_URL}/og-image.png`;
+
   const articleSchema = {
     '@type': 'Article',
     headline: post.title,
     description: post.description,
     datePublished: post.date,
+    image: imageUrl,
     author: {
       '@type': 'Person',
       name: post.author,
@@ -119,6 +139,20 @@ export default async function BlogPostPage({ params }: PageProps) {
             <span>{post.readingTime} min read</span>
           </div>
         </header>
+
+        {/* Hero Image */}
+        {post.featuredImage && (
+          <div className="relative mb-8 aspect-video overflow-hidden rounded-xl">
+            <Image
+              src={post.featuredImage}
+              alt={post.title}
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
+            />
+          </div>
+        )}
 
         {/* Content */}
         <div

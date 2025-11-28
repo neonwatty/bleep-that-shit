@@ -7,6 +7,7 @@ export interface BlogPostMeta {
   tags: string[];
   readingTime: number;
   featured?: boolean;
+  featuredImage?: string; // Path relative to /public, e.g., "/images/blog/my-post.jpg"
 }
 
 export interface BlogPost extends BlogPostMeta {
