@@ -146,16 +146,7 @@ function getBlogPosts(): SitemapEntry[] {
     });
   }
 
-  // Add blog index if we have posts
-  if (entries.length > 0) {
-    const blogIndexConfig = PAGE_CONFIG['/blog'];
-    entries.unshift({
-      loc: `${SITE_URL}/blog`,
-      lastmod: new Date().toISOString().split('T')[0],
-      changefreq: blogIndexConfig.changefreq,
-      priority: blogIndexConfig.priority,
-    });
-  }
+  // Note: /blog index page is already picked up by getStaticPages() from app/blog/page.tsx
 
   return entries;
 }
