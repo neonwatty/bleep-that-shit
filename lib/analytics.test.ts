@@ -9,7 +9,7 @@ describe('analytics', () => {
   afterEach(() => {
     vi.useRealTimers();
     // Clean up window.gtag
-    delete (window as Record<string, unknown>).gtag;
+    delete (window as unknown as Record<string, unknown>).gtag;
   });
 
   describe('trackEvent', () => {
@@ -36,7 +36,7 @@ describe('analytics', () => {
 
     it('does not throw when window.gtag is undefined', () => {
       // Ensure gtag is not defined
-      delete (window as Record<string, unknown>).gtag;
+      delete (window as unknown as Record<string, unknown>).gtag;
 
       expect(() => trackEvent('test_event')).not.toThrow();
     });
