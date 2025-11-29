@@ -6,6 +6,7 @@ import { exportWordsetsCSV, getWordsetById } from '@/lib/utils/db/wordsetOperati
 import { WordsetList } from './WordsetList';
 import { WordsetEditor } from './WordsetEditor';
 import { WordsetImportExport } from './WordsetImportExport';
+import { trackEvent } from '@/lib/analytics';
 import type { WordsetCreateInput, WordsetUpdateInput } from '@/lib/types/wordset';
 
 interface WordsetManagerContentProps {
@@ -59,6 +60,7 @@ export function WordsetManagerContent({ onWordsetUpdated }: WordsetManagerConten
     setIsSubmitting(false);
 
     if (result.success) {
+      trackEvent('wordset_duplicated');
       setSuccessMessage(`Wordset duplicated successfully!`);
       setTimeout(() => setSuccessMessage(null), 3000);
       onWordsetUpdated?.();
@@ -74,6 +76,10 @@ export function WordsetManagerContent({ onWordsetUpdated }: WordsetManagerConten
         wordsetResult.success && wordsetResult.data
           ? wordsetResult.data.name.toLowerCase().replace(/\s+/g, '-')
           : 'wordset';
+      const wordCount =
+        wordsetResult.success && wordsetResult.data ? wordsetResult.data.words.length : 0;
+
+      trackEvent('wordset_exported_single', { word_count: wordCount });
 
       const blob = new Blob([result.data], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
@@ -98,6 +104,13 @@ export function WordsetManagerContent({ onWordsetUpdated }: WordsetManagerConten
     setIsSubmitting(false);
 
     if (result?.success) {
+      const wordCount = 'words' in data && data.words ? data.words.length : 0;
+      if (currentView === 'create') {
+        trackEvent('wordset_created', { word_count: wordCount });
+      } else {
+        trackEvent('wordset_updated', { word_count: wordCount });
+      }
+
       setSuccessMessage(
         currentView === 'create' ? 'Wordset created successfully!' : 'Wordset updated successfully!'
       );
@@ -110,11 +123,15 @@ export function WordsetManagerContent({ onWordsetUpdated }: WordsetManagerConten
   const handleConfirmDelete = async () => {
     if (!deletingId) return;
 
+    const wordsetToDelete = wordsets.find(ws => ws.id === deletingId);
+    const wordCount = wordsetToDelete?.words.length || 0;
+
     setIsSubmitting(true);
     const result = await remove(deletingId);
     setIsSubmitting(false);
 
     if (result.success) {
+      trackEvent('wordset_deleted', { word_count: wordCount });
       setSuccessMessage('Wordset deleted successfully!');
       setCurrentView('list');
       setDeletingId(null);
@@ -178,6 +195,7 @@ export function WordsetManagerContent({ onWordsetUpdated }: WordsetManagerConten
               onClick={async () => {
                 const result = await exportCSV();
                 if (result.success && result.data) {
+                  trackEvent('wordsets_exported_all', { wordset_count: wordsets.length });
                   const blob = new Blob([result.data], { type: 'text/csv' });
                   const url = URL.createObjectURL(blob);
                   const link = document.createElement('a');

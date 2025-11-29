@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { downloadTranscript, TranscriptData, ExportFormat } from '@/lib/utils/transcriptExport';
+import { trackEvent } from '@/lib/analytics';
 
 interface TranscriptExportProps {
   transcriptData: TranscriptData;
@@ -17,6 +18,10 @@ export function TranscriptExport({
   const [selectedFormat, setSelectedFormat] = useState<ExportFormat>('txt');
 
   const handleExport = () => {
+    trackEvent('transcript_exported', {
+      format: selectedFormat,
+      word_count: transcriptData.chunks?.length || 0,
+    });
     downloadTranscript(transcriptData, selectedFormat, filename);
   };
 

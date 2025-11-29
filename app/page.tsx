@@ -269,7 +269,8 @@ export default function Home() {
           </div>
           <div className="text-left text-base text-gray-800 md:text-lg">
             All processing is done locally in your browser using cutting-edge technologies. No
-            uploads, no cloud, no tracking. Your media and transcripts stay private.
+            uploads, no cloud. Your media and transcripts stay private. We use anonymous analytics
+            to improve the app.
           </div>
         </section>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { trackEvent } from '@/lib/analytics';
 import type { ImportResult } from '@/lib/types/wordset';
 
 interface WordsetImportExportProps {
@@ -36,6 +37,7 @@ export function WordsetImportExport({ onImport, onExportAll, onClose }: WordsetI
       const result = await onImport(text, importMode === 'merge');
 
       if (result.success && result.data) {
+        trackEvent('wordsets_imported', { wordset_count: result.data.imported });
         setImportResult(result.data);
       } else {
         setImportError(result.error || 'Failed to import CSV');

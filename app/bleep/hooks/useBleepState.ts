@@ -7,6 +7,7 @@ import { mergeOverlappingBleeps } from '@/lib/utils/bleepMerger';
 import { levenshteinDistance } from '@/lib/utils/stringMatching';
 import { getWordsetById } from '@/lib/utils/db/wordsetOperations';
 import { ManualCensorSegment, createManualCensorSegment } from '@/lib/types/manualCensor';
+import { trackEvent } from '@/lib/analytics';
 
 export interface TranscriptionResult {
   text: string;
@@ -75,9 +76,21 @@ export function useBleepState() {
   // Handler to auto-set volume when silence is selected
   const setBleepSound = useCallback((sound: string) => {
     setBleepSoundInternal(sound);
+    trackEvent('bleep_sound_changed', { sound_type: sound });
     if (sound === 'silence') {
       setOriginalVolumeReduction(0);
     }
+  }, []);
+
+  // Wrapped setters for analytics
+  const handleLanguageChange = useCallback((lang: string) => {
+    setLanguage(lang);
+    trackEvent('language_changed', { language_code: lang });
+  }, []);
+
+  const handleModelChange = useCallback((newModel: string) => {
+    setModel(newModel);
+    trackEvent('model_changed', { model_id: newModel });
   }, []);
   const [censoredMediaUrl, setCensoredMediaUrl] = useState<string | null>(null);
   const [isProcessingVideo, setIsProcessingVideo] = useState(false);
@@ -164,11 +177,25 @@ export function useBleepState() {
                 `This file is ${minutes}:${seconds.toString().padStart(2, '0')} long. Files longer than 10 minutes may not process correctly.`
               );
             }
+
+            // Track file upload with duration
+            trackEvent('file_upload', {
+              file_type: uploadedFile.type.includes('video') ? 'video' : 'audio',
+              file_size_mb: Math.round((uploadedFile.size / 1024 / 1024) * 100) / 100,
+              duration_seconds: Math.round(duration),
+              is_long_file: duration > 600,
+            });
+
             resolve(null);
           });
         });
       } catch (error) {
         console.error('Error checking file duration:', error);
+        // Track upload even if duration check fails
+        trackEvent('file_upload', {
+          file_type: uploadedFile.type.includes('video') ? 'video' : 'audio',
+          file_size_mb: Math.round((uploadedFile.size / 1024 / 1024) * 100) / 100,
+        });
       }
     } else {
       setShowFileWarning(true);
@@ -188,6 +215,7 @@ export function useBleepState() {
           const blob = await response.blob();
           const sampleFile = new File([blob], 'bob-ross-trim.mp4', { type: 'video/mp4' });
 
+          trackEvent('sample_video_loaded', { sample_name: sample });
           await handleFileUpload(sampleFile);
         } catch (error) {
           console.error('Error loading sample video:', error);
@@ -207,6 +235,12 @@ export function useBleepState() {
     setIsTranscribing(true);
     setProgress(0);
     setProgressText('Initializing...');
+
+    trackEvent('transcription_started', {
+      file_type: file.type.includes('video') ? 'video' : 'audio',
+      model_id: model,
+      language_code: language,
+    });
 
     try {
       if (!workerRef.current) {
@@ -253,6 +287,12 @@ export function useBleepState() {
             setTimestampWarning(null);
           }
 
+          trackEvent('transcription_completed', {
+            word_count: result.chunks?.length || 0,
+            has_timestamp_issues: result.metadata?.nullTimestampCount > 0,
+            null_timestamp_count: result.metadata?.nullTimestampCount || 0,
+          });
+
           setIsTranscribing(false);
           setProgress(100);
           setProgressText('Transcription complete!');
@@ -291,6 +331,7 @@ export function useBleepState() {
         }
         if (error) {
           console.error('Worker error:', error);
+          trackEvent('transcription_error', { error_message: String(error).slice(0, 100) });
           setIsTranscribing(false);
           setProgressText('Error: ' + error);
           setErrorMessage(error);
@@ -410,6 +451,13 @@ export function useBleepState() {
     setCensoredWordIndices(newIndices);
     setWordSource(newSource);
 
+    trackEvent('words_matched', {
+      word_count_searched: words.length,
+      matches_found: newIndices.size - censoredWordIndices.size,
+      total_selected: newIndices.size,
+      source: source === 'manual' ? 'manual' : 'wordset',
+    });
+
     if (newIndices.size === 0) {
       console.log('No matches found. Check if words exist in transcription.');
     }
@@ -418,8 +466,9 @@ export function useBleepState() {
   const handleToggleWord = (index: number) => {
     const newIndices = new Set(censoredWordIndices);
     const newSource = new Map(wordSource);
+    const isRemoving = newIndices.has(index);
 
-    if (newIndices.has(index)) {
+    if (isRemoving) {
       newIndices.delete(index);
       newSource.delete(index);
     } else {
@@ -427,11 +476,18 @@ export function useBleepState() {
       newSource.set(index, 'manual'); // Manual toggle
     }
 
+    trackEvent('word_toggled', {
+      action: isRemoving ? 'deselect' : 'select',
+      total_selected: newIndices.size,
+    });
+
     setCensoredWordIndices(newIndices);
     setWordSource(newSource);
   };
 
   const handleClearAll = () => {
+    const previousCount = censoredWordIndices.size;
+    trackEvent('words_cleared', { previous_count: previousCount });
     setCensoredWordIndices(new Set());
     setWordSource(new Map());
   };
@@ -536,6 +592,18 @@ export function useBleepState() {
       // Update censored indices with all matches
       setCensoredWordIndices(newIndices);
       setWordSource(newSource);
+
+      trackEvent('wordset_applied', {
+        wordset_count: wordsetIds.length,
+        total_words: allWordsetWords.length,
+        matches_found: newIndices.size - censoredWordIndices.size,
+      });
+    } else {
+      trackEvent('wordset_applied', {
+        wordset_count: wordsetIds.length,
+        total_words: allWordsetWords.length,
+        matches_found: 0,
+      });
     }
   };
 
@@ -547,18 +615,27 @@ export function useBleepState() {
 
     // Remove wordset words
     const newWordsetWords = new Map(wordsetWords);
+    const removedWords = newWordsetWords.get(wordsetId) || [];
     newWordsetWords.delete(wordsetId);
     setWordsetWords(newWordsetWords);
 
     // Remove all censoredWordIndices from this wordset
     const newIndices = new Set(censoredWordIndices);
     const newSource = new Map(wordSource);
+    let wordsRemoved = 0;
 
     wordSource.forEach((source, idx) => {
       if (source === wordsetId) {
         newIndices.delete(idx);
         newSource.delete(idx);
+        wordsRemoved++;
       }
+    });
+
+    trackEvent('wordset_removed', {
+      wordset_id: wordsetId,
+      words_removed: wordsRemoved,
+      wordset_word_count: removedWords.length,
     });
 
     setCensoredWordIndices(newIndices);
@@ -576,6 +653,11 @@ export function useBleepState() {
   // Manual timeline handlers
   const handleAddManualCensor = useCallback((start: number, end: number) => {
     const newSegment = createManualCensorSegment(start, end);
+    trackEvent('manual_censor_added', {
+      start_time: Math.round(start * 100) / 100,
+      end_time: Math.round(end * 100) / 100,
+      duration_seconds: Math.round((end - start) * 100) / 100,
+    });
     setManualCensorSegments(prev => [...prev, newSegment].sort((a, b) => a.start - b.start));
   }, []);
 
@@ -591,11 +673,15 @@ export function useBleepState() {
   );
 
   const handleRemoveManualCensor = useCallback((id: string) => {
+    trackEvent('manual_censor_removed');
     setManualCensorSegments(prev => prev.filter(segment => segment.id !== id));
   }, []);
 
   const handleClearManualCensors = useCallback(() => {
-    setManualCensorSegments([]);
+    setManualCensorSegments(prev => {
+      trackEvent('manual_censors_cleared', { previous_count: prev.length });
+      return [];
+    });
   }, []);
 
   // Bleep handlers
@@ -666,6 +752,16 @@ export function useBleepState() {
       setProgress(100);
       setProgressText('Bleeping complete!');
 
+      trackEvent('bleep_processing_completed', {
+        words_count: matchedWords.length,
+        file_type: file.type.includes('video') ? 'video' : 'audio',
+        bleep_sound: bleepSound,
+        bleep_volume: bleepVolume,
+        original_volume: Math.round(originalVolumeReduction * 100),
+        buffer_seconds: bleepBuffer,
+        is_reapply: hasBleeped,
+      });
+
       setHasBleeped(true);
       setLastBleepVolume(bleepVolume);
 
@@ -683,6 +779,7 @@ export function useBleepState() {
 
   const handlePreviewBleep = async () => {
     setIsPreviewingBleep(true);
+    trackEvent('bleep_preview_played', { sound_type: bleepSound, volume_percent: bleepVolume });
 
     try {
       const bleepPath = getPublicPath(`/bleeps/${bleepSound}.mp3`);
@@ -775,8 +872,8 @@ export function useBleepState() {
       progressText,
       errorMessage,
       timestampWarning,
-      setLanguage,
-      setModel,
+      setLanguage: handleLanguageChange,
+      setModel: handleModelChange,
       setErrorMessage,
       setTranscriptionResult, // Exposed for testing
       handleTranscribe,
