@@ -1,3 +1,7 @@
+'use client';
+
+import { trackEvent } from '@/lib/analytics';
+
 interface Tab {
   id: string;
   label: string;
@@ -12,6 +16,10 @@ interface BleepTabsProps {
 }
 
 export function BleepTabs({ activeTab, onTabChange, tabs }: BleepTabsProps) {
+  const handleTabChange = (tabId: string) => {
+    trackEvent('tab_changed', { tab_id: tabId });
+    onTabChange(tabId);
+  };
   return (
     <div className="mb-0">
       {/* Tab Bar - File Folder Style */}
@@ -23,7 +31,7 @@ export function BleepTabs({ activeTab, onTabChange, tabs }: BleepTabsProps) {
           return (
             <button
               key={tab.id}
-              onClick={() => tab.enabled && onTabChange(tab.id)}
+              onClick={() => tab.enabled && handleTabChange(tab.id)}
               disabled={isDisabled}
               role="tab"
               aria-selected={isActive}

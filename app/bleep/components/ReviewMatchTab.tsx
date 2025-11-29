@@ -7,6 +7,7 @@ import { WordsetSelector } from '@/components/wordsets/WordsetSelector';
 import { TimelineBar } from '@/components/timeline/TimelineBar';
 import { formatTime } from '@/lib/utils/timeFormat';
 import { FloatingNavArrows } from './FloatingNavArrows';
+import { trackEvent } from '@/lib/analytics';
 import type { TranscriptionResult, MatchedWord } from '../hooks/useBleepState';
 import type { ManualCensorSegment } from '@/lib/types/manualCensor';
 
@@ -239,6 +240,20 @@ export function ReviewMatchTab({
     ? 'Review & Select Words to Bleep'
     : 'Manual Timeline Censoring';
 
+  // Wrapper for match mode change with analytics
+  const handleMatchModeWithTracking = useCallback(
+    (newMode: { exact: boolean; partial: boolean; fuzzy: boolean }) => {
+      trackEvent('match_mode_changed', {
+        exact: newMode.exact,
+        partial: newMode.partial,
+        fuzzy: newMode.fuzzy,
+        fuzzy_distance: fuzzyDistance,
+      });
+      onMatchModeChange(newMode);
+    },
+    [onMatchModeChange, fuzzyDistance]
+  );
+
   // Build navigation items based on available sections
   const navItems: { id: SectionId; label: string; count?: number; visible: boolean }[] = [
     {
@@ -438,7 +453,10 @@ export function ReviewMatchTab({
                               type="checkbox"
                               checked={matchMode.exact}
                               onChange={e =>
-                                onMatchModeChange({ ...matchMode, exact: e.target.checked })
+                                handleMatchModeWithTracking({
+                                  ...matchMode,
+                                  exact: e.target.checked,
+                                })
                               }
                               className="mr-3 h-5 w-5"
                             />
@@ -450,7 +468,10 @@ export function ReviewMatchTab({
                               type="checkbox"
                               checked={matchMode.partial}
                               onChange={e =>
-                                onMatchModeChange({ ...matchMode, partial: e.target.checked })
+                                handleMatchModeWithTracking({
+                                  ...matchMode,
+                                  partial: e.target.checked,
+                                })
                               }
                               className="mr-3 h-5 w-5"
                             />
@@ -462,7 +483,10 @@ export function ReviewMatchTab({
                               type="checkbox"
                               checked={matchMode.fuzzy}
                               onChange={e =>
-                                onMatchModeChange({ ...matchMode, fuzzy: e.target.checked })
+                                handleMatchModeWithTracking({
+                                  ...matchMode,
+                                  fuzzy: e.target.checked,
+                                })
                               }
                               className="mr-3 h-5 w-5"
                             />

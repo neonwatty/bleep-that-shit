@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 import { TranscriptExport } from '@/components/TranscriptExport';
+import { trackEvent } from '@/lib/analytics';
 
 interface ModelResult {
   model: string;
@@ -85,6 +86,13 @@ function SamplerPageContent() {
           await new Promise(resolve => {
             mediaElement.addEventListener('loadedmetadata', () => {
               const duration = mediaElement.duration;
+
+              trackEvent('sampler_file_upload', {
+                file_type: file.type.includes('video') ? 'video' : 'audio',
+                file_size_mb: Math.round((file.size / 1024 / 1024) * 100) / 100,
+                duration_seconds: Math.round(duration),
+              });
+
               if (duration > 600) {
                 // 10 minutes = 600 seconds
                 const minutes = Math.floor(duration / 60);
@@ -112,6 +120,14 @@ function SamplerPageContent() {
     if (!file) return;
 
     setIsProcessing(true);
+    const comparisonStartTime = Date.now();
+
+    trackEvent('sampler_comparison_started', {
+      language_code: language,
+      model_count: models.length,
+      sample_start: sampleStart,
+      sample_duration: sampleDuration,
+    });
 
     // Initialize results
     const initialResults: ModelResult[] = models.map(model => ({
@@ -146,6 +162,14 @@ function SamplerPageContent() {
 
             if (type === 'complete' && result) {
               const endTime = Date.now();
+              const processingTime = (endTime - startTime) / 1000;
+
+              trackEvent('sampler_model_completed', {
+                model_name: model.name,
+                processing_time_seconds: Math.round(processingTime * 100) / 100,
+                word_count: result.chunks?.length || 0,
+              });
+
               setResults(prev =>
                 prev.map((r, idx) =>
                   idx === i
@@ -153,7 +177,7 @@ function SamplerPageContent() {
                         ...r,
                         text: result.text,
                         chunks: result.chunks || [],
-                        time: (endTime - startTime) / 1000,
+                        time: processingTime,
                         status: 'complete' as const,
                       }
                     : r
@@ -220,6 +244,13 @@ function SamplerPageContent() {
         console.error(`Error with model ${model.name}:`, error);
       }
     }
+
+    // Track comparison completed
+    const totalTime = (Date.now() - comparisonStartTime) / 1000;
+    trackEvent('sampler_comparison_completed', {
+      total_time_seconds: Math.round(totalTime * 100) / 100,
+      model_count: models.length,
+    });
 
     setIsProcessing(false);
   };
@@ -381,7 +412,10 @@ function SamplerPageContent() {
               <select
                 data-testid="language-select"
                 value={language}
-                onChange={e => setLanguage(e.target.value)}
+                onChange={e => {
+                  setLanguage(e.target.value);
+                  trackEvent('sampler_language_changed', { language_code: e.target.value });
+                }}
                 className="w-full rounded border border-gray-300 p-2"
               >
                 <option value="en">English</option>

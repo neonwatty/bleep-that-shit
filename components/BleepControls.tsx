@@ -1,3 +1,8 @@
+'use client';
+
+import { useRef, useEffect } from 'react';
+import { trackEvent } from '@/lib/analytics';
+
 interface BleepControlsProps {
   bleepSound: string;
   bleepVolume: number;
@@ -23,6 +28,45 @@ export function BleepControls({
   onBleepBufferChange,
   onPreviewBleep,
 }: BleepControlsProps) {
+  // Debounced tracking for sliders - fires 500ms after user stops adjusting
+  const bleepVolumeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const originalVolumeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const bufferTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    if (isInitialMount.current) return;
+    clearTimeout(bleepVolumeTimerRef.current);
+    bleepVolumeTimerRef.current = setTimeout(() => {
+      trackEvent('bleep_volume_changed', { volume_percent: bleepVolume });
+    }, 500);
+    return () => clearTimeout(bleepVolumeTimerRef.current);
+  }, [bleepVolume]);
+
+  useEffect(() => {
+    if (isInitialMount.current) return;
+    clearTimeout(originalVolumeTimerRef.current);
+    originalVolumeTimerRef.current = setTimeout(() => {
+      trackEvent('original_volume_changed', {
+        volume_percent: Math.round(originalVolumeReduction * 100),
+      });
+    }, 500);
+    return () => clearTimeout(originalVolumeTimerRef.current);
+  }, [originalVolumeReduction]);
+
+  useEffect(() => {
+    if (isInitialMount.current) return;
+    clearTimeout(bufferTimerRef.current);
+    bufferTimerRef.current = setTimeout(() => {
+      trackEvent('bleep_buffer_changed', { buffer_seconds: bleepBuffer });
+    }, 500);
+    return () => clearTimeout(bufferTimerRef.current);
+  }, [bleepBuffer]);
+
+  // Mark initial mount complete after first render
+  useEffect(() => {
+    isInitialMount.current = false;
+  }, []);
   return (
     <div className="space-y-4">
       <div>

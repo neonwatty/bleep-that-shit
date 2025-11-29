@@ -1,6 +1,7 @@
 import { BleepControls } from '@/components/BleepControls';
 import { FloatingNavArrows } from './FloatingNavArrows';
 import type { MatchedWord } from '../hooks/useBleepState';
+import { trackEvent } from '@/lib/analytics';
 
 interface BleepDownloadTabProps {
   file: File | null;
@@ -143,6 +144,9 @@ export function BleepDownloadTab({
                   href={censoredMediaUrl}
                   download="censored-video.mp4"
                   className="mt-2 inline-block rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+                  onClick={() =>
+                    trackEvent('download_censored_file', { file_type: 'video', file_format: 'mp4' })
+                  }
                 >
                   Download Censored Video
                 </a>
@@ -157,6 +161,9 @@ export function BleepDownloadTab({
                   href={censoredMediaUrl}
                   download="censored-audio.mp3"
                   className="mt-2 inline-block rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+                  onClick={() =>
+                    trackEvent('download_censored_file', { file_type: 'audio', file_format: 'mp3' })
+                  }
                 >
                   Download Censored Audio
                 </a>
