@@ -43,3 +43,10 @@ yarn-error.log*
 next-env.d.ts
 .claude/settings.local.json
 blog-screenshots/
+
+# YouTube automation secrets
+scripts/youtube/client_secrets.json
+scripts/youtube/youtube_token.json
+
+# Generated video output
+/output/

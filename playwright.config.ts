@@ -15,6 +15,25 @@ export default defineConfig({
   },
 
   projects: [
+    // Video recording for YouTube Shorts demos
+    // Run with: npx playwright test --project=videos --headed
+    {
+      name: 'videos',
+      testMatch: /videos\/.*\.spec\.ts/,
+      timeout: 300000, // 5 min per video - demos need time
+      use: {
+        ...devices['Desktop Chrome'],
+        headless: false, // Must be headed for visible recording
+        video: 'on', // Always record video
+        viewport: { width: 1080, height: 1920 }, // Vertical 9:16 for Shorts
+        actionTimeout: 60000, // Longer timeouts for demos
+        navigationTimeout: 120000,
+        launchOptions: {
+          slowMo: 100, // Slight slowdown for visibility
+        },
+      },
+    },
+
     // Smoke tests - fast UI-only tests (no model loading)
     {
       name: 'smoke-chromium',
