@@ -18,6 +18,7 @@ import { BleepPage } from '../helpers/pages/BleepPage';
  * Extended test fixture with BleepPage helper
  */
 export const test = base.extend<{ bleepPage: BleepPage }>({
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   bleepPage: async ({ page }, use) => {
     const bleepPage = new BleepPage(page);
     await use(bleepPage);
