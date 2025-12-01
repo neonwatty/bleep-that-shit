@@ -90,7 +90,7 @@ export function MatchedWordsDisplay({ matchedWords, isVisible }: MatchedWordsDis
           return (
             <span
               key={idx}
-              className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-sm"
+              className="inline-flex min-h-[36px] items-center gap-2 rounded-full border bg-white px-3 py-1.5 text-sm sm:min-h-0 sm:py-1"
               style={{ borderColor: color }}
             >
               <span

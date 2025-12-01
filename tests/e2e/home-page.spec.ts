@@ -134,8 +134,10 @@ test.describe('Home Page - Hero CTA Interaction', () => {
     // Should navigate to bleep page with sample parameter
     await expect(page).toHaveURL(/\/bleep\?sample=bob-ross/);
 
-    // Wait for bleep page to load
-    await expect(page.getByText(/Setup & Transcribe/i)).toBeVisible({ timeout: 10000 });
+    // Wait for bleep page to load - target desktop tab specifically to avoid mobile dropdown match
+    await expect(
+      page.locator('button[role="tab"]').filter({ hasText: /Setup & Transcribe/i })
+    ).toBeVisible({ timeout: 10000 });
 
     // The sample should start loading (look for loading indicator or player)
     // Note: In CI the actual download may be blocked, but the URL parameter should work

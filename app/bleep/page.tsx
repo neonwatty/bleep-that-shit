@@ -61,7 +61,7 @@ function BleepPageContent() {
   return (
     <div className="editorial-section px-2 sm:px-4">
       {/* Header */}
-      <div className="mb-8 flex items-center gap-3">
+      <div className="mb-8 flex flex-wrap items-center gap-2 sm:gap-3">
         <span className="inline-block align-middle" aria-label="Waveform icon">
           <svg
             width="36"
@@ -123,8 +123,8 @@ function BleepPageContent() {
       {/* Tab Navigation */}
       <BleepTabs activeTab={activeTab} onTabChange={setActiveTab} tabs={tabs} />
 
-      {/* Tab Content Area - connects to active tab */}
-      <div className="-mt-px rounded-b-lg border-t-2 border-r-2 border-b-2 border-l-2 border-indigo-500 bg-white p-6 shadow-sm">
+      {/* Tab Content Area - connects to active tab on desktop, standalone on mobile */}
+      <div className="mt-4 rounded-lg border-2 border-indigo-500 bg-white p-3 shadow-sm sm:p-6 md:-mt-px md:rounded-t-none md:rounded-b-lg md:border-t-2">
         {activeTab === 'setup' && (
           <SetupTranscribeTab
             file={bleepState.file.file}

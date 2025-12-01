@@ -136,7 +136,11 @@ export function BleepDownloadTab({
             <h3 className="mb-2 font-bold">Censored Result:</h3>
             {file?.type.includes('video') ? (
               <div className="flex flex-col items-center">
-                <video key={censoredMediaUrl} controls className="max-w-2xl rounded-lg shadow-md">
+                <video
+                  key={censoredMediaUrl}
+                  controls
+                  className="w-full max-w-full rounded-lg shadow-md sm:max-w-2xl"
+                >
                   <source src={censoredMediaUrl} type="video/mp4" />
                 </video>
                 <a

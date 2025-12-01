@@ -73,8 +73,8 @@ test.describe('Responsive Design - Smoke Tests', () => {
       await expect(page.locator('h2').filter({ hasText: 'Upload Your File' })).toBeVisible();
       await expect(page.locator('h2').filter({ hasText: 'Select Language & Model' })).toBeVisible();
 
-      // Controls should be accessible
-      await expect(page.locator('select').first()).toBeVisible();
+      // Controls should be accessible (use :visible to skip hidden mobile-only dropdowns)
+      await expect(page.locator('select:visible').first()).toBeVisible();
       await expect(page.locator('input[type="file"]')).toBeAttached();
     });
 
@@ -117,8 +117,8 @@ test.describe('Responsive Design - Smoke Tests', () => {
       const stepHeadings = page.locator('h2').filter({ hasText: /Step \d/ });
       await expect(stepHeadings).toHaveCount(await stepHeadings.count());
 
-      // Controls should be accessible
-      await expect(page.locator('select').first()).toBeVisible();
+      // Controls should be accessible (use :visible to skip hidden mobile-only dropdowns)
+      await expect(page.locator('select:visible').first()).toBeVisible();
     });
 
     test('sampler page renders correctly on desktop', async ({ page }) => {
@@ -152,7 +152,8 @@ test.describe('Responsive Design - Smoke Tests', () => {
 
       // Layout should adapt to wide screen
       await expect(page.locator('h1').filter({ hasText: 'Bleep Your Sh*t!' })).toBeVisible();
-      await expect(page.locator('select').first()).toBeVisible();
+      // Use :visible to skip hidden mobile-only dropdowns
+      await expect(page.locator('select:visible').first()).toBeVisible();
     });
 
     test('sampler page renders correctly on wide desktop', async ({ page }) => {
