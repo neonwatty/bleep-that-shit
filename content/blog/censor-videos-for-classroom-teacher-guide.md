@@ -55,7 +55,11 @@ Drag and drop your MP4 video file directly into the browser. The file stays on y
 - MP4 video files (most common for downloaded content)
 - MP3 audio files (for podcasts or audio-only content)
 
-![Transcription in progress](/images/blog/step2-transcribe.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step2-transcribe-mobile.png" />
+  <img src="/images/blog/step2-transcribe.png" alt="Transcription in progress" />
+</picture>
+
 _The transcription interface showing your video being processed_
 
 ### Step 2: Generate an Automatic Transcript
@@ -76,7 +80,11 @@ You have several options for identifying inappropriate content:
 
 Apply pre-built profanity lists with one click. This catches common inappropriate words automatically, saving you the time of manually reviewing the entire transcript.
 
-![Word lists selection](/images/blog/step3-wordlists.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step3-wordlists-mobile.png" />
+  <img src="/images/blog/step3-wordlists.png" alt="Word lists selection" />
+</picture>
+
 _Quick apply word lists for common profanity filtering_
 
 #### Create Custom Word Lists for Your Classroom
@@ -103,7 +111,11 @@ One of the most powerful features for educators is the ability to **create and s
 
 Click directly on words in the transcript to mark them for censoring. This gives you precise control—useful when context matters (the same word might be fine in one sentence but inappropriate in another).
 
-![Interactive transcript](/images/blog/step3-transcript.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step3-transcript-mobile.png" />
+  <img src="/images/blog/step3-transcript.png" alt="Interactive transcript" />
+</picture>
+
 _Click on words in the transcript to select them for censoring_
 
 #### Pattern Matching
@@ -114,14 +126,22 @@ Enter specific words to find and censor throughout the video:
 - **Partial match**: Catches variations (e.g., entering "damn" also catches "dammit")
 - **Fuzzy match**: Catches similar-sounding words, helpful for catching variations the AI might have transcribed differently
 
-![Pattern matching](/images/blog/step3-pattern.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step3-pattern-mobile.png" />
+  <img src="/images/blog/step3-pattern.png" alt="Pattern matching" />
+</picture>
+
 _Enter words to match with different matching modes_
 
 ### Step 4: Preview and Download
 
 Choose your bleep sound (the classic TV censor tone works well for classroom settings), preview the censored sections, and download your edited video. The original video file remains unchanged.
 
-![Preview and download](/images/blog/step4-preview.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step4-preview-mobile.png" />
+  <img src="/images/blog/step4-preview.png" alt="Preview and download" />
+</picture>
+
 _Preview your censored video and download when ready_
 
 ## Get Started Today

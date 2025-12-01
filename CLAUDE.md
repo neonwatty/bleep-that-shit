@@ -181,3 +181,52 @@ The repository includes automated CI checks via GitHub Actions (`.github/workflo
 - `/` - Home page
 - `/bleep` - Main bleeping interface (transcription + censoring)
 - `/sampler` - Model comparison tool
+
+## Social Starter Pack Tools
+
+### autocomplete-cli
+
+Keyword suggestions from Google, YouTube, Bing, Amazon, and DuckDuckGo.
+
+- README: https://github.com/neonwatty/autocomplete-cli
+
+```bash
+# Basic usage
+autocomplete google "topic"
+autocomplete youtube "topic"
+
+# Get help
+autocomplete --help
+```
+
+### reddit-market-research
+
+Search Reddit for pain points and market opportunities.
+
+- README: https://github.com/neonwatty/reddit-market-research
+
+```bash
+# Search a subreddit with keywords
+make reddit ARGS='search -s "subreddit" -k "keywords"'
+
+# Setup (required for credentials)
+make doppler-connect
+
+# Get help
+reddit-market-research --help
+```
+
+### demo-recorder
+
+Record demo videos and screenshots of web apps.
+
+- README: https://github.com/neonwatty/demo-recorder
+- Requires: FFmpeg installed
+
+```bash
+# Record a demo video
+demo-recorder record demo.ts -o video.mp4
+
+# Get help
+demo-recorder --help
+```

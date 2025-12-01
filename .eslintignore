@@ -20,3 +20,6 @@ next-env.d.ts
 # Misc
 .DS_Store
 *.log
+
+# Demo scripts (not part of the app)
+demos/
