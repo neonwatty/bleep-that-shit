@@ -299,7 +299,7 @@ function SamplerPageContent() {
         <div
           {...getRootProps()}
           data-testid="file-dropzone"
-          className="cursor-pointer rounded-lg border-2 border-dashed border-gray-400 p-8 text-center transition-colors hover:border-blue-500"
+          className="cursor-pointer rounded-lg border-2 border-dashed border-gray-400 p-4 text-center transition-colors hover:border-blue-500 sm:p-8"
         >
           <input {...getInputProps()} data-testid="file-input" />
           {isDragActive ? (

@@ -302,14 +302,14 @@ export function ReviewMatchTab({
         {/* Mobile Navigation - Horizontal sticky bar */}
         {visibleNavItems.length > 1 && (
           <nav
-            className="mb-4 flex gap-2 overflow-x-auto pb-2 md:hidden"
+            className="scrollbar-hide mb-4 flex gap-2 overflow-x-auto pb-2 md:hidden"
             aria-label="Section navigation"
           >
             {visibleNavItems.map(item => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`rounded-full px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`min-h-[36px] rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
                   activeSection === item.id
                     ? 'bg-purple-500 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'

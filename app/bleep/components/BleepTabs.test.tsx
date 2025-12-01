@@ -15,21 +15,29 @@ describe('BleepTabs', () => {
     tabs: mockTabs,
   };
 
-  describe('Tab rendering', () => {
-    it('renders all tabs with labels', () => {
-      render(<BleepTabs {...defaultProps} />);
+  // Helper to get desktop tab buttons
+  const getDesktopTabs = (container: HTMLElement) => {
+    const tablist = container.querySelector('[role="tablist"]');
+    return tablist?.querySelectorAll('button[role="tab"]') || [];
+  };
 
-      expect(screen.getByText('Setup')).toBeInTheDocument();
-      expect(screen.getByText('Review')).toBeInTheDocument();
-      expect(screen.getByText('Bleep')).toBeInTheDocument();
+  describe('Tab rendering', () => {
+    it('renders all tabs with labels in desktop view', () => {
+      const { container } = render(<BleepTabs {...defaultProps} />);
+
+      const buttons = getDesktopTabs(container);
+      expect(buttons[0]?.textContent).toContain('Setup');
+      expect(buttons[1]?.textContent).toContain('Review');
+      expect(buttons[2]?.textContent).toContain('Bleep');
     });
 
     it('renders tabs with icons when provided', () => {
-      render(<BleepTabs {...defaultProps} />);
+      const { container } = render(<BleepTabs {...defaultProps} />);
 
-      expect(screen.getByText('📁')).toBeInTheDocument();
-      expect(screen.getByText('👀')).toBeInTheDocument();
-      expect(screen.getByText('🔊')).toBeInTheDocument();
+      const buttons = getDesktopTabs(container);
+      expect(buttons[0]?.textContent).toContain('📁');
+      expect(buttons[1]?.textContent).toContain('👀');
+      expect(buttons[2]?.textContent).toContain('🔊');
     });
 
     it('renders tabs without icons when not provided', () => {
@@ -37,16 +45,17 @@ describe('BleepTabs', () => {
         { id: 'tab1', label: 'Tab 1', enabled: true },
         { id: 'tab2', label: 'Tab 2', enabled: true },
       ];
-      render(<BleepTabs {...defaultProps} tabs={tabsWithoutIcons} />);
+      const { container } = render(<BleepTabs {...defaultProps} tabs={tabsWithoutIcons} />);
 
-      expect(screen.getByText('Tab 1')).toBeInTheDocument();
-      expect(screen.getByText('Tab 2')).toBeInTheDocument();
+      const buttons = getDesktopTabs(container);
+      expect(buttons[0]?.textContent).toContain('Tab 1');
+      expect(buttons[1]?.textContent).toContain('Tab 2');
     });
 
     it('renders correct number of tab buttons', () => {
       const { container } = render(<BleepTabs {...defaultProps} />);
 
-      const buttons = container.querySelectorAll('button[role="tab"]');
+      const buttons = getDesktopTabs(container);
       expect(buttons).toHaveLength(3);
     });
 
@@ -56,83 +65,97 @@ describe('BleepTabs', () => {
       const tablist = container.querySelector('[role="tablist"]');
       expect(tablist).toBeInTheDocument();
     });
+
+    it('renders mobile dropdown select', () => {
+      render(<BleepTabs {...defaultProps} />);
+
+      const select = screen.getByRole('combobox');
+      expect(select).toBeInTheDocument();
+    });
   });
 
   describe('Active tab', () => {
     it('marks active tab with aria-selected="true"', () => {
-      render(<BleepTabs {...defaultProps} activeTab="setup" />);
+      const { container } = render(<BleepTabs {...defaultProps} activeTab="setup" />);
 
-      const setupTab = screen.getByText('Setup').closest('button');
-      expect(setupTab).toHaveAttribute('aria-selected', 'true');
+      const buttons = getDesktopTabs(container);
+      expect(buttons[0]).toHaveAttribute('aria-selected', 'true');
     });
 
     it('marks inactive tabs with aria-selected="false"', () => {
-      render(<BleepTabs {...defaultProps} activeTab="setup" />);
+      const { container } = render(<BleepTabs {...defaultProps} activeTab="setup" />);
 
-      const reviewTab = screen.getByText('Review').closest('button');
-      expect(reviewTab).toHaveAttribute('aria-selected', 'false');
+      const buttons = getDesktopTabs(container);
+      expect(buttons[1]).toHaveAttribute('aria-selected', 'false');
     });
 
     it('applies active styling to active tab', () => {
-      render(<BleepTabs {...defaultProps} activeTab="setup" />);
+      const { container } = render(<BleepTabs {...defaultProps} activeTab="setup" />);
 
-      const setupTab = screen.getByText('Setup').closest('button');
-      expect(setupTab).toHaveClass('bg-white');
-      expect(setupTab).toHaveClass('text-indigo-700');
+      const buttons = getDesktopTabs(container);
+      expect(buttons[0]).toHaveClass('bg-white');
+      expect(buttons[0]).toHaveClass('text-indigo-700');
     });
 
     it('does not apply active styling to inactive tabs', () => {
-      render(<BleepTabs {...defaultProps} activeTab="setup" />);
+      const { container } = render(<BleepTabs {...defaultProps} activeTab="setup" />);
 
-      const reviewTab = screen.getByText('Review').closest('button');
-      expect(reviewTab).not.toHaveClass('bg-white');
-      expect(reviewTab).toHaveClass('bg-gray-50');
+      const buttons = getDesktopTabs(container);
+      expect(buttons[1]).not.toHaveClass('bg-white');
+      expect(buttons[1]).toHaveClass('bg-gray-50');
     });
 
     it('sets correct aria-controls attribute', () => {
+      const { container } = render(<BleepTabs {...defaultProps} activeTab="setup" />);
+
+      const buttons = getDesktopTabs(container);
+      expect(buttons[0]).toHaveAttribute('aria-controls', 'tabpanel-setup');
+    });
+
+    it('mobile dropdown shows active tab value', () => {
       render(<BleepTabs {...defaultProps} activeTab="setup" />);
 
-      const setupTab = screen.getByText('Setup').closest('button');
-      expect(setupTab).toHaveAttribute('aria-controls', 'tabpanel-setup');
+      const select = screen.getByRole('combobox') as HTMLSelectElement;
+      expect(select.value).toBe('setup');
     });
   });
 
   describe('Disabled tabs', () => {
     it('disables button when tab is not enabled', () => {
-      render(<BleepTabs {...defaultProps} />);
+      const { container } = render(<BleepTabs {...defaultProps} />);
 
-      const bleepTab = screen.getByText('Bleep').closest('button');
-      expect(bleepTab).toBeDisabled();
+      const buttons = getDesktopTabs(container);
+      expect(buttons[2]).toBeDisabled();
     });
 
     it('does not disable button when tab is enabled', () => {
-      render(<BleepTabs {...defaultProps} />);
+      const { container } = render(<BleepTabs {...defaultProps} />);
 
-      const setupTab = screen.getByText('Setup').closest('button');
-      expect(setupTab).not.toBeDisabled();
+      const buttons = getDesktopTabs(container);
+      expect(buttons[0]).not.toBeDisabled();
     });
 
     it('shows lock icon for disabled tabs', () => {
-      render(<BleepTabs {...defaultProps} />);
+      const { container } = render(<BleepTabs {...defaultProps} />);
 
-      const bleepTab = screen.getByText('Bleep').closest('button');
-      expect(bleepTab?.textContent).toContain('🔒');
+      const buttons = getDesktopTabs(container);
+      expect(buttons[2]?.textContent).toContain('🔒');
     });
 
     it('does not show lock icon for enabled tabs', () => {
-      render(<BleepTabs {...defaultProps} />);
+      const { container } = render(<BleepTabs {...defaultProps} />);
 
-      const setupTab = screen.getByText('Setup').closest('button');
-      expect(setupTab?.textContent).not.toContain('🔒');
+      const buttons = getDesktopTabs(container);
+      expect(buttons[0]?.textContent).not.toContain('🔒');
     });
 
     it('applies disabled styling to disabled tabs', () => {
-      render(<BleepTabs {...defaultProps} />);
+      const { container } = render(<BleepTabs {...defaultProps} />);
 
-      const bleepTab = screen.getByText('Bleep').closest('button');
-      expect(bleepTab).toHaveClass('bg-gray-100');
-      expect(bleepTab).toHaveClass('text-gray-400');
-      expect(bleepTab).toHaveClass('cursor-not-allowed');
+      const buttons = getDesktopTabs(container);
+      expect(buttons[2]).toHaveClass('bg-gray-100');
+      expect(buttons[2]).toHaveClass('text-gray-400');
+      expect(buttons[2]).toHaveClass('cursor-not-allowed');
     });
 
     it('shows lock icon with correct aria-label', () => {
@@ -140,15 +163,23 @@ describe('BleepTabs', () => {
 
       expect(screen.getByLabelText('Tab locked')).toBeInTheDocument();
     });
+
+    it('mobile dropdown disables disabled tabs', () => {
+      render(<BleepTabs {...defaultProps} />);
+
+      const select = screen.getByRole('combobox');
+      const options = select.querySelectorAll('option');
+      expect(options[2]).toBeDisabled();
+    });
   });
 
   describe('Tab interactions', () => {
     it('calls onTabChange when enabled tab is clicked', () => {
       const onTabChange = vi.fn();
-      render(<BleepTabs {...defaultProps} onTabChange={onTabChange} />);
+      const { container } = render(<BleepTabs {...defaultProps} onTabChange={onTabChange} />);
 
-      const reviewTab = screen.getByText('Review').closest('button');
-      if (reviewTab) fireEvent.click(reviewTab);
+      const buttons = getDesktopTabs(container);
+      if (buttons[1]) fireEvent.click(buttons[1]);
 
       expect(onTabChange).toHaveBeenCalledWith('review');
       expect(onTabChange).toHaveBeenCalledTimes(1);
@@ -156,37 +187,46 @@ describe('BleepTabs', () => {
 
     it('does not call onTabChange when disabled tab is clicked', () => {
       const onTabChange = vi.fn();
-      render(<BleepTabs {...defaultProps} onTabChange={onTabChange} />);
+      const { container } = render(<BleepTabs {...defaultProps} onTabChange={onTabChange} />);
 
-      const bleepTab = screen.getByText('Bleep').closest('button');
-      if (bleepTab) fireEvent.click(bleepTab);
+      const buttons = getDesktopTabs(container);
+      if (buttons[2]) fireEvent.click(buttons[2]);
 
       expect(onTabChange).not.toHaveBeenCalled();
     });
 
     it('calls onTabChange with correct tab id', () => {
       const onTabChange = vi.fn();
-      render(<BleepTabs {...defaultProps} onTabChange={onTabChange} />);
+      const { container } = render(<BleepTabs {...defaultProps} onTabChange={onTabChange} />);
 
-      const setupTab = screen.getByText('Setup').closest('button');
-      if (setupTab) fireEvent.click(setupTab);
+      const buttons = getDesktopTabs(container);
+      if (buttons[0]) fireEvent.click(buttons[0]);
 
       expect(onTabChange).toHaveBeenCalledWith('setup');
     });
 
     it('can switch between multiple enabled tabs', () => {
       const onTabChange = vi.fn();
-      render(<BleepTabs {...defaultProps} onTabChange={onTabChange} />);
+      const { container } = render(<BleepTabs {...defaultProps} onTabChange={onTabChange} />);
 
-      const setupTab = screen.getByText('Setup').closest('button');
-      const reviewTab = screen.getByText('Review').closest('button');
+      const buttons = getDesktopTabs(container);
 
-      if (setupTab) fireEvent.click(setupTab);
-      if (reviewTab) fireEvent.click(reviewTab);
+      if (buttons[0]) fireEvent.click(buttons[0]);
+      if (buttons[1]) fireEvent.click(buttons[1]);
 
       expect(onTabChange).toHaveBeenCalledWith('setup');
       expect(onTabChange).toHaveBeenCalledWith('review');
       expect(onTabChange).toHaveBeenCalledTimes(2);
+    });
+
+    it('calls onTabChange when mobile dropdown changes', () => {
+      const onTabChange = vi.fn();
+      render(<BleepTabs {...defaultProps} onTabChange={onTabChange} />);
+
+      const select = screen.getByRole('combobox');
+      fireEvent.change(select, { target: { value: 'review' } });
+
+      expect(onTabChange).toHaveBeenCalledWith('review');
     });
   });
 
@@ -194,7 +234,7 @@ describe('BleepTabs', () => {
     it('renders tabs in the order provided', () => {
       const { container } = render(<BleepTabs {...defaultProps} />);
 
-      const buttons = container.querySelectorAll('button[role="tab"]');
+      const buttons = getDesktopTabs(container);
       expect(buttons[0]?.textContent).toContain('Setup');
       expect(buttons[1]?.textContent).toContain('Review');
       expect(buttons[2]?.textContent).toContain('Bleep');
@@ -202,9 +242,12 @@ describe('BleepTabs', () => {
 
     it('handles single tab', () => {
       const singleTab = [{ id: 'only', label: 'Only Tab', enabled: true }];
-      render(<BleepTabs {...defaultProps} tabs={singleTab} activeTab="only" />);
+      const { container } = render(
+        <BleepTabs {...defaultProps} tabs={singleTab} activeTab="only" />
+      );
 
-      expect(screen.getByText('Only Tab')).toBeInTheDocument();
+      const buttons = getDesktopTabs(container);
+      expect(buttons[0]?.textContent).toContain('Only Tab');
     });
 
     it('handles many tabs', () => {
@@ -213,35 +256,37 @@ describe('BleepTabs', () => {
         label: `Tab ${i + 1}`,
         enabled: true,
       }));
-      render(<BleepTabs {...defaultProps} tabs={manyTabs} />);
+      const { container } = render(<BleepTabs {...defaultProps} tabs={manyTabs} />);
 
-      manyTabs.forEach(tab => {
-        expect(screen.getByText(tab.label)).toBeInTheDocument();
+      const buttons = getDesktopTabs(container);
+      expect(buttons).toHaveLength(6);
+      manyTabs.forEach((tab, i) => {
+        expect(buttons[i]?.textContent).toContain(tab.label);
       });
     });
   });
 
   describe('Different active states', () => {
     it('can have any tab as active', () => {
-      render(<BleepTabs {...defaultProps} activeTab="review" />);
+      const { container } = render(<BleepTabs {...defaultProps} activeTab="review" />);
 
-      const reviewTab = screen.getByText('Review').closest('button');
-      expect(reviewTab).toHaveAttribute('aria-selected', 'true');
+      const buttons = getDesktopTabs(container);
+      expect(buttons[1]).toHaveAttribute('aria-selected', 'true');
     });
 
     it('can have disabled tab as active (edge case)', () => {
-      render(<BleepTabs {...defaultProps} activeTab="bleep" />);
+      const { container } = render(<BleepTabs {...defaultProps} activeTab="bleep" />);
 
-      const bleepTab = screen.getByText('Bleep').closest('button');
-      expect(bleepTab).toHaveAttribute('aria-selected', 'true');
-      expect(bleepTab).toBeDisabled();
+      const buttons = getDesktopTabs(container);
+      expect(buttons[2]).toHaveAttribute('aria-selected', 'true');
+      expect(buttons[2]).toBeDisabled();
     });
 
     it('handles all tabs disabled', () => {
       const allDisabled = mockTabs.map(tab => ({ ...tab, enabled: false }));
-      render(<BleepTabs {...defaultProps} tabs={allDisabled} />);
+      const { container } = render(<BleepTabs {...defaultProps} tabs={allDisabled} />);
 
-      const buttons = screen.getAllByRole('tab');
+      const buttons = getDesktopTabs(container);
       buttons.forEach(button => {
         expect(button).toBeDisabled();
       });
@@ -249,9 +294,9 @@ describe('BleepTabs', () => {
 
     it('handles all tabs enabled', () => {
       const allEnabled = mockTabs.map(tab => ({ ...tab, enabled: true }));
-      render(<BleepTabs {...defaultProps} tabs={allEnabled} />);
+      const { container } = render(<BleepTabs {...defaultProps} tabs={allEnabled} />);
 
-      const buttons = screen.getAllByRole('tab');
+      const buttons = getDesktopTabs(container);
       buttons.forEach(button => {
         expect(button).not.toBeDisabled();
       });

@@ -239,6 +239,13 @@ h6 {
   border-top-color: #ec4899;
 }
 
+/* Hide timestamp tooltips on touch devices and mobile */
+@media (hover: none), (max-width: 639px) {
+  .timestamp {
+    display: none !important;
+  }
+}
+
 .sentence {
   margin-bottom: 1.2rem;
   display: flex;
@@ -365,4 +372,14 @@ h6 {
   margin-bottom: 1.5rem;
   font-style: italic;
   color: #4b5563;
+}
+
+/* Scrollbar hide utility - keeps scroll functionality without visible scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

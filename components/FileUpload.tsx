@@ -40,7 +40,7 @@ export function FileUpload({
       <div
         {...getRootProps()}
         data-testid="file-dropzone"
-        className="min-h-[120px] cursor-pointer rounded-lg border-2 border-dashed border-gray-400 p-8 text-center transition-all hover:border-blue-500 hover:bg-gray-50 active:bg-gray-100 sm:min-h-[100px] sm:p-6"
+        className="min-h-[120px] cursor-pointer rounded-lg border-2 border-dashed border-gray-400 p-4 text-center transition-all hover:border-blue-500 hover:bg-gray-50 active:bg-gray-100 sm:min-h-[100px] sm:p-8"
       >
         <input {...getInputProps()} data-testid="file-input" className="sr-only" />
         {isDragActive ? (
@@ -113,7 +113,10 @@ export function FileUpload({
             </audio>
           )}
           {fileUrl && file.type.includes('video') && (
-            <video controls className="mx-auto mt-2 max-w-2xl rounded-lg shadow-sm">
+            <video
+              controls
+              className="mx-auto mt-2 w-full max-w-full rounded-lg shadow-sm sm:max-w-2xl"
+            >
               <source src={fileUrl} type={file.type} />
             </video>
           )}
