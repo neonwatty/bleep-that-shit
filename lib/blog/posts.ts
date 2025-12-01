@@ -1,8 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { remark } from 'remark';
-import html from 'remark-html';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import remarkRehype from 'remark-rehype';
+import rehypeRaw from 'rehype-raw';
+import rehypeStringify from 'rehype-stringify';
 import type { BlogPostMeta, BlogPost } from './types';
 
 const postsDirectory = path.join(process.cwd(), 'content/blog');
@@ -53,8 +56,13 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
 
-  // Convert markdown to HTML
-  const processedContent = await remark().use(html).process(content);
+  // Convert markdown to HTML using unified pipeline with rehype-raw for HTML block support
+  const processedContent = await unified()
+    .use(remarkParse)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeRaw)
+    .use(rehypeStringify)
+    .process(content);
   const contentHtml = processedContent.toString();
 
   return {

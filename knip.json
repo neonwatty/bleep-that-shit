@@ -23,7 +23,12 @@
     "eslint-plugin-prettier",
     "gray-matter",
     "remark",
-    "remark-html"
+    "remark-html",
+    "rehype-raw",
+    "rehype-stringify",
+    "remark-parse",
+    "remark-rehype",
+    "unified"
   ],
   "ignoreExportsUsedInFile": {
     "interface": true,

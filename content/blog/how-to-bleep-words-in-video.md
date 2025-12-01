@@ -43,7 +43,10 @@ Simply drag and drop your MP4 video file (or MP3 audio) into the browser. Your f
 
 Choose a Whisper AI model and click "Transcribe". The AI will automatically generate a word-level transcript of your audio, including precise timestamps for each word.
 
-![Select language and model, then transcribe](/images/blog/step2-transcribe.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step2-transcribe-mobile.png" />
+  <img src="/images/blog/step2-transcribe.png" alt="Select language and model, then transcribe" />
+</picture>
 
 ### Step 3: Select Words to Bleep
 
@@ -53,7 +56,10 @@ We provide four powerful ways to select which words to censor:
 
 Apply pre-built or custom word lists with one click. Perfect for common profanity or creating reusable lists for your content.
 
-![Quick apply word lists](/images/blog/step3-wordlists.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step3-wordlists-mobile.png" />
+  <img src="/images/blog/step3-wordlists.png" alt="Quick apply word lists" />
+</picture>
 
 #### Pattern Match
 
@@ -63,19 +69,28 @@ Enter words manually with three matching modes:
 - **Partial match**: Bleep words containing a specific string
 - **Fuzzy match**: Bleep words that sound similar (great for catching variations)
 
-![Pattern matching with exact, partial, and fuzzy modes](/images/blog/step3-pattern.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step3-pattern-mobile.png" />
+  <img src="/images/blog/step3-pattern.png" alt="Pattern matching with exact, partial, and fuzzy modes" />
+</picture>
 
 #### Transcript View
 
 Click directly on words in the transcript to toggle them for censoring. Matched words appear highlighted in pink.
 
-![Click words directly in the transcript](/images/blog/step3-transcript.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step3-transcript-mobile.png" />
+  <img src="/images/blog/step3-transcript.png" alt="Click words directly in the transcript" />
+</picture>
 
 #### Timeline
 
 Visualize your audio and select precise time ranges to censor - useful for bleeping entire sections or sounds that aren't words.
 
-![Timeline view for precise selection](/images/blog/step3-timeline.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step3-timeline-mobile.png" />
+  <img src="/images/blog/step3-timeline.png" alt="Timeline view for precise selection" />
+</picture>
 
 ### Step 4: Choose Your Bleep Sound
 
@@ -88,7 +103,10 @@ Pick from our selection of bleep sounds:
 
 Adjust the volume and buffer settings, preview your changes, then download your censored video.
 
-![Choose bleep sound and volume, then apply bleeps](/images/blog/step4-preview.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step4-preview-mobile.png" />
+  <img src="/images/blog/step4-preview.png" alt="Choose bleep sound and volume, then apply bleeps" />
+</picture>
 
 ## Tips for Best Results
 

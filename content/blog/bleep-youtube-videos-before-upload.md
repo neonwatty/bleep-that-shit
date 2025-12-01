@@ -31,7 +31,10 @@ With Bleep That Sh\*t!, you can censor your video in minutes—right in your bro
 
 Drag and drop your MP4 file into the browser. Your video stays on your device—nothing is uploaded to any server.
 
-![Transcription in progress](/images/blog/step2-transcribe.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step2-transcribe-mobile.png" />
+  <img src="/images/blog/step2-transcribe.png" alt="Transcription in progress" />
+</picture>
 
 ### Step 2: AI Transcription Finds Every Word
 
@@ -43,17 +46,26 @@ You have multiple options:
 
 **Use Word Lists**: Apply pre-built profanity lists with one click. This catches common words automatically.
 
-![Word lists selection](/images/blog/step3-wordlists.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step3-wordlists-mobile.png" />
+  <img src="/images/blog/step3-wordlists.png" alt="Word lists selection" />
+</picture>
 
 **Click Words Directly**: Review the transcript and click on any word to mark it for censoring. Perfect for catching context-specific words.
 
-![Interactive transcript](/images/blog/step3-transcript.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step3-transcript-mobile.png" />
+  <img src="/images/blog/step3-transcript.png" alt="Interactive transcript" />
+</picture>
 
 ### Step 4: Preview and Download
 
 Choose your bleep sound, preview the censored sections, and download your ad-friendly video. Upload to YouTube with confidence.
 
-![Preview and download](/images/blog/step4-preview.png)
+<picture>
+  <source media="(max-width: 768px)" srcset="/images/blog/step4-preview-mobile.png" />
+  <img src="/images/blog/step4-preview.png" alt="Preview and download" />
+</picture>
 
 ## Pro Tips for Monetization
 
