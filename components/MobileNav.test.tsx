@@ -256,7 +256,7 @@ describe('MobileNav', () => {
       fireEvent.click(menuButton);
 
       const discordLink = screen.getByLabelText('Discord');
-      expect(discordLink).toHaveAttribute('href', 'https://discord.gg/8EUxqR93');
+      expect(discordLink).toHaveAttribute('href', 'https://discord.gg/XuzjVXyjH4');
       expect(discordLink).toHaveAttribute('target', '_blank');
       expect(discordLink).toHaveAttribute('rel', 'noopener noreferrer');
     });

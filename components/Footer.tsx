@@ -43,7 +43,7 @@ export function Footer() {
             <i className="fas fa-blog text-2xl"></i>
           </Link>
           <a
-            href="https://discord.gg/8EUxqR93"
+            href="https://discord.gg/XuzjVXyjH4"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-700 transition-colors hover:text-black"

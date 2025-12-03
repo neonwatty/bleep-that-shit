@@ -178,7 +178,7 @@ describe('SetupTranscribeTab', () => {
 
       const discordLink = screen.getByText('Get help on Discord');
       expect(discordLink).toBeInTheDocument();
-      expect(discordLink).toHaveAttribute('href', 'https://discord.gg/8EUxqR93');
+      expect(discordLink).toHaveAttribute('href', 'https://discord.gg/XuzjVXyjH4');
       expect(discordLink).toHaveAttribute('target', '_blank');
       expect(discordLink).toHaveAttribute('rel', 'noopener noreferrer');
     });

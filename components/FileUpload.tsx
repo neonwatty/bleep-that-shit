@@ -91,7 +91,7 @@ export function FileUpload({
               <span className="ml-1 text-sm">
                 Need help with longer files?{' '}
                 <a
-                  href="https://discord.gg/8EUxqR93"
+                  href="https://discord.gg/XuzjVXyjH4"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-indigo-600 underline hover:text-indigo-800"

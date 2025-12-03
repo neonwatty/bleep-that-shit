@@ -59,7 +59,7 @@ describe('Footer', () => {
   it('renders Discord link with correct attributes', () => {
     render(<Footer />);
     const discordLink = screen.getByLabelText('Join Discord community');
-    expect(discordLink).toHaveAttribute('href', 'https://discord.gg/8EUxqR93');
+    expect(discordLink).toHaveAttribute('href', 'https://discord.gg/XuzjVXyjH4');
     expect(discordLink).toHaveAttribute('target', '_blank');
     expect(discordLink).toHaveAttribute('rel', 'noopener noreferrer');
   });

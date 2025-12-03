@@ -126,7 +126,7 @@ describe('FileUpload', () => {
 
     const link = screen.getByRole('link', { name: /Ask on Discord/i });
     expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute('href', 'https://discord.gg/8EUxqR93');
+    expect(link).toHaveAttribute('href', 'https://discord.gg/XuzjVXyjH4');
     expect(link).toHaveAttribute('target', '_blank');
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });

@@ -15,6 +15,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Validate Discord invite link
+        run: |
+          DISCORD_URL="https://discord.gg/XuzjVXyjH4"
+          echo "Checking Discord invite link: $DISCORD_URL"
+          HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" -L "$DISCORD_URL")
+          echo "HTTP Status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+            echo "✅ Discord link is valid (HTTP $HTTP_STATUS)"
+          else
+            echo "❌ Discord link returned HTTP $HTTP_STATUS"
+            exit 1
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

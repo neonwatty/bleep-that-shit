@@ -347,7 +347,7 @@ export default function Home() {
             </p>
             <a
               data-testid="discord-link"
-              href="https://discord.gg/8EUxqR93"
+              href="https://discord.gg/XuzjVXyjH4"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-3.5 text-base font-semibold text-white transition-all hover:from-indigo-700 hover:to-purple-700 hover:shadow-lg sm:text-lg"
