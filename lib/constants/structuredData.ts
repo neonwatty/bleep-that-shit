@@ -12,7 +12,7 @@ export const organizationSchema = {
     width: 512,
     height: 512,
   },
-  sameAs: ['https://github.com/neonwatty/bleep-that-shit', 'https://discord.gg/8EUxqR93'],
+  sameAs: ['https://github.com/neonwatty/bleep-that-shit', 'https://discord.gg/XuzjVXyjH4'],
 };
 
 export const websiteSchema = {

@@ -1,0 +1,46 @@
+name: Link Validation
+
+on:
+  schedule:
+    # Run daily at 9:00 AM UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch: # Allow manual triggers
+
+jobs:
+  check-links:
+    name: Validate External Links
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate Discord invite link
+        run: |
+          DISCORD_URL="https://discord.gg/XuzjVXyjH4"
+
+          echo "Checking Discord invite link: $DISCORD_URL"
+
+          # Use curl to check the link, following redirects
+          HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" -L "$DISCORD_URL")
+
+          echo "HTTP Status: $HTTP_STATUS"
+
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+            echo "✅ Discord link is valid (HTTP $HTTP_STATUS)"
+          else
+            echo "❌ Discord link returned HTTP $HTTP_STATUS"
+            exit 1
+          fi
+
+      - name: Report status
+        if: failure()
+        run: |
+          echo "::error::Discord invite link validation failed! Please check if the invite is still valid."
+          echo "Update the link in the following files if needed:"
+          echo "  - lib/constants/structuredData.ts"
+          echo "  - components/Footer.tsx"
+          echo "  - components/MobileNav.tsx"
+          echo "  - components/FileUpload.tsx"
+          echo "  - app/page.tsx"
+          echo "  - app/bleep/components/SetupTranscribeTab.tsx"

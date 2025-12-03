@@ -157,7 +157,7 @@ export function SetupTranscribeTab({
                     Dismiss
                   </button>
                   <a
-                    href="https://discord.gg/8EUxqR93"
+                    href="https://discord.gg/XuzjVXyjH4"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-indigo-600 underline hover:text-indigo-800"
@@ -201,7 +201,7 @@ export function SetupTranscribeTab({
                 <div className="mt-2 text-sm">
                   Having issues?{' '}
                   <a
-                    href="https://discord.gg/8EUxqR93"
+                    href="https://discord.gg/XuzjVXyjH4"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-indigo-600 underline hover:text-indigo-800"
