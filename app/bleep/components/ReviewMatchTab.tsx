@@ -510,12 +510,12 @@ export function ReviewMatchTab({
                         )}
                       </div>
 
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
                         <button
                           data-testid="run-matching-button"
                           onClick={onMatch}
                           disabled={!transcriptionResult || !wordsToMatch}
-                          className="btn btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
+                          className="btn btn-sm btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           Match Words
                         </button>
@@ -523,7 +523,7 @@ export function ReviewMatchTab({
                           <button
                             data-testid="clear-all-button"
                             onClick={onClearAll}
-                            className="btn bg-gray-500 text-white hover:bg-gray-600"
+                            className="btn btn-sm bg-gray-500 text-white hover:bg-gray-600"
                           >
                             Clear All
                           </button>

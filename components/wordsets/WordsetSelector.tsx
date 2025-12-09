@@ -109,17 +109,17 @@ export function WordsetSelector({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={handleApply}
               disabled={selectedWordsets.size === 0}
-              className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+              className="btn btn-sm btn-primary disabled:cursor-not-allowed disabled:opacity-50"
               data-testid="apply-wordsets-button"
             >
               Apply Selected ({selectedWordsets.size})
             </button>
             {onManageClick && (
-              <button onClick={onManageClick} className="btn btn-secondary">
+              <button onClick={onManageClick} className="btn btn-sm btn-secondary">
                 Manage Wordsets
               </button>
             )}

@@ -163,7 +163,7 @@ export function BleepControls({
           data-testid="preview-bleep-button"
           onClick={onPreviewBleep}
           disabled={isPreviewingBleep || bleepSound === 'silence'}
-          className="min-h-touch mt-3 w-full rounded-lg bg-yellow-500 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-4 sm:py-2 sm:text-sm"
+          className="mt-3 min-h-[36px] w-auto rounded-lg bg-yellow-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {bleepSound === 'silence'
             ? 'Silence Mode'

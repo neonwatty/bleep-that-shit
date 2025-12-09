@@ -69,6 +69,21 @@ h6 {
   }
 }
 
+/* Smaller button variant for inline/compact contexts */
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  min-height: 36px;
+  width: auto;
+}
+
+@media (min-width: 640px) {
+  .btn-sm {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}
+
 .btn-primary {
   background: #181818;
   color: #fff;
