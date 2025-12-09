@@ -78,4 +78,3 @@ export function isFirstVisit(): boolean {
   // Also check if onboarding is complete
   return !hasCompletedOnboarding();
 }
-
