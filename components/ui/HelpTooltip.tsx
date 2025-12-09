@@ -108,11 +108,11 @@ export function HelpTooltip({ content, gifSrc }: HelpTooltipProps) {
         onMouseLeave={() => setIsVisible(false)}
         onFocus={() => setIsVisible(true)}
         onBlur={() => setIsVisible(false)}
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
           setIsVisible(!isVisible);
         }}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             e.stopPropagation();
