@@ -16,6 +16,7 @@
     "file-type",
     "plyr",
     "plyr-react",
+    "react-joyride",
     "@typescript-eslint/eslint-plugin",
     "@typescript-eslint/parser",
     "eslint-config-next",
