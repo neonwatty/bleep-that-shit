@@ -100,10 +100,9 @@ export function HelpTooltip({ content, gifSrc }: HelpTooltipProps) {
     <span className="relative ml-1.5 inline-flex -translate-y-[3px] items-center align-baseline">
       <span
         ref={triggerRef}
-        role="button"
         tabIndex={0}
+        aria-label="Help"
         aria-describedby={isVisible ? tooltipId : undefined}
-        aria-expanded={isVisible}
         onMouseEnter={() => setIsVisible(true)}
         onMouseLeave={() => setIsVisible(false)}
         onFocus={() => setIsVisible(true)}
