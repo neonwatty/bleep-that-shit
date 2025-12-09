@@ -21,7 +21,7 @@ function isBrowser(): boolean {
 /**
  * Get the stored walkthrough version
  */
-export function getWalkthroughVersion(): string | null {
+function getWalkthroughVersion(): string | null {
   if (!isBrowser()) return null;
   return localStorage.getItem(STORAGE_KEYS.WALKTHROUGH_VERSION);
 }
@@ -29,7 +29,7 @@ export function getWalkthroughVersion(): string | null {
 /**
  * Update the walkthrough version
  */
-export function setWalkthroughVersion(version: string = CURRENT_VERSION): void {
+function setWalkthroughVersion(version: string = CURRENT_VERSION): void {
   if (!isBrowser()) return;
   localStorage.setItem(STORAGE_KEYS.WALKTHROUGH_VERSION, version);
 }
@@ -79,21 +79,3 @@ export function isFirstVisit(): boolean {
   return !hasCompletedOnboarding();
 }
 
-/**
- * Reset all walkthrough state (useful for testing)
- */
-export function resetWalkthroughState(): void {
-  if (!isBrowser()) return;
-  localStorage.removeItem(STORAGE_KEYS.ONBOARDING_COMPLETE);
-  localStorage.removeItem(STORAGE_KEYS.TOUR_COMPLETED);
-  localStorage.removeItem(STORAGE_KEYS.WALKTHROUGH_VERSION);
-}
-
-/**
- * Check if walkthrough version has been updated (for migrations)
- */
-export function needsVersionMigration(): boolean {
-  if (!isBrowser()) return false;
-  const storedVersion = getWalkthroughVersion();
-  return storedVersion !== null && storedVersion !== CURRENT_VERSION;
-}

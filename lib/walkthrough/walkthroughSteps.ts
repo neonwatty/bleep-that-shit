@@ -68,24 +68,3 @@ export const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     demoVideo: 'download.mp4',
   },
 ];
-
-/**
- * Get a step by its index
- */
-export function getStepByIndex(index: number): WalkthroughStep | undefined {
-  return WALKTHROUGH_STEPS[index];
-}
-
-/**
- * Get the total number of steps
- */
-export function getTotalSteps(): number {
-  return WALKTHROUGH_STEPS.length;
-}
-
-/**
- * Get all target selectors (useful for checking if elements exist)
- */
-export function getAllTargetSelectors(): string[] {
-  return WALKTHROUGH_STEPS.map(step => step.target as string);
-}
