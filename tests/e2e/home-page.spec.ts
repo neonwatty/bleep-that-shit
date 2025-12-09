@@ -9,6 +9,7 @@
  */
 
 import { test, expect } from './e2e-setup';
+import { skipOnboardingWizard } from '../helpers';
 
 test.describe('Home Page - Sections', () => {
   test.beforeEach(async ({ page }) => {
@@ -74,6 +75,7 @@ test.describe('Home Page - Sections', () => {
 
 test.describe('Home Page - Navigation', () => {
   test.beforeEach(async ({ page }) => {
+    await page.addInitScript(skipOnboardingWizard);
     await page.goto('/');
   });
 
@@ -106,6 +108,7 @@ test.describe('Home Page - Navigation', () => {
 
 test.describe('Home Page - External Links', () => {
   test.beforeEach(async ({ page }) => {
+    await page.addInitScript(skipOnboardingWizard);
     await page.goto('/');
   });
 
@@ -126,6 +129,7 @@ test.describe('Home Page - External Links', () => {
 
 test.describe('Home Page - Hero CTA Interaction', () => {
   test('should load Bob Ross sample in bleep page', async ({ page }) => {
+    await page.addInitScript(skipOnboardingWizard);
     await page.goto('/');
 
     // Click Bob Ross sample link
