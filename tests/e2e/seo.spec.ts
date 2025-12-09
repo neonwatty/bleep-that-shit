@@ -9,6 +9,7 @@
  */
 
 import { test, expect } from './e2e-setup';
+import { skipOnboardingWizard } from '../helpers';
 
 const SITE_URL = 'https://bleep-that-sht.com';
 
@@ -83,6 +84,7 @@ test.describe('SEO - Home Page', () => {
 
 test.describe('SEO - Bleep Page', () => {
   test.beforeEach(async ({ page }) => {
+    await page.addInitScript(skipOnboardingWizard);
     await page.goto('/bleep');
   });
 

@@ -1,6 +1,21 @@
 import { Page, expect } from '@playwright/test';
 
 /**
+ * Skip the onboarding wizard by setting localStorage to simulate a returning user.
+ * Should be called via page.addInitScript() before navigation.
+ *
+ * @example
+ * test.beforeEach(async ({ page }) => {
+ *   await page.addInitScript(skipOnboardingWizard);
+ *   await page.goto('/bleep');
+ * });
+ */
+export function skipOnboardingWizard() {
+  localStorage.setItem('bts_onboarding_complete', 'true');
+  localStorage.setItem('bts_walkthrough_version', '1.0.0');
+}
+
+/**
  * Wait for transcription to complete (or error)
  */
 export async function waitForTranscription(

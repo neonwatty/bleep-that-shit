@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { uploadFile } from '../fileHelpers';
-import { waitForTranscription, waitForVideoProcessing } from '../waitHelpers';
+import { waitForTranscription, waitForVideoProcessing, skipOnboardingWizard } from '../waitHelpers';
 
 export class BleepPage {
   readonly page: Page;
@@ -143,6 +143,7 @@ export class BleepPage {
    * Navigate to the Bleep page
    */
   async goto() {
+    await this.page.addInitScript(skipOnboardingWizard);
     await this.page.goto('/bleep');
     await this.page.waitForLoadState('networkidle');
   }

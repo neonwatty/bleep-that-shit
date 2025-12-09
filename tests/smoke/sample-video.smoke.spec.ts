@@ -1,8 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { HomePage, BleepPage, SamplerPage } from '../helpers';
+import { HomePage, BleepPage, SamplerPage, skipOnboardingWizard } from '../helpers';
 
 test.describe('Sample Video Feature - Smoke Tests', () => {
   test.setTimeout(60000); // 60 seconds max per test (sample video needs to load)
+
+  test.beforeEach(async ({ page }) => {
+    // Skip onboarding wizard on bleep page (simulates returning user)
+    await page.addInitScript(skipOnboardingWizard);
+  });
 
   test.describe('Home Page Sample Video Button', () => {
     test('displays sample video button in hero section', async ({ page }) => {

@@ -1,10 +1,12 @@
 import { test, expect } from '@playwright/test';
+import { skipOnboardingWizard } from '../helpers';
 
 test.describe('Responsive Design - Smoke Tests', () => {
   test.setTimeout(30000); // 30 seconds max per test
 
   test.describe('Mobile Viewport (375x667)', () => {
     test.beforeEach(async ({ page }) => {
+      await page.addInitScript(skipOnboardingWizard);
       await page.setViewportSize({ width: 375, height: 667 });
     });
 
@@ -49,6 +51,7 @@ test.describe('Responsive Design - Smoke Tests', () => {
 
   test.describe('Tablet Viewport (768x1024)', () => {
     test.beforeEach(async ({ page }) => {
+      await page.addInitScript(skipOnboardingWizard);
       await page.setViewportSize({ width: 768, height: 1024 });
     });
 
@@ -89,6 +92,7 @@ test.describe('Responsive Design - Smoke Tests', () => {
 
   test.describe('Desktop Viewport (1920x1080)', () => {
     test.beforeEach(async ({ page }) => {
+      await page.addInitScript(skipOnboardingWizard);
       await page.setViewportSize({ width: 1920, height: 1080 });
     });
 
@@ -132,6 +136,7 @@ test.describe('Responsive Design - Smoke Tests', () => {
 
   test.describe('Wide Desktop Viewport (2560x1440)', () => {
     test.beforeEach(async ({ page }) => {
+      await page.addInitScript(skipOnboardingWizard);
       await page.setViewportSize({ width: 2560, height: 1440 });
     });
 

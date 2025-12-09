@@ -9,6 +9,7 @@
  */
 
 import { test, expect } from './e2e-setup';
+import { skipOnboardingWizard } from '../helpers';
 
 // Mobile viewport size (iPhone SE)
 const MOBILE_VIEWPORT = { width: 375, height: 667 };
@@ -17,6 +18,8 @@ const DESKTOP_VIEWPORT = { width: 1280, height: 720 };
 
 test.describe('Mobile Navigation - Hamburger Menu', () => {
   test.beforeEach(async ({ page }) => {
+    // Skip onboarding wizard on bleep page
+    await page.addInitScript(skipOnboardingWizard);
     // Set mobile viewport
     await page.setViewportSize(MOBILE_VIEWPORT);
     await page.goto('/');
@@ -135,6 +138,8 @@ test.describe('Mobile Navigation - Hamburger Menu', () => {
 
 test.describe('Desktop Navigation', () => {
   test.beforeEach(async ({ page }) => {
+    // Skip onboarding wizard on bleep page
+    await page.addInitScript(skipOnboardingWizard);
     // Set desktop viewport
     await page.setViewportSize(DESKTOP_VIEWPORT);
     await page.goto('/');
@@ -186,6 +191,7 @@ test.describe('Desktop Navigation', () => {
 
 test.describe('Responsive Navigation Transition', () => {
   test('should switch between mobile and desktop nav on resize', async ({ page }) => {
+    await page.addInitScript(skipOnboardingWizard);
     await page.goto('/');
 
     // Start with mobile

@@ -1,10 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { BleepPage } from '../helpers';
+import { BleepPage, skipOnboardingWizard } from '../helpers';
 
 test.describe('Bleep Page UI - Smoke Tests', () => {
   test.setTimeout(30000); // 30 seconds max per test
 
   test.beforeEach(async ({ page }) => {
+    // Skip onboarding wizard (simulates returning user)
+    await page.addInitScript(skipOnboardingWizard);
     await page.goto('/bleep');
   });
 

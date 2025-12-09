@@ -1,8 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { HomePage, NavbarComponent } from '../helpers';
+import { HomePage, NavbarComponent, skipOnboardingWizard } from '../helpers';
 
 test.describe('Navigation - Smoke Tests', () => {
   test.setTimeout(30000); // 30 seconds max per test
+
+  test.beforeEach(async ({ page }) => {
+    // Skip onboarding wizard on bleep page (simulates returning user)
+    await page.addInitScript(skipOnboardingWizard);
+  });
 
   test('navigates from home to bleep page via navbar', async ({ page }) => {
     await page.goto('/');
