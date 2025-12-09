@@ -1,4 +1,5 @@
 import { useDropzone } from 'react-dropzone';
+import { FEEDBACK_FORM_LONG_FILES_URL } from '@/lib/constants/externalLinks';
 
 interface FileUploadProps {
   onFileUpload: (file: File) => void;
@@ -88,8 +89,19 @@ export function FileUpload({
             <span className="mr-2">⚠️</span>
             <div>
               {fileDurationWarning}
-              <span className="ml-1 text-sm">
-                Need help with longer files?{' '}
+              <div className="mt-2 rounded bg-orange-200 p-2">
+                <p className="text-sm font-medium">We&apos;re working on longer video support.</p>
+                <a
+                  href={FEEDBACK_FORM_LONG_FILES_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-block rounded bg-orange-500 px-3 py-1 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+                >
+                  Get notified when it&apos;s ready
+                </a>
+              </div>
+              <span className="mt-2 block text-sm">
+                Need help now?{' '}
                 <a
                   href="https://discord.gg/XuzjVXyjH4"
                   target="_blank"

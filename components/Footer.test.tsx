@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Footer } from './Footer';
+import { FEEDBACK_FORM_URL } from '@/lib/constants/externalLinks';
 
 describe('Footer', () => {
   const originalDate = Date;
@@ -82,5 +83,19 @@ describe('Footer', () => {
     expect(twitterIcon).toBeInTheDocument();
     expect(blogIcon).toBeInTheDocument();
     expect(discordIcon).toBeInTheDocument();
+  });
+
+  it('renders feedback link with correct attributes', () => {
+    render(<Footer />);
+    const feedbackLink = screen.getByLabelText('Share feedback');
+    expect(feedbackLink).toHaveAttribute('href', FEEDBACK_FORM_URL);
+    expect(feedbackLink).toHaveAttribute('target', '_blank');
+    expect(feedbackLink).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('renders feedback icon', () => {
+    const { container } = render(<Footer />);
+    const feedbackIcon = container.querySelector('.fa-comment-dots');
+    expect(feedbackIcon).toBeInTheDocument();
   });
 });

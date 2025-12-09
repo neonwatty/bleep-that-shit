@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { version } from '../package.json';
+import { FEEDBACK_FORM_URL } from '@/lib/constants/externalLinks';
 
 export function Footer() {
   return (
@@ -50,6 +51,15 @@ export function Footer() {
             aria-label="Join Discord community"
           >
             <i className="fab fa-discord text-2xl"></i>
+          </a>
+          <a
+            href={FEEDBACK_FORM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-700 transition-colors hover:text-black"
+            aria-label="Share feedback"
+          >
+            <i className="fas fa-comment-dots text-2xl"></i>
           </a>
         </div>
         <div className="text-center text-xs text-gray-600">

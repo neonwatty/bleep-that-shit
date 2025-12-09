@@ -2,6 +2,7 @@ import { BleepControls } from '@/components/BleepControls';
 import { FloatingNavArrows } from './FloatingNavArrows';
 import type { MatchedWord } from '../hooks/useBleepState';
 import { trackEvent } from '@/lib/analytics';
+import { FEEDBACK_FORM_URL } from '@/lib/constants/externalLinks';
 
 interface BleepDownloadTabProps {
   file: File | null;
@@ -185,6 +186,23 @@ export function BleepDownloadTab({
                   </span>
                 )}
               </p>
+            </div>
+
+            {/* Feedback CTA */}
+            <div className="mt-4 rounded border-l-4 border-yellow-400 bg-yellow-50 p-3">
+              <p className="text-sm text-yellow-900">
+                <strong>Was this helpful?</strong> We&apos;re building new features and would love
+                your input.
+              </p>
+              <a
+                href={FEEDBACK_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-block rounded bg-yellow-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-yellow-600"
+                onClick={() => trackEvent('feedback_cta_clicked', { location: 'download_success' })}
+              >
+                Share Quick Feedback (30 sec)
+              </a>
             </div>
           </div>
         )}
