@@ -37,9 +37,13 @@ test.describe('Video Bleeping Complete Workflow', () => {
 
     // 3. Switch to Review tab and match words
     await bleepPage.switchToReviewTab();
+    // Expand the Interactive Transcript section (collapsed by default)
+    await bleepPage.expandInteractiveTranscript();
     // Wait for transcript words to render
     await expect(page.locator('.word-wrapper').first()).toBeVisible({ timeout: 5000 });
 
+    // Expand Keyword Matching section
+    await bleepPage.expandKeywordMatching();
     const wordsInput = bleepPage.wordsToMatchInput;
     await wordsInput.fill('happy,little,tree');
 
@@ -70,9 +74,13 @@ test.describe('Video Bleeping Complete Workflow', () => {
 
     // Match words
     await bleepPage.switchToReviewTab();
+    // Expand the Interactive Transcript section (collapsed by default)
+    await bleepPage.expandInteractiveTranscript();
     // Wait for transcript words to render
     await expect(page.locator('.word-wrapper').first()).toBeVisible({ timeout: 5000 });
 
+    // Expand Keyword Matching section
+    await bleepPage.expandKeywordMatching();
     await bleepPage.wordsToMatchInput.fill('painting');
     await bleepPage.page.getByRole('button', { name: /match words/i }).click();
 
@@ -99,9 +107,13 @@ test.describe('Video Bleeping Complete Workflow', () => {
 
     // Match and bleep
     await bleepPage.switchToReviewTab();
+    // Expand the Interactive Transcript section (collapsed by default)
+    await bleepPage.expandInteractiveTranscript();
     // Wait for transcript words to render
     await expect(page.locator('.word-wrapper').first()).toBeVisible({ timeout: 5000 });
 
+    // Expand Keyword Matching section
+    await bleepPage.expandKeywordMatching();
     await bleepPage.wordsToMatchInput.fill('paint');
     await bleepPage.page.getByRole('button', { name: /match words/i }).click();
 
@@ -134,9 +146,13 @@ test.describe('Video Bleeping Complete Workflow', () => {
 
     // Complete bleeping workflow
     await bleepPage.switchToReviewTab();
+    // Expand the Interactive Transcript section (collapsed by default)
+    await bleepPage.expandInteractiveTranscript();
     // Wait for transcript words to render
     await expect(page.locator('.word-wrapper').first()).toBeVisible({ timeout: 5000 });
 
+    // Expand Keyword Matching section
+    await bleepPage.expandKeywordMatching();
     await bleepPage.wordsToMatchInput.fill('happy');
     await bleepPage.page.getByRole('button', { name: /match words/i }).click();
 

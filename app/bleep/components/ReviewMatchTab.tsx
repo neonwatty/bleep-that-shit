@@ -5,6 +5,7 @@ import { TranscriptReview } from '@/components/TranscriptReview';
 import { MatchedWordsDisplay } from '@/components/MatchedWordsDisplay';
 import { WordsetSelector } from '@/components/wordsets/WordsetSelector';
 import { TimelineBar } from '@/components/timeline/TimelineBar';
+import { HelpTooltip } from '@/components/ui/HelpTooltip';
 import { formatTime } from '@/lib/utils/timeFormat';
 import { FloatingNavArrows } from './FloatingNavArrows';
 import { trackEvent } from '@/lib/analytics';
@@ -93,12 +94,12 @@ export function ReviewMatchTab({
   // Navigation
   onNavigate,
 }: ReviewMatchTabProps) {
-  // Collapse states - default to expanded
-  const [timelineExpanded, setTimelineExpanded] = useState(true);
-  const [wordsetsExpanded, setWordsetsExpanded] = useState(true);
-  const [manualMatchingExpanded, setManualMatchingExpanded] = useState(true);
-  const [transcriptSectionExpanded, setTranscriptSectionExpanded] = useState(true);
-  const [matchedWordsExpanded, setMatchedWordsExpanded] = useState(true);
+  // Collapse states - default to collapsed so user sees all options
+  const [timelineExpanded, setTimelineExpanded] = useState(false);
+  const [wordsetsExpanded, setWordsetsExpanded] = useState(false);
+  const [manualMatchingExpanded, setManualMatchingExpanded] = useState(false);
+  const [transcriptSectionExpanded, setTranscriptSectionExpanded] = useState(false);
+  const [matchedWordsExpanded, setMatchedWordsExpanded] = useState(false);
 
   // Sidebar navigation state - default to first visible section
   const [activeSection, setActiveSection] = useState<SectionId>(() => {
@@ -375,6 +376,7 @@ export function ReviewMatchTab({
                     >
                       <h3 className="text-sm font-bold text-gray-700 uppercase">
                         Quick Apply Word Lists
+                        <HelpTooltip content="Pre-made word lists for common censoring needs. Select lists and click Apply to match all words. Create and save your own custom word lists in the 'Manage Word Lists' tab." />
                       </h3>
                       <span
                         className={`text-xl transition-transform duration-200 ${wordsetsExpanded ? '' : '-rotate-90'}`}
@@ -420,7 +422,8 @@ export function ReviewMatchTab({
                     className="flex w-full items-center justify-between p-4 text-left hover:bg-gray-50"
                   >
                     <h3 className="text-sm font-bold text-gray-700 uppercase">
-                      Manual Pattern Matching (Optional)
+                      Keyword Matching
+                      <HelpTooltip content="Enter comma-separated words to find in transcript. Use matching modes for flexible searches." />
                     </h3>
                     <span
                       className={`text-xl transition-transform duration-200 ${manualMatchingExpanded ? '' : '-rotate-90'}`}
@@ -461,6 +464,7 @@ export function ReviewMatchTab({
                               className="mr-3 h-5 w-5"
                             />
                             Exact match
+                            <HelpTooltip content="Case-sensitive matching. 'Bad' won't match 'bad'." />
                           </label>
                           <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
                             <input
@@ -476,6 +480,7 @@ export function ReviewMatchTab({
                               className="mr-3 h-5 w-5"
                             />
                             Partial match
+                            <HelpTooltip content="Finds words containing your term. 'curse' matches 'cursed', 'cursing'." />
                           </label>
                           <label className="-m-2 flex cursor-pointer items-center rounded p-2 hover:bg-gray-50">
                             <input
@@ -491,6 +496,7 @@ export function ReviewMatchTab({
                               className="mr-3 h-5 w-5"
                             />
                             Fuzzy match
+                            <HelpTooltip content="Handles typos and variations. Use distance slider to control strictness." />
                           </label>
                         </div>
 
@@ -548,6 +554,7 @@ export function ReviewMatchTab({
                     >
                       <h3 className="text-sm font-bold text-gray-700 uppercase">
                         Interactive Transcript
+                        <HelpTooltip content="Click any word to select/deselect it for censoring. Selected words appear green." />
                       </h3>
                       <span
                         className={`text-xl transition-transform duration-200 ${transcriptSectionExpanded ? '' : '-rotate-90'}`}
@@ -627,6 +634,7 @@ export function ReviewMatchTab({
                   <h3 className="text-sm font-bold text-gray-700 uppercase">
                     Manual Timeline
                     {manualCensorSegments.length > 0 ? ` (${manualCensorSegments.length})` : ''}
+                    <HelpTooltip content="Hold Shift + drag on timeline to mark sections to bleep. Great for music or non-speech audio." />
                   </h3>
                   <span
                     className={`text-xl transition-transform duration-200 ${timelineExpanded ? '' : '-rotate-90'}`}

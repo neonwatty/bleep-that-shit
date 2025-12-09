@@ -1,5 +1,6 @@
 import { BleepControls } from '@/components/BleepControls';
 import { FloatingNavArrows } from './FloatingNavArrows';
+import { HelpTooltip } from '@/components/ui/HelpTooltip';
 import type { MatchedWord } from '../hooks/useBleepState';
 import { trackEvent } from '@/lib/analytics';
 import { FEEDBACK_FORM_URL } from '@/lib/constants/externalLinks';
@@ -80,6 +81,7 @@ export function BleepDownloadTab({
           </span>
           <h2 className="font-inter text-lg font-extrabold text-black uppercase sm:text-xl md:text-2xl">
             Bleep That Sh*t!
+            <HelpTooltip content="Apply bleeps to your file and download the censored result. You can re-apply with different settings." />
           </h2>
         </div>
 

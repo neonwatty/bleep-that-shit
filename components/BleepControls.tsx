@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 import { trackEvent } from '@/lib/analytics';
+import { HelpTooltip } from '@/components/ui/HelpTooltip';
 
 interface BleepControlsProps {
   bleepSound: string;
@@ -70,7 +71,10 @@ export function BleepControls({
   return (
     <div className="space-y-4">
       <div>
-        <label className="mb-2 block text-sm font-semibold">Bleep Sound</label>
+        <label className="mb-2 block text-sm font-semibold">
+          Bleep Sound
+          <HelpTooltip content="Classic Bleep = TV censor. Brown Noise = white noise. Silence = mutes the word completely." />
+        </label>
         <select
           data-testid="bleep-sound-select"
           value={bleepSound}
@@ -95,6 +99,7 @@ export function BleepControls({
           >
             {bleepSound === 'silence' ? 'N/A' : `${bleepVolume}%`}
           </span>
+          <HelpTooltip content="0-150%. Above 100% makes the bleep louder than the original audio." />
         </label>
         <input
           data-testid="bleep-volume-slider"
@@ -118,6 +123,7 @@ export function BleepControls({
             <span className="font-bold text-yellow-600">
               {Math.round(originalVolumeReduction * 100)}%
             </span>
+            <HelpTooltip content="0% = word is silent. 100% = original volume plays under the bleep." />
           </label>
           <input
             data-testid="original-volume-slider"
@@ -139,6 +145,7 @@ export function BleepControls({
           <label className="mb-2 block text-sm font-semibold">
             Bleep Buffer:{' '}
             <span className="font-bold text-yellow-600">{bleepBuffer.toFixed(2)}s</span>
+            <HelpTooltip content="Extends the bleep duration before and after each word. Helps cover slight timing errors." />
           </label>
           <input
             data-testid="bleep-buffer-slider"

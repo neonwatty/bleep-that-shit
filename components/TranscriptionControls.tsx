@@ -1,3 +1,5 @@
+import { HelpTooltip } from '@/components/ui/HelpTooltip';
+
 interface TranscriptionControlsProps {
   language: string;
   model: string;
@@ -36,7 +38,10 @@ export function TranscriptionControls({
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">Model</label>
+        <label className="mb-2 block text-sm font-semibold">
+          Model
+          <HelpTooltip content="Tiny = fast but less accurate. Base = balanced. Small = most accurate but slower. Use Multilingual for non-English." />
+        </label>
         <select
           data-testid="model-select"
           value={model}

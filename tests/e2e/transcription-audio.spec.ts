@@ -74,6 +74,8 @@ test.describe('Audio Transcription with Tiny Model', () => {
     await expect(bleepPage.reviewTab).toHaveAttribute('aria-selected', 'true');
 
     // 8. Verify transcript is displayed in Review tab
+    // Expand the Keyword Matching section to see the interface
+    await bleepPage.expandKeywordMatching();
     // Should show interactive word selection interface
     await expect(bleepPage.page.getByText(/words to match/i)).toBeVisible();
   });

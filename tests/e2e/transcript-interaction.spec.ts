@@ -28,6 +28,8 @@ test.describe('Interactive Transcript', () => {
     await expect(bleepPage.reviewTab).toBeEnabled({ timeout: 5000 });
     await bleepPage.switchToReviewTab();
 
+    // Expand the Interactive Transcript section (collapsed by default)
+    await bleepPage.expandInteractiveTranscript();
     // Wait for transcript words to render
     await expect(page.locator('.word-wrapper').first()).toBeVisible({ timeout: 5000 });
   });
@@ -125,6 +127,9 @@ test.describe('Interactive Transcript', () => {
       await page.waitForTimeout(200);
     }
 
+    // Expand Keyword Matching section to access Clear All button
+    await bleepPage.expandKeywordMatching();
+
     // Find Clear All button
     const clearButton = page.getByRole('button', { name: /clear all/i });
     await expect(clearButton).toBeVisible();
@@ -188,6 +193,8 @@ test.describe('Interactive Transcript', () => {
 
   test('should highlight matched words from pattern matching', async ({ page }) => {
     // First match some words using pattern matching
+    // Expand Keyword Matching section first
+    await bleepPage.expandKeywordMatching();
     const wordsInput = bleepPage.wordsToMatchInput;
     await wordsInput.fill('happy');
     await page.getByRole('button', { name: /match words/i }).click();

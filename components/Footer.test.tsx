@@ -95,7 +95,7 @@ describe('Footer', () => {
 
   it('renders feedback icon', () => {
     const { container } = render(<Footer />);
-    const feedbackIcon = container.querySelector('.fa-comment-dots');
+    const feedbackIcon = container.querySelector('.fa-pen-to-square');
     expect(feedbackIcon).toBeInTheDocument();
   });
 });

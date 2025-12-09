@@ -41,10 +41,13 @@ test.describe('Audio Bleeping Complete Workflow', () => {
 
     // 3. Switch to Review tab
     await bleepPage.switchToReviewTab();
+    // Expand the Interactive Transcript section (collapsed by default)
+    await bleepPage.expandInteractiveTranscript();
     // Wait for transcript words to render
     await expect(page.locator('.word-wrapper').first()).toBeVisible({ timeout: 5000 });
 
-    // 4. Enter words to match
+    // 4. Enter words to match - expand Keyword Matching section first
+    await bleepPage.expandKeywordMatching();
     const wordsInput = bleepPage.wordsToMatchInput;
     await wordsInput.fill('the,and,of');
 
@@ -89,8 +92,12 @@ test.describe('Audio Bleeping Complete Workflow', () => {
 
     // Match words
     await bleepPage.switchToReviewTab();
+    // Expand the Interactive Transcript section (collapsed by default)
+    await bleepPage.expandInteractiveTranscript();
     // Wait for transcript words to render
     await expect(page.locator('.word-wrapper').first()).toBeVisible({ timeout: 5000 });
+    // Expand Keyword Matching section
+    await bleepPage.expandKeywordMatching();
     await bleepPage.wordsToMatchInput.fill('happy');
     await bleepPage.page.getByRole('button', { name: /match words/i }).click();
     await bleepPage.page.waitForTimeout(1000);
@@ -124,8 +131,12 @@ test.describe('Audio Bleeping Complete Workflow', () => {
 
     // Match words
     await bleepPage.switchToReviewTab();
+    // Expand the Interactive Transcript section (collapsed by default)
+    await bleepPage.expandInteractiveTranscript();
     // Wait for transcript words to render
     await expect(page.locator('.word-wrapper').first()).toBeVisible({ timeout: 5000 });
+    // Expand Keyword Matching section
+    await bleepPage.expandKeywordMatching();
     await bleepPage.wordsToMatchInput.fill('paint');
     await bleepPage.page.getByRole('button', { name: /match words/i }).click();
 
@@ -153,8 +164,12 @@ test.describe('Audio Bleeping Complete Workflow', () => {
 
     // Match words - use "happy" which appears multiple times in transcript
     await bleepPage.switchToReviewTab();
+    // Expand the Interactive Transcript section (collapsed by default)
+    await bleepPage.expandInteractiveTranscript();
     // Wait for transcript words to render
     await expect(page.locator('.word-wrapper').first()).toBeVisible({ timeout: 5000 });
+    // Expand Keyword Matching section
+    await bleepPage.expandKeywordMatching();
     await bleepPage.wordsToMatchInput.fill('happy');
     await bleepPage.page.getByRole('button', { name: /match words/i }).click();
 
