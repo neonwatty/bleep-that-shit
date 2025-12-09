@@ -25,6 +25,8 @@ test.describe('Pattern Matching Modes', () => {
     await loadTranscript(page, AUDIO_TRANSCRIPT);
     await expect(bleepPage.reviewTab).toBeEnabled({ timeout: 5000 });
     await bleepPage.switchToReviewTab();
+    // Expand the Keyword Matching section (collapsed by default)
+    await bleepPage.expandKeywordMatching();
   });
 
   test('should match words in exact mode', async () => {
@@ -150,9 +152,12 @@ test.describe('Pattern Matching Modes', () => {
     await matchButton.click();
     await bleepPage.page.waitForTimeout(1000);
 
-    // Look for count display (e.g., "5 words matched")
-    const countDisplay = bleepPage.page.getByText(/\d+\s+(word|match)/i).first();
-    await expect(countDisplay).toBeVisible({ timeout: 5000 });
+    // Verify that matching worked by checking the "Selected Words" collapsible section header
+    // It shows the count in the heading, e.g., "Selected Words (1)"
+    const selectedWordsHeader = bleepPage.page.getByRole('heading', {
+      name: /selected words \(\d+\)/i,
+    });
+    await expect(selectedWordsHeader).toBeVisible({ timeout: 5000 });
   });
 
   test('should clear matched words', async () => {

@@ -99,6 +99,8 @@ test.describe('Tab State Transitions', () => {
     await expect(bleepPage.reviewTab).toBeEnabled({ timeout: 5000 });
 
     await bleepPage.switchToReviewTab();
+    // Expand Keyword Matching section (collapsed by default)
+    await bleepPage.expandKeywordMatching();
     const wordsInput = bleepPage.wordsToMatchInput;
     await wordsInput.fill('happy,tree');
     await bleepPage.page.getByRole('button', { name: /match words/i }).click();
@@ -117,6 +119,9 @@ test.describe('Tab State Transitions', () => {
 
     // Matched words should still be there
     await expect(bleepPage.page.getByText(/matched words|selected words/i).first()).toBeVisible();
+
+    // Expand Keyword Matching section again to check input value
+    await bleepPage.expandKeywordMatching();
 
     // Input should still have values
     const inputValue = await wordsInput.inputValue();

@@ -11,6 +11,10 @@ export class BleepPage {
   readonly bleepTab: Locator;
   readonly wordsetTab: Locator;
 
+  // Section Toggles (for collapsible sections in Review tab)
+  readonly interactiveTranscriptToggle: Locator;
+  readonly keywordMatchingToggle: Locator;
+
   // Manual Timeline Section Elements (in Review tab)
   readonly timelineSection: Locator;
   readonly timelineSectionToggle: Locator;
@@ -78,6 +82,12 @@ export class BleepPage {
     this.reviewTab = page.getByRole('tab', { name: /review/i });
     this.bleepTab = page.getByRole('tab', { name: /bleep/i });
     this.wordsetTab = page.getByRole('tab', { name: /word.*list/i });
+
+    // Section Toggles (for collapsible sections in Review tab)
+    this.interactiveTranscriptToggle = page.getByRole('button', {
+      name: /Interactive Transcript/i,
+    });
+    this.keywordMatchingToggle = page.getByRole('button', { name: /Keyword Matching/i });
 
     // Manual Timeline Section (in Review tab)
     this.timelineSection = page.getByTestId('timeline-section');
@@ -184,6 +194,34 @@ export class BleepPage {
    */
   async switchToReviewTab() {
     await this.reviewTab.click();
+  }
+
+  /**
+   * Expand the Interactive Transcript section if collapsed
+   */
+  async expandInteractiveTranscript() {
+    const toggle = this.interactiveTranscriptToggle;
+    if (await toggle.isVisible()) {
+      // Check if collapsed by looking for ▼ text (means it's collapsed)
+      const toggleText = await toggle.textContent();
+      if (toggleText?.includes('▼')) {
+        await toggle.click();
+      }
+    }
+  }
+
+  /**
+   * Expand the Keyword Matching section if collapsed
+   */
+  async expandKeywordMatching() {
+    const toggle = this.keywordMatchingToggle;
+    if (await toggle.isVisible()) {
+      // Check if collapsed by looking for ▼ text (means it's collapsed)
+      const toggleText = await toggle.textContent();
+      if (toggleText?.includes('▼')) {
+        await toggle.click();
+      }
+    }
   }
 
   /**
