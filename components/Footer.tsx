@@ -59,7 +59,7 @@ export function Footer() {
             className="text-gray-700 transition-colors hover:text-black"
             aria-label="Share feedback"
           >
-            <i className="fas fa-comment-dots text-2xl"></i>
+            <i className="fas fa-pen-to-square text-2xl"></i>
           </a>
         </div>
         <div className="text-center text-xs text-gray-600">

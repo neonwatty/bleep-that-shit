@@ -2,6 +2,15 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ReviewMatchTab } from './ReviewMatchTab';
 
+// Helper to expand a collapsible section by clicking its header
+const expandSection = (sectionText: string) => {
+  const sectionHeader = screen.getByText(sectionText);
+  const button = sectionHeader.closest('button');
+  if (button) {
+    fireEvent.click(button);
+  }
+};
+
 describe('ReviewMatchTab', () => {
   const mockTranscript = {
     text: 'Hello world this is a test',
@@ -58,19 +67,21 @@ describe('ReviewMatchTab', () => {
     it('renders pattern matching section heading', () => {
       render(<ReviewMatchTab {...defaultProps} />);
 
-      expect(screen.getByText('Manual Pattern Matching (Optional)')).toBeInTheDocument();
+      expect(screen.getByText('Keyword Matching')).toBeInTheDocument();
     });
   });
 
   describe('Words to match input', () => {
     it('renders words to match input', () => {
       render(<ReviewMatchTab {...defaultProps} />);
+      expandSection('Keyword Matching');
 
       expect(screen.getByTestId('words-to-match-input')).toBeInTheDocument();
     });
 
     it('displays current wordsToMatch value', () => {
       render(<ReviewMatchTab {...defaultProps} wordsToMatch="bad, worse, worst" />);
+      expandSection('Keyword Matching');
 
       const input = screen.getByTestId('words-to-match-input') as HTMLInputElement;
       expect(input.value).toBe('bad, worse, worst');
@@ -78,6 +89,7 @@ describe('ReviewMatchTab', () => {
 
     it('shows placeholder text', () => {
       render(<ReviewMatchTab {...defaultProps} />);
+      expandSection('Keyword Matching');
 
       const input = screen.getByTestId('words-to-match-input');
       expect(input).toHaveAttribute('placeholder', 'e.g., bad, word, curse');
@@ -86,6 +98,7 @@ describe('ReviewMatchTab', () => {
     it('calls onWordsToMatchChange when input changes', () => {
       const onWordsToMatchChange = vi.fn();
       render(<ReviewMatchTab {...defaultProps} onWordsToMatchChange={onWordsToMatchChange} />);
+      expandSection('Keyword Matching');
 
       const input = screen.getByTestId('words-to-match-input');
       fireEvent.change(input, { target: { value: 'test, word' } });
@@ -97,6 +110,7 @@ describe('ReviewMatchTab', () => {
   describe('Match mode checkboxes', () => {
     it('renders all three match mode checkboxes', () => {
       render(<ReviewMatchTab {...defaultProps} />);
+      expandSection('Keyword Matching');
 
       expect(screen.getByTestId('exact-match-checkbox')).toBeInTheDocument();
       expect(screen.getByTestId('partial-match-checkbox')).toBeInTheDocument();
@@ -110,6 +124,7 @@ describe('ReviewMatchTab', () => {
           matchMode={{ exact: true, partial: false, fuzzy: false }}
         />
       );
+      expandSection('Keyword Matching');
 
       const checkbox = screen.getByTestId('exact-match-checkbox') as HTMLInputElement;
       expect(checkbox.checked).toBe(true);
@@ -122,6 +137,7 @@ describe('ReviewMatchTab', () => {
           matchMode={{ exact: false, partial: true, fuzzy: false }}
         />
       );
+      expandSection('Keyword Matching');
 
       const checkbox = screen.getByTestId('partial-match-checkbox') as HTMLInputElement;
       expect(checkbox.checked).toBe(true);
@@ -134,6 +150,7 @@ describe('ReviewMatchTab', () => {
           matchMode={{ exact: false, partial: false, fuzzy: true }}
         />
       );
+      expandSection('Keyword Matching');
 
       const checkbox = screen.getByTestId('fuzzy-match-checkbox') as HTMLInputElement;
       expect(checkbox.checked).toBe(true);
@@ -142,6 +159,7 @@ describe('ReviewMatchTab', () => {
     it('calls onMatchModeChange when exact match checkbox is toggled', () => {
       const onMatchModeChange = vi.fn();
       render(<ReviewMatchTab {...defaultProps} onMatchModeChange={onMatchModeChange} />);
+      expandSection('Keyword Matching');
 
       const checkbox = screen.getByTestId('exact-match-checkbox');
       fireEvent.click(checkbox);
@@ -156,6 +174,7 @@ describe('ReviewMatchTab', () => {
     it('calls onMatchModeChange when partial match checkbox is toggled', () => {
       const onMatchModeChange = vi.fn();
       render(<ReviewMatchTab {...defaultProps} onMatchModeChange={onMatchModeChange} />);
+      expandSection('Keyword Matching');
 
       const checkbox = screen.getByTestId('partial-match-checkbox');
       fireEvent.click(checkbox);
@@ -170,6 +189,7 @@ describe('ReviewMatchTab', () => {
     it('calls onMatchModeChange when fuzzy match checkbox is toggled', () => {
       const onMatchModeChange = vi.fn();
       render(<ReviewMatchTab {...defaultProps} onMatchModeChange={onMatchModeChange} />);
+      expandSection('Keyword Matching');
 
       const checkbox = screen.getByTestId('fuzzy-match-checkbox');
       fireEvent.click(checkbox);
@@ -190,6 +210,7 @@ describe('ReviewMatchTab', () => {
           matchMode={{ exact: true, partial: false, fuzzy: false }}
         />
       );
+      expandSection('Keyword Matching');
 
       expect(screen.queryByTestId('fuzzy-distance-slider')).not.toBeInTheDocument();
     });
@@ -201,6 +222,7 @@ describe('ReviewMatchTab', () => {
           matchMode={{ exact: false, partial: false, fuzzy: true }}
         />
       );
+      expandSection('Keyword Matching');
 
       expect(screen.getByTestId('fuzzy-distance-slider')).toBeInTheDocument();
     });
@@ -213,6 +235,7 @@ describe('ReviewMatchTab', () => {
           fuzzyDistance={2}
         />
       );
+      expandSection('Keyword Matching');
 
       expect(screen.getByText('Fuzzy distance: 2')).toBeInTheDocument();
     });
@@ -226,6 +249,7 @@ describe('ReviewMatchTab', () => {
           onFuzzyDistanceChange={onFuzzyDistanceChange}
         />
       );
+      expandSection('Keyword Matching');
 
       const slider = screen.getByTestId('fuzzy-distance-slider');
       fireEvent.change(slider, { target: { value: '3' } });
@@ -240,6 +264,7 @@ describe('ReviewMatchTab', () => {
           matchMode={{ exact: false, partial: false, fuzzy: true }}
         />
       );
+      expandSection('Keyword Matching');
 
       const slider = screen.getByTestId('fuzzy-distance-slider') as HTMLInputElement;
       expect(slider.type).toBe('range');
@@ -251,6 +276,7 @@ describe('ReviewMatchTab', () => {
   describe('Match Words button', () => {
     it('renders Match Words button', () => {
       render(<ReviewMatchTab {...defaultProps} />);
+      expandSection('Keyword Matching');
 
       expect(screen.getByTestId('run-matching-button')).toBeInTheDocument();
       expect(screen.getByText('Match Words')).toBeInTheDocument();
@@ -258,6 +284,7 @@ describe('ReviewMatchTab', () => {
 
     it('disables Match Words button when no transcription result', () => {
       render(<ReviewMatchTab {...defaultProps} transcriptionResult={null} />);
+      expandSection('Keyword Matching');
 
       const button = screen.getByTestId('run-matching-button');
       expect(button).toBeDisabled();
@@ -265,6 +292,7 @@ describe('ReviewMatchTab', () => {
 
     it('disables Match Words button when wordsToMatch is empty', () => {
       render(<ReviewMatchTab {...defaultProps} wordsToMatch="" />);
+      expandSection('Keyword Matching');
 
       const button = screen.getByTestId('run-matching-button');
       expect(button).toBeDisabled();
@@ -272,6 +300,7 @@ describe('ReviewMatchTab', () => {
 
     it('enables Match Words button when both transcript and words are provided', () => {
       render(<ReviewMatchTab {...defaultProps} wordsToMatch="test" />);
+      expandSection('Keyword Matching');
 
       const button = screen.getByTestId('run-matching-button');
       expect(button).toBeEnabled();
@@ -280,6 +309,7 @@ describe('ReviewMatchTab', () => {
     it('calls onMatch when clicked', () => {
       const onMatch = vi.fn();
       render(<ReviewMatchTab {...defaultProps} wordsToMatch="test" onMatch={onMatch} />);
+      expandSection('Keyword Matching');
 
       const button = screen.getByTestId('run-matching-button');
       fireEvent.click(button);
@@ -291,12 +321,14 @@ describe('ReviewMatchTab', () => {
   describe('Clear All button', () => {
     it('does not show Clear All button when no words are selected', () => {
       render(<ReviewMatchTab {...defaultProps} censoredWordIndices={new Set()} />);
+      expandSection('Keyword Matching');
 
       expect(screen.queryByTestId('clear-all-button')).not.toBeInTheDocument();
     });
 
     it('shows Clear All button when words are selected', () => {
       render(<ReviewMatchTab {...defaultProps} censoredWordIndices={new Set([0, 1, 2])} />);
+      expandSection('Keyword Matching');
 
       expect(screen.getByTestId('clear-all-button')).toBeInTheDocument();
       expect(screen.getByText('Clear All')).toBeInTheDocument();
@@ -311,6 +343,7 @@ describe('ReviewMatchTab', () => {
           onClearAll={onClearAll}
         />
       );
+      expandSection('Keyword Matching');
 
       const button = screen.getByTestId('clear-all-button');
       fireEvent.click(button);
@@ -329,6 +362,7 @@ describe('ReviewMatchTab', () => {
 
     it('renders TranscriptReview when transcriptionResult is provided', () => {
       render(<ReviewMatchTab {...defaultProps} transcriptionResult={mockTranscript} />);
+      expandSection('Interactive Transcript');
 
       // TranscriptReview renders TranscriptStats component
       expect(screen.getByText(/words selected/i)).toBeInTheDocument();
@@ -336,6 +370,7 @@ describe('ReviewMatchTab', () => {
 
     it('renders search input when transcript is expanded', () => {
       render(<ReviewMatchTab {...defaultProps} transcriptionResult={mockTranscript} />);
+      expandSection('Interactive Transcript');
 
       expect(screen.getByTestId('search-transcript-input')).toBeInTheDocument();
       expect(screen.getByPlaceholderText(/Search for words in transcript/i)).toBeInTheDocument();
@@ -357,6 +392,9 @@ describe('ReviewMatchTab', () => {
       ];
       render(<ReviewMatchTab {...defaultProps} matchedWords={matchedWords} />);
 
+      // Expand the Selected Words section to see the matched words
+      expandSection('Selected Words (2)');
+
       // MatchedWordsDisplay renders the matched words
       expect(screen.getByText('bad')).toBeInTheDocument();
       expect(screen.getByText('worse')).toBeInTheDocument();
@@ -367,6 +405,7 @@ describe('ReviewMatchTab', () => {
     it('does not show success message when no words are matched', () => {
       render(<ReviewMatchTab {...defaultProps} matchedWords={[]} />);
 
+      // Section doesn't render at all when no words are matched
       expect(screen.queryByText(/words selected!/)).not.toBeInTheDocument();
     });
 
@@ -378,6 +417,9 @@ describe('ReviewMatchTab', () => {
       ];
       render(<ReviewMatchTab {...defaultProps} matchedWords={matchedWords} />);
 
+      // Expand the Selected Words section to see the success message
+      expandSection('Selected Words (3)');
+
       expect(screen.getByText(/3 words selected!/)).toBeInTheDocument();
       expect(
         screen.getByText(/Continue to Bleep & Download tab to configure and apply bleeps/)
@@ -387,6 +429,9 @@ describe('ReviewMatchTab', () => {
     it('shows correct count in success message', () => {
       const matchedWords = [{ word: 'test', start: 1.0, end: 1.5, index: 0 }];
       render(<ReviewMatchTab {...defaultProps} matchedWords={matchedWords} />);
+
+      // Expand the Selected Words section to see the success message
+      expandSection('Selected Words (1)');
 
       expect(screen.getByText(/1 words selected!/)).toBeInTheDocument();
     });
@@ -400,6 +445,7 @@ describe('ReviewMatchTab', () => {
           matchMode={{ exact: true, partial: true, fuzzy: false }}
         />
       );
+      expandSection('Keyword Matching');
 
       const exactCheckbox = screen.getByTestId('exact-match-checkbox') as HTMLInputElement;
       const partialCheckbox = screen.getByTestId('partial-match-checkbox') as HTMLInputElement;
@@ -417,6 +463,7 @@ describe('ReviewMatchTab', () => {
           matchMode={{ exact: false, partial: false, fuzzy: false }}
         />
       );
+      expandSection('Keyword Matching');
 
       const exactCheckbox = screen.getByTestId('exact-match-checkbox') as HTMLInputElement;
       const partialCheckbox = screen.getByTestId('partial-match-checkbox') as HTMLInputElement;
