@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BleepDownloadTab } from './BleepDownloadTab';
+import { FEEDBACK_FORM_URL } from '@/lib/constants/externalLinks';
 
 describe('BleepDownloadTab', () => {
   const mockMatchedWords = [
@@ -414,6 +415,39 @@ describe('BleepDownloadTab', () => {
       expect(button).toHaveTextContent('Re-apply Bleeps with New Settings');
       expect(button).toHaveClass('animate-pulse');
       expect(screen.getByText(/Volume changed from 80% to 120%/)).toBeInTheDocument();
+    });
+  });
+
+  describe('Feedback CTA', () => {
+    it('shows feedback CTA when censored result is available', () => {
+      const mockFile = new File(['content'], 'test.mp3', { type: 'audio/mp3' });
+      render(
+        <BleepDownloadTab {...defaultProps} file={mockFile} censoredMediaUrl="blob:test-url" />
+      );
+
+      expect(screen.getByText(/Was this helpful\?/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/We're building new features and would love your input/)
+      ).toBeInTheDocument();
+    });
+
+    it('renders feedback form link with correct attributes', () => {
+      const mockFile = new File(['content'], 'test.mp3', { type: 'audio/mp3' });
+      render(
+        <BleepDownloadTab {...defaultProps} file={mockFile} censoredMediaUrl="blob:test-url" />
+      );
+
+      const feedbackLink = screen.getByRole('link', { name: /Share Quick Feedback/i });
+      expect(feedbackLink).toBeInTheDocument();
+      expect(feedbackLink).toHaveAttribute('href', FEEDBACK_FORM_URL);
+      expect(feedbackLink).toHaveAttribute('target', '_blank');
+      expect(feedbackLink).toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
+    it('does not show feedback CTA when no censored result', () => {
+      render(<BleepDownloadTab {...defaultProps} censoredMediaUrl={null} />);
+
+      expect(screen.queryByText(/Was this helpful\?/)).not.toBeInTheDocument();
     });
   });
 });
