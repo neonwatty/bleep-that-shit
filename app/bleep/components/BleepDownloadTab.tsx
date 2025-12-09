@@ -115,6 +115,7 @@ export function BleepDownloadTab({
 
         <button
           data-testid="apply-bleeps-button"
+          data-walkthrough="apply-bleeps-button"
           onClick={onBleep}
           disabled={!file || matchedWords.length === 0}
           className={`btn btn-pink transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
@@ -146,6 +147,7 @@ export function BleepDownloadTab({
                 </video>
                 <a
                   data-testid="download-button"
+                  data-walkthrough="download-button"
                   href={censoredMediaUrl}
                   download="censored-video.mp4"
                   className="mt-2 inline-block rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
@@ -163,6 +165,7 @@ export function BleepDownloadTab({
                 </audio>
                 <a
                   data-testid="download-button"
+                  data-walkthrough="download-button"
                   href={censoredMediaUrl}
                   download="censored-audio.mp3"
                   className="mt-2 inline-block rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"

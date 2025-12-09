@@ -436,6 +436,7 @@ export function ReviewMatchTab({
                         </label>
                         <input
                           data-testid="words-to-match-input"
+                          data-walkthrough="words-input"
                           type="text"
                           value={wordsToMatch}
                           onChange={e => onWordsToMatchChange(e.target.value)}
@@ -513,6 +514,7 @@ export function ReviewMatchTab({
                       <div className="flex flex-wrap gap-2">
                         <button
                           data-testid="run-matching-button"
+                          data-walkthrough="match-button"
                           onClick={onMatch}
                           disabled={!transcriptionResult || !wordsToMatch}
                           className="btn btn-sm btn-secondary disabled:cursor-not-allowed disabled:opacity-50"

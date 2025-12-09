@@ -6,6 +6,9 @@ import { Footer } from '@/components/Footer';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 import { JsonLd } from '@/components/JsonLd';
 import { organizationSchema, websiteSchema } from '@/lib/constants/structuredData';
+import { WalkthroughProvider } from '@/components/walkthrough/WalkthroughProvider';
+import { OnboardingWizard } from '@/components/walkthrough/OnboardingWizard';
+import { HelpButton } from '@/components/walkthrough/HelpButton';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -119,11 +122,15 @@ export default function RootLayout({
         <JsonLd data={[organizationSchema, websiteSchema]} />
       </head>
       <body className="font-merriweather bg-pattern text-dark min-h-screen">
-        <MobileNav />
-        <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 md:max-w-4xl md:px-0">
-          {children}
-          <Footer />
-        </main>
+        <WalkthroughProvider>
+          <MobileNav />
+          <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 md:max-w-4xl md:px-0">
+            {children}
+            <Footer />
+          </main>
+          <OnboardingWizard />
+          <HelpButton />
+        </WalkthroughProvider>
       </body>
       <GoogleAnalytics gaId="G-4ECB42TNZG" />
     </html>

@@ -108,6 +108,7 @@ export function SetupTranscribeTab({
 
         <button
           data-testid="transcribe-button"
+          data-walkthrough="transcribe-button"
           onClick={onTranscribe}
           disabled={!file || isTranscribing}
           className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"

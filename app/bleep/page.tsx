@@ -7,6 +7,7 @@ import { SetupTranscribeTab } from './components/SetupTranscribeTab';
 import { ReviewMatchTab } from './components/ReviewMatchTab';
 import { WordsetTab } from './components/WordsetTab';
 import { BleepDownloadTab } from './components/BleepDownloadTab';
+import { WalkthroughTour } from '@/components/walkthrough/WalkthroughTour';
 
 function BleepPageContent() {
   const [activeTab, setActiveTab] = useState('setup');
@@ -60,6 +61,9 @@ function BleepPageContent() {
 
   return (
     <div className="editorial-section px-2 sm:px-4">
+      {/* Walkthrough Tour */}
+      <WalkthroughTour />
+
       {/* Header */}
       <div className="mb-8 flex flex-wrap items-center gap-2 sm:gap-3">
         <span className="inline-block align-middle" aria-label="Waveform icon">

@@ -1,11 +1,20 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MobileNav } from './MobileNav';
+import { WalkthroughProvider } from './walkthrough/WalkthroughProvider';
+
+// Wrapper to provide WalkthroughContext
+const renderMobileNav = () =>
+  render(
+    <WalkthroughProvider>
+      <MobileNav />
+    </WalkthroughProvider>
+  );
 
 describe('MobileNav', () => {
   describe('Logo rendering', () => {
     it('renders logo link on mobile navigation', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const logos = screen.getAllByTestId('navbar-logo');
       expect(logos.length).toBeGreaterThan(0);
@@ -18,21 +27,21 @@ describe('MobileNav', () => {
 
   describe('Hamburger menu', () => {
     it('renders hamburger menu button with correct aria-label', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       expect(menuButton).toBeInTheDocument();
     });
 
     it('menu drawer is initially closed', () => {
-      const { container } = render(<MobileNav />);
+      const { container } = renderMobileNav();
 
       const drawer = container.querySelector('.translate-x-full');
       expect(drawer).toBeInTheDocument();
     });
 
     it('opens menu drawer when hamburger is clicked', () => {
-      const { container } = render(<MobileNav />);
+      const { container } = renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -42,7 +51,7 @@ describe('MobileNav', () => {
     });
 
     it('closes menu drawer when hamburger is clicked again', () => {
-      const { container } = render(<MobileNav />);
+      const { container } = renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
 
@@ -56,7 +65,7 @@ describe('MobileNav', () => {
     });
 
     it('shows menu header when drawer is open', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -65,7 +74,7 @@ describe('MobileNav', () => {
     });
 
     it('renders close button in drawer with correct aria-label', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -74,7 +83,7 @@ describe('MobileNav', () => {
     });
 
     it('closes menu when close button is clicked', () => {
-      const { container } = render(<MobileNav />);
+      const { container } = renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -86,7 +95,7 @@ describe('MobileNav', () => {
     });
 
     it('closes menu when overlay is clicked', () => {
-      const { container } = render(<MobileNav />);
+      const { container } = renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -99,14 +108,14 @@ describe('MobileNav', () => {
     });
 
     it('overlay is not visible when menu is closed', () => {
-      const { container } = render(<MobileNav />);
+      const { container } = renderMobileNav();
 
       const overlay = container.querySelector('.opacity-0');
       expect(overlay).toBeInTheDocument();
     });
 
     it('overlay is visible when menu is open', () => {
-      const { container } = render(<MobileNav />);
+      const { container } = renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -118,7 +127,7 @@ describe('MobileNav', () => {
 
   describe('Navigation links', () => {
     it('renders Home link in mobile menu', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -128,7 +137,7 @@ describe('MobileNav', () => {
     });
 
     it('renders Bleep link in mobile menu', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -141,7 +150,7 @@ describe('MobileNav', () => {
     });
 
     it('renders Sampler link in mobile menu', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -154,7 +163,7 @@ describe('MobileNav', () => {
     });
 
     it('displays correct text for Bleep link', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -164,7 +173,7 @@ describe('MobileNav', () => {
     });
 
     it('displays correct text for Sampler link', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -174,7 +183,7 @@ describe('MobileNav', () => {
     });
 
     it('closes menu when Home link is clicked', () => {
-      const { container } = render(<MobileNav />);
+      const { container } = renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -186,7 +195,7 @@ describe('MobileNav', () => {
     });
 
     it('closes menu when Bleep link is clicked', () => {
-      const { container } = render(<MobileNav />);
+      const { container } = renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -199,7 +208,7 @@ describe('MobileNav', () => {
     });
 
     it('closes menu when Sampler link is clicked', () => {
-      const { container } = render(<MobileNav />);
+      const { container } = renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -214,7 +223,7 @@ describe('MobileNav', () => {
 
   describe('Social links', () => {
     it('renders GitHub social link', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -226,7 +235,7 @@ describe('MobileNav', () => {
     });
 
     it('renders X (Twitter) social link', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -238,7 +247,7 @@ describe('MobileNav', () => {
     });
 
     it('renders Blog social link', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -250,7 +259,7 @@ describe('MobileNav', () => {
     });
 
     it('renders Discord social link', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const menuButton = screen.getByLabelText('Toggle menu');
       fireEvent.click(menuButton);
@@ -264,21 +273,21 @@ describe('MobileNav', () => {
 
   describe('Desktop navigation', () => {
     it('renders desktop navigation elements', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const logos = screen.getAllByTestId('navbar-logo');
       expect(logos.length).toBe(2); // One for mobile, one for desktop
     });
 
     it('renders Bleep link in desktop nav', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const bleepLinks = screen.getAllByTestId('navbar-bleep-link');
       expect(bleepLinks.length).toBe(2); // One for mobile, one for desktop
     });
 
     it('renders Sampler link in desktop nav', () => {
-      render(<MobileNav />);
+      renderMobileNav();
 
       const samplerLinks = screen.getAllByTestId('navbar-sampler-link');
       expect(samplerLinks.length).toBe(2); // One for mobile, one for desktop

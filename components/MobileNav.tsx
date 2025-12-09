@@ -2,12 +2,25 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useWalkthrough } from '@/hooks/useWalkthrough';
+import { trackEvent } from '@/lib/analytics';
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const walkthrough = useWalkthrough();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
+
+  const handleStartTour = () => {
+    closeMenu();
+    trackEvent('help_button_clicked', { location: 'mobile_nav' });
+    walkthrough.startTour();
+  };
+
+  const isOnBleepPage = pathname === '/bleep';
 
   return (
     <>
@@ -118,6 +131,18 @@ export function MobileNav() {
                 <span className="font-semibold">Transcription Sampler</span>
               </div>
             </Link>
+
+            {isOnBleepPage && (
+              <button
+                onClick={handleStartTour}
+                className="block w-full rounded-lg bg-yellow-500 px-4 py-3 text-left text-white"
+              >
+                <div className="flex items-center">
+                  <span className="mr-3 text-2xl">❓</span>
+                  <span className="font-semibold">Start Guided Tour</span>
+                </div>
+              </button>
+            )}
           </div>
 
           {/* Social Links */}

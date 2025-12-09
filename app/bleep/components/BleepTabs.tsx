@@ -87,6 +87,7 @@ export function BleepTabs({ activeTab, onTabChange, tabs }: BleepTabsProps) {
                 role="tab"
                 aria-selected={isActive}
                 aria-controls={`tabpanel-${tab.id}`}
+                data-walkthrough={tab.id === 'bleep' ? 'bleep-tab' : undefined}
                 className={`relative px-6 py-3 text-sm font-semibold transition-all duration-200 ${
                   isActive
                     ? // Active tab - raised, solid background, connected to content

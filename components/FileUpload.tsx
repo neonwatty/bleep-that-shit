@@ -41,6 +41,7 @@ export function FileUpload({
       <div
         {...getRootProps()}
         data-testid="file-dropzone"
+        data-walkthrough="file-upload"
         className="min-h-[120px] cursor-pointer rounded-lg border-2 border-dashed border-gray-400 p-4 text-center transition-all hover:border-blue-500 hover:bg-gray-50 active:bg-gray-100 sm:min-h-[100px] sm:p-8"
       >
         <input {...getInputProps()} data-testid="file-input" className="sr-only" />
