@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useId } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 
 interface HelpTooltipProps {
@@ -13,16 +14,24 @@ type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 export function HelpTooltip({ content, gifSrc }: HelpTooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState<TooltipPosition>('top');
+  const [tooltipStyles, setTooltipStyles] = useState<React.CSSProperties>({});
+  const [mounted, setMounted] = useState(false);
   const tooltipId = useId();
   const triggerRef = useRef<HTMLSpanElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
-  // Calculate best position based on available space
+  // Track when component is mounted (for portal)
   useEffect(() => {
-    if (!isVisible || !triggerRef.current || !tooltipRef.current) return;
+    setMounted(true);
+  }, []);
+
+  // Calculate best position based on available space and set absolute styles
+  useEffect(() => {
+    if (!isVisible || !triggerRef.current) return;
 
     const trigger = triggerRef.current.getBoundingClientRect();
-    const tooltip = tooltipRef.current.getBoundingClientRect();
+    const tooltipWidth = 320; // max-w-80 = 320px
+    const tooltipHeight = 150; // estimated height
     const padding = 8;
 
     // Check available space in each direction
@@ -31,19 +40,62 @@ export function HelpTooltip({ content, gifSrc }: HelpTooltipProps) {
     const spaceLeft = trigger.left;
     const spaceRight = window.innerWidth - trigger.right;
 
+    let newPosition: TooltipPosition = 'top';
+    let styles: React.CSSProperties = {};
+
     // Prefer top, then bottom, then right, then left
-    if (spaceAbove >= tooltip.height + padding) {
-      setPosition('top');
-    } else if (spaceBelow >= tooltip.height + padding) {
-      setPosition('bottom');
-    } else if (spaceRight >= tooltip.width + padding) {
-      setPosition('right');
-    } else if (spaceLeft >= tooltip.width + padding) {
-      setPosition('left');
-    } else {
-      // Default to top if nothing fits well
-      setPosition('top');
+    if (spaceAbove >= tooltipHeight + padding) {
+      newPosition = 'top';
+    } else if (spaceBelow >= tooltipHeight + padding) {
+      newPosition = 'bottom';
+    } else if (spaceRight >= tooltipWidth + padding) {
+      newPosition = 'right';
+    } else if (spaceLeft >= tooltipWidth + padding) {
+      newPosition = 'left';
     }
+
+    // Calculate absolute position based on trigger position
+    const triggerCenterX = trigger.left + trigger.width / 2;
+    const triggerCenterY = trigger.top + trigger.height / 2;
+
+    switch (newPosition) {
+      case 'top':
+        styles = {
+          left: Math.max(
+            padding,
+            Math.min(triggerCenterX - tooltipWidth / 2, window.innerWidth - tooltipWidth - padding)
+          ),
+          top: trigger.top - padding,
+          transform: 'translateY(-100%)',
+        };
+        break;
+      case 'bottom':
+        styles = {
+          left: Math.max(
+            padding,
+            Math.min(triggerCenterX - tooltipWidth / 2, window.innerWidth - tooltipWidth - padding)
+          ),
+          top: trigger.bottom + padding,
+        };
+        break;
+      case 'left':
+        styles = {
+          left: trigger.left - tooltipWidth - padding,
+          top: triggerCenterY,
+          transform: 'translateY(-50%)',
+        };
+        break;
+      case 'right':
+        styles = {
+          left: trigger.right + padding,
+          top: triggerCenterY,
+          transform: 'translateY(-50%)',
+        };
+        break;
+    }
+
+    setPosition(newPosition);
+    setTooltipStyles(styles);
   }, [isVisible]);
 
   // Close on Escape key
@@ -80,13 +132,6 @@ export function HelpTooltip({ content, gifSrc }: HelpTooltipProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isVisible]);
 
-  const positionClasses: Record<TooltipPosition, string> = {
-    top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
-    bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
-    left: 'right-full top-1/2 -translate-y-1/2 mr-2',
-    right: 'left-full top-1/2 -translate-y-1/2 ml-2',
-  };
-
   const arrowClasses: Record<TooltipPosition, string> = {
     top: 'top-full left-1/2 -translate-x-1/2 border-t-indigo-900 border-x-transparent border-b-transparent',
     bottom:
@@ -95,6 +140,42 @@ export function HelpTooltip({ content, gifSrc }: HelpTooltipProps) {
     right:
       'right-full top-1/2 -translate-y-1/2 border-r-indigo-900 border-y-transparent border-l-transparent',
   };
+
+  const tooltipContent = isVisible && mounted && (
+    <div
+      ref={tooltipRef}
+      id={tooltipId}
+      role="tooltip"
+      className="fixed z-[99999]"
+      style={tooltipStyles}
+    >
+      <div className="animate-fade-in relative w-72 max-w-[90vw] rounded-xl border border-indigo-800/50 bg-gradient-to-br from-indigo-900 via-indigo-900 to-indigo-950 px-4 py-3 text-sm shadow-xl shadow-indigo-950/30 sm:w-80">
+        {/* Subtle glow effect */}
+        <div className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-br from-indigo-400/5 via-transparent to-transparent" />
+
+        {gifSrc && (
+          <div className="relative mb-3 overflow-hidden rounded-lg border border-indigo-700/30">
+            <Image
+              src={gifSrc}
+              alt=""
+              width={248}
+              height={150}
+              className="h-auto max-h-[150px] w-full object-contain"
+              loading="lazy"
+            />
+          </div>
+        )}
+        <p className="relative leading-relaxed tracking-wide text-indigo-50 normal-case">
+          {content}
+        </p>
+        {/* Arrow */}
+        <span
+          className={`absolute h-0 w-0 border-[6px] ${arrowClasses[position]}`}
+          aria-hidden="true"
+        />
+      </div>
+    </div>
+  );
 
   return (
     <span className="relative ml-1.5 inline-flex -translate-y-[3px] items-center align-baseline">
@@ -123,40 +204,7 @@ export function HelpTooltip({ content, gifSrc }: HelpTooltipProps) {
         <span className="transition-transform duration-200 group-hover:scale-110">?</span>
       </span>
 
-      {isVisible && (
-        <div
-          ref={tooltipRef}
-          id={tooltipId}
-          role="tooltip"
-          className={`absolute z-[9999] ${positionClasses[position]}`}
-        >
-          <div className="animate-fade-in relative w-72 max-w-[90vw] rounded-xl border border-indigo-800/50 bg-gradient-to-br from-indigo-900 via-indigo-900 to-indigo-950 px-4 py-3 text-sm shadow-xl shadow-indigo-950/30 sm:w-80">
-            {/* Subtle glow effect */}
-            <div className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-br from-indigo-400/5 via-transparent to-transparent" />
-
-            {gifSrc && (
-              <div className="relative mb-3 overflow-hidden rounded-lg border border-indigo-700/30">
-                <Image
-                  src={gifSrc}
-                  alt=""
-                  width={248}
-                  height={150}
-                  className="h-auto max-h-[150px] w-full object-contain"
-                  loading="lazy"
-                />
-              </div>
-            )}
-            <p className="relative leading-relaxed tracking-wide text-indigo-50 normal-case">
-              {content}
-            </p>
-            {/* Arrow */}
-            <span
-              className={`absolute h-0 w-0 border-[6px] ${arrowClasses[position]}`}
-              aria-hidden="true"
-            />
-          </div>
-        </div>
-      )}
+      {mounted && createPortal(tooltipContent, document.body)}
     </span>
   );
 }
