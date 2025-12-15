@@ -74,6 +74,11 @@ export class BleepPage {
   readonly downloadButton: Locator;
   readonly videoProcessingIndicator: Locator;
 
+  // Premium CTA Elements
+  readonly premiumCta: Locator;
+  readonly premiumCtaLink: Locator;
+  readonly premiumCtaDismiss: Locator;
+
   constructor(page: Page) {
     this.page = page;
 
@@ -147,6 +152,11 @@ export class BleepPage {
     this.censoredResult = page.getByTestId('censored-result');
     this.downloadButton = page.getByTestId('download-button');
     this.videoProcessingIndicator = page.getByTestId('video-processing-indicator');
+
+    // Premium CTA
+    this.premiumCta = page.getByTestId('premium-cta');
+    this.premiumCtaLink = page.getByRole('link', { name: /Learn About Premium/i });
+    this.premiumCtaDismiss = page.getByLabel('Dismiss premium prompt');
   }
 
   /**
@@ -603,5 +613,46 @@ export class BleepPage {
    */
   async expectTimelineSectionVisible() {
     await expect(this.timelineSection).toBeVisible();
+  }
+
+  /**
+   * Dismiss the Premium CTA
+   */
+  async dismissPremiumCta() {
+    await this.premiumCtaDismiss.click();
+  }
+
+  /**
+   * Verify Premium CTA is visible
+   */
+  async expectPremiumCtaVisible() {
+    await expect(this.premiumCta).toBeVisible();
+    await expect(this.premiumCtaLink).toBeVisible();
+  }
+
+  /**
+   * Verify Premium CTA is not visible
+   */
+  async expectPremiumCtaNotVisible() {
+    await expect(this.premiumCta).not.toBeVisible();
+  }
+
+  /**
+   * Complete a minimal workflow to get censored result (uses manual timeline, no transcription)
+   * This is faster than full transcription workflow
+   */
+  async completeFastWorkflow(filePath: string) {
+    // Upload file
+    await this.uploadFile(filePath);
+    await expect(this.audioPlayer).toBeVisible({ timeout: 10000 });
+
+    // Add manual censor via timeline (no transcription needed)
+    await this.switchToTimelineSection();
+    await expect(this.timelineBar).toBeVisible({ timeout: 10000 });
+    await this.createTimelineSegment(10, 30);
+
+    // Switch to bleep tab and apply
+    await this.switchToBleepTab();
+    await this.applyBleepsAndWait({ timeout: 60000 });
   }
 }

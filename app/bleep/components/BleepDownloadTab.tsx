@@ -1,9 +1,12 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
 import { BleepControls } from '@/components/BleepControls';
 import { FloatingNavArrows } from './FloatingNavArrows';
 import { HelpTooltip } from '@/components/ui/HelpTooltip';
 import type { MatchedWord } from '../hooks/useBleepState';
 import { trackEvent } from '@/lib/analytics';
-import { FEEDBACK_FORM_URL } from '@/lib/constants/externalLinks';
 
 interface BleepDownloadTabProps {
   file: File | null;
@@ -46,6 +49,21 @@ export function BleepDownloadTab({
   onBleep,
   onNavigate,
 }: BleepDownloadTabProps) {
+  const [isPremiumCtaDismissed, setIsPremiumCtaDismissed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('premium_cta_dismissed') === 'true';
+    }
+    return false;
+  });
+
+  const handleDismissPremiumCta = () => {
+    setIsPremiumCtaDismissed(true);
+    localStorage.setItem('premium_cta_dismissed', 'true');
+    trackEvent('premium_cta_dismissed', {
+      location: 'download_success',
+    });
+  };
+
   return (
     <div className="space-y-8">
       {/* Step 5: Bleep Sound */}
@@ -190,22 +208,48 @@ export function BleepDownloadTab({
               </p>
             </div>
 
-            {/* Feedback CTA */}
-            <div className="mt-4 rounded border-l-4 border-yellow-400 bg-yellow-50 p-3">
-              <p className="text-sm text-yellow-900">
-                <strong>Was this helpful?</strong> We&apos;re building new features and would love
-                your input.
-              </p>
-              <a
-                href={FEEDBACK_FORM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-block rounded bg-yellow-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-yellow-600"
-                onClick={() => trackEvent('feedback_cta_clicked', { location: 'download_success' })}
+            {/* Premium Interest CTA */}
+            {!isPremiumCtaDismissed && (
+              <div
+                data-testid="premium-cta"
+                className="animate-fade-in mt-4 rounded border-l-4 border-violet-400 bg-violet-50 p-3"
               >
-                Share Quick Feedback (30 sec)
-              </a>
-            </div>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="text-sm text-violet-900">
+                      <strong>Want more power?</strong> We&apos;re exploring premium features like
+                      longer files, faster processing, and saved projects.
+                    </p>
+                    <Link
+                      href="/premium"
+                      className="mt-2 inline-block rounded bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-violet-700"
+                      onClick={() =>
+                        trackEvent('premium_cta_clicked', {
+                          location: 'download_success',
+                          file_type: file?.type.includes('video') ? 'video' : 'audio',
+                        })
+                      }
+                    >
+                      Learn About Premium →
+                    </Link>
+                  </div>
+                  <button
+                    onClick={handleDismissPremiumCta}
+                    className="ml-2 text-violet-400 hover:text-violet-600"
+                    aria-label="Dismiss premium prompt"
+                  >
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </section>
