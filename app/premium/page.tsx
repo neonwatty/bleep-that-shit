@@ -75,7 +75,23 @@ const useCases = [
 
 export default function PremiumPage() {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="relative right-1/2 left-1/2 -mr-[50vw] -ml-[50vw] min-h-screen w-screen bg-black text-white">
+      {/* Navigation Header */}
+      <header className="absolute top-0 right-0 left-0 z-50 flex items-center justify-between px-6 py-4 lg:px-12">
+        <Link
+          href="/"
+          className="font-inter text-lg font-bold tracking-tight text-white/80 uppercase transition-colors hover:text-white"
+        >
+          Bleep That Sh*t!
+        </Link>
+        <Link
+          href="/bleep"
+          className="rounded-full bg-white px-5 py-2 text-sm font-bold text-black transition-all hover:bg-gray-200"
+        >
+          Try Free Demo
+        </Link>
+      </header>
+
       {/* Hero - Split Layout */}
       <section className="flex min-h-screen flex-col lg:flex-row">
         {/* Left: Typography */}

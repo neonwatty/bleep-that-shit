@@ -11,6 +11,24 @@ test.describe('Premium Page Tests', () => {
     await expect(heading).toContainText('Bleep');
   });
 
+  test('should display custom header with navigation links', async ({ page }) => {
+    // Check logo link
+    const logoLink = page.locator('header a[href="/"]');
+    await expect(logoLink).toBeVisible();
+    await expect(logoLink).toContainText('Bleep That Sh*t!');
+
+    // Check demo button
+    const demoButton = page.locator('header a[href="/bleep"]');
+    await expect(demoButton).toBeVisible();
+    await expect(demoButton).toContainText('Try Free Demo');
+  });
+
+  test('should navigate to bleep page via Try Free Demo button', async ({ page }) => {
+    const demoButton = page.locator('header a[href="/bleep"]');
+    await demoButton.click();
+    await expect(page).toHaveURL(/.*\/bleep/);
+  });
+
   test('should display Coming Soon badge', async ({ page }) => {
     const badge = page.locator('span').filter({ hasText: 'Coming Soon' });
     await expect(badge).toBeVisible();
