@@ -1,10 +1,11 @@
-# Bleep That Sh*t - Premium Interest CTA Implementation Plan
+# Bleep That Sh\*t - Premium Interest CTA Implementation Plan
 
 ## Overview
 
-Add a "Premium Interest" CTA (Call-to-Action) after successful downloads in the Bleep That Sh*t application. The goal is to measure user interest in a premium/full-stack offering before investing in paid advertising. This CTA will **replace** the existing feedback CTA as the primary post-download call-to-action.
+Add a "Premium Interest" CTA (Call-to-Action) after successful downloads in the Bleep That Sh\*t application. The goal is to measure user interest in a premium/full-stack offering before investing in paid advertising. This CTA will **replace** the existing feedback CTA as the primary post-download call-to-action.
 
 ### Business Context
+
 - **Goal**: Gauge interest in premium features before ad spend
 - **Target Audience**: Users who have successfully completed the bleeping workflow (highest engagement point)
 - **Metric**: Track CTA impressions, clicks, and form submissions
@@ -22,6 +23,7 @@ Add a "Premium Interest" CTA (Call-to-Action) after successful downloads in the 
 **File**: `app/bleep/components/BleepDownloadTab.tsx`
 
 **Remove** the existing Feedback CTA (lines 193-208) and **replace** it with the Premium CTA. The CTA should:
+
 - Use a violet color scheme
 - Include a fade-in animation
 - Be dismissible with state persisted to localStorage
@@ -56,43 +58,52 @@ import Link from 'next/link';
 **CTA JSX** (replaces the Feedback CTA block):
 
 ```tsx
-{/* Premium Interest CTA */}
-{!isPremiumCtaDismissed && (
-  <div
-    data-testid="premium-cta"
-    className="animate-fade-in mt-4 rounded border-l-4 border-violet-400 bg-violet-50 p-3"
-  >
-    <div className="flex items-start justify-between">
-      <div className="flex-1">
-        <p className="text-sm text-violet-900">
-          <strong>Want more power?</strong> We&apos;re exploring premium features
-          like longer files, faster processing, and saved projects.
-        </p>
-        <Link
-          href="/premium"
-          className="mt-2 inline-block rounded bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-violet-700"
-          onClick={() =>
-            trackEvent('premium_cta_clicked', {
-              location: 'download_success',
-              file_type: file?.type.includes('video') ? 'video' : 'audio',
-            })
-          }
+{
+  /* Premium Interest CTA */
+}
+{
+  !isPremiumCtaDismissed && (
+    <div
+      data-testid="premium-cta"
+      className="animate-fade-in mt-4 rounded border-l-4 border-violet-400 bg-violet-50 p-3"
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <p className="text-sm text-violet-900">
+            <strong>Want more power?</strong> We&apos;re exploring premium features like longer
+            files, faster processing, and saved projects.
+          </p>
+          <Link
+            href="/premium"
+            className="mt-2 inline-block rounded bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-violet-700"
+            onClick={() =>
+              trackEvent('premium_cta_clicked', {
+                location: 'download_success',
+                file_type: file?.type.includes('video') ? 'video' : 'audio',
+              })
+            }
+          >
+            Learn About Premium →
+          </Link>
+        </div>
+        <button
+          onClick={handleDismissPremiumCta}
+          className="ml-2 text-violet-400 hover:text-violet-600"
+          aria-label="Dismiss premium prompt"
         >
-          Learn About Premium →
-        </Link>
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
       </div>
-      <button
-        onClick={handleDismissPremiumCta}
-        className="ml-2 text-violet-400 hover:text-violet-600"
-        aria-label="Dismiss premium prompt"
-      >
-        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
     </div>
-  </div>
-)}
+  );
+}
 ```
 
 ### Step 4: Add Fade-In Animation
@@ -161,20 +172,20 @@ Skip impression tracking and focus on click-through rate relative to downloads. 
 
 ### Files to Modify
 
-| File | Changes |
-|------|---------|
-| `app/bleep/components/BleepDownloadTab.tsx` | Remove Feedback CTA, add Premium CTA with dismissibility and fade-in |
-| `app/globals.css` or `tailwind.config.js` | Add fade-in animation |
-| `app/bleep/components/BleepDownloadTab.test.tsx` | Update tests: remove Feedback CTA tests, add Premium CTA tests |
-| `tests/*.spec.ts` | Update E2E tests to verify Premium CTA behavior |
+| File                                             | Changes                                                              |
+| ------------------------------------------------ | -------------------------------------------------------------------- |
+| `app/bleep/components/BleepDownloadTab.tsx`      | Remove Feedback CTA, add Premium CTA with dismissibility and fade-in |
+| `app/globals.css` or `tailwind.config.js`        | Add fade-in animation                                                |
+| `app/bleep/components/BleepDownloadTab.test.tsx` | Update tests: remove Feedback CTA tests, add Premium CTA tests       |
+| `tests/*.spec.ts`                                | Update E2E tests to verify Premium CTA behavior                      |
 
 ### New Google Analytics Events
 
-| Event Name | Parameters | When Fired |
-|------------|------------|------------|
-| `premium_cta_clicked` | `location: 'download_success'`, `file_type: 'audio' \| 'video'` | User clicks "Learn About Premium" link |
-| `premium_cta_dismissed` | `location: 'download_success'` | User clicks dismiss button |
-| `premium_cta_impression` | (optional) `location`, `file_type` | CTA becomes visible after successful bleep |
+| Event Name               | Parameters                                                      | When Fired                                 |
+| ------------------------ | --------------------------------------------------------------- | ------------------------------------------ |
+| `premium_cta_clicked`    | `location: 'download_success'`, `file_type: 'audio' \| 'video'` | User clicks "Learn About Premium" link     |
+| `premium_cta_dismissed`  | `location: 'download_success'`                                  | User clicks dismiss button                 |
+| `premium_cta_impression` | (optional) `location`, `file_type`                              | CTA becomes visible after successful bleep |
 
 ## Testing
 
@@ -344,15 +355,19 @@ async completeFastWorkflow(filePath: string) {
 Ensure the Premium CTA div has a testid:
 
 ```tsx
-{/* Premium Interest CTA */}
-{!isPremiumCtaDismissed && (
-  <div
-    data-testid="premium-cta"
-    className="animate-fade-in mt-4 rounded border-l-4 border-violet-400 bg-violet-50 p-3"
-  >
-    {/* ... rest of CTA ... */}
-  </div>
-)}
+{
+  /* Premium Interest CTA */
+}
+{
+  !isPremiumCtaDismissed && (
+    <div
+      data-testid="premium-cta"
+      className="animate-fade-in mt-4 rounded border-l-4 border-violet-400 bg-violet-50 p-3"
+    >
+      {/* ... rest of CTA ... */}
+    </div>
+  );
+}
 ```
 
 #### Step 3: Create E2E Test File
@@ -449,9 +464,7 @@ test.describe('Premium CTA', () => {
       await bleepPage.dismissPremiumCta();
 
       // Check localStorage
-      const dismissed = await page.evaluate(() =>
-        localStorage.getItem('premium_cta_dismissed')
-      );
+      const dismissed = await page.evaluate(() => localStorage.getItem('premium_cta_dismissed'));
       expect(dismissed).toBe('true');
     });
 
@@ -554,11 +567,11 @@ test.describe('Premium CTA - Video Files', () => {
 
 ## Success Metrics
 
-| Metric | Calculation | Target |
-|--------|-------------|--------|
-| CTA Click Rate | `premium_cta_clicked / download_censored_file` | > 5% |
-| Premium Page Conversion | `/premium` form submissions / `premium_cta_clicked` | > 20% |
-| Dismiss Rate | `premium_cta_dismissed / premium_cta_impression` | < 50% |
+| Metric                  | Calculation                                         | Target |
+| ----------------------- | --------------------------------------------------- | ------ |
+| CTA Click Rate          | `premium_cta_clicked / download_censored_file`      | > 5%   |
+| Premium Page Conversion | `/premium` form submissions / `premium_cta_clicked` | > 20%  |
+| Dismiss Rate            | `premium_cta_dismissed / premium_cta_impression`    | < 50%  |
 
 ### GA4 Custom Report Setup
 
@@ -577,13 +590,13 @@ If CTA negatively impacts user experience:
 
 ## Critical Files
 
-| File | Changes |
-|------|---------|
-| `app/bleep/components/BleepDownloadTab.tsx` | Replace Feedback CTA with Premium CTA (dismissible, animated, links to `/premium`) |
-| `app/globals.css` or `tailwind.config.js` | Add `animate-fade-in` animation |
-| `app/bleep/components/BleepDownloadTab.test.tsx` | Update unit tests for Premium CTA |
-| `tests/helpers/pages/BleepPage.ts` | Add Premium CTA locators and helper methods |
-| `tests/premium-cta.spec.ts` | New E2E test file (11 tests) |
+| File                                             | Changes                                                                            |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| `app/bleep/components/BleepDownloadTab.tsx`      | Replace Feedback CTA with Premium CTA (dismissible, animated, links to `/premium`) |
+| `app/globals.css` or `tailwind.config.js`        | Add `animate-fade-in` animation                                                    |
+| `app/bleep/components/BleepDownloadTab.test.tsx` | Update unit tests for Premium CTA                                                  |
+| `tests/helpers/pages/BleepPage.ts`               | Add Premium CTA locators and helper methods                                        |
+| `tests/premium-cta.spec.ts`                      | New E2E test file (11 tests)                                                       |
 
 ## Dependencies
 

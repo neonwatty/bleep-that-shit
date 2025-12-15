@@ -5,22 +5,26 @@
 Create a `/premium` landing page to measure user interest in premium features before building them. The page will highlight potential premium capabilities, link to a Google Form waitlist, and integrate with the existing app through strategic CTAs at key touchpoints.
 
 ### Goals
+
 1. Validate demand for premium features through waitlist signups
 2. Gather user input on which features matter most
 3. Track engagement via Google Analytics events
 
 ### Scope
+
 - New page at `/premium` route
 - Link to external Google Form for waitlist capture
 - SEO-optimized with structured data
 
 ### Dependencies
+
 - **Google Form**: Already created at `https://docs.google.com/forms/d/e/1FAIpQLSfsLPN_1a6NZlLSaaYz6DcsVPU85ZIcqFMV9-pygbRyF_XHyg/viewform`
 - **Mock-up**: Approved design at `mock-ups/premium-landing.html`
 
 ## Page Design
 
 ### Visual Style (Dark Mode Premium Aesthetic)
+
 - **Background**: Black (`bg-black`) with gray-950 section variants
 - **Typography**: Inter for headlines (font-black uppercase), Merriweather for body
 - **Accents**: Indigo → Purple → Pink gradient palette
@@ -67,14 +71,15 @@ Create a `/premium` landing page to measure user interest in premium features be
 
 ```typescript
 // Premium waitlist Google Form
-export const PREMIUM_WAITLIST_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfsLPN_1a6NZlLSaaYz6DcsVPU85ZIcqFMV9-pygbRyF_XHyg/viewform';
+export const PREMIUM_WAITLIST_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSfsLPN_1a6NZlLSaaYz6DcsVPU85ZIcqFMV9-pygbRyF_XHyg/viewform';
 ```
 
 ### Metadata
 
 **File: `app/premium/page.tsx`**
 
-```typescript
+````typescript
 export const metadata: Metadata = {
   title: 'Premium Features - Coming Soon | Bleep That Sh*t!',
   description:
@@ -373,15 +378,17 @@ export default function PremiumPage() {
     </div>
   );
 }
-```
+````
 
 ## Implementation Steps
 
 ### Phase 1: Core Setup
 
 1. **Add external link constant** to `lib/constants/externalLinks.ts`:
+
    ```typescript
-   export const PREMIUM_WAITLIST_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfsLPN_1a6NZlLSaaYz6DcsVPU85ZIcqFMV9-pygbRyF_XHyg/viewform';
+   export const PREMIUM_WAITLIST_FORM_URL =
+     'https://docs.google.com/forms/d/e/1FAIpQLSfsLPN_1a6NZlLSaaYz6DcsVPU85ZIcqFMV9-pygbRyF_XHyg/viewform';
    ```
 
 2. **Create page file** `app/premium/page.tsx` with the component above
@@ -402,24 +409,26 @@ export default function PremiumPage() {
    - Waitlist button links to Google Form
    - Back to home link works
    - Discord link is present
-    - Navigation links work
-    - Mobile responsive
+   - Navigation links work
+   - Mobile responsive
 
 ## GA Tracking Events
 
-| Event Name | Parameters | Trigger |
-|------------|------------|---------|
-| `premium_cta_clicked` | `location` | CTA click (hero, download_success) |
-| `premium_waitlist_clicked` | `location` | Waitlist button click |
+| Event Name                 | Parameters | Trigger                            |
+| -------------------------- | ---------- | ---------------------------------- |
+| `premium_cta_clicked`      | `location` | CTA click (hero, download_success) |
+| `premium_waitlist_clicked` | `location` | Waitlist button click              |
 
 ## Success Metrics
 
 ### Primary Metrics
+
 1. **Waitlist signups**: Number of email captures via Google Form
 2. **Page visits**: Unique visitors to /premium
 3. **Conversion rate**: Signups / Visitors
 
 ### Secondary Metrics
+
 1. **Traffic sources**: Which integration points drive most traffic
 2. **Feature interest**: Which checkbox options are most selected in form
 

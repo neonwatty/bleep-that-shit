@@ -1,10 +1,10 @@
-# Organic Marketing Plan: Bleep That Sh*t! - Teacher Audience Focus
+# Organic Marketing Plan: Bleep That Sh\*t! - Teacher Audience Focus
 
 ## Overview
 
 ### Executive Summary
 
-This organic marketing plan targets K-12 educators who need to censor inappropriate language in educational videos for classroom use. The strategy leverages the existing blog infrastructure, free tools (autocomplete-cli, reddit-market-research, demo-recorder), and community building to establish Bleep That Sh*t! as the go-to solution for teacher-friendly video censoring.
+This organic marketing plan targets K-12 educators who need to censor inappropriate language in educational videos for classroom use. The strategy leverages the existing blog infrastructure, free tools (autocomplete-cli, reddit-market-research, demo-recorder), and community building to establish Bleep That Sh\*t! as the go-to solution for teacher-friendly video censoring.
 
 ### Key Value Propositions for Teachers
 
@@ -47,18 +47,21 @@ autocomplete bing "classroom video editing"
 ### Target Keyword Clusters
 
 **Primary Keywords (High Intent):**
+
 - "how to censor videos for classroom"
 - "bleep words in video free online"
 - "make video school appropriate"
 - "remove profanity from video free"
 
 **Secondary Keywords (Comparison/Alternative):**
+
 - "censor video without iMovie"
 - "bleep words without Premiere Pro"
 - "free alternative to video editing software"
 - "video censor tool Chromebook"
 
 **Long-tail Keywords (Specific Use Cases):**
+
 - "censor documentary for middle school"
 - "bleep TED Talk for classroom"
 - "edit YouTube video for elementary students"
@@ -67,6 +70,7 @@ autocomplete bing "classroom video editing"
 ### On-Page SEO Recommendations
 
 Each blog post should include:
+
 - Target keyword in title (H1)
 - Keyword variations in H2 headings
 - Alt text on images with keywords
@@ -83,6 +87,7 @@ Each blog post should include:
 **Target Keywords:** "videos for substitute teachers," "classroom video library," "educational videos for subs"
 
 **Outline:**
+
 1. The substitute teacher video problem
 2. Building a classroom video library
 3. Categories of videos to pre-censor:
@@ -104,6 +109,7 @@ Each blog post should include:
 **Target Keywords:** "FERPA video editing," "student privacy video tools," "classroom technology compliance"
 
 **Outline:**
+
 1. Understanding FERPA and video content
 2. The problem with cloud-based video editors
 3. Why browser-based, local processing is FERPA-friendly
@@ -121,6 +127,7 @@ Each blog post should include:
 **Target Keywords:** "educational video editing," "classroom documentary editing"
 
 **Outline:**
+
 1. Introduction: Great content exists everywhere, but language varies
 2. **History/Social Studies:** Civil rights docs, war footage, political content
 3. **Science:** Nature documentaries, space/physics content, medical videos
@@ -139,10 +146,11 @@ Each blog post should include:
 **Target Keywords:** "edit video on Chromebook," "Chromebook video editing teacher"
 
 **Outline:**
+
 1. The Chromebook challenge: limited software options
 2. Why most video editing software doesn't work on Chromebooks
 3. Browser-based tools: the Chromebook solution
-4. Step-by-step: Using Bleep That Sh*t! on Chromebook
+4. Step-by-step: Using Bleep That Sh\*t! on Chromebook
 5. Troubleshooting common Chromebook issues
 6. Processing longer videos: memory considerations
 7. Works on school-managed Chromebooks
@@ -157,6 +165,7 @@ Each blog post should include:
 **Target Keywords:** "classroom content filtering," "age appropriate video editing"
 
 **Outline:**
+
 1. Why one profanity filter doesn't fit all grades
 2. Understanding grade-level appropriateness:
    - Elementary (K-5): strictest filtering
@@ -177,6 +186,7 @@ Each blog post should include:
 **Target Keywords:** "quick video editing for teachers," "fast video censoring"
 
 **Outline:**
+
 1. You found the perfect video, but there's one problem...
 2. The 5-minute fix workflow:
    - Upload (30 seconds)
@@ -197,6 +207,7 @@ Each blog post should include:
 **Target Keywords:** "teacher video tips," "classroom video ideas"
 
 **Outline:**
+
 1. Introduction: Teachers solving real problems
 2. Story 1: Middle school history teacher + civil rights documentary
 3. Story 2: Science teacher + nature documentary series
@@ -225,13 +236,13 @@ make reddit ARGS='search -s "Teachers" -k "almost perfect video but"'
 
 **Target Subreddits:**
 
-| Subreddit | Size | Strategy |
-|-----------|------|----------|
-| r/Teachers | 1M+ | Primary - participate genuinely, share when relevant |
-| r/teaching | 300K+ | Secondary - similar approach |
-| r/edtech | 50K+ | Tool discovery posts, privacy discussions |
-| r/k12sysadmin | 30K+ | IT administrators, FERPA discussions |
-| r/education | 200K+ | Policy discussions, resource sharing |
+| Subreddit     | Size  | Strategy                                             |
+| ------------- | ----- | ---------------------------------------------------- |
+| r/Teachers    | 1M+   | Primary - participate genuinely, share when relevant |
+| r/teaching    | 300K+ | Secondary - similar approach                         |
+| r/edtech      | 50K+  | Tool discovery posts, privacy discussions            |
+| r/k12sysadmin | 30K+  | IT administrators, FERPA discussions                 |
+| r/education   | 200K+ | Policy discussions, resource sharing                 |
 
 **Reddit Engagement Strategy:**
 
@@ -252,6 +263,7 @@ make reddit ARGS='search -s "Teachers" -k "almost perfect video but"'
 ### Facebook Group Outreach
 
 **Target Groups:**
+
 - "Teachers Pay Teachers Sellers"
 - "K-12 Technology Integration"
 - "High School English Teachers"
@@ -262,6 +274,7 @@ make reddit ARGS='search -s "Teachers" -k "almost perfect video but"'
 - "Chromebook Classroom"
 
 **Engagement Strategy:**
+
 1. Join groups as a genuine participant
 2. Answer questions about tech tools
 3. Share blog posts when relevant (not tool directly)
@@ -304,13 +317,13 @@ demo-recorder record demos/chromebook.ts -o chromebook-tutorial.mp4
 
 ### Video Content Plan
 
-| Video | Length | Purpose | Distribution |
-|-------|--------|---------|--------------|
-| Full Teacher Tutorial | 3-5 min | Complete walkthrough | YouTube, Blog |
-| Quick Demo | 30 sec | Social media teaser | Twitter, TikTok |
-| Custom Word Lists | 1-2 min | Feature highlight | Blog, YouTube |
-| Chromebook Tutorial | 2-3 min | Platform-specific | Blog, YouTube |
-| Privacy Explainer | 1 min | FERPA messaging | Blog, YouTube |
+| Video                 | Length  | Purpose              | Distribution    |
+| --------------------- | ------- | -------------------- | --------------- |
+| Full Teacher Tutorial | 3-5 min | Complete walkthrough | YouTube, Blog   |
+| Quick Demo            | 30 sec  | Social media teaser  | Twitter, TikTok |
+| Custom Word Lists     | 1-2 min | Feature highlight    | Blog, YouTube   |
+| Chromebook Tutorial   | 2-3 min | Platform-specific    | Blog, YouTube   |
+| Privacy Explainer     | 1 min   | FERPA messaging      | Blog, YouTube   |
 
 ## Social Media Strategy
 
@@ -344,6 +357,7 @@ demo-recorder record demos/chromebook.ts -o chromebook-tutorial.mp4
 ### Testimonial Template
 
 "[Tool name] saved me [time/frustration] when I needed to [use case]. Now I [ongoing benefit]."
+
 - [Name], [Role], [School/District] (optional)
 
 ## Action Checklist
@@ -408,19 +422,19 @@ demo-recorder record demos/chromebook.ts -o chromebook-tutorial.mp4
 
 ## Success Metrics to Track
 
-| Category | Metric | How to Measure |
-|----------|--------|----------------|
-| Organic Search | Blog post pageviews | GA4 |
-| Organic Search | Keyword rankings | Search Console |
-| Referral | Reddit referrals | GA4 referral report |
-| Referral | Facebook referrals | GA4 referral report |
-| Engagement | Tool usage (files processed) | GA4 events |
-| Engagement | Return visitors | GA4 |
-| Community | Discord community growth | Discord stats |
-| Content | Video views and completion | YouTube Analytics |
-| Conversion | Downloads completed | GA4 events |
-| Conversion | Newsletter signups | Form submissions |
-| Social Proof | Testimonials received | Manual tracking |
+| Category       | Metric                       | How to Measure      |
+| -------------- | ---------------------------- | ------------------- |
+| Organic Search | Blog post pageviews          | GA4                 |
+| Organic Search | Keyword rankings             | Search Console      |
+| Referral       | Reddit referrals             | GA4 referral report |
+| Referral       | Facebook referrals           | GA4 referral report |
+| Engagement     | Tool usage (files processed) | GA4 events          |
+| Engagement     | Return visitors              | GA4                 |
+| Community      | Discord community growth     | Discord stats       |
+| Content        | Video views and completion   | YouTube Analytics   |
+| Conversion     | Downloads completed          | GA4 events          |
+| Conversion     | Newsletter signups           | Form submissions    |
+| Social Proof   | Testimonials received        | Manual tracking     |
 
 ## Critical Files
 
