@@ -1,8 +1,18 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { version } from '../package.json';
 import { FEEDBACK_FORM_URL } from '@/lib/constants/externalLinks';
 
 export function Footer() {
+  const pathname = usePathname();
+
+  // Hide footer on premium landing page (has its own footer)
+  if (pathname === '/premium') {
+    return null;
+  }
+
   return (
     <footer className="mx-auto mt-12 w-full max-w-4xl border-t-2 border-black px-2 py-8 md:px-0">
       <div className="flex flex-col items-center gap-4">
