@@ -70,11 +70,11 @@ Pick a bleep sound, click "Apply Bleeps," and download your censored video.
 
 ## Tips for Chromebook Users
 
-| Chromebook Type | Recommendation |
-|-----------------|----------------|
+| Chromebook Type     | Recommendation                          |
+| ------------------- | --------------------------------------- |
 | Budget/older models | Use Tiny model, keep videos under 5 min |
-| Chromebook Plus | Base model works well, longer videos OK |
-| School-managed | Works perfectly - it's just a website |
+| Chromebook Plus     | Base model works well, longer videos OK |
+| School-managed      | Works perfectly - it's just a website   |
 
 ## Try It Free
 
