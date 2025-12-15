@@ -389,6 +389,52 @@ h6 {
   color: #4b5563;
 }
 
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.prose thead {
+  background: #f3f4f6;
+}
+
+.prose th {
+  font-family: var(--font-inter), 'Inter', 'Montserrat', sans-serif;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid #e5e7eb;
+  color: #111827;
+}
+
+.prose td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+
+.prose tbody tr:hover {
+  background: #f9fafb;
+}
+
+.prose table strong {
+  color: #059669;
+}
+
+/* Responsive table wrapper */
+@media (max-width: 640px) {
+  .prose table {
+    font-size: 0.85rem;
+  }
+
+  .prose th,
+  .prose td {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
 /* Scrollbar hide utility - keeps scroll functionality without visible scrollbar */
 .scrollbar-hide {
   -ms-overflow-style: none;
