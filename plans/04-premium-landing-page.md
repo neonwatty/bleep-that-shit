@@ -2,72 +2,73 @@
 
 ## Overview
 
-Create a `/premium` landing page to measure user interest in premium features before building them. The page will highlight potential premium capabilities, capture email signups via a Google Form embed, and integrate with the existing app through strategic CTAs at key touchpoints.
+Create a `/premium` landing page to measure user interest in premium features before building them. The page will highlight potential premium capabilities, link to a Google Form waitlist, and integrate with the existing app through strategic CTAs at key touchpoints.
 
 ### Goals
-1. Validate demand for premium features through email capture
+1. Validate demand for premium features through waitlist signups
 2. Gather user input on which features matter most
-3. Establish a design pattern for future marketing pages
-4. Track engagement via Google Analytics events
+3. Track engagement via Google Analytics events
 
 ### Scope
 - New page at `/premium` route
-- Integration with 3-4 existing touchpoints
-- Email capture via Google Form embed (no backend required)
+- Link to external Google Form for waitlist capture
 - SEO-optimized with structured data
+
+### Dependencies
+- **Google Form**: Already created at `https://docs.google.com/forms/d/e/1FAIpQLSfsLPN_1a6NZlLSaaYz6DcsVPU85ZIcqFMV9-pygbRyF_XHyg/viewform`
+- **Mock-up**: Approved design at `mock-ups/premium-landing.html`
 
 ## Page Design
 
-### Visual Style (matching existing editorial aesthetic)
-- Use `editorial-section font-merriweather` container
-- H1 with `font-inter` extrabold uppercase styling
-- Section dividers: `<div className="mx-auto my-10 h-0.5 w-24 rounded bg-black md:w-40"></div>`
-- Feature cards with gradient backgrounds (`bg-gradient-to-r from-yellow-100 to-pink-100`)
-- Accent colors: yellow-400/500 for highlights, indigo-600 for CTAs
-- Alert/info boxes with border-l-4 pattern
+### Visual Style (Dark Mode Premium Aesthetic)
+- **Background**: Black (`bg-black`) with gray-950 section variants
+- **Typography**: Inter for headlines (font-black uppercase), Merriweather for body
+- **Accents**: Indigo → Purple → Pink gradient palette
+- **Feature cards**: Gradient borders with black interior
+- **Hero**: Split layout with bold stacked gradient text
 
 ### Page Sections
 
-1. **Hero Section**
-   - Headline: "Unlock the Full Power of Bleep That Sh*t!"
-   - Subheadline: "Process longer files, save projects, and more."
-   - Yellow badge: "Coming Soon - Join the Waitlist"
-   - Primary CTA button linking to email form section
+1. **Hero Section (Split Layout)**
+   - Left side: Bold stacked typography "Bleep Faster. Longer. Smarter."
+   - Right side: Feature cards with gradient borders
+   - "Coming Soon" badge
+   - Two CTAs: "Join Waitlist" and "See Features"
 
-2. **Current Limits vs Premium Comparison**
-   - Two-column comparison table/cards
-   - Free tier: 10-minute files, no saved projects, browser processing
-   - Premium tier: Longer files, saved projects, batch processing, priority support
+2. **Stats Bar**
+   - Gradient background (indigo → purple)
+   - 4 stats: 10K+ Files Processed, 500+ Discord Members, 100% Privacy First, 10x Faster (Premium)
 
-3. **Premium Features List**
-   - **Longer Files**: Process videos up to 60+ minutes
-   - **Saved Projects**: Return to previous work, re-edit transcripts
-   - **Batch Processing**: Upload multiple files, queue processing
-   - **API Access**: Integrate censoring into your workflow
-   - **Team Features**: Shared wordsets, collaboration
-   - **Priority Support**: Dedicated Discord channel, faster response
+3. **Use Cases Section ("Built For Creators")**
+   - Alternating layout with large emoji icons
+   - 4 personas: Teachers, Podcasters, YouTubers, Production Teams
+   - Each with description and testimonial quote
 
-4. **Pricing Preview (Placeholder)**
-   - "Pricing coming soon" message
-   - Option to show placeholder tiers
-   - Emphasize "Help us decide" and link to form
+4. **Free vs Premium Comparison**
+   - Two-column minimal list
+   - Free Forever: 10 min files, browser processing, 100% private, save wordsets
+   - Premium Adds: 2+ hour files, 10x faster server processing, saved projects, project history, team features
 
-5. **Email Capture / Waitlist Form**
-   - Google Form embed (iframe) for email capture
-   - Fields: Email, "Which features interest you most?" (checkboxes)
-   - Fallback link to open form in new tab
+5. **Waitlist CTA Section**
+   - Large "Get Early Access" headline
+   - 50% off for 3 months messaging
+   - Button linking to Google Form
+   - "Free version stays free forever" reassurance
 
-6. **FAQ Section**
-   - "When will premium be available?"
-   - "Will the free version still exist?"
-   - "How will my data be handled?"
-   - "Can I suggest features?"
-
-7. **Community CTA**
-   - Link to Discord for feature discussions
-   - GitHub link for transparency
+6. **Footer**
+   - Back to main app link
+   - Discord link
 
 ## Content Structure
+
+### External Links
+
+**File: `lib/constants/externalLinks.ts`**
+
+```typescript
+// Premium waitlist Google Form
+export const PREMIUM_WAITLIST_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfsLPN_1a6NZlLSaaYz6DcsVPU85ZIcqFMV9-pygbRyF_XHyg/viewform';
+```
 
 ### Metadata
 
@@ -75,20 +76,20 @@ Create a `/premium` landing page to measure user interest in premium features be
 
 ```typescript
 export const metadata: Metadata = {
-  title: 'Premium Features - Coming Soon',
+  title: 'Premium Features - Coming Soon | Bleep That Sh*t!',
   description:
-    'Unlock longer file processing, saved projects, batch processing, and more. Join the waitlist for Bleep That Sh*t! Premium.',
+    'Process 2+ hour files with 10x faster server-side processing. Save projects, re-edit anytime. Join the waitlist for early access.',
   keywords: [
     'premium audio censorship',
     'long video censoring',
-    'batch audio processing',
+    'server-side transcription',
     'professional video bleeping',
-    'audio censorship API',
+    'saved projects',
   ],
   openGraph: {
-    title: 'Premium Features Coming Soon | Bleep That Sh*t!',
+    title: 'Bleep That Sh*t! Premium - Coming Soon',
     description:
-      'Process longer files, save projects, and access advanced features. Join the waitlist today.',
+      'Process 2+ hour files 10x faster. Save projects. Team features. Join the waitlist for 50% off.',
     url: `${SITE_URL}/premium`,
     type: 'website',
   },
@@ -96,167 +97,320 @@ export const metadata: Metadata = {
     canonical: `${SITE_URL}/premium`,
   },
 };
-```
 
-### Structured Data Schema
+## Full Page Component
 
-**File: `lib/constants/structuredData.ts`**
+**File: `app/premium/page.tsx`**
 
-```typescript
-export const premiumPageFAQItems: FAQItem[] = [
+```tsx
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { PREMIUM_WAITLIST_FORM_URL } from '@/lib/constants/externalLinks';
+import { DISCORD_INVITE_URL } from '@/lib/constants/externalLinks';
+import { SITE_URL } from '@/lib/constants/siteMetadata';
+import { trackEvent } from '@/lib/analytics';
+
+export const metadata: Metadata = {
+  title: 'Premium Features - Coming Soon | Bleep That Sh*t!',
+  description:
+    'Process 2+ hour files with 10x faster server-side processing. Save projects, re-edit anytime. Join the waitlist for early access.',
+  openGraph: {
+    title: 'Bleep That Sh*t! Premium - Coming Soon',
+    description:
+      'Process 2+ hour files 10x faster. Save projects. Team features. Join the waitlist for 50% off.',
+    url: `${SITE_URL}/premium`,
+    type: 'website',
+  },
+  alternates: {
+    canonical: `${SITE_URL}/premium`,
+  },
+};
+
+const features = [
+  { emoji: '⚡', title: '10x Faster Processing', description: 'Server-side OpenAI Whisper API' },
+  { emoji: '⏱️', title: '2+ Hour Files', description: 'No more 10-minute limits' },
+  { emoji: '💾', title: 'Saved Projects', description: 'Pick up where you left off' },
+  { emoji: '🔄', title: 'Project History', description: 'Re-edit and re-export anytime' },
+];
+
+const useCases = [
   {
-    question: 'When will Bleep That Sh*t! Premium be available?',
-    answer: 'We are currently gauging interest. Join the waitlist to be notified when premium features launch.',
+    emoji: '👩‍🏫',
+    title: 'Teachers & Educators',
+    description: 'Show real-world content in your classroom without worrying about inappropriate language.',
+    quote: '"I use documentaries in my history class but had to skip certain clips. Now I can show the full video."',
+    color: 'blue',
   },
   {
-    question: 'Will the free version still be available?',
-    answer: 'Yes! The free version with 10-minute file support will remain available. Premium adds extended capabilities.',
+    emoji: '🎙️',
+    title: 'Podcasters',
+    description: 'Create ad-friendly versions of your 2+ hour episodes in minutes instead of hours.',
+    quote: '"Our interviews get heated sometimes. Now I can quickly make a clean version for YouTube."',
+    color: 'purple',
   },
   {
-    question: 'What payment methods will be accepted?',
-    answer: 'We plan to accept major credit cards via Stripe. Final payment options will be announced at launch.',
+    emoji: '🎬',
+    title: 'YouTube Creators',
+    description: 'Keep your videos monetization-safe without losing authenticity or spending hours editing.',
+    quote: '"My gaming videos always had slip-ups. Now I bleep them out in minutes."',
+    color: 'red',
   },
   {
-    question: 'Can I suggest premium features?',
-    answer: 'Absolutely! Join our Discord community or fill out the waitlist form to share your feature requests.',
+    emoji: '👥',
+    title: 'Production Teams',
+    description: 'Standardize censoring across your team with shared wordsets and project collaboration.',
+    quote: '"We process client videos daily. Shared wordsets mean everyone uses the same standards."',
+    color: 'green',
   },
 ];
-```
 
-### External Links Addition
+export default function PremiumPage() {
+  return (
+    <div className="min-h-screen bg-black text-white">
+      {/* Hero - Split Layout */}
+      <section className="flex min-h-screen flex-col lg:flex-row">
+        {/* Left: Typography */}
+        <div className="relative flex flex-1 flex-col justify-center px-8 py-16 lg:px-16">
+          {/* Gradient orb */}
+          <div className="absolute left-0 top-20 h-96 w-96 rounded-full bg-indigo-600 opacity-20 blur-[180px]" />
 
-**File: `lib/constants/externalLinks.ts`**
+          <div className="relative z-10">
+            <span className="mb-6 inline-block rounded bg-gradient-to-r from-indigo-500 to-purple-500 px-3 py-1 text-xs font-bold uppercase tracking-wider">
+              Coming Soon
+            </span>
 
-```typescript
-// Premium waitlist Google Form
-export const PREMIUM_WAITLIST_FORM_URL = 'https://forms.gle/[NEW_FORM_ID]';
+            <h1 className="font-inter font-black uppercase leading-[0.85] tracking-tight">
+              <span className="block text-5xl md:text-7xl lg:text-8xl">Bleep</span>
+              <span className="block bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-5xl text-transparent md:text-7xl lg:text-8xl">
+                Faster.
+              </span>
+              <span className="block bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-5xl text-transparent md:text-7xl lg:text-8xl">
+                Longer.
+              </span>
+              <span className="block bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-5xl text-transparent md:text-7xl lg:text-8xl">
+                Smarter.
+              </span>
+            </h1>
+
+            <p className="mt-8 max-w-md font-merriweather text-xl text-gray-400">
+              Premium unlocks server-powered processing, 2+ hour files, and saved projects.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <a
+                href="#waitlist"
+                className="inline-block bg-white px-8 py-4 text-center text-lg font-bold text-black transition-all hover:bg-gray-100"
+                onClick={() => trackEvent('premium_cta_clicked', { location: 'hero' })}
+              >
+                Join Waitlist →
+              </a>
+              <a
+                href="#features"
+                className="inline-block border border-gray-700 px-8 py-4 text-center text-lg font-bold transition-all hover:bg-white/5"
+              >
+                See Features
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Feature Stack */}
+        <div className="flex flex-1 items-center justify-center bg-gray-950/50 px-8 py-16 lg:px-16">
+          <div className="w-full max-w-md space-y-4">
+            {features.map((feature) => (
+              <div
+                key={feature.title}
+                className="rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-[2px]"
+              >
+                <div className="flex items-center gap-4 rounded-xl bg-black p-6">
+                  <div className="text-4xl">{feature.emoji}</div>
+                  <div>
+                    <h3 className="font-inter text-lg font-bold">{feature.title}</h3>
+                    <p className="text-sm text-gray-500">{feature.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="pt-4 text-center">
+              <p className="text-sm text-gray-600">+ Team sharing, priority support, and more</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Bar */}
+      <section className="bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-12">
+        <div className="mx-auto max-w-5xl">
+          <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
+            <div>
+              <div className="text-3xl font-black md:text-4xl">10K+</div>
+              <div className="text-sm text-white/70">Files Processed</div>
+            </div>
+            <div>
+              <div className="text-3xl font-black md:text-4xl">500+</div>
+              <div className="text-sm text-white/70">Discord Members</div>
+            </div>
+            <div>
+              <div className="text-3xl font-black md:text-4xl">100%</div>
+              <div className="text-sm text-white/70">Privacy First</div>
+            </div>
+            <div>
+              <div className="text-3xl font-black md:text-4xl">10x</div>
+              <div className="text-sm text-white/70">Faster (Premium)</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Use Cases Section */}
+      <section id="features" className="bg-black px-4 py-24">
+        <div className="mx-auto max-w-5xl">
+          <h2 className="mb-4 text-center font-inter text-3xl font-black uppercase md:text-5xl">
+            Built For Creators
+          </h2>
+          <p className="mx-auto mb-16 max-w-xl text-center text-gray-500">
+            Whether you&apos;re a teacher, podcaster, or content creator - premium gives you the tools to work faster.
+          </p>
+
+          <div className="space-y-16">
+            {useCases.map((useCase, index) => (
+              <div
+                key={useCase.title}
+                className={`flex flex-col items-center gap-8 ${
+                  index % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'
+                }`}
+              >
+                <div
+                  className={`flex h-32 w-32 flex-shrink-0 items-center justify-center rounded-2xl border bg-gradient-to-br border-${useCase.color}-500/30 from-${useCase.color}-500/20 to-${useCase.color}-600/10`}
+                >
+                  <span className="text-6xl">{useCase.emoji}</span>
+                </div>
+                <div className={index % 2 === 1 ? 'md:text-right' : ''}>
+                  <h3 className="mb-2 font-inter text-2xl font-bold uppercase">{useCase.title}</h3>
+                  <p className="mb-3 font-merriweather text-lg text-gray-400">{useCase.description}</p>
+                  <p className={`text-sm italic text-${useCase.color}-400`}>{useCase.quote}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Free vs Premium Comparison */}
+      <section className="bg-gray-950 px-4 py-24">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="mb-12 font-inter text-3xl font-black uppercase">Free Stays Free</h2>
+
+          <div className="grid gap-8 text-left md:grid-cols-2">
+            <div>
+              <h3 className="mb-4 font-inter text-lg font-bold uppercase text-gray-500">Free Forever</h3>
+              <ul className="space-y-3 text-gray-400">
+                <li>✓ 10 minute files</li>
+                <li>✓ Browser processing</li>
+                <li>✓ 100% private</li>
+                <li>✓ Save wordsets locally</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-4 font-inter text-lg font-bold uppercase text-indigo-400">Premium Adds</h3>
+              <ul className="space-y-3">
+                <li>✓ 2+ hour files</li>
+                <li>✓ 10x faster server processing</li>
+                <li>✓ Saved projects</li>
+                <li>✓ Project history & re-export</li>
+                <li>✓ Team features</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Waitlist CTA */}
+      <section id="waitlist" className="relative overflow-hidden bg-black px-4 py-24">
+        {/* Gradient background */}
+        <div className="absolute bottom-0 left-1/2 h-[400px] w-[800px] -translate-x-1/2 transform rounded-full bg-gradient-to-t from-indigo-600/20 to-transparent blur-3xl" />
+
+        <div className="relative z-10 mx-auto max-w-2xl text-center">
+          <h2 className="mb-8 font-inter text-5xl font-black uppercase leading-none md:text-7xl">
+            Get
+            <br />
+            Early
+            <br />
+            Access
+          </h2>
+          <p className="mb-4 font-merriweather text-xl text-gray-400">
+            Join the waitlist and lock in <span className="font-bold text-white">50% off</span> for 3 months.
+          </p>
+          <p className="mb-8 text-gray-600">Free version stays free forever. Premium is for power users.</p>
+          <a
+            href={PREMIUM_WAITLIST_FORM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-12 py-5 text-xl font-bold shadow-lg shadow-indigo-500/25 transition-all hover:scale-105 hover:from-indigo-500 hover:to-purple-500"
+            onClick={() => trackEvent('premium_waitlist_clicked', { location: 'cta_section' })}
+          >
+            Join Premium Waitlist →
+          </a>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-900 bg-black px-4 py-8 text-center">
+        <Link href="/" className="text-gray-500 transition-colors hover:text-white">
+          ← Back to Bleep That Sh*t!
+        </Link>
+        <div className="mt-4">
+          <a
+            href={DISCORD_INVITE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-600 transition-colors hover:text-indigo-400"
+          >
+            <i className="fab fa-discord text-xl" />
+          </a>
+        </div>
+      </footer>
+    </div>
+  );
+}
 ```
 
 ## Implementation Steps
 
-### Phase 1: Core Page Setup
+### Phase 1: Core Setup
 
-1. **Create page file**: `app/premium/page.tsx`
-2. **Add structured data exports** to `lib/constants/structuredData.ts`
-3. **Add external link constant** to `lib/constants/externalLinks.ts`
-4. **Create Google Form** for email capture
-
-### Phase 2: Page Content Implementation
-
-5. **Build page sections** in order:
-   - Hero with headline, badges, and CTA
-   - Free vs Premium comparison grid
-   - Feature cards (6 premium features)
-   - Pricing placeholder
-   - Google Form embed (with fallback link)
-   - FAQ accordion (using existing pattern from homepage)
-   - Discord/community CTA
-
-6. **Add analytics tracking**:
-   - Page view tracking (automatic via GA)
-   - Custom events for form interactions
-   - Track CTA clicks from different sources
-
-### Phase 3: Integration Points
-
-7. **Update FileUpload.tsx** (10-minute limit warning):
-   ```tsx
-   <a
-     href="/premium"
-     className="mt-1 inline-block text-sm font-semibold text-indigo-600 hover:text-indigo-800"
-     onClick={() => trackEvent('premium_cta_clicked', { location: 'file_duration_warning' })}
-   >
-     Need longer files? Learn about Premium
-   </a>
+1. **Add external link constant** to `lib/constants/externalLinks.ts`:
+   ```typescript
+   export const PREMIUM_WAITLIST_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfsLPN_1a6NZlLSaaYz6DcsVPU85ZIcqFMV9-pygbRyF_XHyg/viewform';
    ```
 
-8. **Update BleepDownloadTab.tsx** (download success):
-   ```tsx
-   <div className="mt-4 rounded border-l-4 border-indigo-400 bg-indigo-50 p-3">
-     <p className="text-sm text-indigo-900">
-       <strong>Want more?</strong> Premium features are coming soon -
-       longer files, saved projects, and more.
-     </p>
-     <Link
-       href="/premium"
-       className="mt-2 inline-block text-sm font-semibold text-indigo-600 hover:text-indigo-800"
-       onClick={() => trackEvent('premium_cta_clicked', { location: 'download_success' })}
-     >
-       Join the Waitlist →
-     </Link>
-   </div>
-   ```
+2. **Create page file** `app/premium/page.tsx` with the component above
 
-9. **Update Footer.tsx** - Add premium icon link:
-   ```tsx
-   <Link
-     href="/premium"
-     className="text-gray-700 transition-colors hover:text-black"
-     aria-label="Premium features"
-   >
-     <i className="fas fa-crown text-2xl"></i>
-   </Link>
-   ```
+3. **Add analytics event** to `lib/analytics.ts` if not already present:
+   - `premium_cta_clicked` with `location` parameter
+   - `premium_waitlist_clicked` with `location` parameter
 
-10. **Update homepage** (`app/page.tsx`) - Make 10-min badge clickable:
-    ```tsx
-    <Link
-      href="/premium"
-      className="inline-block rounded-full bg-blue-200 px-4 py-2 font-semibold transition-all hover:bg-blue-300"
-    >
-      ⏱️ Currently supports files up to 10 minutes
-    </Link>
-    ```
+### Phase 2: Integration Points (handled by Plan 02)
 
-11. **Update MobileNav.tsx** (optional) - Add menu item:
-    ```tsx
-    <Link
-      href="/premium"
-      onClick={closeMenu}
-      className="block rounded-lg bg-gradient-to-r from-yellow-400 to-orange-400 px-4 py-3 text-white"
-    >
-      <div className="flex items-center">
-        <span className="mr-3 text-2xl">👑</span>
-        <div>
-          <span className="font-semibold">Premium</span>
-          <span className="ml-2 rounded bg-white/20 px-2 py-0.5 text-xs">Coming Soon</span>
-        </div>
-      </div>
-    </Link>
-    ```
+4. **Update BleepDownloadTab.tsx** - Add premium CTA after successful download (see Plan 02 for details)
 
-### Phase 4: Testing
+### Phase 3: Testing
 
-12. **Add E2E tests** in `tests/e2e/premium-page.spec.ts`:
-    - Page loads correctly
-    - All sections render
-    - Form embed is accessible
+5. **Add E2E tests** in `tests/premium-page.spec.ts`:
+   - Page loads at /premium route
+   - All sections render (hero, stats, use cases, comparison, CTA)
+   - Waitlist button links to Google Form
+   - Back to home link works
+   - Discord link is present
     - Navigation links work
     - Mobile responsive
-
-## SEO Considerations
-
-### On-Page SEO
-- **Title**: "Premium Features - Coming Soon | Bleep That Sh*t!"
-- **Meta description**: Focus on benefits (longer files, saved projects)
-- **H1**: Single, clear headline about premium features
-- **Internal linking**: Links from homepage, /bleep, footer
-- **Canonical URL**: `https://bleepthatshit.com/premium`
-
-### Structured Data
-- WebPage schema linking to main site
-- FAQPage schema for premium FAQ items
-- Breadcrumb schema: Home > Premium
 
 ## GA Tracking Events
 
 | Event Name | Parameters | Trigger |
 |------------|------------|---------|
-| `premium_page_view` | `source` | Page load |
-| `premium_cta_clicked` | `location` | CTA click from any integration point |
-| `premium_form_started` | - | User starts interacting with form |
-| `premium_form_submitted` | `features_selected[]` | Form submission |
-| `premium_faq_expanded` | `question` | FAQ accordion opened |
+| `premium_cta_clicked` | `location` | CTA click (hero, download_success) |
+| `premium_waitlist_clicked` | `location` | Waitlist button click |
 
 ## Success Metrics
 
@@ -267,9 +421,7 @@ export const PREMIUM_WAITLIST_FORM_URL = 'https://forms.gle/[NEW_FORM_ID]';
 
 ### Secondary Metrics
 1. **Traffic sources**: Which integration points drive most traffic
-2. **Feature interest**: Which checkbox options are most selected
-3. **Time on page**: Engagement indicator
-4. **FAQ engagement**: Which questions are most viewed
+2. **Feature interest**: Which checkbox options are most selected in form
 
 ## File Structure Summary
 
@@ -279,28 +431,17 @@ app/
 │   └── page.tsx            # NEW: Premium landing page
 
 lib/constants/
-├── structuredData.ts       # UPDATE: Add premium schemas
-└── externalLinks.ts        # UPDATE: Add waitlist form URL
-
-components/
-├── FileUpload.tsx          # UPDATE: Add premium link
-├── Footer.tsx              # UPDATE: Add premium icon link
-└── MobileNav.tsx           # UPDATE: Add premium menu item (optional)
+└── externalLinks.ts        # UPDATE: Add PREMIUM_WAITLIST_FORM_URL
 
 app/bleep/components/
-└── BleepDownloadTab.tsx    # UPDATE: Add premium upsell
+└── BleepDownloadTab.tsx    # UPDATE: Add premium CTA (see Plan 02)
 
-app/
-└── page.tsx                # UPDATE: Make 10-min badge clickable
-
-tests/e2e/
+tests/
 └── premium-page.spec.ts    # NEW: E2E tests
 ```
 
-## Critical Files
+## Notes
 
-- `app/page.tsx` - Pattern reference for page structure and JsonLd usage
-- `lib/constants/structuredData.ts` - Add new schema definitions
-- `components/FileUpload.tsx` - Primary integration point for 10-min limit upsell
-- `app/bleep/components/BleepDownloadTab.tsx` - Integration point for download success upsell
-- `lib/constants/externalLinks.ts` - Add the Google Form URL constant
+- The page uses a dark mode design that differs from the rest of the app - this is intentional to make it feel "premium"
+- Dynamic Tailwind classes for colors (e.g., `text-${color}-400`) require the colors to be included in safelist or use static classes
+- Consider adding the colors explicitly in the component if Tailwind purging removes them

@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://bleep-that-sht.com/</loc>
-    <lastmod>2025-11-29</lastmod>
+    <lastmod>2025-12-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -26,7 +26,7 @@
   </url>
   <url>
     <loc>https://bleep-that-sht.com/blog/bleep-youtube-videos-before-upload</loc>
-    <lastmod>2025-11-28</lastmod>
+    <lastmod>2025-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -38,14 +38,20 @@
   </url>
   <url>
     <loc>https://bleep-that-sht.com/blog/censor-videos-for-classroom-teacher-guide</loc>
-    <lastmod>2025-11-28</lastmod>
+    <lastmod>2025-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://bleep-that-sht.com/blog/how-to-bleep-words-in-video</loc>
-    <lastmod>2025-11-28</lastmod>
+    <lastmod>2025-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://bleep-that-sht.com/premium</loc>
+    <lastmod>2025-12-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>
