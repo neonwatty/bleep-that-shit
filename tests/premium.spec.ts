@@ -89,6 +89,14 @@ test.describe('Premium Page Tests', () => {
     await expect(page).toHaveURL(/.*#waitlist/);
   });
 
+  test('should have See Features link and navigate to features section', async ({ page }) => {
+    const featuresLink = page.locator('a[href="#features"]');
+    await expect(featuresLink).toBeVisible();
+    await expect(featuresLink).toContainText('See Features');
+    await featuresLink.click();
+    await expect(page).toHaveURL(/.*#features/);
+  });
+
   test('should have back to home link in footer', async ({ page }) => {
     const backLink = page.locator('a').filter({ hasText: 'Back to Bleep That' });
     await expect(backLink).toBeVisible();
