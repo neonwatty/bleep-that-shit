@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bleep That Sh*t! Premium</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .font-inter { font-family: 'Inter', sans-serif; }
+    .font-merriweather { font-family: 'Merriweather', serif; }
+    .gradient-border {
+      background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+      padding: 2px;
+    }
+    .gradient-border > div {
+      background: black;
+    }
+  </style>
+</head>
+<body class="bg-black text-white">
+
+  <!-- Hero - Split Layout -->
+  <section class="min-h-screen flex flex-col lg:flex-row">
+
+    <!-- Left: Typography -->
+    <div class="flex-1 flex flex-col justify-center px-8 py-16 lg:px-16 relative">
+      <!-- Gradient orb -->
+      <div class="absolute top-20 left-0 w-96 h-96 bg-indigo-600 rounded-full filter blur-[180px] opacity-20"></div>
+
+      <div class="relative z-10">
+        <span class="inline-block bg-gradient-to-r from-indigo-500 to-purple-500 px-3 py-1 rounded text-xs font-bold uppercase tracking-wider mb-6">
+          Coming Soon
+        </span>
+
+        <h1 class="font-inter font-black uppercase leading-[0.85] tracking-tight">
+          <span class="block text-5xl md:text-7xl lg:text-8xl">Bleep</span>
+          <span class="block text-5xl md:text-7xl lg:text-8xl bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Faster.</span>
+          <span class="block text-5xl md:text-7xl lg:text-8xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Longer.</span>
+          <span class="block text-5xl md:text-7xl lg:text-8xl bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent">Smarter.</span>
+        </h1>
+
+        <p class="font-merriweather text-xl text-gray-400 mt-8 max-w-md">
+          Premium unlocks server-powered processing, 2+ hour files, and saved projects.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 mt-8">
+          <a href="#waitlist" class="inline-block bg-white text-black px-8 py-4 font-bold text-lg hover:bg-gray-100 transition-all text-center">
+            Join Waitlist →
+          </a>
+          <a href="#features" class="inline-block border border-gray-700 px-8 py-4 font-bold text-lg hover:bg-white/5 transition-all text-center">
+            See Features
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Feature Stack -->
+    <div class="flex-1 flex items-center justify-center px-8 py-16 lg:px-16 bg-gray-950/50">
+      <div class="w-full max-w-md space-y-4">
+
+        <div class="gradient-border rounded-xl">
+          <div class="rounded-xl p-6 flex items-center gap-4">
+            <div class="text-4xl">⚡</div>
+            <div>
+              <h3 class="font-inter font-bold text-lg">10x Faster Processing</h3>
+              <p class="text-gray-500 text-sm">Server-side OpenAI Whisper API</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gradient-border rounded-xl">
+          <div class="rounded-xl p-6 flex items-center gap-4">
+            <div class="text-4xl">⏱️</div>
+            <div>
+              <h3 class="font-inter font-bold text-lg">2+ Hour Files</h3>
+              <p class="text-gray-500 text-sm">No more 10-minute limits</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gradient-border rounded-xl">
+          <div class="rounded-xl p-6 flex items-center gap-4">
+            <div class="text-4xl">💾</div>
+            <div>
+              <h3 class="font-inter font-bold text-lg">Saved Projects</h3>
+              <p class="text-gray-500 text-sm">Pick up where you left off</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gradient-border rounded-xl">
+          <div class="rounded-xl p-6 flex items-center gap-4">
+            <div class="text-4xl">🔄</div>
+            <div>
+              <h3 class="font-inter font-bold text-lg">Project History</h3>
+              <p class="text-gray-500 text-sm">Re-edit and re-export anytime</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center pt-4">
+          <p class="text-gray-600 text-sm">+ Team sharing, priority support, and more</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="py-12 px-4 bg-gradient-to-r from-indigo-600 to-purple-600">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div>
+          <div class="text-3xl md:text-4xl font-black">10K+</div>
+          <div class="text-white/70 text-sm">Files Processed</div>
+        </div>
+        <div>
+          <div class="text-3xl md:text-4xl font-black">500+</div>
+          <div class="text-white/70 text-sm">Discord Members</div>
+        </div>
+        <div>
+          <div class="text-3xl md:text-4xl font-black">100%</div>
+          <div class="text-white/70 text-sm">Privacy First</div>
+        </div>
+        <div>
+          <div class="text-3xl md:text-4xl font-black">10x</div>
+          <div class="text-white/70 text-sm">Faster (Premium)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases Section -->
+  <section id="features" class="py-24 px-4 bg-black">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="font-inter text-3xl md:text-5xl font-black uppercase text-center mb-4">
+        Built For Creators
+      </h2>
+      <p class="text-gray-500 text-center mb-16 max-w-xl mx-auto">
+        Whether you're a teacher, podcaster, or content creator - premium gives you the tools to work faster.
+      </p>
+
+      <!-- Alternating rows -->
+      <div class="space-y-16">
+
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <div class="flex-shrink-0 w-32 h-32 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 flex items-center justify-center">
+            <span class="text-6xl">👩‍🏫</span>
+          </div>
+          <div>
+            <h3 class="font-inter text-2xl font-bold uppercase mb-2">Teachers & Educators</h3>
+            <p class="text-gray-400 font-merriweather text-lg mb-3">
+              Show real-world content in your classroom without worrying about inappropriate language.
+            </p>
+            <p class="text-blue-400 text-sm italic">
+              "I use documentaries in my history class but had to skip certain clips. Now I can show the full video."
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row-reverse items-center gap-8">
+          <div class="flex-shrink-0 w-32 h-32 rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 flex items-center justify-center">
+            <span class="text-6xl">🎙️</span>
+          </div>
+          <div class="md:text-right">
+            <h3 class="font-inter text-2xl font-bold uppercase mb-2">Podcasters</h3>
+            <p class="text-gray-400 font-merriweather text-lg mb-3">
+              Create ad-friendly versions of your 2+ hour episodes in minutes instead of hours.
+            </p>
+            <p class="text-purple-400 text-sm italic">
+              "Our interviews get heated sometimes. Now I can quickly make a clean version for YouTube."
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <div class="flex-shrink-0 w-32 h-32 rounded-2xl bg-gradient-to-br from-red-500/20 to-red-600/10 border border-red-500/30 flex items-center justify-center">
+            <span class="text-6xl">🎬</span>
+          </div>
+          <div>
+            <h3 class="font-inter text-2xl font-bold uppercase mb-2">YouTube Creators</h3>
+            <p class="text-gray-400 font-merriweather text-lg mb-3">
+              Keep your videos monetization-safe without losing authenticity or spending hours editing.
+            </p>
+            <p class="text-red-400 text-sm italic">
+              "My gaming videos always had slip-ups. Now I bleep them out in minutes."
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row-reverse items-center gap-8">
+          <div class="flex-shrink-0 w-32 h-32 rounded-2xl bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/30 flex items-center justify-center">
+            <span class="text-6xl">👥</span>
+          </div>
+          <div class="md:text-right">
+            <h3 class="font-inter text-2xl font-bold uppercase mb-2">Production Teams</h3>
+            <p class="text-gray-400 font-merriweather text-lg mb-3">
+              Standardize censoring across your team with shared wordsets and project collaboration.
+            </p>
+            <p class="text-green-400 text-sm italic">
+              "We process client videos daily. Shared wordsets mean everyone uses the same standards."
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Free vs Premium - Minimal -->
+  <section class="py-24 px-4 bg-gray-950">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="font-inter text-3xl font-black uppercase mb-12">
+        Free Stays Free
+      </h2>
+
+      <div class="grid md:grid-cols-2 gap-8 text-left">
+        <div>
+          <h3 class="font-inter text-lg font-bold text-gray-500 uppercase mb-4">Free Forever</h3>
+          <ul class="space-y-3 text-gray-400">
+            <li>✓ 10 minute files</li>
+            <li>✓ Browser processing</li>
+            <li>✓ 100% private</li>
+            <li>✓ Save wordsets locally</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-inter text-lg font-bold text-indigo-400 uppercase mb-4">Premium Adds</h3>
+          <ul class="space-y-3">
+            <li>✓ 2+ hour files</li>
+            <li>✓ 10x faster server processing</li>
+            <li>✓ Saved projects</li>
+            <li>✓ Project history & re-export</li>
+            <li>✓ Team features</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="waitlist" class="py-24 px-4 bg-black relative overflow-hidden">
+    <!-- Gradient background -->
+    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-t from-indigo-600/20 to-transparent rounded-full filter blur-3xl"></div>
+
+    <div class="max-w-2xl mx-auto text-center relative z-10">
+      <h2 class="font-inter text-5xl md:text-7xl font-black uppercase leading-none mb-8">
+        Get<br>Early<br>Access
+      </h2>
+      <p class="font-merriweather text-xl text-gray-400 mb-4">
+        Join the waitlist and lock in <span class="text-white font-bold">50% off</span> for 3 months.
+      </p>
+      <p class="text-gray-600 mb-8">
+        Free version stays free forever. Premium is for power users.
+      </p>
+      <a href="https://forms.gle/PLACEHOLDER" target="_blank" class="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 px-12 py-5 rounded-xl font-bold text-xl hover:from-indigo-500 hover:to-purple-500 transition-all hover:scale-105 shadow-lg shadow-indigo-500/25">
+        Join Premium Waitlist →
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 px-4 text-center bg-black border-t border-gray-900">
+    <a href="/" class="text-gray-500 hover:text-white transition-colors">← Back to Bleep That Sh*t!</a>
+    <div class="mt-4">
+      <a href="https://discord.gg/XuzjVXyjH4" target="_blank" class="text-gray-600 hover:text-indigo-400 transition-colors">
+        <i class="fab fa-discord text-xl"></i>
+      </a>
+    </div>
+  </footer>
+
+</body>
+</html>
