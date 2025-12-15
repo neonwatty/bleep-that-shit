@@ -1,10 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Hide navigation on premium landing page
+  if (pathname === '/premium') {
+    return null;
+  }
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);

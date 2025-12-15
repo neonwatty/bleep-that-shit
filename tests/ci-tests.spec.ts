@@ -9,7 +9,8 @@ test.describe('CI-Friendly Tests', () => {
       await homePage.goto();
 
       await expect(page.locator('h1').first()).toBeVisible();
-      await expect(page.locator('nav')).toBeVisible();
+      // Desktop viewport (default) shows desktop nav
+      await expect(page.locator('nav.md\\:flex')).toBeVisible();
       await expect(page.locator('footer')).toBeVisible();
     });
   });
@@ -119,18 +120,18 @@ test.describe('CI-Friendly Tests', () => {
 
   test.describe('Responsive Design', () => {
     test('should be responsive', async ({ page }) => {
-      // Desktop
+      // Desktop - desktop nav visible
       await page.setViewportSize({ width: 1920, height: 1080 });
       await page.goto('/');
-      await expect(page.locator('nav')).toBeVisible();
+      await expect(page.locator('nav.md\\:flex')).toBeVisible();
 
-      // Tablet
+      // Tablet (768px is the md breakpoint) - desktop nav visible
       await page.setViewportSize({ width: 768, height: 1024 });
-      await expect(page.locator('nav')).toBeVisible();
+      await expect(page.locator('nav.md\\:flex')).toBeVisible();
 
-      // Mobile
+      // Mobile - mobile nav visible
       await page.setViewportSize({ width: 375, height: 667 });
-      await expect(page.locator('nav')).toBeVisible();
+      await expect(page.locator('nav.md\\:hidden')).toBeVisible();
     });
   });
 });

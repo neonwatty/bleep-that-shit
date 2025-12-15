@@ -55,16 +55,15 @@ test.describe('Home Page Tests', () => {
   });
 
   test('should have responsive design', async ({ page }) => {
-    // Test mobile viewport
+    // Test mobile viewport - mobile nav should be visible
     await page.setViewportSize({ width: 375, height: 667 });
+    const mobileNav = page.locator('nav.md\\:hidden');
+    await expect(mobileNav).toBeVisible();
 
-    // Check if navigation becomes vertical on mobile
-    const navbar = page.locator('nav');
-    await expect(navbar).toHaveClass(/flex-col/);
-
-    // Test desktop viewport
+    // Test desktop viewport - desktop nav should be visible
     await page.setViewportSize({ width: 1920, height: 1080 });
-    await expect(navbar).toHaveClass(/sm:flex-row/);
+    const desktopNav = page.locator('nav.md\\:flex');
+    await expect(desktopNav).toBeVisible();
   });
 
   test('should have footer with GitHub link', async ({ page }) => {

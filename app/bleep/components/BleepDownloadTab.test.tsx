@@ -1,7 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BleepDownloadTab } from './BleepDownloadTab';
-import { FEEDBACK_FORM_URL } from '@/lib/constants/externalLinks';
 
 describe('BleepDownloadTab', () => {
   const mockMatchedWords = [
@@ -418,36 +417,74 @@ describe('BleepDownloadTab', () => {
     });
   });
 
-  describe('Feedback CTA', () => {
-    it('shows feedback CTA when censored result is available', () => {
+  describe('Premium CTA', () => {
+    beforeEach(() => {
+      // Clear localStorage before each test
+      localStorage.clear();
+    });
+
+    it('shows premium CTA when censored result is available', () => {
       const mockFile = new File(['content'], 'test.mp3', { type: 'audio/mp3' });
       render(
         <BleepDownloadTab {...defaultProps} file={mockFile} censoredMediaUrl="blob:test-url" />
       );
 
-      expect(screen.getByText(/Was this helpful\?/)).toBeInTheDocument();
+      expect(screen.getByText(/Want more power\?/)).toBeInTheDocument();
       expect(
-        screen.getByText(/We're building new features and would love your input/)
+        screen.getByText(
+          /We're exploring premium features like longer files, faster processing, and saved projects/
+        )
       ).toBeInTheDocument();
     });
 
-    it('renders feedback form link with correct attributes', () => {
+    it('renders premium link with correct attributes', () => {
       const mockFile = new File(['content'], 'test.mp3', { type: 'audio/mp3' });
       render(
         <BleepDownloadTab {...defaultProps} file={mockFile} censoredMediaUrl="blob:test-url" />
       );
 
-      const feedbackLink = screen.getByRole('link', { name: /Share Quick Feedback/i });
-      expect(feedbackLink).toBeInTheDocument();
-      expect(feedbackLink).toHaveAttribute('href', FEEDBACK_FORM_URL);
-      expect(feedbackLink).toHaveAttribute('target', '_blank');
-      expect(feedbackLink).toHaveAttribute('rel', 'noopener noreferrer');
+      const premiumLink = screen.getByRole('link', { name: /Learn About Premium/i });
+      expect(premiumLink).toBeInTheDocument();
+      expect(premiumLink).toHaveAttribute('href', '/premium');
     });
 
-    it('does not show feedback CTA when no censored result', () => {
+    it('does not show premium CTA when no censored result', () => {
       render(<BleepDownloadTab {...defaultProps} censoredMediaUrl={null} />);
 
-      expect(screen.queryByText(/Was this helpful\?/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Want more power\?/)).not.toBeInTheDocument();
+    });
+
+    it('can be dismissed and persists to localStorage', () => {
+      const mockFile = new File(['content'], 'test.mp3', { type: 'audio/mp3' });
+      render(
+        <BleepDownloadTab {...defaultProps} file={mockFile} censoredMediaUrl="blob:test-url" />
+      );
+
+      // CTA should be visible
+      expect(screen.getByTestId('premium-cta')).toBeInTheDocument();
+
+      // Click dismiss button
+      const dismissButton = screen.getByLabelText('Dismiss premium prompt');
+      fireEvent.click(dismissButton);
+
+      // CTA should be hidden
+      expect(screen.queryByTestId('premium-cta')).not.toBeInTheDocument();
+
+      // localStorage should be set
+      expect(localStorage.getItem('premium_cta_dismissed')).toBe('true');
+    });
+
+    it('stays hidden when previously dismissed', () => {
+      // Set localStorage before render
+      localStorage.setItem('premium_cta_dismissed', 'true');
+
+      const mockFile = new File(['content'], 'test.mp3', { type: 'audio/mp3' });
+      render(
+        <BleepDownloadTab {...defaultProps} file={mockFile} censoredMediaUrl="blob:test-url" />
+      );
+
+      // CTA should not be visible
+      expect(screen.queryByTestId('premium-cta')).not.toBeInTheDocument();
     });
   });
 });

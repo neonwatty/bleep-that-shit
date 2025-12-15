@@ -398,3 +398,19 @@ h6 {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Fade-in animation for Premium CTA and other elements */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
