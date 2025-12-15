@@ -27,6 +27,7 @@
     "rehype-raw",
     "rehype-stringify",
     "remark-parse",
+    "remark-gfm",
     "remark-rehype",
     "unified"
   ],
