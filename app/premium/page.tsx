@@ -8,7 +8,7 @@ const features = [
   {
     emoji: '⚡',
     title: '10x Faster Processing',
-    description: 'Server-side OpenAI Whisper API',
+    description: 'Cloud-powered OpenAI Whisper API',
   },
   {
     emoji: '⏱️',
@@ -118,7 +118,7 @@ export default function PremiumPage() {
             </h1>
 
             <p className="font-merriweather mt-8 max-w-md text-xl text-gray-400">
-              Premium unlocks server-powered processing, 2+ hour files, and saved projects.
+              Premium unlocks cloud-powered processing, 2+ hour files, and saved projects.
             </p>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -247,7 +247,7 @@ export default function PremiumPage() {
               </h3>
               <ul className="space-y-3">
                 <li>✓ 2+ hour files</li>
-                <li>✓ 10x faster server processing</li>
+                <li>✓ 10x faster cloud processing</li>
                 <li>✓ Saved projects</li>
                 <li>✓ Project history & re-export</li>
                 <li>✓ Team features</li>
