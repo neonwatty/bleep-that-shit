@@ -114,7 +114,7 @@ test.describe('Premium Page Tests', () => {
     await expect(page).toHaveTitle(/Premium/);
 
     const metaDescription = page.locator('meta[name="description"]');
-    await expect(metaDescription).toHaveAttribute('content', /server-side processing/i);
+    await expect(metaDescription).toHaveAttribute('content', /cloud processing/i);
   });
 
   test('should have Discord link in footer', async ({ page }) => {
