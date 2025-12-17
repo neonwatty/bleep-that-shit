@@ -71,9 +71,11 @@ describe('TranscriptionControls', () => {
     expect(select).toHaveTextContent('Tiny (~50 MB, fastest, lower accuracy)');
     expect(select).toHaveTextContent('Base (~85 MB, balanced, recommended)');
     expect(select).toHaveTextContent('Small (~275 MB, best accuracy, slower)');
+    expect(select).toHaveTextContent('Medium (~800 MB, highest accuracy, slowest)');
     expect(select).toHaveTextContent('Tiny Multilingual (~50 MB, 90+ languages)');
     expect(select).toHaveTextContent('Base Multilingual (~85 MB, recommended)');
     expect(select).toHaveTextContent('Small Multilingual (~275 MB, best accuracy)');
+    expect(select).toHaveTextContent('Medium Multilingual (~800 MB, highest accuracy, slowest)');
   });
 
   it('has correct model option values', () => {
@@ -86,9 +88,11 @@ describe('TranscriptionControls', () => {
       'Xenova/whisper-tiny.en',
       'Xenova/whisper-base.en',
       'Xenova/whisper-small.en',
+      'onnx-community/whisper-medium.en_timestamped',
       'Xenova/whisper-tiny',
       'Xenova/whisper-base',
       'Xenova/whisper-small',
+      'onnx-community/whisper-medium_timestamped',
     ]);
   });
 
@@ -137,9 +141,11 @@ describe('TranscriptionControls', () => {
       'Xenova/whisper-tiny.en',
       'Xenova/whisper-base.en',
       'Xenova/whisper-small.en',
+      'onnx-community/whisper-medium.en_timestamped',
       'Xenova/whisper-tiny',
       'Xenova/whisper-base',
       'Xenova/whisper-small',
+      'onnx-community/whisper-medium_timestamped',
     ];
     const select = screen.getByTestId('model-select');
 

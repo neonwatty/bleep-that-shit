@@ -71,6 +71,12 @@ self.onmessage = async (event: MessageEvent) => {
         );
       }
 
+      // Determine model ID and revision early (needed for timeout calculation)
+      const modelId = model || 'Xenova/whisper-tiny.en';
+      // onnx-community timestamped models have timestamps in main branch, Xenova models need 'output_attentions'
+      const isTimestampedModel = modelId.includes('_timestamped');
+      const revision = isTimestampedModel ? 'main' : 'output_attentions';
+
       self.postMessage({
         debug: `[Worker] Audio data received, length: ${audioData.length}`,
         progress: 20,
@@ -78,34 +84,32 @@ self.onmessage = async (event: MessageEvent) => {
       });
 
       // Load the pipeline with timeout protection
+      // Larger models (medium) need more time to download/load
       let pipelineLoaded = false;
+      const timeoutMs = modelId.includes('medium') ? 300000 : 30000; // 5 min for medium, 30s for others
       const pipelineTimeout = setTimeout(() => {
         if (!pipelineLoaded) {
-          throw new Error('Model loading timed out after 30 seconds');
+          throw new Error(`Model loading timed out after ${timeoutMs / 1000} seconds`);
         }
-      }, 30000);
+      }, timeoutMs);
 
-      const transcriber = await pipeline(
-        'automatic-speech-recognition',
-        model || 'Xenova/whisper-tiny.en',
-        {
-          revision: 'output_attentions', // Use revision with cross-attention outputs for accurate word-level timestamps
-          progress_callback: (progress: any) => {
-            if (progress && progress.progress !== undefined) {
-              // Check if progress.progress is already a percentage (0-100) or decimal (0-1)
-              const progressValue = progress.progress;
-              const isPercentage = progressValue > 1;
-              const normalizedProgress = isPercentage ? progressValue / 100 : progressValue;
+      const transcriber = await pipeline('automatic-speech-recognition', modelId, {
+        revision,
+        progress_callback: (progress: any) => {
+          if (progress && progress.progress !== undefined) {
+            // Check if progress.progress is already a percentage (0-100) or decimal (0-1)
+            const progressValue = progress.progress;
+            const isPercentage = progressValue > 1;
+            const normalizedProgress = isPercentage ? progressValue / 100 : progressValue;
 
-              self.postMessage({
-                progress: 20 + normalizedProgress * 30, // 20-50% for model loading
-                status: `Loading model...`,
-                debug: `[Worker] Model loading progress - raw: ${progressValue}, normalized: ${normalizedProgress}`,
-              });
-            }
-          },
-        }
-      );
+            self.postMessage({
+              progress: 20 + normalizedProgress * 30, // 20-50% for model loading
+              status: `Loading model...`,
+              debug: `[Worker] Model loading progress - raw: ${progressValue}, normalized: ${normalizedProgress}`,
+            });
+          }
+        },
+      });
       pipelineLoaded = true;
       clearTimeout(pipelineTimeout);
 

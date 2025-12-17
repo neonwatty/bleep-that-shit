@@ -51,9 +51,15 @@ export function TranscriptionControls({
           <option value="Xenova/whisper-tiny.en">Tiny (~50 MB, fastest, lower accuracy)</option>
           <option value="Xenova/whisper-base.en">Base (~85 MB, balanced, recommended)</option>
           <option value="Xenova/whisper-small.en">Small (~275 MB, best accuracy, slower)</option>
+          <option value="onnx-community/whisper-medium.en_timestamped">
+            Medium (~800 MB, highest accuracy, slowest)
+          </option>
           <option value="Xenova/whisper-tiny">Tiny Multilingual (~50 MB, 90+ languages)</option>
           <option value="Xenova/whisper-base">Base Multilingual (~85 MB, recommended)</option>
           <option value="Xenova/whisper-small">Small Multilingual (~275 MB, best accuracy)</option>
+          <option value="onnx-community/whisper-medium_timestamped">
+            Medium Multilingual (~800 MB, highest accuracy, slowest)
+          </option>
         </select>
       </div>
     </div>
