@@ -61,9 +61,19 @@ function SamplerPageContent() {
     { id: 'Xenova/whisper-tiny.en', name: 'Tiny (fastest, lower accuracy)', size: '~50 MB' },
     { id: 'Xenova/whisper-base.en', name: 'Base (balanced, recommended)', size: '~85 MB' },
     { id: 'Xenova/whisper-small.en', name: 'Small (best accuracy)', size: '~275 MB' },
+    {
+      id: 'onnx-community/whisper-medium.en_timestamped',
+      name: 'Medium (highest accuracy, slowest)',
+      size: '~800 MB',
+    },
     { id: 'Xenova/whisper-tiny', name: 'Tiny Multilingual (90+ languages)', size: '~50 MB' },
     { id: 'Xenova/whisper-base', name: 'Base Multilingual (recommended)', size: '~85 MB' },
     { id: 'Xenova/whisper-small', name: 'Small Multilingual (best accuracy)', size: '~275 MB' },
+    {
+      id: 'onnx-community/whisper-medium_timestamped',
+      name: 'Medium Multilingual (highest accuracy, slowest)',
+      size: '~800 MB',
+    },
   ];
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

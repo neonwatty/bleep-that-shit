@@ -13,8 +13,13 @@ self.onmessage = async (event: MessageEvent) => {
     );
     self.postMessage({ progress: 10, status: `Loading ${model}...` });
 
+    // Determine revision: Xenova models need 'output_attentions' branch,
+    // but onnx-community timestamped models have timestamps in main branch
+    const isTimestampedModel = model.includes('_timestamped');
+    const revision = isTimestampedModel ? 'main' : 'output_attentions';
+
     const transcriber = await pipeline('automatic-speech-recognition', model, {
-      revision: 'output_attentions', // Use revision with cross-attention outputs for accurate word-level timestamps
+      revision,
       progress_callback: (progress: any) => {
         if (progress && progress.progress !== undefined) {
           // Check if progress.progress is already a percentage (0-100) or decimal (0-1)
