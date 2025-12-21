@@ -39,13 +39,13 @@ Click "Apply Bleeps" and download. No watermark, original quality preserved.
 
 ## Comparison
 
-| Feature | Bleep That Sh\*t | Kapwing | Premiere Pro |
-|---------|-----------------|---------|--------------|
-| Free | ✓ | Limited | ✗ ($23/mo) |
-| No watermark | ✓ | ✗ | N/A |
-| Auto-detect words | ✓ | ✗ | ✗ |
-| No download required | ✓ | ✓ | ✗ |
-| Local processing | ✓ | ✗ | ✓ |
+| Feature              | Bleep That Sh\*t | Kapwing | Premiere Pro |
+| -------------------- | ---------------- | ------- | ------------ |
+| Free                 | ✓                | Limited | ✗ ($23/mo)   |
+| No watermark         | ✓                | ✗       | N/A          |
+| Auto-detect words    | ✓                | ✗       | ✗            |
+| No download required | ✓                | ✓       | ✗            |
+| Local processing     | ✓                | ✗       | ✓            |
 
 ## FAQ
 
