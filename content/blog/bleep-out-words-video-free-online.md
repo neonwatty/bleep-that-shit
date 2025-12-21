@@ -6,7 +6,7 @@ author: 'Bleep That Team'
 tags: ['tutorial', 'video editing', 'censoring', 'free tool']
 readingTime: 3
 featured: false
-featuredImage: '/images/blog/thumbnails/how-to-bleep-video.png'
+featuredImage: '/images/blog/thumbnails/youtube-monetization.png'
 ---
 
 Need to censor profanity for YouTube monetization, work presentations, or repurposing content across platforms? **Bleep That Sh\*t** does it in your browser—no software to download, no account required.
