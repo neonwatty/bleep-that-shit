@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { FileUpload } from './FileUpload';
-import { FEEDBACK_FORM_LONG_FILES_URL } from '@/lib/constants/externalLinks';
 
 // Mock react-dropzone
 vi.mock('react-dropzone', () => ({
@@ -132,15 +131,13 @@ describe('FileUpload', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('displays email notification signup CTA in duration warning', () => {
+  it('displays Pro waitlist CTA in duration warning', () => {
     render(<FileUpload {...defaultProps} fileDurationWarning="Warning message" />);
 
     expect(screen.getByText(/We're working on longer video support/i)).toBeInTheDocument();
-    const notifyLink = screen.getByRole('link', { name: /Get notified when it's ready/i });
-    expect(notifyLink).toBeInTheDocument();
-    expect(notifyLink).toHaveAttribute('href', FEEDBACK_FORM_LONG_FILES_URL);
-    expect(notifyLink).toHaveAttribute('target', '_blank');
-    expect(notifyLink).toHaveAttribute('rel', 'noopener noreferrer');
+    const waitlistLink = screen.getByRole('link', { name: /Join the Pro Waitlist/i });
+    expect(waitlistLink).toBeInTheDocument();
+    expect(waitlistLink).toHaveAttribute('href', '/#waitlist');
   });
 
   it('displays file name when file is loaded', () => {

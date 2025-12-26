@@ -208,7 +208,7 @@ export function BleepDownloadTab({
               </p>
             </div>
 
-            {/* Premium Interest CTA */}
+            {/* Pro Waitlist CTA */}
             {!isPremiumCtaDismissed && (
               <div
                 data-testid="premium-cta"
@@ -217,20 +217,20 @@ export function BleepDownloadTab({
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <p className="text-sm text-violet-900">
-                      <strong>Want more power?</strong> We&apos;re exploring premium features like
-                      longer files, faster processing, and saved projects.
+                      <strong>Need to process longer videos?</strong> Join the waitlist for Bleep
+                      Pro with support for 60+ minute files, saved projects, and batch processing.
                     </p>
                     <Link
-                      href="/premium"
+                      href="/#waitlist"
                       className="mt-2 inline-block rounded bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-violet-700"
                       onClick={() =>
-                        trackEvent('premium_cta_clicked', {
+                        trackEvent('waitlist_cta_clicked', {
                           location: 'download_success',
                           file_type: file?.type.includes('video') ? 'video' : 'audio',
                         })
                       }
                     >
-                      Learn About Premium →
+                      Join the Pro Waitlist →
                     </Link>
                   </div>
                   <button

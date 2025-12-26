@@ -44,7 +44,7 @@ export function WaitlistForm() {
 
   if (formState === 'success') {
     return (
-      <section data-testid="waitlist-section" className="editorial-section mb-16">
+      <section id="waitlist" data-testid="waitlist-section" className="editorial-section mb-16">
         <div className="flex flex-col items-center text-center">
           <div className="mb-4 text-5xl">&#10003;</div>
           <h2
@@ -63,7 +63,7 @@ export function WaitlistForm() {
   }
 
   return (
-    <section data-testid="waitlist-section" className="editorial-section mb-16">
+    <section id="waitlist" data-testid="waitlist-section" className="editorial-section mb-16">
       <div className="flex flex-col items-center text-center">
         <h2
           className="font-inter mb-4 text-2xl font-extrabold text-black uppercase sm:text-3xl md:text-4xl"

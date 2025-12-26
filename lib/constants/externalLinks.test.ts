@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DISCORD_URL, FEEDBACK_FORM_URL, FEEDBACK_FORM_LONG_FILES_URL } from './externalLinks';
+import { DISCORD_URL, FEEDBACK_FORM_URL } from './externalLinks';
 
 describe('External Links Validation', () => {
   describe('Discord Link', () => {
@@ -17,25 +17,13 @@ describe('External Links Validation', () => {
     });
   });
 
-  describe('Feedback Form Links', () => {
-    it('should have a valid Google Forms URL format for primary feedback form', () => {
+  describe('Feedback Form Link', () => {
+    it('should have a valid Google Forms URL format', () => {
       expect(FEEDBACK_FORM_URL).toMatch(/^https:\/\/forms\.gle\/[A-Za-z0-9]+$/);
     });
 
-    it('should have a valid Google Forms URL format for long files form', () => {
-      expect(FEEDBACK_FORM_LONG_FILES_URL).toMatch(/^https:\/\/forms\.gle\/[A-Za-z0-9]+$/);
-    });
-
-    it('should have the expected primary feedback form URL', () => {
+    it('should have the expected feedback form URL', () => {
       expect(FEEDBACK_FORM_URL).toBe('https://forms.gle/NbsDZeTWMVXe5Q1R8');
-    });
-
-    it('should have the expected long files form URL', () => {
-      expect(FEEDBACK_FORM_LONG_FILES_URL).toBe('https://forms.gle/FKCSYGe95oa9p7Ey9');
-    });
-
-    it('should use different forms for different purposes', () => {
-      expect(FEEDBACK_FORM_URL).not.toBe(FEEDBACK_FORM_LONG_FILES_URL);
     });
   });
 });
