@@ -60,7 +60,9 @@ test.describe('Home Page - Sections', () => {
 
   test('should display Waitlist section', async ({ page }) => {
     await expect(page.getByTestId('waitlist-section')).toBeVisible();
-    await expect(page.getByRole('heading', { name: /Need to process longer videos/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /Need to process longer videos/i })
+    ).toBeVisible();
     await expect(page.getByTestId('waitlist-email-input')).toBeVisible();
     await expect(page.getByTestId('waitlist-submit-button')).toBeVisible();
   });
@@ -117,7 +119,6 @@ test.describe('Home Page - External Links', () => {
     await expect(githubLink).toHaveAttribute('href', /github\.com\/neonwatty\/bleep-that-shit/);
     await expect(githubLink).toHaveAttribute('target', '_blank');
   });
-
 });
 
 test.describe('Home Page - Hero CTA Interaction', () => {
