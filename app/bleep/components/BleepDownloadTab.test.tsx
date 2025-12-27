@@ -423,35 +423,33 @@ describe('BleepDownloadTab', () => {
       localStorage.clear();
     });
 
-    it('shows premium CTA when censored result is available', () => {
+    it('shows Pro waitlist CTA when censored result is available', () => {
       const mockFile = new File(['content'], 'test.mp3', { type: 'audio/mp3' });
       render(
         <BleepDownloadTab {...defaultProps} file={mockFile} censoredMediaUrl="blob:test-url" />
       );
 
-      expect(screen.getByText(/Want more power\?/)).toBeInTheDocument();
+      expect(screen.getByText(/Need to process longer videos\?/)).toBeInTheDocument();
       expect(
-        screen.getByText(
-          /We're exploring premium features like longer files, faster processing, and saved projects/
-        )
+        screen.getByText(/Join the waitlist for Bleep Pro with support for 60\+ minute files/)
       ).toBeInTheDocument();
     });
 
-    it('renders premium link with correct attributes', () => {
+    it('renders waitlist link with correct attributes', () => {
       const mockFile = new File(['content'], 'test.mp3', { type: 'audio/mp3' });
       render(
         <BleepDownloadTab {...defaultProps} file={mockFile} censoredMediaUrl="blob:test-url" />
       );
 
-      const premiumLink = screen.getByRole('link', { name: /Learn About Premium/i });
-      expect(premiumLink).toBeInTheDocument();
-      expect(premiumLink).toHaveAttribute('href', '/premium');
+      const waitlistLink = screen.getByRole('link', { name: /Join the Pro Waitlist/i });
+      expect(waitlistLink).toBeInTheDocument();
+      expect(waitlistLink).toHaveAttribute('href', '/#waitlist');
     });
 
-    it('does not show premium CTA when no censored result', () => {
+    it('does not show waitlist CTA when no censored result', () => {
       render(<BleepDownloadTab {...defaultProps} censoredMediaUrl={null} />);
 
-      expect(screen.queryByText(/Want more power\?/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Need to process longer videos\?/)).not.toBeInTheDocument();
     });
 
     it('can be dismissed and persists to localStorage', () => {

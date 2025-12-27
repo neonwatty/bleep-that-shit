@@ -70,11 +70,10 @@ test.describe('Premium Page Tests', () => {
     await expect(page.getByText('50% off')).toBeVisible();
   });
 
-  test('should have working waitlist link to Google Form', async ({ page }) => {
+  test('should have working waitlist link to home page waitlist section', async ({ page }) => {
     const waitlistLink = page.locator('a').filter({ hasText: 'Join Premium Waitlist' });
     await expect(waitlistLink).toBeVisible();
-    await expect(waitlistLink).toHaveAttribute('href', /docs\.google\.com\/forms/);
-    await expect(waitlistLink).toHaveAttribute('target', '_blank');
+    await expect(waitlistLink).toHaveAttribute('href', '/#waitlist');
   });
 
   test('should have hero waitlist CTA', async ({ page }) => {

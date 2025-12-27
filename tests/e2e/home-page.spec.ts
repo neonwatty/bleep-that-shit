@@ -58,9 +58,13 @@ test.describe('Home Page - Sections', () => {
     await expect(page.getByText(/Plyr/i)).toBeVisible();
   });
 
-  test('should display Community section', async ({ page }) => {
-    await expect(page.getByTestId('community-section')).toBeVisible();
-    await expect(page.getByRole('heading', { name: /Join Our Community/i })).toBeVisible();
+  test('should display Waitlist section', async ({ page }) => {
+    await expect(page.getByTestId('waitlist-section')).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /Need to process longer videos/i })
+    ).toBeVisible();
+    await expect(page.getByTestId('waitlist-email-input')).toBeVisible();
+    await expect(page.getByTestId('waitlist-submit-button')).toBeVisible();
   });
 
   test('should display demo video', async ({ page }) => {
@@ -114,13 +118,6 @@ test.describe('Home Page - External Links', () => {
     await expect(githubLink).toBeVisible();
     await expect(githubLink).toHaveAttribute('href', /github\.com\/neonwatty\/bleep-that-shit/);
     await expect(githubLink).toHaveAttribute('target', '_blank');
-  });
-
-  test('should have Discord link with correct URL', async ({ page }) => {
-    const discordLink = page.getByTestId('discord-link');
-    await expect(discordLink).toBeVisible();
-    await expect(discordLink).toHaveAttribute('href', /discord\.gg/);
-    await expect(discordLink).toHaveAttribute('target', '_blank');
   });
 });
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useBleepState } from './hooks/useBleepState';
 import { BleepTabs } from './components/BleepTabs';
 import { SetupTranscribeTab } from './components/SetupTranscribeTab';
@@ -95,9 +96,11 @@ function BleepPageContent() {
         , censoring selected words with customizable matching and bleep sounds.
         <div className="mt-2 text-sm">
           <span className="inline-flex items-center">
-            ⏱️ <strong className="ml-1">Note:</strong> Currently supports files up to 10 minutes in
-            length.
+            ⏱️ <strong className="ml-1">Note:</strong> Currently supports files up to 10 minutes.
           </span>
+          <Link href="/#waitlist" className="ml-2 text-indigo-600 underline hover:text-indigo-800">
+            Need longer? Join the Pro waitlist
+          </Link>
         </div>
       </div>
 

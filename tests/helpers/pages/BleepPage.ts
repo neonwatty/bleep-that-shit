@@ -153,9 +153,9 @@ export class BleepPage {
     this.downloadButton = page.getByTestId('download-button');
     this.videoProcessingIndicator = page.getByTestId('video-processing-indicator');
 
-    // Premium CTA
+    // Pro Waitlist CTA (formerly Premium CTA)
     this.premiumCta = page.getByTestId('premium-cta');
-    this.premiumCtaLink = page.getByRole('link', { name: /Learn About Premium/i });
+    this.premiumCtaLink = this.premiumCta.getByRole('link', { name: /Join the Pro Waitlist/i });
     this.premiumCtaDismiss = page.getByLabel('Dismiss premium prompt');
   }
 

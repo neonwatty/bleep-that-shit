@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { PREMIUM_WAITLIST_FORM_URL, DISCORD_URL } from '@/lib/constants/externalLinks';
+import { DISCORD_URL } from '@/lib/constants/externalLinks';
 import { trackEvent } from '@/lib/analytics';
 
 const features = [
@@ -277,15 +277,13 @@ export default function PremiumPage() {
           <p className="mb-8 text-gray-600">
             Free version stays free forever. Premium is for power users.
           </p>
-          <a
-            href={PREMIUM_WAITLIST_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/#waitlist"
             className="inline-block rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-12 py-5 text-xl font-bold shadow-lg shadow-indigo-500/25 transition-all hover:scale-105 hover:from-indigo-500 hover:to-purple-500"
             onClick={() => trackEvent('premium_waitlist_clicked', { location: 'cta_section' })}
           >
             Join Premium Waitlist →
-          </a>
+          </Link>
         </div>
       </section>
 
