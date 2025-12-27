@@ -65,9 +65,7 @@ test.describe('For Educators Page - Sections', () => {
   });
 
   test('should display FAQ section with educator-specific questions', async ({ page }) => {
-    await expect(
-      page.getByRole('heading', { name: /Frequently Asked Questions/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Frequently Asked Questions/i })).toBeVisible();
 
     // Check FAQ questions are present
     await expect(page.getByText(/Does this work on school Chromebooks/i)).toBeVisible();
@@ -89,7 +87,10 @@ test.describe('For Educators Page - Navigation', () => {
 
   test('should navigate to /bleep when clicking Start Censoring button', async ({ page }) => {
     // Use the main content area CTA, not navigation
-    const ctaButton = page.locator('main a.btn').filter({ hasText: /Start Censoring/i }).first();
+    const ctaButton = page
+      .locator('main a.btn')
+      .filter({ hasText: /Start Censoring/i })
+      .first();
     await expect(ctaButton).toBeVisible();
 
     await ctaButton.click();
@@ -104,9 +105,7 @@ test.describe('For Educators Page - Navigation', () => {
     await expect(page).toHaveURL(/\/bleep\?sample=bob-ross/);
   });
 
-  test('should scroll to How It Works section when clicking See How It Works', async ({
-    page,
-  }) => {
+  test('should scroll to How It Works section when clicking See How It Works', async ({ page }) => {
     const howItWorksLink = page.getByRole('link', { name: /See How It Works/i });
     await expect(howItWorksLink).toBeVisible();
 

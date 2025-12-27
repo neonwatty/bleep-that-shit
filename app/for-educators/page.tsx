@@ -99,7 +99,9 @@ export default function ForEducatorsPage() {
             </div>
             <div className="rounded-lg border border-gray-200 bg-white p-5">
               <div className="mb-2 text-2xl">🎥</div>
-              <div className="font-inter mb-1 font-bold text-black">Film Clips for English Class</div>
+              <div className="font-inter mb-1 font-bold text-black">
+                Film Clips for English Class
+              </div>
               <div className="text-sm text-gray-800 sm:text-base">
                 Use movie adaptations without worrying about rating concerns.
               </div>
@@ -173,7 +175,9 @@ export default function ForEducatorsPage() {
             <div className="flex items-start gap-3">
               <span className="text-2xl">⚡</span>
               <div>
-                <div className="font-inter mb-1 font-bold text-black">Fast Enough for Lesson Prep</div>
+                <div className="font-inter mb-1 font-bold text-black">
+                  Fast Enough for Lesson Prep
+                </div>
                 <div className="text-sm text-gray-800 sm:text-base">
                   Censor a 10-minute video in 2-3 minutes. Perfect for busy teachers.
                 </div>
@@ -272,8 +276,8 @@ export default function ForEducatorsPage() {
             ></iframe>
           </div>
           <p className="max-w-2xl text-left text-base text-gray-900 sm:text-lg md:text-xl">
-            Watch a quick demo showing the complete workflow. From upload to download, you&apos;ll see
-            how easy it is to make any video classroom-appropriate.
+            Watch a quick demo showing the complete workflow. From upload to download, you&apos;ll
+            see how easy it is to make any video classroom-appropriate.
           </p>
         </section>
 
