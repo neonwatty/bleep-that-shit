@@ -63,6 +63,39 @@ export interface FAQItem {
   answer: string;
 }
 
+export const educatorFAQItems: FAQItem[] = [
+  {
+    question: 'Does this work on school Chromebooks?',
+    answer:
+      'Yes! Bleep That Sh*t! is 100% browser-based. It works on Chromebooks, school-managed devices, and any computer with a modern web browser. No software installation or IT approval needed.',
+  },
+  {
+    question: 'Is my student data safe? What about FERPA?',
+    answer:
+      'Absolutely. All processing happens locally in your browser. Your video files never upload to any server. This helps maintain FERPA compliance by keeping student-related content on your device only.',
+  },
+  {
+    question: 'How long does it take to censor a video?',
+    answer:
+      'A typical 10-minute video takes about 2-3 minutes to process: upload, transcribe with AI, select words to censor, and download. Much faster than traditional video editing software.',
+  },
+  {
+    question: 'Can I create word lists for different grade levels?',
+    answer:
+      'Yes! You can create and save custom word lists that persist in your browser. Create separate lists for elementary, middle school, and high school content, then apply them with one click.',
+  },
+  {
+    question: 'What file formats are supported?',
+    answer:
+      'The tool supports MP4 video files and MP3 audio files. These are the most common formats for downloaded educational content.',
+  },
+  {
+    question: 'Is there a file length limit?',
+    answer:
+      'Currently, the free browser-based tool supports files up to 10 minutes. This covers most documentary clips, TED Talks, and YouTube educational videos used in classrooms.',
+  },
+];
+
 export const homepageFAQItems: FAQItem[] = [
   {
     question: 'How do I bleep out words in a video?',

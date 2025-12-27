@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history needed for sitemap lastmod dates
 
       - name: Validate Discord invite link
         run: |
@@ -49,6 +51,24 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Verify sitemap is up to date
+        run: |
+          echo "Regenerating sitemap..."
+          npm run sitemap
+          echo ""
+          echo "Checking for uncommitted sitemap changes..."
+          if git diff --exit-code public/sitemap.xml; then
+            echo "✅ Sitemap is up to date"
+          else
+            echo ""
+            echo "❌ Sitemap is out of date!"
+            echo ""
+            echo "It looks like you added or modified pages but forgot to update the sitemap."
+            echo "Please run: npm run sitemap"
+            echo "Then commit the updated public/sitemap.xml"
+            exit 1
+          fi
 
       - name: Run ESLint
         run: npm run lint
