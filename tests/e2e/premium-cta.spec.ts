@@ -44,12 +44,12 @@ test.describe('Premium CTA', () => {
     // Verify censored result is visible
     await bleepPage.expectCensoredResultVisible();
 
-    // Verify Premium CTA appears
+    // Verify Pro Waitlist CTA appears
     await bleepPage.expectPremiumCtaVisible();
-    await expect(bleepPage.page.getByText('Want more power?')).toBeVisible();
+    await expect(bleepPage.page.getByText('Need to process longer videos?')).toBeVisible();
   });
 
-  test('premium CTA link points to /premium page', async () => {
+  test('waitlist CTA link points to home page waitlist section', async () => {
     // Upload and bleep
     await bleepPage.uploadFile(AUDIO_FIXTURE);
     await expect(bleepPage.audioPlayer).toBeVisible({ timeout: 15000 });
@@ -59,8 +59,8 @@ test.describe('Premium CTA', () => {
     await bleepPage.switchToBleepTab();
     await bleepPage.applyBleepsAndWait({ timeout: 60000 });
 
-    // Verify link points to internal premium page
-    await expect(bleepPage.premiumCtaLink).toHaveAttribute('href', '/premium');
+    // Verify link points to waitlist section on home page
+    await expect(bleepPage.premiumCtaLink).toHaveAttribute('href', '/#waitlist');
   });
 
   test('premium CTA can be dismissed and persists to localStorage', async () => {
