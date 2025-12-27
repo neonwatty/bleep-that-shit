@@ -155,7 +155,7 @@ export class BleepPage {
 
     // Pro Waitlist CTA (formerly Premium CTA)
     this.premiumCta = page.getByTestId('premium-cta');
-    this.premiumCtaLink = page.getByRole('link', { name: /Join the Pro Waitlist/i });
+    this.premiumCtaLink = this.premiumCta.getByRole('link', { name: /Join the Pro Waitlist/i });
     this.premiumCtaDismiss = page.getByLabel('Dismiss premium prompt');
   }
 
