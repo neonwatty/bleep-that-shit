@@ -21,7 +21,7 @@ const merriweather = Merriweather({
 
 // Get base path for production
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-const siteUrl = 'https://bleep-that-sht.com';
+const siteUrl = 'https://bleep-that-shit.com';
 
 export const viewport: Viewport = {
   width: 'device-width',

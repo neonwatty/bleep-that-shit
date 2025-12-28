@@ -1,4 +1,4 @@
-export const SITE_URL = 'https://bleep-that-sht.com';
+export const SITE_URL = 'https://bleep-that-shit.com';
 export const SITE_NAME = 'Bleep That Sh*t!';
 
 export const organizationSchema = {

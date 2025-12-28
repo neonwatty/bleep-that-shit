@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bleep-that-sht.com/sitemap.xml
+Sitemap: https://bleep-that-shit.com/sitemap.xml

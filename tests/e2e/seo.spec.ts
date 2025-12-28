@@ -10,7 +10,7 @@
 
 import { test, expect } from './e2e-setup';
 
-const SITE_URL = 'https://bleep-that-sht.com';
+const SITE_URL = 'https://bleep-that-shit.com';
 
 test.describe('SEO - Home Page', () => {
   test.beforeEach(async ({ page }) => {

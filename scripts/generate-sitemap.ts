@@ -12,7 +12,7 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const SITE_URL = 'https://bleep-that-sht.com';
+const SITE_URL = 'https://bleep-that-shit.com';
 const APP_DIR = path.join(process.cwd(), 'app');
 const CONTENT_DIR = path.join(process.cwd(), 'content');
 const OUTPUT_PATH = path.join(process.cwd(), 'public', 'sitemap.xml');
