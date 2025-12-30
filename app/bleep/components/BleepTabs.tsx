@@ -1,6 +1,7 @@
 'use client';
 
 import { trackEvent } from '@/lib/analytics';
+import { MobileStepIndicator } from '@/components/ui/MobileStepIndicator';
 
 interface Tab {
   id: string;
@@ -15,61 +16,40 @@ interface BleepTabsProps {
   tabs: Tab[];
 }
 
+// Short labels for mobile step indicator
+const shortLabels: Record<string, string> = {
+  setup: 'Upload',
+  review: 'Review',
+  bleep: 'Download',
+  wordsets: 'Word Lists',
+};
+
 export function BleepTabs({ activeTab, onTabChange, tabs }: BleepTabsProps) {
   const handleTabChange = (tabId: string) => {
     trackEvent('tab_changed', { tab_id: tabId });
     onTabChange(tabId);
   };
 
-  const activeTabData = tabs.find(tab => tab.id === activeTab);
+  // Calculate completed steps (all enabled steps before active)
+  const activeIndex = tabs.findIndex(t => t.id === activeTab);
+  const completedStepIds = tabs.filter((t, i) => i < activeIndex && t.enabled).map(t => t.id);
+
+  // Map tabs to steps with short labels
+  const steps = tabs.map(tab => ({
+    ...tab,
+    shortLabel: shortLabels[tab.id] || tab.label,
+  }));
 
   return (
     <div className="mb-0">
-      {/* Mobile: Dropdown menu */}
+      {/* Mobile: Horizontal Step Indicator */}
       <div className="md:hidden">
-        <label htmlFor="mobile-tab-select" className="sr-only">
-          Select a tab
-        </label>
-        <div className="relative">
-          <select
-            id="mobile-tab-select"
-            value={activeTab}
-            onChange={e => {
-              const selectedTab = tabs.find(t => t.id === e.target.value);
-              if (selectedTab?.enabled) {
-                handleTabChange(e.target.value);
-              }
-            }}
-            className="block w-full appearance-none rounded-lg border-2 border-indigo-500 bg-white px-4 py-3 pr-10 text-base font-semibold text-indigo-700 shadow-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-          >
-            {tabs.map(tab => (
-              <option key={tab.id} value={tab.id} disabled={!tab.enabled}>
-                {tab.icon} {tab.label} {!tab.enabled ? '🔒' : ''}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <svg
-              className="h-5 w-5 text-indigo-500"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-        </div>
-        {/* Current tab indicator below dropdown */}
-        <div className="mt-2 flex items-center gap-2 text-sm text-gray-600">
-          <span>Current:</span>
-          <span className="font-semibold text-indigo-700">
-            {activeTabData?.icon} {activeTabData?.label}
-          </span>
-        </div>
+        <MobileStepIndicator
+          steps={steps}
+          activeStepId={activeTab}
+          onStepChange={handleTabChange}
+          completedStepIds={completedStepIds}
+        />
       </div>
 
       {/* Desktop: File Folder Style Tabs */}

@@ -66,11 +66,13 @@ describe('BleepTabs', () => {
       expect(tablist).toBeInTheDocument();
     });
 
-    it('renders mobile dropdown select', () => {
+    it('renders mobile step indicator', () => {
       render(<BleepTabs {...defaultProps} />);
 
-      const select = screen.getByRole('combobox');
-      expect(select).toBeInTheDocument();
+      // MobileStepIndicator renders buttons for each step
+      expect(screen.getByLabelText('Step 1: Setup')).toBeInTheDocument();
+      expect(screen.getByLabelText('Step 2: Review')).toBeInTheDocument();
+      expect(screen.getByLabelText('Step 3: Bleep (locked)')).toBeInTheDocument();
     });
   });
 
@@ -112,11 +114,11 @@ describe('BleepTabs', () => {
       expect(buttons[0]).toHaveAttribute('aria-controls', 'tabpanel-setup');
     });
 
-    it('mobile dropdown shows active tab value', () => {
+    it('mobile step indicator shows active step', () => {
       render(<BleepTabs {...defaultProps} activeTab="setup" />);
 
-      const select = screen.getByRole('combobox') as HTMLSelectElement;
-      expect(select.value).toBe('setup');
+      const activeStep = screen.getByLabelText('Step 1: Setup');
+      expect(activeStep).toHaveAttribute('aria-current', 'step');
     });
   });
 
@@ -164,12 +166,11 @@ describe('BleepTabs', () => {
       expect(screen.getByLabelText('Tab locked')).toBeInTheDocument();
     });
 
-    it('mobile dropdown disables disabled tabs', () => {
+    it('mobile step indicator disables disabled steps', () => {
       render(<BleepTabs {...defaultProps} />);
 
-      const select = screen.getByRole('combobox');
-      const options = select.querySelectorAll('option');
-      expect(options[2]).toBeDisabled();
+      const disabledStep = screen.getByLabelText('Step 3: Bleep (locked)');
+      expect(disabledStep).toBeDisabled();
     });
   });
 
@@ -219,12 +220,12 @@ describe('BleepTabs', () => {
       expect(onTabChange).toHaveBeenCalledTimes(2);
     });
 
-    it('calls onTabChange when mobile dropdown changes', () => {
+    it('calls onTabChange when mobile step is clicked', () => {
       const onTabChange = vi.fn();
       render(<BleepTabs {...defaultProps} onTabChange={onTabChange} />);
 
-      const select = screen.getByRole('combobox');
-      fireEvent.change(select, { target: { value: 'review' } });
+      const reviewStep = screen.getByLabelText('Step 2: Review');
+      fireEvent.click(reviewStep);
 
       expect(onTabChange).toHaveBeenCalledWith('review');
     });
