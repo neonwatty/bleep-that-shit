@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Merriweather } from 'next/font/google';
 import './globals.css';
 import { MobileNav } from '@/components/MobileNav';
+import { BottomTabBar } from '@/components/BottomTabBar';
 import { Footer } from '@/components/Footer';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 import { JsonLd } from '@/components/JsonLd';
@@ -120,10 +121,11 @@ export default function RootLayout({
       </head>
       <body className="font-merriweather bg-pattern text-dark min-h-screen">
         <MobileNav />
-        <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 md:max-w-4xl md:px-0">
+        <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 pb-20 md:max-w-4xl md:px-0 md:pb-0">
           {children}
           <Footer />
         </main>
+        <BottomTabBar />
       </body>
       <GoogleAnalytics gaId="G-4ECB42TNZG" gadsId="AW-8611321497" />
     </html>

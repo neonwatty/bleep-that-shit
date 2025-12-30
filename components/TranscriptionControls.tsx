@@ -1,4 +1,5 @@
 import { HelpTooltip } from '@/components/ui/HelpTooltip';
+import { MobileSelect } from '@/components/ui/MobileSelect';
 
 interface TranscriptionControlsProps {
   language: string;
@@ -6,6 +7,63 @@ interface TranscriptionControlsProps {
   onLanguageChange: (language: string) => void;
   onModelChange: (model: string) => void;
 }
+
+const languageOptions = [
+  { value: 'en', label: 'English' },
+  { value: 'es', label: 'Spanish' },
+  { value: 'fr', label: 'French' },
+  { value: 'de', label: 'German' },
+  { value: 'it', label: 'Italian' },
+  { value: 'pt', label: 'Portuguese' },
+  { value: 'nl', label: 'Dutch' },
+  { value: 'pl', label: 'Polish' },
+  { value: 'ja', label: 'Japanese' },
+  { value: 'zh', label: 'Chinese' },
+  { value: 'ko', label: 'Korean' },
+];
+
+const modelOptions = [
+  {
+    value: 'Xenova/whisper-tiny.en',
+    label: 'Tiny (~50 MB)',
+    description: 'Fastest, lower accuracy',
+  },
+  {
+    value: 'Xenova/whisper-base.en',
+    label: 'Base (~85 MB)',
+    description: 'Balanced, recommended',
+  },
+  {
+    value: 'Xenova/whisper-small.en',
+    label: 'Small (~275 MB)',
+    description: 'Best accuracy, slower',
+  },
+  {
+    value: 'onnx-community/whisper-medium.en_timestamped',
+    label: 'Medium (~800 MB)',
+    description: 'Highest accuracy, slowest',
+  },
+  {
+    value: 'Xenova/whisper-tiny',
+    label: 'Tiny Multilingual (~50 MB)',
+    description: '90+ languages',
+  },
+  {
+    value: 'Xenova/whisper-base',
+    label: 'Base Multilingual (~85 MB)',
+    description: 'Recommended for non-English',
+  },
+  {
+    value: 'Xenova/whisper-small',
+    label: 'Small Multilingual (~275 MB)',
+    description: 'Best accuracy for non-English',
+  },
+  {
+    value: 'onnx-community/whisper-medium_timestamped',
+    label: 'Medium Multilingual (~800 MB)',
+    description: 'Highest accuracy, slowest',
+  },
+];
 
 export function TranscriptionControls({
   language,
@@ -17,24 +75,14 @@ export function TranscriptionControls({
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <div>
         <label className="mb-2 block text-sm font-semibold">Language</label>
-        <select
+        <MobileSelect
           data-testid="language-select"
           value={language}
-          onChange={e => onLanguageChange(e.target.value)}
-          className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:p-2"
-        >
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
-          <option value="it">Italian</option>
-          <option value="pt">Portuguese</option>
-          <option value="nl">Dutch</option>
-          <option value="pl">Polish</option>
-          <option value="ja">Japanese</option>
-          <option value="zh">Chinese</option>
-          <option value="ko">Korean</option>
-        </select>
+          options={languageOptions}
+          onChange={onLanguageChange}
+          label="Select Language"
+          placeholder="Select language"
+        />
       </div>
 
       <div>
@@ -42,25 +90,14 @@ export function TranscriptionControls({
           Model
           <HelpTooltip content="Tiny = fast but less accurate. Base = balanced. Small = most accurate but slower. Use Multilingual for non-English." />
         </label>
-        <select
+        <MobileSelect
           data-testid="model-select"
           value={model}
-          onChange={e => onModelChange(e.target.value)}
-          className="min-h-touch w-full rounded-lg border border-gray-300 p-3 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:p-2"
-        >
-          <option value="Xenova/whisper-tiny.en">Tiny (~50 MB, fastest, lower accuracy)</option>
-          <option value="Xenova/whisper-base.en">Base (~85 MB, balanced, recommended)</option>
-          <option value="Xenova/whisper-small.en">Small (~275 MB, best accuracy, slower)</option>
-          <option value="onnx-community/whisper-medium.en_timestamped">
-            Medium (~800 MB, highest accuracy, slowest)
-          </option>
-          <option value="Xenova/whisper-tiny">Tiny Multilingual (~50 MB, 90+ languages)</option>
-          <option value="Xenova/whisper-base">Base Multilingual (~85 MB, recommended)</option>
-          <option value="Xenova/whisper-small">Small Multilingual (~275 MB, best accuracy)</option>
-          <option value="onnx-community/whisper-medium_timestamped">
-            Medium Multilingual (~800 MB, highest accuracy, slowest)
-          </option>
-        </select>
+          options={modelOptions}
+          onChange={onModelChange}
+          label="Select Model"
+          placeholder="Select model"
+        />
       </div>
     </div>
   );
