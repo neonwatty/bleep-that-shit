@@ -32,8 +32,8 @@ test.describe('Responsive Design - Smoke Tests', () => {
       // File dropzone should be visible
       await expect(page.locator('text=/Drag and drop/i')).toBeVisible();
 
-      // Controls should be visible
-      await expect(page.locator('select').first()).toBeVisible();
+      // Controls should be visible (MobileSelect uses button on mobile)
+      await expect(page.getByTestId('language-select')).toBeVisible();
     });
 
     test('sampler page renders correctly on mobile', async ({ page }) => {
