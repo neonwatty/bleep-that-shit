@@ -14,7 +14,9 @@ export class NavbarComponent {
     // Navbar elements - use main-navbar testid to distinguish from bottom tab bar
     this.logo = page.locator('[data-testid="main-navbar"]').getByTestId('navbar-logo');
     this.bleepLink = page.locator('[data-testid="main-navbar"]').getByTestId('navbar-bleep-link');
-    this.samplerLink = page.locator('[data-testid="main-navbar"]').getByTestId('navbar-sampler-link');
+    this.samplerLink = page
+      .locator('[data-testid="main-navbar"]')
+      .getByTestId('navbar-sampler-link');
   }
 
   /**
