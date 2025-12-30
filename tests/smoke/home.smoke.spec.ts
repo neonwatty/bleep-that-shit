@@ -113,8 +113,8 @@ test.describe('Home Page - Smoke Tests', () => {
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
 
-    // Check main navbar is still visible on mobile
-    const navbar = page.locator('[data-testid="main-navbar"]');
+    // Check mobile navbar is visible on mobile
+    const navbar = page.locator('[data-testid="mobile-navbar"]');
     await expect(navbar).toBeVisible();
 
     // Check hero section is visible

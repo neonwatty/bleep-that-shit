@@ -11,8 +11,8 @@ test.describe('Responsive Design - Smoke Tests', () => {
     test('home page renders correctly on mobile', async ({ page }) => {
       await page.goto('/');
 
-      // Navbar should be visible (use main navbar)
-      const navbar = page.locator('[data-testid="main-navbar"]');
+      // Mobile navbar should be visible on mobile
+      const navbar = page.locator('[data-testid="mobile-navbar"]');
       await expect(navbar).toBeVisible();
 
       // Main heading should be visible
