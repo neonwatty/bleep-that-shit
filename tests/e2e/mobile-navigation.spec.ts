@@ -2,9 +2,9 @@
  * E2E Test: Mobile Navigation
  *
  * Tests mobile-specific navigation:
- * - Hamburger menu opens/closes
- * - Menu links navigate correctly
- * - Mobile navbar visible at small viewports
+ * - Bottom tab bar visible on mobile
+ * - Tab bar links navigate correctly
+ * - Mobile navbar header visible at small viewports
  * - Desktop navbar visible at large viewports
  */
 
@@ -15,121 +15,77 @@ const MOBILE_VIEWPORT = { width: 375, height: 667 };
 // Desktop viewport size
 const DESKTOP_VIEWPORT = { width: 1280, height: 720 };
 
-test.describe('Mobile Navigation - Hamburger Menu', () => {
+test.describe('Mobile Navigation - Bottom Tab Bar', () => {
   test.beforeEach(async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize(MOBILE_VIEWPORT);
     await page.goto('/');
   });
 
-  test('should show mobile navbar on small screens', async ({ page }) => {
-    // Mobile nav should be visible
-    const mobileNav = page.locator('nav').filter({ hasText: 'Bleep That Sh*t!' }).first();
+  test('should show mobile navbar header on small screens', async ({ page }) => {
+    // Mobile nav header should be visible
+    const mobileNav = page.getByTestId('mobile-navbar');
     await expect(mobileNav).toBeVisible();
 
-    // Hamburger button should be visible
-    const hamburgerButton = page.getByRole('button', { name: /toggle menu/i });
-    await expect(hamburgerButton).toBeVisible();
+    // Should show the logo
+    await expect(page.getByTestId('navbar-logo').first()).toBeVisible();
   });
 
-  test('should open menu when clicking hamburger', async ({ page }) => {
-    // Click hamburger
-    await page.getByRole('button', { name: /toggle menu/i }).click();
+  test('should show bottom tab bar on mobile', async ({ page }) => {
+    // Bottom tab bar should be visible
+    const bottomTabBar = page.getByTestId('bottom-tab-bar');
+    await expect(bottomTabBar).toBeVisible();
 
-    // Menu drawer should be visible - look for the drawer element
-    const menuDrawer = page
-      .locator('[data-testid="mobile-menu-drawer"]')
-      .or(page.locator('div[role="dialog"]'))
-      .or(page.locator('.fixed.inset-0'));
-    await expect(menuDrawer.first()).toBeVisible();
-
-    // Menu items should be visible (use role-based selectors in menu context)
-    await expect(page.getByRole('link', { name: /home/i }).first()).toBeVisible();
-    await expect(page.getByRole('link', { name: /bleep/i }).first()).toBeVisible();
-    await expect(page.getByRole('link', { name: /sampler/i }).first()).toBeVisible();
+    // Tab bar should have Home, Bleep, and Sampler links
+    await expect(bottomTabBar.getByText('Home')).toBeVisible();
+    await expect(bottomTabBar.getByText('Bleep')).toBeVisible();
+    await expect(bottomTabBar.getByText('Sampler')).toBeVisible();
   });
 
-  test('should close menu when clicking X button', async ({ page }) => {
-    // Open menu
-    await page.getByRole('button', { name: /toggle menu/i }).click();
-
-    // Wait for menu to open
-    await expect(page.getByRole('link', { name: /home/i }).first()).toBeVisible();
-
-    // Click close button
-    await page.getByRole('button', { name: /close menu/i }).click();
-
-    // Menu should be hidden - hamburger should be visible again
-    await expect(page.getByRole('button', { name: /toggle menu/i })).toBeVisible();
-  });
-
-  test('should close menu when clicking overlay', async ({ page }) => {
-    // Open menu
-    await page.getByRole('button', { name: /toggle menu/i }).click();
-
-    // Wait for menu to open
-    await expect(page.getByRole('link', { name: /home/i }).first()).toBeVisible();
-
-    // Click overlay (click outside the menu drawer)
-    await page.mouse.click(50, 300);
-
-    // Menu should close - hamburger should be visible
-    await expect(page.getByRole('button', { name: /toggle menu/i })).toBeVisible();
-  });
-
-  test('should navigate to home from menu', async ({ page }) => {
+  test('should navigate to home from tab bar', async ({ page }) => {
     // Go to bleep page first
     await page.goto('/bleep');
     await page.setViewportSize(MOBILE_VIEWPORT);
 
-    // Open menu
-    await page.getByRole('button', { name: /toggle menu/i }).click();
-
-    // Click Home link
-    await page.getByRole('link', { name: /home/i }).click();
+    // Click Home in tab bar
+    const bottomTabBar = page.getByTestId('bottom-tab-bar');
+    await bottomTabBar.getByText('Home').click();
 
     // Should be on home page
     await expect(page).toHaveURL('/');
   });
 
-  test('should navigate to bleep page from menu', async ({ page }) => {
-    // Open menu
-    await page.getByRole('button', { name: /toggle menu/i }).click();
-
-    // Wait for menu to open
-    await expect(page.getByRole('link', { name: /home/i }).first()).toBeVisible();
-
-    // Click Bleep link (in mobile menu) - use first matching link
-    await page.locator('a[href="/bleep"]').first().click();
+  test('should navigate to bleep page from tab bar', async ({ page }) => {
+    // Click Bleep in tab bar
+    const bottomTabBar = page.getByTestId('bottom-tab-bar');
+    await bottomTabBar.getByText('Bleep').click();
 
     // Should be on bleep page
     await expect(page).toHaveURL(/\/bleep$/);
   });
 
-  test('should navigate to sampler page from menu', async ({ page }) => {
-    // Open menu
-    await page.getByRole('button', { name: /toggle menu/i }).click();
-
-    // Wait for menu to open
-    await expect(page.getByRole('link', { name: /home/i }).first()).toBeVisible();
-
-    // Click Sampler link (in mobile menu) - use first matching link
-    await page.locator('a[href="/sampler"]').first().click();
+  test('should navigate to sampler page from tab bar', async ({ page }) => {
+    // Click Sampler in tab bar
+    const bottomTabBar = page.getByTestId('bottom-tab-bar');
+    await bottomTabBar.getByText('Sampler').click();
 
     // Should be on sampler page
     await expect(page).toHaveURL(/\/sampler$/);
   });
 
-  test('should show social links in menu drawer', async ({ page }) => {
-    // Open menu
-    await page.getByRole('button', { name: /toggle menu/i }).click();
+  test('should highlight active tab', async ({ page }) => {
+    // On home page, Home tab should be active
+    const bottomTabBar = page.getByTestId('bottom-tab-bar');
+    const homeLink = bottomTabBar.getByRole('link', { name: 'Home' });
+    await expect(homeLink).toHaveClass(/text-black/);
 
-    // Wait for menu to open
-    await expect(page.getByRole('link', { name: /home/i }).first()).toBeVisible();
+    // Navigate to bleep
+    await bottomTabBar.getByText('Bleep').click();
+    await expect(page).toHaveURL(/\/bleep$/);
 
-    // Social links should be present (use first() to avoid strict mode)
-    await expect(page.getByRole('link', { name: /github/i }).first()).toBeVisible();
-    await expect(page.getByRole('link', { name: /discord/i }).first()).toBeVisible();
+    // Bleep tab should now be active
+    const bleepLink = bottomTabBar.getByRole('link', { name: 'Bleep' });
+    await expect(bleepLink).toHaveClass(/text-black/);
   });
 });
 
@@ -141,33 +97,31 @@ test.describe('Desktop Navigation', () => {
   });
 
   test('should show desktop navbar on large screens', async ({ page }) => {
-    // Desktop nav should be visible (hidden md:flex class)
-    const desktopNav = page.locator('nav.hidden.md\\:flex');
+    // Desktop nav should be visible
+    const desktopNav = page.getByTestId('main-navbar');
     await expect(desktopNav).toBeVisible();
 
-    // Navbar logo (use last() to get desktop nav version, first is hidden mobile nav)
+    // Navbar logo
     await expect(page.getByTestId('navbar-logo').last()).toBeVisible();
 
-    // Nav links (use last() to get visible desktop versions)
-    await expect(page.getByTestId('navbar-bleep-link').last()).toBeVisible();
-    await expect(page.getByTestId('navbar-sampler-link').last()).toBeVisible();
+    // Nav links
+    await expect(page.getByTestId('navbar-bleep-link')).toBeVisible();
+    await expect(page.getByTestId('navbar-sampler-link')).toBeVisible();
   });
 
-  test('should not show hamburger on desktop', async ({ page }) => {
-    // Hamburger should be hidden on desktop
-    const hamburgerButton = page.getByRole('button', { name: /toggle menu/i });
-    await expect(hamburgerButton).not.toBeVisible();
+  test('should not show bottom tab bar on desktop', async ({ page }) => {
+    // Bottom tab bar should be hidden on desktop (md:hidden class)
+    const bottomTabBar = page.getByTestId('bottom-tab-bar');
+    await expect(bottomTabBar).not.toBeVisible();
   });
 
   test('should navigate to bleep page from desktop navbar', async ({ page }) => {
-    // Use last() to get visible desktop nav link
-    await page.getByTestId('navbar-bleep-link').last().click();
+    await page.getByTestId('navbar-bleep-link').click();
     await expect(page).toHaveURL(/\/bleep$/);
   });
 
   test('should navigate to sampler page from desktop navbar', async ({ page }) => {
-    // Use last() to get visible desktop nav link
-    await page.getByTestId('navbar-sampler-link').last().click();
+    await page.getByTestId('navbar-sampler-link').click();
     await expect(page).toHaveURL(/\/sampler$/);
   });
 
@@ -176,7 +130,7 @@ test.describe('Desktop Navigation', () => {
     await page.goto('/bleep');
     await page.setViewportSize(DESKTOP_VIEWPORT);
 
-    // Click logo (use last() to get visible desktop nav logo)
+    // Click logo
     await page.getByTestId('navbar-logo').last().click();
 
     // Should be on home page
@@ -188,17 +142,17 @@ test.describe('Responsive Navigation Transition', () => {
   test('should switch between mobile and desktop nav on resize', async ({ page }) => {
     await page.goto('/');
 
-    // Start with mobile
+    // Start with mobile - bottom tab bar visible
     await page.setViewportSize(MOBILE_VIEWPORT);
-    const hamburger = page.getByRole('button', { name: /toggle menu/i });
-    await expect(hamburger).toBeVisible();
+    const bottomTabBar = page.getByTestId('bottom-tab-bar');
+    await expect(bottomTabBar).toBeVisible();
 
-    // Switch to desktop
+    // Switch to desktop - bottom tab bar hidden
     await page.setViewportSize(DESKTOP_VIEWPORT);
-    await expect(hamburger).not.toBeVisible();
+    await expect(bottomTabBar).not.toBeVisible();
 
-    // Switch back to mobile
+    // Switch back to mobile - bottom tab bar visible again
     await page.setViewportSize(MOBILE_VIEWPORT);
-    await expect(hamburger).toBeVisible();
+    await expect(bottomTabBar).toBeVisible();
   });
 });
