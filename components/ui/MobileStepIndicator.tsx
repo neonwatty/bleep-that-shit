@@ -21,7 +21,7 @@ export function MobileStepIndicator({
   onStepChange,
   completedStepIds = [],
 }: MobileStepIndicatorProps) {
-  const activeIndex = steps.findIndex((s) => s.id === activeStepId);
+  const activeIndex = steps.findIndex(s => s.id === activeStepId);
 
   return (
     <div className="w-full px-2">
@@ -83,7 +83,7 @@ export function MobileStepIndicator({
 
                 {/* Label */}
                 <span
-                  className={`mt-1.5 text-center text-xs font-medium leading-tight ${
+                  className={`mt-1.5 text-center text-xs leading-tight font-medium ${
                     isActive
                       ? 'text-indigo-700'
                       : showCheckmark

@@ -44,7 +44,7 @@ export function MobileSelect({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const selectedOption = options.find((opt) => opt.value === value);
+  const selectedOption = options.find(opt => opt.value === value);
   const displayValue = selectedOption?.label || placeholder;
 
   const handleSelect = (optionValue: string) => {
@@ -60,13 +60,11 @@ export function MobileSelect({
           type="button"
           data-testid={testId}
           onClick={() => setIsOpen(true)}
-          className="flex min-h-touch w-full items-center justify-between rounded-lg border border-gray-300 bg-white p-3 text-left text-base focus:border-transparent focus:ring-2 focus:ring-blue-500"
+          className="min-h-touch flex w-full items-center justify-between rounded-lg border border-gray-300 bg-white p-3 text-left text-base focus:border-transparent focus:ring-2 focus:ring-blue-500"
           aria-haspopup="listbox"
           aria-expanded={isOpen}
         >
-          <span className={selectedOption ? 'text-gray-900' : 'text-gray-500'}>
-            {displayValue}
-          </span>
+          <span className={selectedOption ? 'text-gray-900' : 'text-gray-500'}>{displayValue}</span>
           <svg
             className="h-5 w-5 text-gray-400"
             fill="none"
@@ -79,7 +77,7 @@ export function MobileSelect({
 
         <BottomSheet isOpen={isOpen} onClose={() => setIsOpen(false)} title={label}>
           <div className="py-2" role="listbox" aria-label={label}>
-            {options.map((option) => {
+            {options.map(option => {
               const isSelected = option.value === value;
               return (
                 <button
@@ -89,25 +87,17 @@ export function MobileSelect({
                   aria-selected={isSelected}
                   onClick={() => handleSelect(option.value)}
                   className={`flex w-full items-start gap-3 rounded-lg px-4 py-4 text-left transition-colors ${
-                    isSelected
-                      ? 'bg-blue-50'
-                      : 'hover:bg-gray-50 active:bg-gray-100'
+                    isSelected ? 'bg-blue-50' : 'hover:bg-gray-50 active:bg-gray-100'
                   }`}
                 >
                   {/* Selection indicator */}
                   <div
                     className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
-                      isSelected
-                        ? 'border-blue-500 bg-blue-500'
-                        : 'border-gray-300 bg-white'
+                      isSelected ? 'border-blue-500 bg-blue-500' : 'border-gray-300 bg-white'
                     }`}
                   >
                     {isSelected && (
-                      <svg
-                        className="h-3 w-3 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
+                      <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path
                           fillRule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -155,10 +145,10 @@ export function MobileSelect({
     <select
       data-testid={testId}
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={e => onChange(e.target.value)}
       className="min-h-touch w-full rounded-lg border border-gray-300 p-2 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500"
     >
-      {options.map((option) => (
+      {options.map(option => (
         <option key={option.value} value={option.value}>
           {option.label}
         </option>

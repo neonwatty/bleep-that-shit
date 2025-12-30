@@ -89,16 +89,16 @@ export function BottomTabBar() {
 
   const isActive = (tab: TabItem) => {
     if (tab.matchPaths) {
-      return tab.matchPaths.some((path) => pathname === path);
+      return tab.matchPaths.some(path => pathname === path);
     }
     return pathname === tab.href;
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur-sm md:hidden">
+    <nav className="fixed right-0 bottom-0 left-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur-sm md:hidden">
       {/* Safe area padding for iOS */}
-      <div className="flex items-center justify-around pb-safe">
-        {tabs.map((tab) => {
+      <div className="pb-safe flex items-center justify-around">
+        {tabs.map(tab => {
           const active = isActive(tab);
           return (
             <Link
@@ -118,9 +118,7 @@ export function BottomTabBar() {
                 {tab.label}
               </span>
               {/* Active indicator dot */}
-              {active && (
-                <span className="absolute bottom-1 h-1 w-1 rounded-full bg-black" />
-              )}
+              {active && <span className="absolute bottom-1 h-1 w-1 rounded-full bg-black" />}
             </Link>
           );
         })}

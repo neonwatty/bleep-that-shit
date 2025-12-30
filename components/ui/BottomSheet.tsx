@@ -117,7 +117,10 @@ export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetPro
         )}
 
         {/* Content */}
-        <div className="overflow-y-auto overscroll-contain px-4 pb-safe" style={{ maxHeight: 'calc(85vh - 80px)' }}>
+        <div
+          className="pb-safe overflow-y-auto overscroll-contain px-4"
+          style={{ maxHeight: 'calc(85vh - 80px)' }}
+        >
           {children}
         </div>
       </div>
