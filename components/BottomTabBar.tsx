@@ -95,7 +95,7 @@ export function BottomTabBar() {
   };
 
   return (
-    <nav className="fixed right-0 bottom-0 left-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur-sm md:hidden">
+    <nav data-testid="bottom-tab-bar" className="fixed right-0 bottom-0 left-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur-sm md:hidden">
       {/* Safe area padding for iOS */}
       <div className="pb-safe flex items-center justify-around">
         {tabs.map(tab => {

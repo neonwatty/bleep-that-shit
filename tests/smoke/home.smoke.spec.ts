@@ -95,10 +95,10 @@ test.describe('Home Page - Smoke Tests', () => {
     const navbar = new NavbarComponent(page);
     await navbar.expectNavbarVisible();
 
-    // Verify navbar contains expected links (use visible nav)
-    await expect(page.locator('nav:visible a[href="/"]')).toBeVisible();
-    await expect(page.locator('nav:visible a[href="/bleep"]')).toBeVisible();
-    await expect(page.locator('nav:visible a[href="/sampler"]')).toBeVisible();
+    // Verify navbar contains expected links (use main navbar)
+    await expect(page.locator('[data-testid="main-navbar"] a[href="/"]')).toBeVisible();
+    await expect(page.locator('[data-testid="main-navbar"] a[href="/bleep"]')).toBeVisible();
+    await expect(page.locator('[data-testid="main-navbar"] a[href="/sampler"]')).toBeVisible();
   });
 
   test('hero CTA buttons have correct href attributes', async ({ page }) => {
@@ -113,8 +113,8 @@ test.describe('Home Page - Smoke Tests', () => {
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
 
-    // Check navbar is still visible on mobile (use visible nav)
-    const navbar = page.locator('nav:visible');
+    // Check main navbar is still visible on mobile
+    const navbar = page.locator('[data-testid="main-navbar"]');
     await expect(navbar).toBeVisible();
 
     // Check hero section is visible
@@ -126,8 +126,8 @@ test.describe('Home Page - Smoke Tests', () => {
     // Test tablet viewport
     await page.setViewportSize({ width: 768, height: 1024 });
 
-    // Verify main elements are visible (use visible nav since mobile and desktop navs both exist)
-    await expect(page.locator('nav:visible')).toBeVisible();
+    // Verify main elements are visible (use main navbar)
+    await expect(page.locator('[data-testid="main-navbar"]')).toBeVisible();
     await expect(page.locator('h1').first()).toBeVisible();
     await expect(page.locator('footer').first()).toBeVisible();
   });
@@ -136,8 +136,8 @@ test.describe('Home Page - Smoke Tests', () => {
     // Test desktop viewport
     await page.setViewportSize({ width: 1920, height: 1080 });
 
-    // Verify layout is properly displayed (use visible nav)
-    const navbar = page.locator('nav:visible');
+    // Verify layout is properly displayed (use main navbar)
+    const navbar = page.locator('[data-testid="main-navbar"]');
     await expect(navbar).toBeVisible();
 
     // Check navbar has horizontal layout on desktop

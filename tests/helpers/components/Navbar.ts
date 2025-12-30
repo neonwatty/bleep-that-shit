@@ -11,10 +11,10 @@ export class NavbarComponent {
   constructor(page: Page) {
     this.page = page;
 
-    // Navbar elements - filter to only visible navbar since mobile and desktop navs both exist
-    this.logo = page.locator('nav:visible').getByTestId('navbar-logo');
-    this.bleepLink = page.locator('nav:visible').getByTestId('navbar-bleep-link');
-    this.samplerLink = page.locator('nav:visible').getByTestId('navbar-sampler-link');
+    // Navbar elements - use main-navbar testid to distinguish from bottom tab bar
+    this.logo = page.locator('[data-testid="main-navbar"]').getByTestId('navbar-logo');
+    this.bleepLink = page.locator('[data-testid="main-navbar"]').getByTestId('navbar-bleep-link');
+    this.samplerLink = page.locator('[data-testid="main-navbar"]').getByTestId('navbar-sampler-link');
   }
 
   /**
