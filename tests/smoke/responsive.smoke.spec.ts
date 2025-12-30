@@ -11,8 +11,8 @@ test.describe('Responsive Design - Smoke Tests', () => {
     test('home page renders correctly on mobile', async ({ page }) => {
       await page.goto('/');
 
-      // Navbar should be visible (use visible nav)
-      const navbar = page.locator('nav:visible');
+      // Mobile navbar should be visible on mobile
+      const navbar = page.locator('[data-testid="mobile-navbar"]');
       await expect(navbar).toBeVisible();
 
       // Main heading should be visible
@@ -32,8 +32,8 @@ test.describe('Responsive Design - Smoke Tests', () => {
       // File dropzone should be visible
       await expect(page.locator('text=/Drag and drop/i')).toBeVisible();
 
-      // Controls should be visible
-      await expect(page.locator('select').first()).toBeVisible();
+      // Controls should be visible (MobileSelect uses button on mobile)
+      await expect(page.getByTestId('language-select')).toBeVisible();
     });
 
     test('sampler page renders correctly on mobile', async ({ page }) => {
@@ -55,8 +55,8 @@ test.describe('Responsive Design - Smoke Tests', () => {
     test('home page renders correctly on tablet', async ({ page }) => {
       await page.goto('/');
 
-      // All main sections should be visible (use visible nav)
-      await expect(page.locator('nav:visible')).toBeVisible();
+      // All main sections should be visible (use main navbar)
+      await expect(page.locator('[data-testid="main-navbar"]')).toBeVisible();
       await expect(page.locator('h1').first()).toBeVisible();
       await expect(page.locator('footer').first()).toBeVisible();
 
@@ -95,7 +95,7 @@ test.describe('Responsive Design - Smoke Tests', () => {
     test('home page renders correctly on desktop', async ({ page }) => {
       await page.goto('/');
 
-      const navbar = page.locator('nav:visible');
+      const navbar = page.locator('[data-testid="main-navbar"]');
       await expect(navbar).toBeVisible();
 
       // Check navbar has horizontal layout on desktop
@@ -142,9 +142,9 @@ test.describe('Responsive Design - Smoke Tests', () => {
       const mainContent = page.locator('main, div[class*="container"]').first();
       await expect(mainContent).toBeVisible();
 
-      // All elements should be visible (use visible nav)
+      // All elements should be visible (use main navbar)
       await expect(page.locator('h1').first()).toBeVisible();
-      await expect(page.locator('nav:visible')).toBeVisible();
+      await expect(page.locator('[data-testid="main-navbar"]')).toBeVisible();
     });
 
     test('bleep page renders correctly on wide desktop', async ({ page }) => {

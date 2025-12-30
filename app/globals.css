@@ -460,3 +460,15 @@ h6 {
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
 }
+
+/* iOS Safe Area Support for Bottom Tab Bar */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Ensure content doesn't get hidden behind bottom tab bar */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+}

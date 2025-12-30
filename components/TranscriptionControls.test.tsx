@@ -68,14 +68,15 @@ describe('TranscriptionControls', () => {
     render(<TranscriptionControls {...defaultProps} />);
 
     const select = screen.getByTestId('model-select');
-    expect(select).toHaveTextContent('Tiny (~50 MB, fastest, lower accuracy)');
-    expect(select).toHaveTextContent('Base (~85 MB, balanced, recommended)');
-    expect(select).toHaveTextContent('Small (~275 MB, best accuracy, slower)');
-    expect(select).toHaveTextContent('Medium (~800 MB, highest accuracy, slowest)');
-    expect(select).toHaveTextContent('Tiny Multilingual (~50 MB, 90+ languages)');
-    expect(select).toHaveTextContent('Base Multilingual (~85 MB, recommended)');
-    expect(select).toHaveTextContent('Small Multilingual (~275 MB, best accuracy)');
-    expect(select).toHaveTextContent('Medium Multilingual (~800 MB, highest accuracy, slowest)');
+    // MobileSelect shows labels only in the button, descriptions are shown in bottom sheet
+    expect(select).toHaveTextContent('Tiny (~50 MB)');
+    expect(select).toHaveTextContent('Base (~85 MB)');
+    expect(select).toHaveTextContent('Small (~275 MB)');
+    expect(select).toHaveTextContent('Medium (~800 MB)');
+    expect(select).toHaveTextContent('Tiny Multilingual (~50 MB)');
+    expect(select).toHaveTextContent('Base Multilingual (~85 MB)');
+    expect(select).toHaveTextContent('Small Multilingual (~275 MB)');
+    expect(select).toHaveTextContent('Medium Multilingual (~800 MB)');
   });
 
   it('has correct model option values', () => {
