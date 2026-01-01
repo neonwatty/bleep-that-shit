@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   output: 'export',
   basePath: isProd ? basePath : '',
   assetPrefix: isProd ? basePath : '',
+  trailingSlash: true, // Required for Capacitor static file routing
   images: {
     unoptimized: true,
   },

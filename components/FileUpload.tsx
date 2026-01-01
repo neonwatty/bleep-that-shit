@@ -56,12 +56,12 @@ export function FileUpload({
       {!file && !isLoadingSample && (
         <div className="mt-4 text-center">
           <p className="mb-2 text-sm text-gray-600">No video? Try our sample:</p>
-          <a
+          <Link
             href="/bleep?sample=bob-ross"
             className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
           >
             🎨 Bob Ross Video
-          </a>
+          </Link>
         </div>
       )}
 

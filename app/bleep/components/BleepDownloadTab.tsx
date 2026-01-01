@@ -7,6 +7,7 @@ import { FloatingNavArrows } from './FloatingNavArrows';
 import { HelpTooltip } from '@/components/ui/HelpTooltip';
 import type { MatchedWord } from '../hooks/useBleepState';
 import { trackEvent } from '@/lib/analytics';
+import { downloadFile, isNativeApp } from '@/lib/utils/downloadFile';
 
 interface BleepDownloadTabProps {
   file: File | null;
@@ -55,6 +56,11 @@ export function BleepDownloadTab({
     }
     return false;
   });
+  const [downloadStatus, setDownloadStatus] = useState<{
+    message: string;
+    isError: boolean;
+  } | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDismissPremiumCta = () => {
     setIsPremiumCtaDismissed(true);
@@ -62,6 +68,33 @@ export function BleepDownloadTab({
     trackEvent('premium_cta_dismissed', {
       location: 'download_success',
     });
+  };
+
+  const handleDownload = async (
+    url: string,
+    filename: string,
+    mimeType: string,
+    fileType: 'video' | 'audio'
+  ) => {
+    setIsDownloading(true);
+    setDownloadStatus(null);
+
+    trackEvent('download_censored_file', {
+      file_type: fileType,
+      file_format: fileType === 'video' ? 'mp4' : 'mp3',
+      is_native: isNativeApp(),
+    });
+
+    const result = await downloadFile(url, filename, mimeType);
+
+    setIsDownloading(false);
+    setDownloadStatus({
+      message: result.message,
+      isError: !result.success,
+    });
+
+    // Clear status after 5 seconds
+    setTimeout(() => setDownloadStatus(null), 5000);
   };
 
   return (
@@ -164,35 +197,46 @@ export function BleepDownloadTab({
                 >
                   <source src={censoredMediaUrl} type="video/mp4" />
                 </video>
-                <a
+                <button
                   data-testid="download-button"
-                  href={censoredMediaUrl}
-                  download="censored-video.mp4"
-                  className="mt-2 inline-block rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
                   onClick={() =>
-                    trackEvent('download_censored_file', { file_type: 'video', file_format: 'mp4' })
+                    handleDownload(censoredMediaUrl, 'censored-video.mp4', 'video/mp4', 'video')
                   }
+                  disabled={isDownloading}
+                  className="mt-2 inline-block rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Download Censored Video
-                </a>
+                  {isDownloading ? 'Saving...' : 'Download Censored Video'}
+                </button>
               </div>
             ) : (
               <>
                 <audio key={censoredMediaUrl} controls className="w-full">
                   <source src={censoredMediaUrl} type="audio/mpeg" />
                 </audio>
-                <a
+                <button
                   data-testid="download-button"
-                  href={censoredMediaUrl}
-                  download="censored-audio.mp3"
-                  className="mt-2 inline-block rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
                   onClick={() =>
-                    trackEvent('download_censored_file', { file_type: 'audio', file_format: 'mp3' })
+                    handleDownload(censoredMediaUrl, 'censored-audio.mp3', 'audio/mpeg', 'audio')
                   }
+                  disabled={isDownloading}
+                  className="mt-2 inline-block rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Download Censored Audio
-                </a>
+                  {isDownloading ? 'Saving...' : 'Download Censored Audio'}
+                </button>
               </>
+            )}
+
+            {/* Download status message */}
+            {downloadStatus && (
+              <div
+                className={`mt-2 rounded p-2 text-sm ${
+                  downloadStatus.isError
+                    ? 'border border-red-300 bg-red-100 text-red-700'
+                    : 'border border-green-300 bg-green-100 text-green-700'
+                }`}
+              >
+                {downloadStatus.message}
+              </div>
             )}
 
             <div className="mt-4 rounded border-l-4 border-blue-400 bg-blue-50 p-3 text-sm">
