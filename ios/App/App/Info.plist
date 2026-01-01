@@ -47,5 +47,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Bleep That needs access to your photo library to select videos and audio files for censoring.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Bleep That needs permission to save censored videos to your photo library.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>
