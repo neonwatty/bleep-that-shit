@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getPostBySlug, getAllSlugs } from '@/lib/blog/posts';
+import { getPostBySlug, getAllSlugs, getRelatedPosts } from '@/lib/blog/posts';
 import { BlogCTA } from '@/components/blog/BlogCTA';
+import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { SITE_URL } from '@/lib/constants/structuredData';
 import { JsonLd } from '@/components/JsonLd';
 
@@ -71,6 +72,9 @@ export default async function BlogPostPage({ params }: PageProps) {
   if (!post) {
     notFound();
   }
+
+  // Get related posts based on tags
+  const relatedPosts = getRelatedPosts(slug, post.tags, 3);
 
   const imageUrl = post.featuredImage
     ? `${SITE_URL}${post.featuredImage}`
@@ -162,6 +166,9 @@ export default async function BlogPostPage({ params }: PageProps) {
 
         {/* CTA */}
         <BlogCTA />
+
+        {/* Related Posts */}
+        <RelatedPosts posts={relatedPosts} currentSlug={slug} />
 
         {/* Back link */}
         <div className="mt-8 border-t border-gray-200 pt-8">

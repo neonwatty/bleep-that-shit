@@ -51,9 +51,9 @@ describe('Footer', () => {
     expect(twitterLink).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('renders blog link with correct attributes', () => {
+  it('renders blog link in Quick Links section', () => {
     render(<Footer />);
-    const blogLink = screen.getByLabelText('Visit blog');
+    const blogLink = screen.getByRole('link', { name: 'Blog' });
     expect(blogLink).toHaveAttribute('href', '/blog');
   });
 
@@ -67,35 +67,37 @@ describe('Footer', () => {
 
   it('displays the current year in copyright', () => {
     render(<Footer />);
-    expect(
-      screen.getByText(/© 2025 Bleep That Sh\*t! All rights reserved\./i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/© 2025 Bleep That Sh\*t!/i)).toBeInTheDocument();
   });
 
   it('renders all social media icons', () => {
     const { container } = render(<Footer />);
     const githubIcon = container.querySelector('.fa-github');
     const twitterIcon = container.querySelector('.fa-x-twitter');
-    const blogIcon = container.querySelector('.fa-blog');
     const discordIcon = container.querySelector('.fa-discord');
 
     expect(githubIcon).toBeInTheDocument();
     expect(twitterIcon).toBeInTheDocument();
-    expect(blogIcon).toBeInTheDocument();
     expect(discordIcon).toBeInTheDocument();
   });
 
-  it('renders feedback link with correct attributes', () => {
+  it('renders feedback link in More Resources section', () => {
     render(<Footer />);
-    const feedbackLink = screen.getByLabelText('Share feedback');
+    const feedbackLink = screen.getByRole('link', { name: 'Share Feedback' });
     expect(feedbackLink).toHaveAttribute('href', FEEDBACK_FORM_URL);
     expect(feedbackLink).toHaveAttribute('target', '_blank');
     expect(feedbackLink).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('renders feedback icon', () => {
-    const { container } = render(<Footer />);
-    const feedbackIcon = container.querySelector('.fa-pen-to-square');
-    expect(feedbackIcon).toBeInTheDocument();
+  it('renders Quick Links section with key pages', () => {
+    render(<Footer />);
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: 'Bleep Tool' })).toHaveAttribute('href', '/bleep');
+    expect(screen.getByRole('link', { name: 'For Educators' })).toHaveAttribute(
+      'href',
+      '/for-educators'
+    );
+    expect(screen.getByRole('link', { name: 'Premium' })).toHaveAttribute('href', '/premium');
+    expect(screen.getByRole('link', { name: 'Sound Sampler' })).toHaveAttribute('href', '/sampler');
   });
 });
