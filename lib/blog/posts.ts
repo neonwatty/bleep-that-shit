@@ -94,3 +94,40 @@ export function getAllSlugs(): string[] {
     .filter(name => name.endsWith('.md'))
     .map(name => name.replace(/\.md$/, ''));
 }
+
+/**
+ * Get related posts based on shared tags, excluding the current post
+ * Returns posts sorted by number of shared tags (most relevant first)
+ */
+export function getRelatedPosts(
+  currentSlug: string,
+  currentTags: string[],
+  limit = 3
+): BlogPostMeta[] {
+  const allPosts = getAllPosts();
+
+  // Filter out the current post and calculate relevance score based on shared tags
+  const postsWithScore = allPosts
+    .filter(post => post.slug !== currentSlug)
+    .map(post => {
+      const sharedTags = post.tags.filter(tag => currentTags.includes(tag));
+      return {
+        post,
+        score: sharedTags.length,
+      };
+    })
+    .filter(item => item.score > 0) // Only include posts with at least one shared tag
+    .sort((a, b) => b.score - a.score); // Sort by relevance (most shared tags first)
+
+  // If not enough related posts by tags, fill with recent posts
+  const relatedPosts = postsWithScore.slice(0, limit).map(item => item.post);
+
+  if (relatedPosts.length < limit) {
+    const remainingPosts = allPosts
+      .filter(post => post.slug !== currentSlug && !relatedPosts.some(rp => rp.slug === post.slug))
+      .slice(0, limit - relatedPosts.length);
+    relatedPosts.push(...remainingPosts);
+  }
+
+  return relatedPosts.slice(0, limit);
+}
