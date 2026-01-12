@@ -1,8 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Static export for Vercel and E2E tests
-  output: 'export',
   // Keep images unoptimized for WASM/Transformers.js compatibility
   images: {
     unoptimized: true,
