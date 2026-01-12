@@ -3,10 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { RelatedPosts } from './RelatedPosts';
 import type { BlogPostMeta } from '@/lib/blog/types';
 
-const createMockPost = (
-  slug: string,
-  overrides: Partial<BlogPostMeta> = {}
-): BlogPostMeta => ({
+const createMockPost = (slug: string, overrides: Partial<BlogPostMeta> = {}): BlogPostMeta => ({
   title: `Test Post ${slug}`,
   slug,
   description: `Description for post ${slug}`,
@@ -28,9 +25,7 @@ describe('RelatedPosts', () => {
   it('renders nothing when all posts are filtered out by currentSlug', () => {
     const posts = [createMockPost('current')];
 
-    const { container } = render(
-      <RelatedPosts posts={posts} currentSlug="current" />
-    );
+    const { container } = render(<RelatedPosts posts={posts} currentSlug="current" />);
 
     expect(container.firstChild).toBeNull();
   });
@@ -76,9 +71,7 @@ describe('RelatedPosts', () => {
   });
 
   it('displays post descriptions', () => {
-    const posts = [
-      createMockPost('post-1', { description: 'This is a test description' }),
-    ];
+    const posts = [createMockPost('post-1', { description: 'This is a test description' })];
 
     render(<RelatedPosts posts={posts} currentSlug="current" />);
 
@@ -94,9 +87,7 @@ describe('RelatedPosts', () => {
   });
 
   it('displays up to 2 tags per post', () => {
-    const posts = [
-      createMockPost('post-1', { tags: ['tag1', 'tag2', 'tag3', 'tag4'] }),
-    ];
+    const posts = [createMockPost('post-1', { tags: ['tag1', 'tag2', 'tag3', 'tag4'] })];
 
     render(<RelatedPosts posts={posts} currentSlug="current" />);
 
@@ -142,11 +133,7 @@ describe('RelatedPosts', () => {
   });
 
   it('filters out current post even when in the middle of the array', () => {
-    const posts = [
-      createMockPost('post-1'),
-      createMockPost('current'),
-      createMockPost('post-3'),
-    ];
+    const posts = [createMockPost('post-1'), createMockPost('current'), createMockPost('post-3')];
 
     render(<RelatedPosts posts={posts} currentSlug="current" />);
 
