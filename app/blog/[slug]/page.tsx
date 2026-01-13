@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { getPostBySlug, getAllSlugs, getRelatedPosts } from '@/lib/blog/posts';
 import { BlogCTA } from '@/components/blog/BlogCTA';
 import { RelatedPosts } from '@/components/blog/RelatedPosts';
-import { SITE_URL } from '@/lib/constants/structuredData';
+import { SITE_URL, createBreadcrumbSchema } from '@/lib/constants/structuredData';
 import { JsonLd } from '@/components/JsonLd';
 
 interface PageProps {
@@ -100,9 +100,16 @@ export default async function BlogPostPage({ params }: PageProps) {
     keywords: post.tags.join(', '),
   };
 
+  // Breadcrumb schema for SEO
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Blog', url: `${SITE_URL}/blog` },
+    { name: post.title, url: `${SITE_URL}/blog/${post.slug}` },
+  ]);
+
   return (
     <>
-      <JsonLd data={articleSchema} />
+      <JsonLd data={[articleSchema, breadcrumbSchema]} />
       <article className="editorial-section font-merriweather">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm text-gray-500">

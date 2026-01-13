@@ -13,6 +13,30 @@ export function BlogCTA() {
       >
         Bleep Your Sh*t!
       </Link>
+
+      {/* Secondary links for better internal linking */}
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm">
+        <Link
+          href="/sampler"
+          className="text-gray-600 underline decoration-dotted hover:text-indigo-600"
+        >
+          Try Sound Samples
+        </Link>
+        <span className="text-gray-400">|</span>
+        <Link
+          href="/for-educators"
+          className="text-gray-600 underline decoration-dotted hover:text-indigo-600"
+        >
+          For Educators
+        </Link>
+        <span className="text-gray-400">|</span>
+        <Link
+          href="/premium"
+          className="text-gray-600 underline decoration-dotted hover:text-indigo-600"
+        >
+          Premium Features
+        </Link>
+      </div>
     </div>
   );
 }
