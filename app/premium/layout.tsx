@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
-import { SITE_URL } from '@/lib/constants/structuredData';
+import { JsonLd } from '@/components/JsonLd';
+import { SITE_URL, createBreadcrumbSchema } from '@/lib/constants/structuredData';
 
 export const metadata: Metadata = {
   title: 'Premium Features - Coming Soon | Bleep That Sh*t!',
@@ -17,6 +18,18 @@ export const metadata: Metadata = {
   },
 };
 
+const premiumPageSchemas = [
+  createBreadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Premium', url: `${SITE_URL}/premium` },
+  ]),
+];
+
 export default function PremiumLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <JsonLd data={premiumPageSchemas} />
+      {children}
+    </>
+  );
 }
