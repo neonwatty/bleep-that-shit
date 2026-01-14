@@ -59,6 +59,7 @@ export function MobileSelect({
         <button
           type="button"
           data-testid={testId}
+          data-value={value}
           onClick={() => setIsOpen(true)}
           className="min-h-touch flex w-full items-center justify-between rounded-lg border border-gray-300 bg-white p-3 text-left text-base focus:border-transparent focus:ring-2 focus:ring-blue-500"
           aria-haspopup="listbox"

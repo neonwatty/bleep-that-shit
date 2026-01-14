@@ -1,10 +1,10 @@
 # Feature: Full-Stack Premium Extension
 
-> Transform Bleep That Sh*t from a client-only app to a full-stack platform with authentication, cloud processing, payments, and team collaboration.
+> Transform Bleep That Sh\*t from a client-only app to a full-stack platform with authentication, cloud processing, payments, and team collaboration.
 
 ## Summary
 
-This feature extends the current browser-only Bleep That Sh*t app into a full-stack premium platform. Free users continue to use the app anonymously with browser-based processing (10-minute limit). Premium users get Supabase authentication, cloud-powered transcription via Replicate (2+ hour files, 10x faster), persistent project storage, and team collaboration features.
+This feature extends the current browser-only Bleep That Sh\*t app into a full-stack premium platform. Free users continue to use the app anonymously with browser-based processing (10-minute limit). Premium users get Supabase authentication, cloud-powered transcription via Replicate (2+ hour files, 10x faster), persistent project storage, and team collaboration features.
 
 The monetization model is tiered subscriptions via Stripe (e.g., $10/mo for 5 hours, $25/mo for 20 hours of processing). When users hit their tier limits, they gracefully fall back to browser processing rather than being blocked. Cancelled users get a 30-day grace period to export their data.
 
@@ -13,6 +13,7 @@ Key architectural decisions include: premium-only authentication (free stays ano
 ## Requirements
 
 ### Must Have
+
 - [ ] Supabase authentication (email/password, social OAuth, magic link)
 - [ ] Supabase database for users, projects, wordsets, usage tracking
 - [ ] Supabase storage for video/audio files
@@ -26,6 +27,7 @@ Key architectural decisions include: premium-only authentication (free stays ano
 - [ ] Graceful fallback to browser when limits hit
 
 ### Should Have
+
 - [ ] In-app notification center
 - [ ] Shared project access (team feature)
 - [ ] Turn-based editing with optimistic locking
@@ -33,6 +35,7 @@ Key architectural decisions include: premium-only authentication (free stays ano
 - [ ] Usage dashboard (hours used, remaining)
 
 ### Out of Scope
+
 - Real-time collaborative editing (Google Docs style)
 - Mobile native apps
 - Public API / developer access
@@ -73,23 +76,27 @@ Key architectural decisions include: premium-only authentication (free stays ano
 ### Infrastructure Decision: Vercel + Webhooks
 
 **Why Vercel:**
+
 - Native Next.js deployment with zero config
 - No persistent workers needed - Replicate handles long-running jobs
 - Vercel Cron for scheduled tasks (cleanup, usage resets)
 - Lower operational complexity and cost
 
 **Why Replicate Webhooks (not job queue):**
+
 - Replicate's async API handles the long-running transcription
 - Webhook callback when complete (seconds to process)
 - No need for Redis, BullMQ, or worker containers
 - `jobs` table in Supabase provides job tracking and monitoring
 
 **Monitoring Approach:**
+
 - **Replicate Dashboard** (replicate.com/predictions): Primary operations view - all predictions, status, logs, costs, errors. No setup required.
 - **Supabase Studio**: Query `jobs` table directly for custom views (active jobs, failed jobs, counts by status).
 - **Admin dashboard** (Phase 7, optional): In-app view if frequently needed.
 
 Example Supabase queries:
+
 ```sql
 -- Active jobs
 SELECT * FROM jobs WHERE status = 'processing';
@@ -135,6 +142,7 @@ User                    Vercel API              Replicate           Supabase
 ```
 
 **Key points:**
+
 - User doesn't need to keep browser open - webhook handles completion
 - Job status tracked in `jobs` table (poll for UI updates)
 - Failed jobs marked in DB, user can retry
@@ -142,16 +150,16 @@ User                    Vercel API              Replicate           Supabase
 
 ### Key Components
 
-| Component | Location | Responsibility |
-|-----------|----------|----------------|
-| `AuthProvider` | `providers/AuthProvider.tsx` | Supabase auth context, session management |
-| `ProjectProvider` | `providers/ProjectProvider.tsx` | Project state, sync with Supabase |
-| `UsageTracker` | `lib/usage/tracker.ts` | Track processing minutes, check limits |
-| `ReplicateService` | `lib/replicate/service.ts` | Create predictions, handle webhook verification |
-| `ReplicateWebhook` | `app/api/webhooks/replicate/route.ts` | Receive transcription results, update DB |
-| `StripeWebhook` | `app/api/webhooks/stripe/route.ts` | Handle subscription events |
-| `ProjectDashboard` | `app/dashboard/page.tsx` | List projects, usage stats |
-| `JobStatusPoller` | `hooks/useJobStatus.ts` | Poll job status for real-time UI updates |
+| Component          | Location                              | Responsibility                                  |
+| ------------------ | ------------------------------------- | ----------------------------------------------- |
+| `AuthProvider`     | `providers/AuthProvider.tsx`          | Supabase auth context, session management       |
+| `ProjectProvider`  | `providers/ProjectProvider.tsx`       | Project state, sync with Supabase               |
+| `UsageTracker`     | `lib/usage/tracker.ts`                | Track processing minutes, check limits          |
+| `ReplicateService` | `lib/replicate/service.ts`            | Create predictions, handle webhook verification |
+| `ReplicateWebhook` | `app/api/webhooks/replicate/route.ts` | Receive transcription results, update DB        |
+| `StripeWebhook`    | `app/api/webhooks/stripe/route.ts`    | Handle subscription events                      |
+| `ProjectDashboard` | `app/dashboard/page.tsx`              | List projects, usage stats                      |
+| `JobStatusPoller`  | `hooks/useJobStatus.ts`               | Poll job status for real-time UI updates        |
 
 ### Database Schema (Supabase)
 
@@ -236,11 +244,13 @@ create table public.jobs (
 ### Stripe Configuration
 
 **Products & Prices:**
+
 - Starter: $10/month - 5 hours processing, 10GB storage
 - Pro: $25/month - 20 hours processing, 50GB storage
 - Team: $50/month - 50 hours processing, 100GB storage, 5 team members
 
 **Webhook Events to Handle:**
+
 - `customer.subscription.created`
 - `customer.subscription.updated`
 - `customer.subscription.deleted`
@@ -318,39 +328,43 @@ create table public.jobs (
 
 ## Edge Cases & Error Handling
 
-| Scenario | Handling |
-|----------|----------|
-| Upload fails mid-way | Resume upload via chunked upload, show retry option |
-| Replicate job fails | Mark project as error, allow retry, no usage charged |
-| User hits tier limit | Show upgrade prompt, enable browser fallback |
-| Payment fails | Set subscription to past_due, send email, 7-day grace |
-| User cancels mid-processing | Complete current job, then apply cancellation |
-| Concurrent edit attempt | Show "locked by X" message, offer view-only mode |
-| File exceeds storage quota | Block upload, show upgrade prompt |
-| Replicate is down | Mark job as failed, allow manual retry, notify user |
-| Session expires during edit | Auto-save draft, prompt re-login, restore state |
+| Scenario                    | Handling                                              |
+| --------------------------- | ----------------------------------------------------- |
+| Upload fails mid-way        | Resume upload via chunked upload, show retry option   |
+| Replicate job fails         | Mark project as error, allow retry, no usage charged  |
+| User hits tier limit        | Show upgrade prompt, enable browser fallback          |
+| Payment fails               | Set subscription to past_due, send email, 7-day grace |
+| User cancels mid-processing | Complete current job, then apply cancellation         |
+| Concurrent edit attempt     | Show "locked by X" message, offer view-only mode      |
+| File exceeds storage quota  | Block upload, show upgrade prompt                     |
+| Replicate is down           | Mark job as failed, allow manual retry, notify user   |
+| Session expires during edit | Auto-save draft, prompt re-login, restore state       |
 
 ## Testing Strategy
 
 **Unit Tests:**
+
 - Usage tracking calculations
 - Tier limit checking logic
 - Subscription status transitions
 - Project locking/unlocking
 
 **Integration Tests:**
+
 - Supabase auth flows (signup, login, password reset)
 - Stripe webhook handling
 - File upload to Supabase Storage
 - Replicate job creation and webhook
 
 **E2E Tests:**
+
 - Full signup → subscribe → upload → process → export flow
 - Upgrade flow from free to paid
 - Cancellation with grace period
 - Team invite and shared access
 
 **Manual Testing:**
+
 - Edge cases around payment failures
 - Long file processing (actual 2-hour file)
 - Browser fallback UX when limits hit
@@ -389,22 +403,23 @@ Email template design
 ```
 
 **Parallelization opportunities:**
+
 - **Phase 2 + Phase 4**: Both depend only on Phase 1, can run concurrently
 - **Phase 5 + Phase 6**: Independent features, can run concurrently
 - **Prep work during Phase 1**: External service setup doesn't block code
 
 ## Design Decisions Log
 
-| Decision | Rationale | Alternatives Considered |
-|----------|-----------|------------------------|
-| Vercel deployment | Native Next.js support, zero config, no worker management needed | Self-managed containers, AWS (complex) |
-| Replicate webhooks | No job queue infrastructure needed, Replicate handles long-running jobs | BullMQ + Redis, pg-boss, Inngest |
-| Jobs table for monitoring | Simple, uses existing Supabase, queryable in Studio | Separate monitoring service, Inngest dashboard |
-| Premium-only auth | Keeps free tier frictionless, clear upgrade path | Free accounts with limited sync |
-| Auto-sync wordsets | Reduces friction, preserves user investment | Manual export/import |
-| Store all files | Enables re-export workflow users want | Store only transcription (cheaper) |
-| Tiered pricing | Predictable for users, simple to understand | Usage-based (complex), credits (confusing) |
-| Turn-based collab | Much simpler than real-time, fits async workflow | Real-time (complex), async merge (confusing) |
-| Browser fallback | Graceful degradation, no hard blocks | Hard block at limit, overage charges |
-| 30-day grace | Fair to users, encourages return vs churn | Immediate deletion, 7-day grace |
-| Supabase for all | Single platform reduces complexity | Separate auth (Auth0), DB (PlanetScale) |
+| Decision                  | Rationale                                                               | Alternatives Considered                        |
+| ------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------- |
+| Vercel deployment         | Native Next.js support, zero config, no worker management needed        | Self-managed containers, AWS (complex)         |
+| Replicate webhooks        | No job queue infrastructure needed, Replicate handles long-running jobs | BullMQ + Redis, pg-boss, Inngest               |
+| Jobs table for monitoring | Simple, uses existing Supabase, queryable in Studio                     | Separate monitoring service, Inngest dashboard |
+| Premium-only auth         | Keeps free tier frictionless, clear upgrade path                        | Free accounts with limited sync                |
+| Auto-sync wordsets        | Reduces friction, preserves user investment                             | Manual export/import                           |
+| Store all files           | Enables re-export workflow users want                                   | Store only transcription (cheaper)             |
+| Tiered pricing            | Predictable for users, simple to understand                             | Usage-based (complex), credits (confusing)     |
+| Turn-based collab         | Much simpler than real-time, fits async workflow                        | Real-time (complex), async merge (confusing)   |
+| Browser fallback          | Graceful degradation, no hard blocks                                    | Hard block at limit, overage charges           |
+| 30-day grace              | Fair to users, encourages return vs churn                               | Immediate deletion, 7-day grace                |
+| Supabase for all          | Single platform reduces complexity                                      | Separate auth (Auth0), DB (PlanetScale)        |
