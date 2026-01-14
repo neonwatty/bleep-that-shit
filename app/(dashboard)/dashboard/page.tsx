@@ -1,10 +1,21 @@
 'use client';
 
+import { useState } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
-import Link from 'next/link';
+import { useProjects } from '@/hooks/useProjects';
+import { ProjectList } from '@/components/projects/ProjectList';
+import { CreateProjectDialog } from '@/components/projects/CreateProjectDialog';
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const { projects, isLoading } = useProjects({ limit: 100 });
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+
+  // Calculate stats
+  const totalProjects = projects.length;
+  const processingProjects = projects.filter(p => p.status === 'processing').length;
+  const readyProjects = projects.filter(p => p.status === 'ready').length;
+  const totalMinutes = projects.reduce((acc, p) => acc + (p.processing_minutes || 0), 0);
 
   return (
     <div className="space-y-8">
@@ -22,19 +33,21 @@ export default function DashboardPage() {
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-lg border border-gray-200 bg-white p-6">
           <p className="text-sm font-medium text-gray-500">Total Projects</p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">0</p>
+          <p className="mt-2 text-3xl font-bold text-gray-900">{isLoading ? '-' : totalProjects}</p>
         </div>
         <div className="rounded-lg border border-gray-200 bg-white p-6">
           <p className="text-sm font-medium text-gray-500">Processing</p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">0</p>
+          <p className="mt-2 text-3xl font-bold text-gray-900">
+            {isLoading ? '-' : processingProjects}
+          </p>
         </div>
         <div className="rounded-lg border border-gray-200 bg-white p-6">
           <p className="text-sm font-medium text-gray-500">Completed</p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">0</p>
+          <p className="mt-2 text-3xl font-bold text-gray-900">{isLoading ? '-' : readyProjects}</p>
         </div>
         <div className="rounded-lg border border-gray-200 bg-white p-6">
           <p className="text-sm font-medium text-gray-500">Minutes Used</p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">0</p>
+          <p className="mt-2 text-3xl font-bold text-gray-900">{isLoading ? '-' : totalMinutes}</p>
         </div>
       </div>
 
@@ -42,34 +55,25 @@ export default function DashboardPage() {
       <div className="rounded-lg border border-gray-200 bg-white p-6">
         <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
         <div className="mt-4 flex flex-wrap gap-4">
-          <Link
-            href="/bleep"
+          <button
+            onClick={() => setShowCreateDialog(true)}
             className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
           >
             New Project
-          </Link>
-          <Link
-            href="/dashboard/projects"
-            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            View All Projects
-          </Link>
+          </button>
         </div>
       </div>
 
-      {/* Recent Projects - Placeholder */}
+      {/* Recent Projects */}
       <div className="rounded-lg border border-gray-200 bg-white p-6">
         <h2 className="text-lg font-semibold text-gray-900">Recent Projects</h2>
-        <div className="mt-4 py-8 text-center text-gray-500">
-          <p>No projects yet.</p>
-          <p className="mt-1 text-sm">
-            <Link href="/bleep" className="text-blue-600 hover:text-blue-700">
-              Create your first project
-            </Link>{' '}
-            to get started.
-          </p>
+        <div className="mt-4">
+          <ProjectList limit={5} showViewAllLink={true} />
         </div>
       </div>
+
+      {/* Create Project Dialog */}
+      <CreateProjectDialog isOpen={showCreateDialog} onClose={() => setShowCreateDialog(false)} />
     </div>
   );
 }

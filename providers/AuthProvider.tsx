@@ -1,8 +1,9 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { User, Session, AuthError } from '@supabase/supabase-js';
+import { syncLocalWordsetsToSupabase, hasSyncedWordsets } from '@/lib/utils/wordsetSync';
 
 type AuthContextType = {
   user: User | null;
@@ -27,8 +28,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const syncAttemptedRef = useRef<string | null>(null);
 
   const supabase = createClient();
+
+  // Sync wordsets when user logs in
+  useEffect(() => {
+    const performSync = async () => {
+      if (!user || syncAttemptedRef.current === user.id) return;
+
+      // Mark that we're attempting sync for this user
+      syncAttemptedRef.current = user.id;
+
+      // Check if sync is needed
+      if (!hasSyncedWordsets(user.id)) {
+        console.log('[Auth] Syncing local wordsets to cloud...');
+        const result = await syncLocalWordsetsToSupabase(user.id);
+        if (result.error) {
+          console.error('[Auth] Wordset sync error:', result.error);
+        } else {
+          console.log(
+            `[Auth] Wordset sync complete: ${result.synced} synced, ${result.skipped} skipped`
+          );
+        }
+      }
+    };
+
+    performSync();
+  }, [user]);
 
   useEffect(() => {
     // Get initial session
