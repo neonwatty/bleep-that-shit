@@ -39,6 +39,8 @@
     "@ffmpeg/ffmpeg": "^0.12.15",
     "@ffmpeg/util": "^0.12.2",
     "@huggingface/transformers": "^3.7.6",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.90.1",
     "dexie": "^4.2.0",
     "dexie-react-hooks": "^4.2.0",
     "file-type": "^21.0.0",
