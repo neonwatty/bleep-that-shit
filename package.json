@@ -3,7 +3,8 @@
   "version": "0.4.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3004",
+    "dev": "doppler run -- next dev -p 3004",
+    "dev:local": "next dev -p 3004",
     "build": "next build",
     "start": "next start",
     "test": "vitest run",
