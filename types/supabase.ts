@@ -226,32 +226,50 @@ export type Database = {
         Row: {
           id: string;
           project_id: string;
+          user_id: string;
           replicate_id: string | null;
-          status: 'pending' | 'processing' | 'completed' | 'failed';
+          job_type: 'transcription' | 'processing';
+          status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
           error_message: string | null;
+          input_file_path: string | null;
+          output_data: Json | null;
+          processing_minutes: number | null;
           started_at: string | null;
           completed_at: string | null;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
           project_id: string;
+          user_id: string;
           replicate_id?: string | null;
-          status?: 'pending' | 'processing' | 'completed' | 'failed';
+          job_type?: 'transcription' | 'processing';
+          status?: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
           error_message?: string | null;
+          input_file_path?: string | null;
+          output_data?: Json | null;
+          processing_minutes?: number | null;
           started_at?: string | null;
           completed_at?: string | null;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
           project_id?: string;
+          user_id?: string;
           replicate_id?: string | null;
-          status?: 'pending' | 'processing' | 'completed' | 'failed';
+          job_type?: 'transcription' | 'processing';
+          status?: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
           error_message?: string | null;
+          input_file_path?: string | null;
+          output_data?: Json | null;
+          processing_minutes?: number | null;
           started_at?: string | null;
           completed_at?: string | null;
           created_at?: string;
+          updated_at?: string;
         };
         Relationships: [
           {
@@ -259,6 +277,13 @@ export type Database = {
             columns: ['project_id'];
             isOneToOne: false;
             referencedRelation: 'projects';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'jobs_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
             referencedColumns: ['id'];
           },
         ];
