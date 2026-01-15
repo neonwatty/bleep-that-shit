@@ -29,7 +29,8 @@
     "remark-parse",
     "remark-gfm",
     "remark-rehype",
-    "unified"
+    "unified",
+    "replicate"
   ],
   "ignoreExportsUsedInFile": {
     "interface": true,
