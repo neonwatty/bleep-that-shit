@@ -57,8 +57,7 @@
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
     "remark-html": "^16.0.1",
-    "remark-rehype": "^11.1.2",
-    "replicate": "^1.4.0"
+    "remark-rehype": "^11.1.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",

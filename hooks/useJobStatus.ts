@@ -140,17 +140,26 @@ export function useJobStatus(
 
 /**
  * Hook for fetching latest job for a project
+ * With Groq's synchronous API, processing completes during the startProcessing call
  */
 export function useProjectJob(projectId: string | null): {
   job: Job | null;
   isLoading: boolean;
+  isProcessing: boolean;
   error: Error | null;
+  transcription: TranscriptionResult | null;
   refetch: () => Promise<void>;
-  startProcessing: () => Promise<{ job?: Job; error?: string }>;
+  startProcessing: () => Promise<{
+    job?: Job;
+    transcription?: TranscriptionResult;
+    error?: string;
+  }>;
 } {
   const [job, setJob] = useState<Job | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const [transcription, setTranscription] = useState<TranscriptionResult | null>(null);
 
   const fetchJob = useCallback(async () => {
     if (!projectId) return;
@@ -183,6 +192,9 @@ export function useProjectJob(projectId: string | null): {
   const startProcessing = useCallback(async () => {
     if (!projectId) return { error: 'No project ID' };
 
+    setIsProcessing(true);
+    setError(null);
+
     try {
       const response = await fetch('/api/process/start', {
         method: 'POST',
@@ -193,14 +205,25 @@ export function useProjectJob(projectId: string | null): {
       const data = await response.json();
 
       if (!response.ok) {
+        setError(new Error(data.error || 'Failed to process'));
         return { error: data.error || 'Failed to start processing' };
       }
 
-      // Refetch job after starting
+      // Groq returns results synchronously - update state immediately
+      if (data.transcription) {
+        setTranscription(data.transcription);
+      }
+
+      // Refetch job to get the completed job record
       await fetchJob();
-      return { job: data.job };
+
+      return { job: data.job, transcription: data.transcription };
     } catch (err) {
-      return { error: err instanceof Error ? err.message : 'Failed to start processing' };
+      const errorMessage = err instanceof Error ? err.message : 'Failed to start processing';
+      setError(new Error(errorMessage));
+      return { error: errorMessage };
+    } finally {
+      setIsProcessing(false);
     }
   }, [projectId, fetchJob]);
 
@@ -211,8 +234,17 @@ export function useProjectJob(projectId: string | null): {
   return {
     job,
     isLoading,
+    isProcessing,
     error,
+    transcription,
     refetch: fetchJob,
     startProcessing,
   };
+}
+
+interface TranscriptionResult {
+  text: string;
+  wordCount: number;
+  duration: number;
+  language: string;
 }
