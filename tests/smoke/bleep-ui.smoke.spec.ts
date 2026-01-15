@@ -64,21 +64,34 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
     const bleepPage = new BleepPage(page);
     await expect(bleepPage.languageSelect).toBeVisible();
 
-    // Check it has language options
-    const options = bleepPage.languageSelect.locator('option');
-    await expect(options).toHaveCount(await options.count()); // At least some options
-
-    // Verify English is an option
-    await expect(bleepPage.languageSelect).toContainText('English');
+    // MobileSelect shows different UI on mobile vs desktop
+    const tagName = await bleepPage.languageSelect.evaluate(el => el.tagName.toLowerCase());
+    if (tagName === 'select') {
+      // Native select: check for option elements
+      const options = bleepPage.languageSelect.locator('option');
+      const count = await options.count();
+      expect(count).toBeGreaterThan(0);
+      await expect(bleepPage.languageSelect).toContainText('English');
+    } else {
+      // MobileSelect button: check it displays the selected language
+      await expect(bleepPage.languageSelect).toContainText('English');
+    }
   });
 
   test('model selector is visible with options', async ({ page }) => {
     const bleepPage = new BleepPage(page);
     await expect(bleepPage.modelSelect).toBeVisible();
 
-    // Check it has model options
-    await expect(bleepPage.modelSelect).toContainText('Tiny');
-    await expect(bleepPage.modelSelect).toContainText('Base');
+    // MobileSelect shows different UI on mobile vs desktop
+    const tagName = await bleepPage.modelSelect.evaluate(el => el.tagName.toLowerCase());
+    if (tagName === 'select') {
+      // Native select: check for model options
+      await expect(bleepPage.modelSelect).toContainText('Tiny');
+      await expect(bleepPage.modelSelect).toContainText('Base');
+    } else {
+      // MobileSelect button: just verify it's visible (options are in bottom sheet)
+      await expect(bleepPage.modelSelect).toBeVisible();
+    }
   });
 
   test('transcribe button is disabled without file', async ({ page }) => {
@@ -217,14 +230,30 @@ test.describe('Bleep Page UI - Smoke Tests', () => {
 
   test('language select defaults to English', async ({ page }) => {
     const bleepPage = new BleepPage(page);
-    const value = await bleepPage.languageSelect.inputValue();
+    // Wait for hydration - MobileSelect starts as button then may switch to select
+    await page.waitForTimeout(500);
+
+    // MobileSelect uses data-value attribute on mobile, native value on desktop
+    const tagName = await bleepPage.languageSelect.evaluate(el => el.tagName.toLowerCase());
+    const value =
+      tagName === 'select'
+        ? await bleepPage.languageSelect.inputValue()
+        : await bleepPage.languageSelect.getAttribute('data-value');
 
     expect(value).toBe('en');
   });
 
   test('model select has default value', async ({ page }) => {
     const bleepPage = new BleepPage(page);
-    const value = await bleepPage.modelSelect.inputValue();
+    // Wait for hydration - MobileSelect starts as button then may switch to select
+    await page.waitForTimeout(500);
+
+    // MobileSelect uses data-value attribute on mobile, native value on desktop
+    const tagName = await bleepPage.modelSelect.evaluate(el => el.tagName.toLowerCase());
+    const value =
+      tagName === 'select'
+        ? await bleepPage.modelSelect.inputValue()
+        : await bleepPage.modelSelect.getAttribute('data-value');
 
     // Should have a default model selected
     expect(value).toBeTruthy();
