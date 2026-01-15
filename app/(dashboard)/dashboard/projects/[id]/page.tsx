@@ -36,13 +36,14 @@ export default function ProjectDetailPage({ params }: PageProps) {
     });
   };
 
-  const handleJobComplete = async () => {
+  const handleJobComplete = async (job: Job) => {
+    console.log('Job completed:', job.id);
     // Refresh project data to get transcription
     await refetch();
   };
 
-  const handleJobError = async (error: string) => {
-    console.error('Job error:', error);
+  const handleJobError = async (job: Job) => {
+    console.error('Job failed:', job.error_message);
     // Refresh project data to get error status
     await refetch();
   };

@@ -100,7 +100,7 @@ export function useJobStatus(
     setIsPolling(true);
 
     // Fetch immediately
-    fetchJob().then(shouldStop => {
+    fetchJob().then((shouldStop) => {
       if (shouldStop) {
         setIsPolling(false);
         return;
@@ -139,27 +139,21 @@ export function useJobStatus(
 }
 
 /**
- * Hook for fetching latest job for a project
- * With Groq's synchronous API, processing completes during the startProcessing call
+ * Hook for fetching latest job for a project and starting processing
+ * Uses async queue-based processing - jobs are enqueued and processed by Edge Function
  */
 export function useProjectJob(projectId: string | null): {
   job: Job | null;
   isLoading: boolean;
-  isProcessing: boolean;
+  isStarting: boolean;
   error: Error | null;
-  transcription: TranscriptionResult | null;
   refetch: () => Promise<void>;
-  startProcessing: () => Promise<{
-    job?: Job;
-    transcription?: TranscriptionResult;
-    error?: string;
-  }>;
+  startProcessing: () => Promise<{ job?: { id: string; status: string }; error?: string }>;
 } {
   const [job, setJob] = useState<Job | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [transcription, setTranscription] = useState<TranscriptionResult | null>(null);
 
   const fetchJob = useCallback(async () => {
     if (!projectId) return;
@@ -192,7 +186,7 @@ export function useProjectJob(projectId: string | null): {
   const startProcessing = useCallback(async () => {
     if (!projectId) return { error: 'No project ID' };
 
-    setIsProcessing(true);
+    setIsStarting(true);
     setError(null);
 
     try {
@@ -205,25 +199,20 @@ export function useProjectJob(projectId: string | null): {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(new Error(data.error || 'Failed to process'));
+        setError(new Error(data.error || 'Failed to start processing'));
         return { error: data.error || 'Failed to start processing' };
       }
 
-      // Groq returns results synchronously - update state immediately
-      if (data.transcription) {
-        setTranscription(data.transcription);
-      }
-
-      // Refetch job to get the completed job record
+      // Job is now enqueued - refetch to get the new job
       await fetchJob();
 
-      return { job: data.job, transcription: data.transcription };
+      return { job: data.job };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to start processing';
       setError(new Error(errorMessage));
       return { error: errorMessage };
     } finally {
-      setIsProcessing(false);
+      setIsStarting(false);
     }
   }, [projectId, fetchJob]);
 
@@ -234,17 +223,9 @@ export function useProjectJob(projectId: string | null): {
   return {
     job,
     isLoading,
-    isProcessing,
+    isStarting,
     error,
-    transcription,
     refetch: fetchJob,
     startProcessing,
   };
-}
-
-interface TranscriptionResult {
-  text: string;
-  wordCount: number;
-  duration: number;
-  language: string;
 }

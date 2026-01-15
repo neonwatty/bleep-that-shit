@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { transcribeFromUrl, formatForBleepEditor } from '@/lib/groq/service';
 import type { Database } from '@/types/supabase';
 
 type Project = Database['public']['Tables']['projects']['Row'];
@@ -9,15 +8,18 @@ type JobInsert = Database['public']['Tables']['jobs']['Insert'];
 
 export const dynamic = 'force-dynamic';
 
-// Increase timeout for transcription (Vercel Pro allows up to 300s)
-export const maxDuration = 60;
-
 /**
  * POST /api/process/start
- * Start cloud transcription processing for a project using Groq Whisper
+ * Start cloud transcription processing for a project
  *
- * Groq is fast enough (~1-3 seconds for most files) that we can process
- * synchronously and return the result directly.
+ * This endpoint:
+ * 1. Creates a job record
+ * 2. Generates a signed URL for the audio file
+ * 3. Enqueues the job to PGMQ for async processing
+ * 4. Returns immediately with job ID (client polls for status)
+ *
+ * The actual transcription is handled by a Supabase Edge Function
+ * that reads from the queue and calls the Groq API.
  */
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -79,6 +81,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Get a signed URL for the file (valid for 1 hour)
+  const signedUrlExpiresAt = new Date(Date.now() + 3600 * 1000);
   const { data: signedUrlData, error: signedUrlError } = await supabase.storage
     .from('originals')
     .createSignedUrl(project.original_file_path, 3600);
@@ -93,9 +96,11 @@ export async function POST(request: NextRequest) {
     project_id: projectId,
     user_id: user.id,
     job_type: 'transcription',
-    status: 'processing',
+    status: 'pending',
     input_file_path: project.original_file_path,
-    started_at: new Date().toISOString(),
+    signed_url: signedUrlData.signedUrl,
+    signed_url_expires_at: signedUrlExpiresAt.toISOString(),
+    retry_count: 0,
   };
 
   const { data: job, error: jobError } = await supabase
@@ -112,87 +117,38 @@ export async function POST(request: NextRequest) {
   // Update project status to processing
   await supabase.from('projects').update({ status: 'processing' }).eq('id', projectId);
 
-  try {
-    const startTime = Date.now();
+  // Enqueue job to PGMQ for async processing
+  const { error: queueError } = await supabase.rpc('pgmq_send', {
+    queue_name: 'transcription_jobs',
+    message: {
+      job_id: job.id,
+      project_id: projectId,
+      signed_url: signedUrlData.signedUrl,
+    },
+  });
 
-    // Transcribe using Groq (synchronous - typically 1-3 seconds)
-    const groqResult = await transcribeFromUrl(signedUrlData.signedUrl, {
-      model: 'whisper-large-v3-turbo',
-      language: 'en',
-    });
-
-    const processingTime = (Date.now() - startTime) / 1000;
-    const processingMinutes = groqResult.duration / 60;
-
-    // Format for bleep editor
-    const transcription = formatForBleepEditor(groqResult);
-
-    // Serialize transcription for JSON storage (cast to Json-compatible type)
-    const transcriptionJson = JSON.parse(JSON.stringify(transcription));
-
-    // Update job as completed
-    await supabase
-      .from('jobs')
-      .update({
-        status: 'completed',
-        output_data: transcriptionJson,
-        processing_minutes: processingMinutes,
-        completed_at: new Date().toISOString(),
-      })
-      .eq('id', job.id);
-
-    // Update project with transcription
-    await supabase
-      .from('projects')
-      .update({
-        status: 'ready',
-        transcription: transcriptionJson,
-        processing_minutes: processingMinutes,
-        duration_seconds: Math.round(groqResult.duration),
-      })
-      .eq('id', projectId);
-
-    console.log(
-      `[Groq] Transcribed ${groqResult.duration.toFixed(1)}s audio in ${processingTime.toFixed(1)}s ` +
-        `(${(groqResult.duration / processingTime).toFixed(0)}x real-time)`
-    );
-
-    return NextResponse.json({
-      success: true,
-      job: {
-        id: job.id,
-        status: 'completed',
-        processingTime,
-      },
-      transcription: {
-        text: transcription.text,
-        wordCount: transcription.words.length,
-        duration: groqResult.duration,
-        language: groqResult.language,
-      },
-    });
-  } catch (error) {
-    console.error('Error transcribing:', error);
-
-    // Mark job as failed
+  if (queueError) {
+    console.error('Error enqueueing job:', queueError);
+    // Mark job as failed if we couldn't enqueue
     await supabase
       .from('jobs')
       .update({
         status: 'failed',
-        error_message: error instanceof Error ? error.message : 'Unknown error',
-        completed_at: new Date().toISOString(),
+        error_message: 'Failed to enqueue job for processing',
       })
       .eq('id', job.id);
-
-    // Update project status
     await supabase.from('projects').update({ status: 'error' }).eq('id', projectId);
-
-    return NextResponse.json(
-      {
-        error: 'Failed to transcribe audio',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to enqueue job' }, { status: 500 });
   }
+
+  console.log(`[Queue] Job ${job.id} enqueued for project ${projectId}`);
+
+  return NextResponse.json({
+    success: true,
+    job: {
+      id: job.id,
+      status: 'pending',
+      message: 'Job enqueued for processing',
+    },
+  });
 }
