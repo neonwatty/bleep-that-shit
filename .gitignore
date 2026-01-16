@@ -47,3 +47,6 @@ blog-screenshots/
 # social-starter-pack secrets
 .env
 praw.ini
+
+# Supabase temp files
+supabase/.temp/
