@@ -1,5 +1,9 @@
+'use client';
+
+import { useState } from 'react';
 import { HelpTooltip } from '@/components/ui/HelpTooltip';
 import { MobileSelect } from '@/components/ui/MobileSelect';
+import { UpgradeModal } from '@/components/premium/UpgradeModal';
 
 interface TranscriptionControlsProps {
   language: string;
@@ -44,6 +48,12 @@ const modelOptions = [
     description: 'Highest accuracy, slowest',
   },
   {
+    value: 'cloud/whisper-large-v3-turbo',
+    label: 'Large (Cloud)',
+    description: 'Best accuracy, fast, requires internet',
+    isPremium: true,
+  },
+  {
     value: 'Xenova/whisper-tiny',
     label: 'Tiny Multilingual (~50 MB)',
     description: '90+ languages',
@@ -63,6 +73,12 @@ const modelOptions = [
     label: 'Medium Multilingual (~800 MB)',
     description: 'Highest accuracy, slowest',
   },
+  {
+    value: 'cloud/whisper-large-v3-turbo-multilingual',
+    label: 'Large Multilingual (Cloud)',
+    description: 'Best accuracy for all languages, fast',
+    isPremium: true,
+  },
 ];
 
 export function TranscriptionControls({
@@ -71,34 +87,49 @@ export function TranscriptionControls({
   onLanguageChange,
   onModelChange,
 }: TranscriptionControlsProps) {
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  const handlePremiumClick = () => {
+    setShowUpgradeModal(true);
+  };
+
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      <div>
-        <label className="mb-2 block text-sm font-semibold">Language</label>
-        <MobileSelect
-          data-testid="language-select"
-          value={language}
-          options={languageOptions}
-          onChange={onLanguageChange}
-          label="Select Language"
-          placeholder="Select language"
-        />
+    <>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div>
+          <label className="mb-2 block text-sm font-semibold">Language</label>
+          <MobileSelect
+            data-testid="language-select"
+            value={language}
+            options={languageOptions}
+            onChange={onLanguageChange}
+            label="Select Language"
+            placeholder="Select language"
+          />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-semibold">
+            Model
+            <HelpTooltip content="Tiny = fast but less accurate. Base = balanced. Small = most accurate but slower. Use Multilingual for non-English. Cloud models require a Pro subscription." />
+          </label>
+          <MobileSelect
+            data-testid="model-select"
+            value={model}
+            options={modelOptions}
+            onChange={onModelChange}
+            onPremiumClick={handlePremiumClick}
+            label="Select Model"
+            placeholder="Select model"
+          />
+        </div>
       </div>
 
-      <div>
-        <label className="mb-2 block text-sm font-semibold">
-          Model
-          <HelpTooltip content="Tiny = fast but less accurate. Base = balanced. Small = most accurate but slower. Use Multilingual for non-English." />
-        </label>
-        <MobileSelect
-          data-testid="model-select"
-          value={model}
-          options={modelOptions}
-          onChange={onModelChange}
-          label="Select Model"
-          placeholder="Select model"
-        />
-      </div>
-    </div>
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        featureName="Cloud Transcription"
+      />
+    </>
   );
 }

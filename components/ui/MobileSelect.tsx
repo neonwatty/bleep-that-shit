@@ -7,12 +7,14 @@ interface SelectOption {
   value: string;
   label: string;
   description?: string;
+  isPremium?: boolean;
 }
 
 interface MobileSelectProps {
   value: string;
   options: SelectOption[];
   onChange: (value: string) => void;
+  onPremiumClick?: (option: SelectOption) => void;
   label?: string;
   placeholder?: string;
   'data-testid'?: string;
@@ -22,6 +24,7 @@ export function MobileSelect({
   value,
   options,
   onChange,
+  onPremiumClick,
   label,
   placeholder = 'Select an option',
   'data-testid': testId,
@@ -47,8 +50,13 @@ export function MobileSelect({
   const selectedOption = options.find(opt => opt.value === value);
   const displayValue = selectedOption?.label || placeholder;
 
-  const handleSelect = (optionValue: string) => {
-    onChange(optionValue);
+  const handleSelect = (option: SelectOption) => {
+    if (option.isPremium && onPremiumClick) {
+      onPremiumClick(option);
+      setIsOpen(false);
+      return;
+    }
+    onChange(option.value);
     setIsOpen(false);
   };
 
@@ -80,13 +88,14 @@ export function MobileSelect({
           <div className="py-2" role="listbox" aria-label={label}>
             {options.map(option => {
               const isSelected = option.value === value;
+              const isPremiumLocked = option.isPremium && onPremiumClick;
               return (
                 <button
                   key={option.value}
                   type="button"
                   role="option"
                   aria-selected={isSelected}
-                  onClick={() => handleSelect(option.value)}
+                  onClick={() => handleSelect(option)}
                   className={`flex w-full items-start gap-3 rounded-lg px-4 py-4 text-left transition-colors ${
                     isSelected ? 'bg-blue-50' : 'hover:bg-gray-50 active:bg-gray-100'
                   }`}
@@ -94,28 +103,53 @@ export function MobileSelect({
                   {/* Selection indicator */}
                   <div
                     className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
-                      isSelected ? 'border-blue-500 bg-blue-500' : 'border-gray-300 bg-white'
+                      isPremiumLocked
+                        ? 'border-amber-400 bg-amber-50'
+                        : isSelected
+                          ? 'border-blue-500 bg-blue-500'
+                          : 'border-gray-300 bg-white'
                     }`}
                   >
-                    {isSelected && (
-                      <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    {isPremiumLocked ? (
+                      <svg className="h-3 w-3 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
                         <path
                           fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                           clipRule="evenodd"
                         />
                       </svg>
+                    ) : (
+                      isSelected && (
+                        <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      )
                     )}
                   </div>
 
                   {/* Option content */}
                   <div className="flex-1">
-                    <div
-                      className={`text-base ${
-                        isSelected ? 'font-semibold text-blue-900' : 'text-gray-900'
-                      }`}
-                    >
-                      {option.label}
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`text-base ${
+                          isPremiumLocked
+                            ? 'text-gray-600'
+                            : isSelected
+                              ? 'font-semibold text-blue-900'
+                              : 'text-gray-900'
+                        }`}
+                      >
+                        {option.label}
+                      </span>
+                      {isPremiumLocked && (
+                        <span className="rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-2 py-0.5 text-xs font-semibold text-white">
+                          PRO
+                        </span>
+                      )}
                     </div>
                     {option.description && (
                       <div className="mt-0.5 text-sm text-gray-500">{option.description}</div>
@@ -141,17 +175,30 @@ export function MobileSelect({
     );
   }
 
-  // On desktop: Native select
+  // On desktop: Native select with premium handling
+  const handleDesktopChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+    const selectedOpt = options.find(opt => opt.value === selectedValue);
+    if (selectedOpt?.isPremium && onPremiumClick) {
+      onPremiumClick(selectedOpt);
+      // Reset to previous value since premium options can't be selected
+      e.target.value = value;
+      return;
+    }
+    onChange(selectedValue);
+  };
+
   return (
     <select
       data-testid={testId}
       value={value}
-      onChange={e => onChange(e.target.value)}
+      onChange={handleDesktopChange}
       className="min-h-touch w-full rounded-lg border border-gray-300 p-2 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500"
     >
       {options.map(option => (
         <option key={option.value} value={option.value}>
           {option.label}
+          {option.isPremium && onPremiumClick ? ' 🔒 PRO' : ''}
         </option>
       ))}
     </select>
