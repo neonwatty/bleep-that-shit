@@ -96,9 +96,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       syncAttemptedRef.current = user.id;
 
       // Dynamically import to avoid SSR issues with IndexedDB
-      const { syncLocalWordsetsToSupabase, hasSyncedWordsets } = await import(
-        '@/lib/utils/wordsetSync'
-      );
+      const { syncLocalWordsetsToSupabase, hasSyncedWordsets } =
+        await import('@/lib/utils/wordsetSync');
 
       // Check if sync is needed
       if (!hasSyncedWordsets(user.id)) {
