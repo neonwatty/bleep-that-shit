@@ -1,6 +1,26 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MobileNav } from './MobileNav';
+
+// Mock the useAuth hook since AuthButton uses it
+vi.mock('@/providers/AuthProvider', () => ({
+  useAuth: vi.fn(() => ({
+    isPremium: false,
+    user: null,
+    session: null,
+    profile: null,
+    isLoading: false,
+    subscriptionTier: 'free' as const,
+    signIn: vi.fn(),
+    signUp: vi.fn(),
+    signInWithOAuth: vi.fn(),
+    signInWithMagicLink: vi.fn(),
+    signOut: vi.fn(),
+    resetPassword: vi.fn(),
+    updatePassword: vi.fn(),
+    refreshProfile: vi.fn(),
+  })),
+}));
 
 describe('MobileNav', () => {
   describe('Mobile header', () => {
@@ -13,13 +33,13 @@ describe('MobileNav', () => {
       expect(logos[0]).toHaveAttribute('href', '/');
     });
 
-    it('renders centered logo in mobile header', () => {
+    it('renders logo and auth button in mobile header', () => {
       const { container } = render(<MobileNav />);
 
-      // Mobile nav should have centered content
+      // Mobile nav should have logo and auth button with justify-between
       const mobileNav = container.querySelector('.md\\:hidden');
       expect(mobileNav).toBeInTheDocument();
-      expect(mobileNav?.querySelector('.justify-center')).toBeInTheDocument();
+      expect(mobileNav?.querySelector('.justify-between')).toBeInTheDocument();
     });
 
     it('mobile header is sticky', () => {
