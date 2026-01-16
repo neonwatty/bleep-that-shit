@@ -49,7 +49,7 @@ interface GroqTranscriptionResult {
 function formatForBleepEditor(result: GroqTranscriptionResult) {
   // Convert Groq words to TranscriptChunk format expected by the app
   // App expects: { text: string, timestamp: [start, end] }
-  const chunks = (result.words || []).map((word) => ({
+  const chunks = (result.words || []).map(word => ({
     text: word.word.trim(),
     timestamp: [word.start, word.end] as [number, number],
   }));
@@ -57,7 +57,7 @@ function formatForBleepEditor(result: GroqTranscriptionResult) {
   return {
     text: result.text,
     chunks, // TranscriptChunk[] format for the bleep editor
-    words: (result.words || []).map((word) => ({
+    words: (result.words || []).map(word => ({
       word: word.word.trim(),
       start: word.start,
       end: word.end,
@@ -108,7 +108,7 @@ async function transcribeWithGroq(
   return (await response.json()) as GroqTranscriptionResult;
 }
 
-Deno.serve(async (req) => {
+Deno.serve(async req => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', {

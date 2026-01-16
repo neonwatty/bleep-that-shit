@@ -37,7 +37,14 @@ export async function POST(request: NextRequest) {
   }
 
   // Validate file type
-  const validTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/webm', 'audio/mp4', 'audio/m4a'];
+  const validTypes = [
+    'audio/mpeg',
+    'audio/mp3',
+    'audio/wav',
+    'audio/webm',
+    'audio/mp4',
+    'audio/m4a',
+  ];
   if (!validTypes.some(type => file.type.includes(type.split('/')[1]))) {
     return NextResponse.json(
       { error: `Invalid file type: ${file.type}. Supported: MP3, WAV, WebM, M4A` },
@@ -48,10 +55,7 @@ export async function POST(request: NextRequest) {
   // Check file size (max 25MB for Groq API)
   const maxSize = 25 * 1024 * 1024;
   if (file.size > maxSize) {
-    return NextResponse.json(
-      { error: 'File too large. Maximum size is 25MB.' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'File too large. Maximum size is 25MB.' }, { status: 400 });
   }
 
   try {
@@ -67,7 +71,9 @@ export async function POST(request: NextRequest) {
     });
 
     // Transform to the format expected by the frontend
-    const words = (transcription as unknown as { words?: Array<{ word: string; start: number; end: number }> }).words || [];
+    const words =
+      (transcription as unknown as { words?: Array<{ word: string; start: number; end: number }> })
+        .words || [];
 
     const result = {
       text: transcription.text,
@@ -97,9 +103,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      { error: `Transcription failed: ${message}` },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: `Transcription failed: ${message}` }, { status: 500 });
   }
 }

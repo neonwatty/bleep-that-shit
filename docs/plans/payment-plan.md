@@ -9,6 +9,7 @@ This plan details adding payment/subscription functionality to monetize premium 
 ### Existing Infrastructure
 
 **Database (Supabase):**
+
 - `profiles` table already includes:
   - `stripe_customer_id` (text, unique)
   - `subscription_tier` ('free' | 'starter' | 'pro' | 'team')
@@ -18,6 +19,7 @@ This plan details adding payment/subscription functionality to monetize premium 
 - Full RLS policies in place
 
 **What Doesn't Exist:**
+
 - Stripe SDK integration
 - Webhook handlers
 - Subscription status checking logic
@@ -28,15 +30,16 @@ This plan details adding payment/subscription functionality to monetize premium 
 
 ## 1. Payment Provider: Stripe (Recommended)
 
-| Factor | Stripe | Paddle | LemonSqueezy |
-|--------|--------|--------|--------------|
-| Setup Complexity | Medium | Low | Low |
-| MoR (Tax handling) | No | Yes | Yes |
-| Pricing | 2.9% + $0.30 | 5-8% + $0.50 | 5% + $0.50 |
-| Next.js Support | Excellent | Good | Good |
-| Supabase Integration | Native patterns | Manual | Manual |
+| Factor               | Stripe          | Paddle       | LemonSqueezy |
+| -------------------- | --------------- | ------------ | ------------ |
+| Setup Complexity     | Medium          | Low          | Low          |
+| MoR (Tax handling)   | No              | Yes          | Yes          |
+| Pricing              | 2.9% + $0.30    | 5-8% + $0.50 | 5% + $0.50   |
+| Next.js Support      | Excellent       | Good         | Good         |
+| Supabase Integration | Native patterns | Manual       | Manual       |
 
 **Why Stripe:**
+
 1. Database already has `stripe_customer_id` field
 2. Best Next.js integration
 3. Lower fees for US customers
@@ -46,14 +49,15 @@ This plan details adding payment/subscription functionality to monetize premium 
 
 ## 2. Subscription Tiers
 
-| Tier | Price | Cloud Minutes | File Length | Storage |
-|------|-------|---------------|-------------|---------|
-| **Free** | $0 | 0 | 10 min | Local only |
-| **Starter** | $9/mo | 60 min | 30 min | 5 GB |
-| **Pro** | $19/mo | 300 min | 2 hours | 25 GB |
-| **Team** | $39/mo | 600 min | 2 hours | 100 GB |
+| Tier        | Price  | Cloud Minutes | File Length | Storage    |
+| ----------- | ------ | ------------- | ----------- | ---------- |
+| **Free**    | $0     | 0             | 10 min      | Local only |
+| **Starter** | $9/mo  | 60 min        | 30 min      | 5 GB       |
+| **Pro**     | $19/mo | 300 min       | 2 hours     | 25 GB      |
+| **Team**    | $39/mo | 600 min       | 2 hours     | 100 GB     |
 
 **Pricing Rationale:**
+
 - Groq API ~$0.02/min → $9/mo for 60 min = $1.20 cost, 87% margin
 - Graceful fallback to browser when limits hit
 
@@ -143,17 +147,20 @@ export function useSubscription() {
 ## 5. API Endpoints
 
 ### Checkout (`/app/api/checkout/route.ts`)
+
 - Creates Stripe checkout session
 - Links to user via metadata
 - Redirects to Stripe-hosted checkout
 
 ### Billing Portal (`/app/api/billing-portal/route.ts`)
+
 - Creates Stripe billing portal session
 - User can manage subscription, update payment
 
 ### Webhooks (`/app/api/webhooks/stripe/route.ts`)
 
 Handle events:
+
 - `checkout.session.completed` → Create subscription
 - `customer.subscription.updated` → Update tier/status
 - `customer.subscription.deleted` → Set cancelled + grace period
@@ -163,13 +170,13 @@ Handle events:
 
 ## 6. UI Components
 
-| Component | Purpose |
-|-----------|---------|
-| `PricingPage` | Tier comparison, checkout CTAs |
-| `PricingCard` | Individual tier with features |
-| `UsageDashboard` | Minutes used, upgrade prompts |
-| `PremiumUpsell` | Modal when accessing gated feature |
-| `BillingSettings` | Link to Stripe portal |
+| Component         | Purpose                            |
+| ----------------- | ---------------------------------- |
+| `PricingPage`     | Tier comparison, checkout CTAs     |
+| `PricingCard`     | Individual tier with features      |
+| `UsageDashboard`  | Minutes used, upgrade prompts      |
+| `PremiumUpsell`   | Modal when accessing gated feature |
+| `BillingSettings` | Link to Stripe portal              |
 
 ---
 
@@ -193,30 +200,35 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...
 ## Implementation Phases
 
 ### Phase 1: Stripe Setup (1-2 days)
+
 1. `npm install stripe @stripe/stripe-js`
 2. Create Stripe account + products/prices
 3. Add migration for subscription_events
 4. Configure environment variables
 
 ### Phase 2: Checkout Flow (2-3 days)
+
 1. Create checkout API route
 2. Create billing portal API route
 3. Build pricing page UI
 4. Test checkout redirect
 
 ### Phase 3: Webhook Handling (2-3 days)
+
 1. Create webhook handler
 2. Handle all subscription events
 3. Set up usage record management
 4. Test with Stripe CLI: `stripe listen --forward-to localhost:3004/api/webhooks/stripe`
 
 ### Phase 4: Subscription Hook & Gating (2-3 days)
+
 1. Create useSubscription hook
 2. Gate cloud API with subscription check
 3. Add premium upsell components
 4. Update TranscriptionControls
 
 ### Phase 5: Dashboard & Polish (2-3 days)
+
 1. Usage dashboard component
 2. Billing management integration
 3. Graceful fallback UX

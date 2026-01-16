@@ -100,7 +100,7 @@ export function useJobStatus(
     setIsPolling(true);
 
     // Fetch immediately
-    fetchJob().then((shouldStop) => {
+    fetchJob().then(shouldStop => {
       if (shouldStop) {
         setIsPolling(false);
         return;

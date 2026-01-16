@@ -21,8 +21,7 @@ import { createClient } from '@supabase/supabase-js';
 
 // Public domain test audio (must be accessible by Groq API - no redirects)
 // Using direct URL from Internet Archive (redirects resolved)
-const TEST_AUDIO_URL =
-  'https://ia800208.us.archive.org/14/items/testmp3testfile/mpthreetest.mp3';
+const TEST_AUDIO_URL = 'https://ia800208.us.archive.org/14/items/testmp3testfile/mpthreetest.mp3';
 
 async function main() {
   console.log('\n🧪 Cloud Transcription E2E Test\n');
@@ -67,7 +66,7 @@ async function main() {
     console.log(`   ✓ Auth user created: ${actualUserId.substring(0, 8)}...`);
 
     // Wait for profile to be created by trigger (if exists)
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise(r => setTimeout(r, 500));
 
     // Check if profile exists, if not create it
     const { data: existingProfile } = await supabase
@@ -187,11 +186,7 @@ async function main() {
     const pollTimeout = 30000;
 
     while (!jobCompleted && Date.now() - startPoll < pollTimeout) {
-      const { data: job } = await supabase
-        .from('jobs')
-        .select('*')
-        .eq('id', jobId)
-        .single();
+      const { data: job } = await supabase.from('jobs').select('*').eq('id', jobId).single();
 
       if (job?.status === 'completed') {
         jobCompleted = true;
@@ -205,7 +200,7 @@ async function main() {
         throw new Error(`Job failed: ${job.error_message}`);
       } else {
         console.log(`   ... polling (status: ${job?.status})`);
-        await new Promise((r) => setTimeout(r, 2000));
+        await new Promise(r => setTimeout(r, 2000));
       }
     }
 
