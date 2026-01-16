@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
 import { createClient } from '@/lib/supabase/server';
+import { checkUsageLimit, recordUsage } from '@/lib/usage/tracking';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60; // Allow up to 60 seconds for transcription
 
 /**
  * POST /api/transcribe/cloud
- * Cloud transcription with premium subscription gating.
+ * Cloud transcription with premium subscription gating and usage tracking.
  *
  * Accepts an audio file and returns transcription with word-level timestamps.
  * Uses Groq's whisper-large-v3-turbo model.
@@ -15,6 +16,7 @@ export const maxDuration = 60; // Allow up to 60 seconds for transcription
  * Requires:
  * - Authenticated user
  * - Premium subscription (starter, pro, or team tier with active status)
+ * - Available usage minutes in current billing period
  */
 export async function POST(request: NextRequest) {
   // Check authentication
@@ -54,6 +56,25 @@ export async function POST(request: NextRequest) {
         code: 'PREMIUM_REQUIRED',
       },
       { status: 403 }
+    );
+  }
+
+  // Check usage limits
+  const tier = profile.subscription_tier as 'starter' | 'pro' | 'team';
+  const usageCheck = await checkUsageLimit(supabase, user.id, tier);
+
+  if (!usageCheck.allowed) {
+    return NextResponse.json(
+      {
+        error: `You've used all your cloud transcription minutes for this month. ${usageCheck.usedMinutes.toFixed(1)} of ${usageCheck.limitMinutes} minutes used.`,
+        code: 'USAGE_LIMIT_EXCEEDED',
+        usage: {
+          used: usageCheck.usedMinutes,
+          limit: usageCheck.limitMinutes,
+          remaining: usageCheck.remainingMinutes,
+        },
+      },
+      { status: 429 }
     );
   }
 
@@ -120,6 +141,16 @@ export async function POST(request: NextRequest) {
       (transcription as unknown as { words?: Array<{ word: string; start: number; end: number }> })
         .words || [];
 
+    // Calculate duration from the last word's end timestamp
+    const durationSeconds = words.length > 0 ? words[words.length - 1].end : 0;
+    const durationMinutes = durationSeconds / 60;
+
+    // Record usage
+    await recordUsage(supabase, user.id, tier, durationMinutes);
+
+    // Get updated usage info
+    const updatedUsage = await checkUsageLimit(supabase, user.id, tier);
+
     const result = {
       text: transcription.text,
       chunks: words.map(word => ({
@@ -131,10 +162,19 @@ export async function POST(request: NextRequest) {
         totalChunks: words.length,
         model: 'whisper-large-v3-turbo',
         source: 'cloud',
+        durationMinutes: durationMinutes,
       },
     };
 
-    return NextResponse.json({ success: true, result });
+    return NextResponse.json({
+      success: true,
+      result,
+      usage: {
+        used: updatedUsage.usedMinutes,
+        limit: updatedUsage.limitMinutes,
+        remaining: updatedUsage.remainingMinutes,
+      },
+    });
   } catch (error) {
     console.error('Cloud transcription error:', error);
 

@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/providers/AuthProvider';
+import { UsageMeter } from '@/components/dashboard/UsageMeter';
 
 export function AuthButton() {
   const { user, profile, isLoading, isPremium, signOut } = useAuth();
@@ -92,6 +93,13 @@ export function AuthButton() {
               </span>
             )}
           </div>
+
+          {/* Usage meter for premium users */}
+          {isPremium && (
+            <div className="border-b border-gray-100 px-4 py-3">
+              <UsageMeter compact />
+            </div>
+          )}
 
           {/* Menu items */}
           <div className="py-1">
