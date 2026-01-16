@@ -1,17 +1,62 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
+import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60; // Allow up to 60 seconds for transcription
 
 /**
  * POST /api/transcribe/cloud
- * Direct cloud transcription without authentication (for the /bleep page)
+ * Cloud transcription with premium subscription gating.
  *
  * Accepts an audio file and returns transcription with word-level timestamps.
  * Uses Groq's whisper-large-v3-turbo model.
+ *
+ * Requires:
+ * - Authenticated user
+ * - Premium subscription (starter, pro, or team tier with active status)
  */
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json(
+      { error: 'Authentication required. Please sign in to use cloud transcription.' },
+      { status: 401 }
+    );
+  }
+
+  // Fetch profile to check subscription
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('subscription_tier, subscription_status, subscription_ends_at')
+    .eq('id', user.id)
+    .single();
+
+  if (profileError || !profile) {
+    return NextResponse.json({ error: 'Could not verify subscription status.' }, { status: 500 });
+  }
+
+  // Check premium subscription
+  const isPremium =
+    profile.subscription_tier !== 'free' &&
+    profile.subscription_status === 'active' &&
+    (!profile.subscription_ends_at || new Date(profile.subscription_ends_at) > new Date());
+
+  if (!isPremium) {
+    return NextResponse.json(
+      {
+        error: 'Premium subscription required for cloud transcription.',
+        code: 'PREMIUM_REQUIRED',
+      },
+      { status: 403 }
+    );
+  }
+
   const groqApiKey = process.env.GROQ_API_KEY;
 
   if (!groqApiKey) {

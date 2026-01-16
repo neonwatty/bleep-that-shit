@@ -2,6 +2,26 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { SetupTranscribeTab } from './SetupTranscribeTab';
 
+// Mock the useAuth hook since TranscriptionControls uses it
+vi.mock('@/providers/AuthProvider', () => ({
+  useAuth: vi.fn(() => ({
+    isPremium: false,
+    user: null,
+    session: null,
+    profile: null,
+    isLoading: false,
+    subscriptionTier: 'free' as const,
+    signIn: vi.fn(),
+    signUp: vi.fn(),
+    signInWithOAuth: vi.fn(),
+    signInWithMagicLink: vi.fn(),
+    signOut: vi.fn(),
+    resetPassword: vi.fn(),
+    updatePassword: vi.fn(),
+    refreshProfile: vi.fn(),
+  })),
+}));
+
 describe('SetupTranscribeTab', () => {
   const defaultProps = {
     file: null,

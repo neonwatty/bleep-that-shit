@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { HelpTooltip } from '@/components/ui/HelpTooltip';
 import { MobileSelect } from '@/components/ui/MobileSelect';
 import { UpgradeModal } from '@/components/premium/UpgradeModal';
+import { useAuth } from '@/providers/AuthProvider';
 
 interface TranscriptionControlsProps {
   language: string;
@@ -87,7 +88,19 @@ export function TranscriptionControls({
   onLanguageChange,
   onModelChange,
 }: TranscriptionControlsProps) {
+  const { isPremium } = useAuth();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  // If user is premium, remove the isPremium lock from cloud options
+  const effectiveModelOptions = useMemo(() => {
+    if (isPremium) {
+      return modelOptions.map(opt => ({
+        ...opt,
+        isPremium: false, // Premium users can access all models
+      }));
+    }
+    return modelOptions;
+  }, [isPremium]);
 
   const handlePremiumClick = () => {
     setShowUpgradeModal(true);
@@ -116,7 +129,7 @@ export function TranscriptionControls({
           <MobileSelect
             data-testid="model-select"
             value={model}
-            options={modelOptions}
+            options={effectiveModelOptions}
             onChange={onModelChange}
             onPremiumClick={handlePremiumClick}
             label="Select Model"
