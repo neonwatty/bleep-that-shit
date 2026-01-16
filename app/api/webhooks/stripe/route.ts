@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { stripe, getTierFromPriceId } from '@/lib/stripe/config';
+import { getStripe, getTierFromPriceId } from '@/lib/stripe/config';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/supabase';
 
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    event = getStripe().webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('Webhook signature verification failed:', message);
@@ -106,7 +106,7 @@ async function handleCheckoutCompleted(
   const subscriptionId = session.subscription as string;
 
   if (subscriptionId) {
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    const subscription = await getStripe().subscriptions.retrieve(subscriptionId);
     const priceId = subscription.items.data[0]?.price.id;
     const resolvedTier = (tier || getTierFromPriceId(priceId)) as
       | 'free'
