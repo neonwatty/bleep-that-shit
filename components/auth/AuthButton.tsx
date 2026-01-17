@@ -4,9 +4,15 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/providers/AuthProvider';
 import { UsageMeter } from '@/components/dashboard/UsageMeter';
+import { isAuthEnabled } from '@/lib/config/featureFlags';
 
 export function AuthButton() {
   const { user, profile, isLoading, isPremium, signOut } = useAuth();
+
+  // Hide auth button if auth is disabled (production)
+  if (!isAuthEnabled) {
+    return null;
+  }
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 

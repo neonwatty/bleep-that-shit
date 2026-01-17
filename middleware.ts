@@ -1,10 +1,13 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+// Check if auth features are enabled (set in Vercel environment)
+const isAuthEnabled = process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true';
+
 // Routes that require authentication
 const protectedRoutes = ['/dashboard'];
 
 // Routes that should redirect to dashboard if already authenticated
-const authRoutes = ['/auth/login', '/auth/signup'];
+const authRoutes = ['/auth/login', '/auth/signup', '/auth/reset-password', '/auth/update-password'];
 
 /**
  * Check if user has a valid auth session by looking for Supabase auth cookies.
@@ -29,6 +32,11 @@ export function middleware(request: NextRequest) {
   // Check if route needs auth handling
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
+
+  // If auth is disabled, redirect all auth-related routes to home
+  if (!isAuthEnabled && (isAuthRoute || isProtectedRoute)) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
 
   // Skip middleware for routes that don't need auth
   if (!isProtectedRoute && !isAuthRoute) {
