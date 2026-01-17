@@ -6,8 +6,17 @@
     "lib/blog/*.ts"
   ],
   "project": ["**/*.{js,jsx,ts,tsx}"],
-  "ignore": ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}", "tests/archived/**"],
+  "ignore": [
+    "**/*.test.{ts,tsx}",
+    "**/*.spec.{ts,tsx}",
+    "tests/archived/**",
+    "demos/**",
+    "scripts/**",
+    "supabase/functions/**",
+    "lib/groq/**"
+  ],
   "ignoreDependencies": [
+    "@supabase/ssr",
     "@ffmpeg/core",
     "@ffmpeg/ffmpeg",
     "@ffmpeg/util",
