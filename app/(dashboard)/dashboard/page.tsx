@@ -5,6 +5,7 @@ import { useAuth } from '@/providers/AuthProvider';
 import { useProjects } from '@/hooks/useProjects';
 import { ProjectList } from '@/components/projects/ProjectList';
 import { CreateProjectDialog } from '@/components/projects/CreateProjectDialog';
+import { BillingSettings } from '@/components/dashboard/BillingSettings';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -63,6 +64,9 @@ export default function DashboardPage() {
           </button>
         </div>
       </div>
+
+      {/* Billing Settings */}
+      <BillingSettings />
 
       {/* Recent Projects */}
       <div className="rounded-lg border border-gray-200 bg-white p-6">

@@ -228,9 +228,106 @@ export function useBleepState() {
     }
   }, [searchParams, file, isLoadingSample]);
 
+  // Cloud transcription handler
+  const handleCloudTranscribe = async () => {
+    if (!file) return;
+
+    setIsTranscribing(true);
+    setProgress(0);
+    setProgressText('Preparing file for cloud transcription...');
+
+    try {
+      // For video files, we need to extract audio first
+      let audioFile: File = file;
+
+      if (file.type.includes('video')) {
+        setProgressText('Extracting audio from video...');
+        setProgress(20);
+
+        // Use the worker to extract audio
+        const worker = new Worker(
+          new URL('../../workers/transcriptionWorker.ts', import.meta.url),
+          { type: 'module' }
+        );
+
+        const audioBuffer = await new Promise<ArrayBuffer>((resolve, reject) => {
+          worker.onmessage = event => {
+            if (event.data.type === 'extracted') {
+              resolve(event.data.audioBuffer);
+            } else if (event.data.error) {
+              reject(new Error(event.data.error));
+            }
+          };
+          worker.onerror = error => reject(error);
+
+          file.arrayBuffer().then(arrayBuffer => {
+            worker.postMessage({
+              type: 'extract',
+              fileBuffer: arrayBuffer,
+              fileType: file.type,
+            });
+          });
+        });
+
+        worker.terminate();
+        audioFile = new File([audioBuffer], 'audio.wav', { type: 'audio/wav' });
+      }
+
+      setProgressText('Uploading to cloud transcription service...');
+      setProgress(40);
+
+      const formData = new FormData();
+      formData.append('file', audioFile);
+      formData.append('language', language);
+
+      const response = await fetch('/api/transcribe/cloud', {
+        method: 'POST',
+        body: formData,
+      });
+
+      setProgress(80);
+      setProgressText('Processing transcription...');
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Cloud transcription failed');
+      }
+
+      setTranscriptionResult(data.result);
+      setTimestampWarning(null);
+
+      trackEvent('transcription_completed', {
+        word_count: data.result.chunks?.length || 0,
+        has_timestamp_issues: false,
+        null_timestamp_count: 0,
+        source: 'cloud',
+      });
+
+      setIsTranscribing(false);
+      setProgress(100);
+      setProgressText('Cloud transcription complete!');
+    } catch (error) {
+      console.error('Cloud transcription error:', error);
+      trackEvent('transcription_error', {
+        error_message: String(error).slice(0, 100),
+        source: 'cloud',
+      });
+      setIsTranscribing(false);
+      setProgressText('Error: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      setErrorMessage(error instanceof Error ? error.message : 'Cloud transcription failed');
+      setTranscriptionResult(null);
+    }
+  };
+
   // Transcription handlers
   const handleTranscribe = async () => {
     if (!file) return;
+
+    // Check if cloud model is selected
+    if (model.startsWith('cloud/')) {
+      return handleCloudTranscribe();
+    }
 
     setIsTranscribing(true);
     setProgress(0);

@@ -29,8 +29,8 @@ test.describe('Premium Page Tests', () => {
     await expect(page).toHaveURL(/.*\/bleep/);
   });
 
-  test('should display Coming Soon badge', async ({ page }) => {
-    const badge = page.locator('span').filter({ hasText: 'Coming Soon' });
+  test('should display Premium badge', async ({ page }) => {
+    const badge = page.locator('span').filter({ hasText: 'Premium' });
     await expect(badge).toBeVisible();
   });
 
@@ -63,29 +63,33 @@ test.describe('Premium Page Tests', () => {
     await expect(page.getByRole('heading', { name: 'Premium Adds' })).toBeVisible();
   });
 
-  test('should display waitlist CTA section', async ({ page }) => {
-    // The "Get Early Access" text is split with <br /> tags, check the section exists
-    const waitlistSection = page.locator('#waitlist');
-    await expect(waitlistSection).toBeVisible();
-    await expect(page.getByText('50% off')).toBeVisible();
+  test('should display pricing section', async ({ page }) => {
+    const pricingSection = page.locator('#pricing');
+    await expect(pricingSection).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Choose Your Plan' })).toBeVisible();
   });
 
-  test('should have working waitlist link to home page waitlist section', async ({ page }) => {
-    const waitlistLink = page.locator('a').filter({ hasText: 'Join Premium Waitlist' });
-    await expect(waitlistLink).toBeVisible();
-    await expect(waitlistLink).toHaveAttribute('href', '/#waitlist');
+  test('should display pricing cards for all tiers', async ({ page }) => {
+    // Check tier headings exist (use exact match to avoid partial matches like "Processing", "Project")
+    await expect(page.getByRole('heading', { name: 'Starter', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Pro', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Team', exact: true })).toBeVisible();
+    // Check prices are displayed
+    await expect(page.getByText('$9')).toBeVisible();
+    await expect(page.getByText('$19')).toBeVisible();
+    await expect(page.getByText('$39')).toBeVisible();
   });
 
-  test('should have hero waitlist CTA', async ({ page }) => {
-    const heroWaitlistLink = page.locator('a[href="#waitlist"]');
-    await expect(heroWaitlistLink).toBeVisible();
-    await expect(heroWaitlistLink).toContainText('Join Waitlist');
+  test('should have hero View Plans CTA', async ({ page }) => {
+    const heroPricingLink = page.locator('a[href="#pricing"]');
+    await expect(heroPricingLink).toBeVisible();
+    await expect(heroPricingLink).toContainText('View Plans');
   });
 
-  test('should navigate to waitlist section via hero CTA', async ({ page }) => {
-    const heroWaitlistLink = page.locator('a[href="#waitlist"]').first();
-    await heroWaitlistLink.click();
-    await expect(page).toHaveURL(/.*#waitlist/);
+  test('should navigate to pricing section via hero CTA', async ({ page }) => {
+    const heroPricingLink = page.locator('a[href="#pricing"]').first();
+    await heroPricingLink.click();
+    await expect(page).toHaveURL(/.*#pricing/);
   });
 
   test('should have See Features link and navigate to features section', async ({ page }) => {

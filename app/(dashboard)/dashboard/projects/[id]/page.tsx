@@ -5,8 +5,12 @@ import Link from 'next/link';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProject } from '@/hooks/useProject';
 import { FileUploadWithProgress } from '@/components/projects/FileUploadWithProgress';
+import { ProcessingStatus } from '@/components/projects/ProcessingStatus';
 import { formatDuration } from '@/hooks/useFileUpload';
 import type { UploadResult } from '@/lib/supabase/storage';
+import type { Database } from '@/types/supabase';
+
+type Job = Database['public']['Tables']['jobs']['Row'];
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -22,7 +26,7 @@ const statusColors: Record<string, { bg: string; text: string; label: string }> 
 export default function ProjectDetailPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const { user } = useAuth();
-  const { project, isLoading, error, updateProject } = useProject(resolvedParams.id);
+  const { project, isLoading, error, updateProject, refetch } = useProject(resolvedParams.id);
 
   const handleUploadComplete = async (result: UploadResult & { duration?: number }) => {
     await updateProject({
@@ -30,6 +34,18 @@ export default function ProjectDetailPage({ params }: PageProps) {
       original_file_size: result.metadata.size,
       duration_seconds: result.duration || null,
     });
+  };
+
+  const handleJobComplete = async (job: Job) => {
+    console.log('Job completed:', job.id);
+    // Refresh project data to get transcription
+    await refetch();
+  };
+
+  const handleJobError = async (job: Job) => {
+    console.error('Job failed:', job.error_message);
+    // Refresh project data to get error status
+    await refetch();
   };
 
   if (isLoading) {
@@ -124,31 +140,33 @@ export default function ProjectDetailPage({ params }: PageProps) {
         </div>
       )}
 
-      {/* Process Section */}
+      {/* Cloud Processing Section */}
+      {hasFile &&
+        (project.status === 'draft' ||
+          project.status === 'processing' ||
+          project.status === 'error') && (
+          <ProcessingStatus
+            projectId={project.id}
+            onComplete={handleJobComplete}
+            onError={handleJobError}
+          />
+        )}
+
+      {/* Browser Processing Option */}
       {hasFile && project.status === 'draft' && (
         <div className="rounded-lg border border-gray-200 bg-white p-6">
-          <h2 className="text-lg font-semibold text-gray-900">Next Steps</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Or Use Browser Processing</h2>
           <p className="mt-2 text-gray-600">
-            Your file is uploaded. You can now proceed to transcribe and bleep your content.
+            Process locally in your browser. Works offline but may be slower for longer files.
           </p>
           <div className="mt-4">
             <Link
               href={`/bleep?project=${project.id}`}
-              className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
             >
-              Start Processing
+              Use Browser Processing
             </Link>
           </div>
-        </div>
-      )}
-
-      {/* Processing Status */}
-      {project.status === 'processing' && (
-        <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-6">
-          <h2 className="text-lg font-semibold text-yellow-800">Processing</h2>
-          <p className="mt-2 text-yellow-700">
-            Your media is being processed. This may take a few minutes.
-          </p>
         </div>
       )}
 
@@ -165,24 +183,6 @@ export default function ProjectDetailPage({ params }: PageProps) {
               className="inline-flex items-center rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
             >
               View &amp; Download
-            </Link>
-          </div>
-        </div>
-      )}
-
-      {/* Error Status */}
-      {project.status === 'error' && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-6">
-          <h2 className="text-lg font-semibold text-red-800">Processing Error</h2>
-          <p className="mt-2 text-red-700">
-            There was an error processing your media. Please try again or contact support.
-          </p>
-          <div className="mt-4">
-            <Link
-              href={`/bleep?project=${project.id}`}
-              className="inline-flex items-center rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-            >
-              Retry Processing
             </Link>
           </div>
         </div>

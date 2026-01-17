@@ -111,7 +111,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${merriweather.variable}`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${merriweather.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <link
           rel="stylesheet"
@@ -120,7 +124,10 @@ export default function RootLayout({
         />
         <JsonLd data={[organizationSchema, websiteSchema]} />
       </head>
-      <body className="font-merriweather bg-pattern text-dark min-h-screen">
+      <body
+        className="font-merriweather bg-pattern text-dark min-h-screen"
+        suppressHydrationWarning
+      >
         <AuthProvider>
           <MobileNav />
           <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 pb-20 md:max-w-4xl md:px-0 md:pb-0">

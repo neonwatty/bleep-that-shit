@@ -1,8 +1,31 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { TranscriptionControls } from './TranscriptionControls';
 
+// Mock the useAuth hook
+vi.mock('@/providers/AuthProvider', () => ({
+  useAuth: vi.fn(() => ({
+    isPremium: false,
+    user: null,
+    session: null,
+    profile: null,
+    isLoading: false,
+    subscriptionTier: 'free' as const,
+    signIn: vi.fn(),
+    signUp: vi.fn(),
+    signInWithOAuth: vi.fn(),
+    signInWithMagicLink: vi.fn(),
+    signOut: vi.fn(),
+    resetPassword: vi.fn(),
+    updatePassword: vi.fn(),
+    refreshProfile: vi.fn(),
+  })),
+}));
+
 describe('TranscriptionControls', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
   const defaultProps = {
     language: 'en',
     model: 'Xenova/whisper-base.en',
@@ -73,10 +96,12 @@ describe('TranscriptionControls', () => {
     expect(select).toHaveTextContent('Base (~85 MB)');
     expect(select).toHaveTextContent('Small (~275 MB)');
     expect(select).toHaveTextContent('Medium (~800 MB)');
+    expect(select).toHaveTextContent('Large (Cloud)');
     expect(select).toHaveTextContent('Tiny Multilingual (~50 MB)');
     expect(select).toHaveTextContent('Base Multilingual (~85 MB)');
     expect(select).toHaveTextContent('Small Multilingual (~275 MB)');
     expect(select).toHaveTextContent('Medium Multilingual (~800 MB)');
+    expect(select).toHaveTextContent('Large Multilingual (Cloud)');
   });
 
   it('has correct model option values', () => {
@@ -90,10 +115,12 @@ describe('TranscriptionControls', () => {
       'Xenova/whisper-base.en',
       'Xenova/whisper-small.en',
       'onnx-community/whisper-medium.en_timestamped',
+      'cloud/whisper-large-v3-turbo',
       'Xenova/whisper-tiny',
       'Xenova/whisper-base',
       'Xenova/whisper-small',
       'onnx-community/whisper-medium_timestamped',
+      'cloud/whisper-large-v3-turbo-multilingual',
     ]);
   });
 

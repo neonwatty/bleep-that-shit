@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { DISCORD_URL } from '@/lib/constants/externalLinks';
 import { trackEvent } from '@/lib/analytics';
+import { PricingCard } from '@/components/premium/PricingCard';
 
 const features = [
   {
@@ -24,6 +25,58 @@ const features = [
     emoji: '🔄',
     title: 'Project History',
     description: 'Re-edit and re-export anytime',
+  },
+];
+
+const pricingPlans = [
+  {
+    tier: 'starter' as const,
+    name: 'Starter',
+    price: 9,
+    cloudMinutes: 60,
+    maxFileLength: '30 min',
+    storage: '5 GB',
+    features: [
+      'Cloud-powered transcription',
+      '60 min cloud processing/month',
+      'Files up to 30 minutes',
+      '5 GB project storage',
+      'Save & restore projects',
+      'Priority support',
+    ],
+  },
+  {
+    tier: 'pro' as const,
+    name: 'Pro',
+    price: 19,
+    cloudMinutes: 300,
+    maxFileLength: '2 hours',
+    storage: '25 GB',
+    highlighted: true,
+    features: [
+      'Everything in Starter',
+      '300 min cloud processing/month',
+      'Files up to 2 hours',
+      '25 GB project storage',
+      'Batch processing',
+      'Custom wordsets sync',
+    ],
+  },
+  {
+    tier: 'team' as const,
+    name: 'Team',
+    price: 39,
+    cloudMinutes: 600,
+    maxFileLength: '2 hours',
+    storage: '100 GB',
+    features: [
+      'Everything in Pro',
+      '600 min cloud processing/month',
+      '100 GB shared storage',
+      'Team collaboration',
+      'Shared wordsets',
+      'Admin dashboard',
+    ],
   },
 ];
 
@@ -101,7 +154,7 @@ export default function PremiumPage() {
 
           <div className="relative z-10">
             <span className="mb-6 inline-block rounded bg-gradient-to-r from-indigo-500 to-purple-500 px-3 py-1 text-xs font-bold tracking-wider uppercase">
-              Coming Soon
+              Premium
             </span>
 
             <h1 className="font-inter leading-[0.85] font-black tracking-tight uppercase">
@@ -123,11 +176,11 @@ export default function PremiumPage() {
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <a
-                href="#waitlist"
+                href="#pricing"
                 className="inline-block bg-white px-8 py-4 text-center text-lg font-bold text-black transition-all hover:bg-gray-100"
                 onClick={() => trackEvent('premium_cta_clicked', { location: 'hero' })}
               >
-                Join Waitlist →
+                View Plans →
               </a>
               <a
                 href="#features"
@@ -257,33 +310,38 @@ export default function PremiumPage() {
         </div>
       </section>
 
-      {/* Waitlist CTA */}
-      <section id="waitlist" className="relative overflow-hidden bg-black px-4 py-24">
+      {/* Pricing Section */}
+      <section id="pricing" className="relative overflow-hidden bg-black px-4 py-24">
         {/* Gradient background */}
         <div className="absolute bottom-0 left-1/2 h-[400px] w-[800px] -translate-x-1/2 transform rounded-full bg-gradient-to-t from-indigo-600/20 to-transparent blur-3xl" />
 
-        <div className="relative z-10 mx-auto max-w-2xl text-center">
-          <h2 className="font-inter mb-8 text-5xl leading-none font-black uppercase md:text-7xl">
-            Get
-            <br />
-            Early
-            <br />
-            Access
+        <div className="relative z-10 mx-auto max-w-6xl">
+          <h2 className="font-inter mb-4 text-center text-3xl font-black uppercase md:text-5xl">
+            Choose Your Plan
           </h2>
-          <p className="font-merriweather mb-4 text-xl text-gray-400">
-            Join the waitlist and lock in <span className="font-bold text-white">50% off</span> for
-            3 months.
+          <p className="mx-auto mb-12 max-w-xl text-center text-gray-500">
+            Start with a free trial. Upgrade anytime. Cancel anytime.
           </p>
-          <p className="mb-8 text-gray-600">
-            Free version stays free forever. Premium is for power users.
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {pricingPlans.map(plan => (
+              <PricingCard
+                key={plan.tier}
+                tier={plan.tier}
+                name={plan.name}
+                price={plan.price}
+                cloudMinutes={plan.cloudMinutes}
+                maxFileLength={plan.maxFileLength}
+                storage={plan.storage}
+                features={plan.features}
+                highlighted={plan.highlighted}
+              />
+            ))}
+          </div>
+
+          <p className="mt-8 text-center text-sm text-gray-600">
+            All plans include a 7-day free trial. No credit card required to start.
           </p>
-          <Link
-            href="/#waitlist"
-            className="inline-block rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-12 py-5 text-xl font-bold shadow-lg shadow-indigo-500/25 transition-all hover:scale-105 hover:from-indigo-500 hover:to-purple-500"
-            onClick={() => trackEvent('premium_waitlist_clicked', { location: 'cta_section' })}
-          >
-            Join Premium Waitlist →
-          </Link>
         </div>
       </section>
 

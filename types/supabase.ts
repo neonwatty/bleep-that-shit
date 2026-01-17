@@ -226,32 +226,59 @@ export type Database = {
         Row: {
           id: string;
           project_id: string;
-          replicate_id: string | null;
-          status: 'pending' | 'processing' | 'completed' | 'failed';
+          user_id: string;
+          queue_msg_id: string | null;
+          job_type: 'transcription' | 'processing';
+          status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
           error_message: string | null;
+          input_file_path: string | null;
+          output_data: Json | null;
+          processing_minutes: number | null;
+          retry_count: number;
+          signed_url: string | null;
+          signed_url_expires_at: string | null;
           started_at: string | null;
           completed_at: string | null;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
           project_id: string;
-          replicate_id?: string | null;
-          status?: 'pending' | 'processing' | 'completed' | 'failed';
+          user_id: string;
+          queue_msg_id?: string | null;
+          job_type?: 'transcription' | 'processing';
+          status?: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
           error_message?: string | null;
+          input_file_path?: string | null;
+          output_data?: Json | null;
+          processing_minutes?: number | null;
+          retry_count?: number;
+          signed_url?: string | null;
+          signed_url_expires_at?: string | null;
           started_at?: string | null;
           completed_at?: string | null;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
           project_id?: string;
-          replicate_id?: string | null;
-          status?: 'pending' | 'processing' | 'completed' | 'failed';
+          user_id?: string;
+          queue_msg_id?: string | null;
+          job_type?: 'transcription' | 'processing';
+          status?: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
           error_message?: string | null;
+          input_file_path?: string | null;
+          output_data?: Json | null;
+          processing_minutes?: number | null;
+          retry_count?: number;
+          signed_url?: string | null;
+          signed_url_expires_at?: string | null;
           started_at?: string | null;
           completed_at?: string | null;
           created_at?: string;
+          updated_at?: string;
         };
         Relationships: [
           {
@@ -261,11 +288,54 @@ export type Database = {
             referencedRelation: 'projects';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'jobs_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
         ];
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      pgmq_send: {
+        Args: {
+          queue_name: string;
+          message: Json;
+        };
+        Returns: number;
+      };
+      pgmq_read: {
+        Args: {
+          queue_name: string;
+          vt: number;
+          qty: number;
+        };
+        Returns: Array<{
+          msg_id: number;
+          read_ct: number;
+          enqueued_at: string;
+          vt: string;
+          message: Json;
+        }>;
+      };
+      pgmq_delete: {
+        Args: {
+          queue_name: string;
+          msg_id: number;
+        };
+        Returns: boolean;
+      };
+      pgmq_archive: {
+        Args: {
+          queue_name: string;
+          msg_id: number;
+        };
+        Returns: boolean;
+      };
+    };
     Enums: Record<string, never>;
   };
 };

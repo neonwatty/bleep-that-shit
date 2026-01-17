@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { AuthButton } from '@/components/auth/AuthButton';
 
 export function MobileNav() {
   const pathname = usePathname();
@@ -13,12 +14,12 @@ export function MobileNav() {
 
   return (
     <>
-      {/* Mobile Header - Just logo, clean and simple */}
+      {/* Mobile Header - Logo + Auth */}
       <nav
         data-testid="mobile-navbar"
         className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm md:hidden"
       >
-        <div className="flex items-center justify-center px-4 py-3">
+        <div className="flex items-center justify-between px-4 py-3">
           <Link
             href="/"
             data-testid="navbar-logo"
@@ -26,6 +27,7 @@ export function MobileNav() {
           >
             Bleep That Sh*t!
           </Link>
+          <AuthButton />
         </div>
       </nav>
 
@@ -55,6 +57,7 @@ export function MobileNav() {
           >
             Transcription Sampler
           </Link>
+          <AuthButton />
         </div>
       </nav>
     </>

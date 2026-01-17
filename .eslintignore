@@ -23,3 +23,6 @@ next-env.d.ts
 
 # Demo scripts (not part of the app)
 demos/
+
+# Supabase Edge Functions (Deno runtime)
+supabase/functions/
