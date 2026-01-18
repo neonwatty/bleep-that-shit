@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { version } from '../package.json';
+import { version as packageVersion } from '../package.json';
 import { FEEDBACK_FORM_URL } from '@/lib/constants/externalLinks';
+
+// Use release tag version in production, fallback to package.json
+const version = process.env.NEXT_PUBLIC_APP_VERSION || packageVersion;
 
 export function Footer() {
   const pathname = usePathname();
