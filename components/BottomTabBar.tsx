@@ -2,6 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/providers/AuthProvider';
+import { isAuthEnabled } from '@/lib/config/featureFlags';
 
 interface TabItem {
   href: string;
@@ -58,7 +60,23 @@ const SamplerIcon = ({ active }: { active: boolean }) => (
   </svg>
 );
 
-const tabs: TabItem[] = [
+const AccountIcon = ({ active }: { active: boolean }) => (
+  <svg
+    className={`h-6 w-6 ${active ? 'text-black' : 'text-gray-500'}`}
+    fill={active ? 'currentColor' : 'none'}
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={active ? 0 : 2}
+      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+    />
+  </svg>
+);
+
+const baseTabs: TabItem[] = [
   {
     href: '/',
     label: 'Home',
@@ -81,10 +99,26 @@ const tabs: TabItem[] = [
 
 export function BottomTabBar() {
   const pathname = usePathname();
+  const { user } = useAuth();
 
-  // Hide on premium page and other special pages
-  if (pathname === '/premium' || pathname?.startsWith('/blog')) {
+  // Hide on premium page, blog pages, and dashboard pages (dashboard has its own nav)
+  if (
+    pathname === '/premium' ||
+    pathname?.startsWith('/blog') ||
+    pathname?.startsWith('/dashboard')
+  ) {
     return null;
+  }
+
+  // Build tabs array - add Account tab if user is logged in and auth is enabled
+  const tabs: TabItem[] = [...baseTabs];
+  if (isAuthEnabled && user) {
+    tabs.push({
+      href: '/dashboard',
+      label: 'Account',
+      icon: <AccountIcon active={false} />,
+      matchPaths: ['/dashboard', '/dashboard/projects', '/dashboard/settings'],
+    });
   }
 
   const isActive = (tab: TabItem) => {
@@ -115,6 +149,7 @@ export function BottomTabBar() {
               {tab.href === '/' && <HomeIcon active={active} />}
               {tab.href === '/bleep' && <BleepIcon active={active} />}
               {tab.href === '/sampler' && <SamplerIcon active={active} />}
+              {tab.href === '/dashboard' && <AccountIcon active={active} />}
               <span
                 className={`text-xs font-medium ${active ? 'font-semibold text-black' : 'text-gray-500'}`}
               >

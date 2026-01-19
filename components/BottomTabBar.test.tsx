@@ -7,11 +7,53 @@ vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
 }));
 
+// Mock useAuth hook
+vi.mock('@/providers/AuthProvider', () => ({
+  useAuth: vi.fn(() => ({
+    user: null,
+    session: null,
+    profile: null,
+    isLoading: false,
+    isPremium: false,
+    subscriptionTier: 'free',
+    signIn: vi.fn(),
+    signUp: vi.fn(),
+    signInWithOAuth: vi.fn(),
+    signInWithMagicLink: vi.fn(),
+    signOut: vi.fn(),
+    resetPassword: vi.fn(),
+    updatePassword: vi.fn(),
+    refreshProfile: vi.fn(),
+  })),
+}));
+
+// Mock feature flags
+vi.mock('@/lib/config/featureFlags', () => ({
+  isAuthEnabled: false,
+}));
+
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/providers/AuthProvider';
 
 describe('BottomTabBar', () => {
   beforeEach(() => {
     vi.mocked(usePathname).mockReturnValue('/');
+    vi.mocked(useAuth).mockReturnValue({
+      user: null,
+      session: null,
+      profile: null,
+      isLoading: false,
+      isPremium: false,
+      subscriptionTier: 'free',
+      signIn: vi.fn(),
+      signUp: vi.fn(),
+      signInWithOAuth: vi.fn(),
+      signInWithMagicLink: vi.fn(),
+      signOut: vi.fn(),
+      resetPassword: vi.fn(),
+      updatePassword: vi.fn(),
+      refreshProfile: vi.fn(),
+    });
   });
 
   describe('Tab rendering', () => {
@@ -140,6 +182,45 @@ describe('BottomTabBar', () => {
 
       const nav = container.querySelector('nav');
       expect(nav).toHaveClass('z-50');
+    });
+  });
+
+  describe('Account tab (authenticated user)', () => {
+    it('does not show Account tab when user is not logged in', () => {
+      vi.mocked(useAuth).mockReturnValue({
+        user: null,
+        session: null,
+        profile: null,
+        isLoading: false,
+        isPremium: false,
+        subscriptionTier: 'free',
+        signIn: vi.fn(),
+        signUp: vi.fn(),
+        signInWithOAuth: vi.fn(),
+        signInWithMagicLink: vi.fn(),
+        signOut: vi.fn(),
+        resetPassword: vi.fn(),
+        updatePassword: vi.fn(),
+        refreshProfile: vi.fn(),
+      });
+
+      render(<BottomTabBar />);
+
+      expect(screen.queryByText('Account')).not.toBeInTheDocument();
+    });
+
+    it('is hidden on dashboard pages', () => {
+      vi.mocked(usePathname).mockReturnValue('/dashboard');
+      const { container } = render(<BottomTabBar />);
+
+      expect(container.firstChild).toBeNull();
+    });
+
+    it('is hidden on dashboard sub-pages', () => {
+      vi.mocked(usePathname).mockReturnValue('/dashboard/projects');
+      const { container } = render(<BottomTabBar />);
+
+      expect(container.firstChild).toBeNull();
     });
   });
 });
