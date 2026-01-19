@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 
-// Vercel deployment workflow test
 const nextConfig: NextConfig = {
   // Keep images unoptimized for WASM/Transformers.js compatibility
   images: {
