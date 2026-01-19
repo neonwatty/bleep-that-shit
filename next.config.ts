@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 
-// Next.js configuration for bleep-that-shit
 const nextConfig: NextConfig = {
   // Keep images unoptimized for WASM/Transformers.js compatibility
   images: {
