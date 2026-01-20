@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { BottomSheet } from './BottomSheet';
+import { PremiumBadge, PremiumLockIcon } from './PremiumBadge';
 
 interface SelectOption {
   value: string;
@@ -111,17 +112,7 @@ export function MobileSelect({
                     }`}
                   >
                     {isPremiumLocked ? (
-                      <svg
-                        className="h-3 w-3 text-amber-600"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
+                      <PremiumLockIcon />
                     ) : (
                       isSelected && (
                         <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -149,11 +140,7 @@ export function MobileSelect({
                       >
                         {option.label}
                       </span>
-                      {isPremiumLocked && (
-                        <span className="rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-2 py-0.5 text-xs font-semibold text-white">
-                          PRO
-                        </span>
-                      )}
+                      {isPremiumLocked && <PremiumBadge variant="badge" size="sm" />}
                     </div>
                     {option.description && (
                       <div className="mt-0.5 text-sm text-gray-500">{option.description}</div>

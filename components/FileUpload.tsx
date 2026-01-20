@@ -1,5 +1,10 @@
+'use client';
+
+import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Link from 'next/link';
+import { useAuth } from '@/providers/AuthProvider';
+import { UpgradeModal } from '@/components/premium/UpgradeModal';
 
 interface FileUploadProps {
   onFileUpload: (file: File) => void;
@@ -18,6 +23,9 @@ export function FileUpload({
   showFileWarning,
   fileDurationWarning,
 }: FileUploadProps) {
+  const { isPremium } = useAuth();
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: async (acceptedFiles, fileRejections) => {
       const uploadedFile = acceptedFiles[0];
@@ -80,7 +88,7 @@ export function FileUpload({
         </div>
       )}
 
-      {fileDurationWarning && (
+      {fileDurationWarning && !isPremium && (
         <div
           data-testid="file-duration-warning"
           className="mt-2 rounded border border-orange-400 bg-orange-100 p-3 text-orange-800"
@@ -90,13 +98,15 @@ export function FileUpload({
             <div>
               {fileDurationWarning}
               <div className="mt-2 rounded bg-orange-200 p-2">
-                <p className="text-sm font-medium">We&apos;re working on longer video support.</p>
-                <Link
-                  href="/#waitlist"
-                  className="mt-1 inline-block rounded bg-orange-500 px-3 py-1 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+                <p className="text-sm font-medium">
+                  Upgrade to Pro to process files up to 2 hours long.
+                </p>
+                <button
+                  onClick={() => setShowUpgradeModal(true)}
+                  className="mt-1 inline-block rounded bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-1 text-sm font-semibold text-white transition-colors hover:from-amber-600 hover:to-orange-600"
                 >
-                  Join the Pro Waitlist
-                </Link>
+                  Upgrade to Pro
+                </button>
               </div>
               <span className="mt-2 block text-sm">
                 Need help now?{' '}
@@ -113,6 +123,30 @@ export function FileUpload({
           </div>
         </div>
       )}
+
+      {fileDurationWarning && isPremium && (
+        <div
+          data-testid="file-duration-info"
+          className="mt-2 rounded border border-blue-400 bg-blue-50 p-3 text-blue-800"
+        >
+          <div className="flex items-start">
+            <span className="mr-2">ℹ️</span>
+            <div>
+              <p className="font-medium">Long file detected</p>
+              <p className="mt-1 text-sm">
+                As a Pro member, you can process files up to 2 hours. For best results with long
+                files, we recommend using Cloud transcription for faster and more accurate results.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        featureName="Long File Processing"
+      />
 
       {file && (
         <div className="mt-4">

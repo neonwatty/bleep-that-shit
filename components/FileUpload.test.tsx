@@ -2,6 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { FileUpload } from './FileUpload';
 
+// Mock useAuth hook
+const mockUseAuth = vi.fn();
+vi.mock('@/providers/AuthProvider', () => ({
+  useAuth: () => mockUseAuth(),
+}));
+
 // Mock react-dropzone
 vi.mock('react-dropzone', () => ({
   useDropzone: vi.fn(config => {
@@ -28,6 +34,15 @@ describe('FileUpload', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (global as any).__isDragActive = false;
+    // Default to free user
+    mockUseAuth.mockReturnValue({
+      isPremium: false,
+      isLoading: false,
+      user: null,
+      session: null,
+      profile: null,
+      subscriptionTier: 'free',
+    });
   });
 
   it('renders the dropzone area', () => {
@@ -131,13 +146,46 @@ describe('FileUpload', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('displays Pro waitlist CTA in duration warning', () => {
+  it('displays Pro upgrade CTA in duration warning for free users', () => {
     render(<FileUpload {...defaultProps} fileDurationWarning="Warning message" />);
 
-    expect(screen.getByText(/We're working on longer video support/i)).toBeInTheDocument();
-    const waitlistLink = screen.getByRole('link', { name: /Join the Pro Waitlist/i });
-    expect(waitlistLink).toBeInTheDocument();
-    expect(waitlistLink).toHaveAttribute('href', '/#waitlist');
+    expect(
+      screen.getByText(/Upgrade to Pro to process files up to 2 hours long/i)
+    ).toBeInTheDocument();
+    const upgradeButton = screen.getByRole('button', { name: /Upgrade to Pro/i });
+    expect(upgradeButton).toBeInTheDocument();
+  });
+
+  it('displays info message for premium users with long files', () => {
+    mockUseAuth.mockReturnValue({
+      isPremium: true,
+      isLoading: false,
+      user: { id: '123' },
+      session: {},
+      profile: { subscription_tier: 'pro' },
+      subscriptionTier: 'pro',
+    });
+
+    render(<FileUpload {...defaultProps} fileDurationWarning="Warning message" />);
+
+    expect(screen.getByTestId('file-duration-info')).toBeInTheDocument();
+    expect(screen.getByText(/Long file detected/i)).toBeInTheDocument();
+    expect(screen.getByText(/As a Pro member/i)).toBeInTheDocument();
+  });
+
+  it('does not show upgrade button to premium users', () => {
+    mockUseAuth.mockReturnValue({
+      isPremium: true,
+      isLoading: false,
+      user: { id: '123' },
+      session: {},
+      profile: { subscription_tier: 'pro' },
+      subscriptionTier: 'pro',
+    });
+
+    render(<FileUpload {...defaultProps} fileDurationWarning="Warning message" />);
+
+    expect(screen.queryByRole('button', { name: /Upgrade to Pro/i })).not.toBeInTheDocument();
   });
 
   it('displays file name when file is loaded', () => {
