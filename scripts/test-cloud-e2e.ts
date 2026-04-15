@@ -10,9 +10,10 @@
  * 6. Verifies results in database
  *
  * Usage:
- *   doppler run -- npx tsx scripts/test-cloud-e2e.ts
+ *   # First ensure .env.local is populated: `vercel env pull .env.local`
+ *   set -a && source .env.local && set +a && npx tsx scripts/test-cloud-e2e.ts
  *
- * Environment vars (via Doppler):
+ * Environment vars (from .env.local):
  *   NEXT_PUBLIC_SUPABASE_URL
  *   SUPABASE_SERVICE_ROLE_KEY
  */
@@ -35,7 +36,10 @@ async function main() {
     console.error('❌ Missing required environment variables');
     console.error('   NEXT_PUBLIC_SUPABASE_URL:', supabaseUrl ? '✓' : '✗');
     console.error('   SUPABASE_SERVICE_ROLE_KEY:', serviceRoleKey ? '✓' : '✗');
-    console.error('\n   Run with: doppler run -- npx tsx scripts/test-cloud-e2e.ts');
+    console.error(
+      '\n   Run with: set -a && source .env.local && set +a && npx tsx scripts/test-cloud-e2e.ts'
+    );
+    console.error('   (First populate .env.local via: vercel env pull .env.local)');
     process.exit(1);
   }
 
