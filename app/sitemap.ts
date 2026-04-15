@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { getAllPosts } from '@/lib/blog/posts';
 
-const SITE_URL = 'https://bleep-that-sht.com';
+const SITE_URL = 'https://bleepthat.sh';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Static pages with their priorities and change frequencies
