@@ -209,7 +209,7 @@ Playwright starts `npm run dev` locally and `npm run start` in CI.
 
 ## Code Quality & Standards
 
-- **ESLint** via legacy `.eslintrc.json` config with Next.js + TypeScript + Prettier integration. The lint scripts set `ESLINT_USE_FLAT_CONFIG=false` to opt *out* of ESLint 9's flat-config default and keep the eslintrc loader. If you migrate to `eslint.config.js` later, remove that env var from the scripts.
+- **ESLint** via legacy `.eslintrc.json` config with Next.js + TypeScript + Prettier integration. The lint scripts set `ESLINT_USE_FLAT_CONFIG=false` to opt _out_ of ESLint 9's flat-config default and keep the eslintrc loader. If you migrate to `eslint.config.js` later, remove that env var from the scripts.
 - **Prettier** with Tailwind class sorting (`prettier-plugin-tailwindcss`)
 - **Knip** runs in CI and pre-push to catch unused code and exports
 - TypeScript strict enough to gate the build (`npm run typecheck` in CI)
@@ -228,6 +228,7 @@ Playwright starts `npm run dev` locally and `npm run start` in CI.
 ## Routes
 
 **Marketing / public:**
+
 - `/` — Home
 - `/bleep` — Client-side bleeping interface
 - `/sampler` — Transcription model comparison
@@ -235,10 +236,12 @@ Playwright starts `npm run dev` locally and `npm run start` in CI.
 - `/for-educators`, `/premium` — Landing pages
 
 **Auth (feature-flagged):**
+
 - `/auth/login`, `/auth/signup`, `/auth/reset-password`, `/auth/update-password`
 - `/auth/callback` — Supabase OAuth callback (outside the `(auth)` route group, so middleware treats it as public)
 
 **Authenticated dashboard:**
+
 - `/dashboard`
 - `/dashboard/projects`
 - `/dashboard/projects/[id]`
