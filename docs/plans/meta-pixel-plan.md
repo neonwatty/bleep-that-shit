@@ -58,11 +58,11 @@ for a separate CLI tool's own secrets management, not this project's config.
 
 ## Environment variables
 
-| Variable | Scope | Notes |
-|---|---|---|
-| `NEXT_PUBLIC_META_PIXEL_ID` | Browser + server | `NEXT_PUBLIC_` prefix is required so the Pixel script can read it at runtime |
-| `META_CAPI_ACCESS_TOKEN` | Server only | Secret — never expose to browser |
-| `META_TEST_EVENT_CODE` | Server only | Set in dev/staging, unset (or empty) in prod. Enables Meta Events Manager → Test Events tab routing |
+| Variable                    | Scope            | Notes                                                                                               |
+| --------------------------- | ---------------- | --------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_META_PIXEL_ID` | Browser + server | `NEXT_PUBLIC_` prefix is required so the Pixel script can read it at runtime                        |
+| `META_CAPI_ACCESS_TOKEN`    | Server only      | Secret — never expose to browser                                                                    |
+| `META_TEST_EVENT_CODE`      | Server only      | Set in dev/staging, unset (or empty) in prod. Enables Meta Events Manager → Test Events tab routing |
 
 ## Files to create
 
@@ -132,9 +132,33 @@ EU country code constant + `GB`. Used by middleware geo check.
 ```ts
 export const CONSENT_REQUIRED_COUNTRIES = new Set([
   // EU member states
-  'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
-  'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
-  'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
+  'AT',
+  'BE',
+  'BG',
+  'HR',
+  'CY',
+  'CZ',
+  'DK',
+  'EE',
+  'FI',
+  'FR',
+  'DE',
+  'GR',
+  'HU',
+  'IE',
+  'IT',
+  'LV',
+  'LT',
+  'LU',
+  'MT',
+  'NL',
+  'PL',
+  'PT',
+  'RO',
+  'SK',
+  'SI',
+  'ES',
+  'SE',
   // UK
   'GB',
 ]);
@@ -286,14 +310,14 @@ Verify Purchase appears in Meta Test Events with correct `value`, `currency`, an
 
 ## Effort estimate
 
-| Phase | Estimate |
-|---|---|
-| CAPI wrapper + hashing + unit tests | 1.5 hrs |
-| Pixel component + wrapper refactor + GA migration | 1 hr |
-| Consent banner + middleware geo logic | 1.5 hrs |
-| Event wiring (5 events across 4 files) | 1 hr |
-| Verification via Meta Test Events + Stripe CLI + Playwright assertion | 1 hr |
-| **Total** | **~6 hrs** |
+| Phase                                                                 | Estimate   |
+| --------------------------------------------------------------------- | ---------- |
+| CAPI wrapper + hashing + unit tests                                   | 1.5 hrs    |
+| Pixel component + wrapper refactor + GA migration                     | 1 hr       |
+| Consent banner + middleware geo logic                                 | 1.5 hrs    |
+| Event wiring (5 events across 4 files)                                | 1 hr       |
+| Verification via Meta Test Events + Stripe CLI + Playwright assertion | 1 hr       |
+| **Total**                                                             | **~6 hrs** |
 
 Add ~30 min buffer for field-name mismatches with the Meta CAPI spec (inevitable on first integration).
 
