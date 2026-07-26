@@ -43,7 +43,7 @@ Just open the app in any modern browser — **no installation or setup required*
 
 ### Live Demo
 
-Visit the deployed app at [https://neonwatty.github.io/bleep-that-shit/](https://neonwatty.github.io/bleep-that-shit/) or run it locally.
+Use Bleep at [https://bleepthat.sh/bleep](https://bleepthat.sh/bleep), or run it locally.
 
 ---
 
