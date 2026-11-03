@@ -8,6 +8,20 @@ Make someone sound naughty 😈 or make your content more Ad-friendly.
 
 **The current in-browser implementation works for clips of length 10 minutes or less.**
 
+## Browser project and hosted Studio
+
+This Apache-2.0 repository contains the browser implementation. Its transcription and media editing
+run locally in the browser. You can run this code yourself using the instructions below.
+
+The hosted product at [bleepthat.sh](https://bleepthat.sh/) also offers
+[Bleep Studio](https://bleepthat.sh/studio), an account-based workflow with cloud processing and saved
+projects. Studio is maintained separately; this repository does not contain its hosted implementation.
+The browser project's local-processing privacy statements and clip limit do not describe Studio.
+
+To try the browser workflow, open the [interactive bleep tool](https://bleepthat.sh/bleep). The hosted
+site checks device capabilities and may direct unsupported devices to Studio. See the
+[current plans](https://bleepthat.sh/premium) for hosted Studio pricing and limits.
+
 ---
 
 ## How it works
@@ -70,8 +84,8 @@ Use Bleep at [https://bleepthat.sh/bleep](https://bleepthat.sh/bleep), or run it
 
 ### Prerequisites
 
-- Node.js 18+
-- npm or yarn
+- Node.js 20 or newer
+- npm (the repository includes `package-lock.json`)
 
 ### Installation
 
@@ -85,28 +99,52 @@ Use Bleep at [https://bleepthat.sh/bleep](https://bleepthat.sh/bleep), or run it
 2. Install dependencies:
 
    ```bash
-   npm install
+   npm ci
    ```
 
-3. Start the development server:
+3. Configure the development environment. This snapshot initializes account services even when you
+   are using the browser workflow, so it needs the variables documented in
+   [`.env.local.example`](.env.local.example). Maintainers with access to the project's Doppler
+   configuration can install the Doppler CLI, run `doppler login`, and run `doppler setup` for the
+   development configuration. Do not use production credentials for local development.
+
+4. Start the development server with the configured environment:
 
    ```bash
    npm run dev
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+5. Open [http://localhost:3004](http://localhost:3004) in your browser.
+
+`npm run dev` uses Doppler to supply the development environment. If you already supply the required
+variables through another environment source, `npm run dev:local` starts Next.js directly. It does not
+provide or replace that configuration. Both development scripts use port 3004.
 
 ---
 
 ## Available Scripts
 
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm test            # Run Playwright tests
-npm run test:ui     # Run tests with UI
+npm run dev           # Start development on port 3004 with Doppler configuration
+npm run dev:local     # Start directly with an already-configured environment
+npm run build         # Build for production
+npm run start         # Start the production server
+npm test              # Run unit tests with Vitest
+npm run test:unit:ui   # Open the Vitest UI
+npm run test:e2e       # Run Playwright end-to-end tests
+npm run test:e2e:ui    # Open the Playwright UI
 ```
+
+### CI for documentation changes
+
+README, contributor guidance, licence, and `docs/` changes run the lightweight docs/CI check without
+installing application dependencies, building the app, or starting browser tests. Changes to the CI
+workflow and its change-classification scripts also take this path and run the classifier's tests.
+
+Application code, dependencies, other configuration, and unknown paths run the full app checks.
+Markdown under `content/` is published site content and still triggers app builds and tests. Renaming
+or deleting application files also triggers those checks. Browser CI uses Ubuntu 24.04 to match the
+installed Playwright version.
 
 ---
 
