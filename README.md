@@ -102,24 +102,31 @@ Use Bleep at [https://bleepthat.sh/bleep](https://bleepthat.sh/bleep), or run it
    npm ci
    ```
 
-3. Start the development server:
+3. Configure the development environment. This snapshot initializes account services even when you
+   are using the browser workflow, so it needs the variables documented in
+   [`.env.local.example`](.env.local.example). Maintainers with access to the project's Doppler
+   configuration can install the Doppler CLI, run `doppler login`, and run `doppler setup` for the
+   development configuration. Do not use production credentials for local development.
+
+4. Start the development server with the configured environment:
 
    ```bash
-   npm run dev:local
+   npm run dev
    ```
 
-4. Open [http://localhost:3004](http://localhost:3004) in your browser.
+5. Open [http://localhost:3004](http://localhost:3004) in your browser.
 
-`dev:local` starts Next.js directly. The separate `npm run dev` command uses Doppler and requires a
-configured Doppler CLI; it is not needed for the direct local command above. Both development scripts
-use port 3004.
+`npm run dev` uses Doppler to supply the development environment. If you already supply the required
+variables through another environment source, `npm run dev:local` starts Next.js directly. It does not
+provide or replace that configuration. Both development scripts use port 3004.
 
 ---
 
 ## Available Scripts
 
 ```bash
-npm run dev:local     # Start the local development server on port 3004
+npm run dev           # Start development on port 3004 with Doppler configuration
+npm run dev:local     # Start directly with an already-configured environment
 npm run build         # Build for production
 npm run start         # Start the production server
 npm test              # Run unit tests with Vitest
