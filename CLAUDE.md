@@ -153,6 +153,13 @@ The repository includes automated CI checks via GitHub Actions (`.github/workflo
 - Pull requests to `main` branch
 - Pushes to `main` branch
 
+The `Docs and CI checks` job classifies paths before application jobs run. README,
+this guide, LICENSE, `docs/`, and changes to the CI classifier/workflow receive
+lightweight checks; runtime Markdown in `content/` and unknown paths still run
+the full application pipeline. See README's CI section and
+`scripts/ci-changes.test.mjs` for the classification contract. Browser jobs use
+Ubuntu 24.04 for compatibility with the installed Playwright version.
+
 **CI Pipeline Steps:**
 
 1. **ESLint** - Code quality and style checks

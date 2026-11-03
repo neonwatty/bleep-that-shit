@@ -135,6 +135,17 @@ npm run test:e2e       # Run Playwright end-to-end tests
 npm run test:e2e:ui    # Open the Playwright UI
 ```
 
+### CI for documentation changes
+
+README, contributor guidance, licence, and `docs/` changes run the lightweight docs/CI check without
+installing application dependencies, building the app, or starting browser tests. Changes to the CI
+workflow and its change-classification scripts also take this path and run the classifier's tests.
+
+Application code, dependencies, other configuration, and unknown paths run the full app checks.
+Markdown under `content/` is published site content and still triggers app builds and tests. Renaming
+or deleting application files also triggers those checks. Browser CI uses Ubuntu 24.04 to match the
+installed Playwright version.
+
 ---
 
 ## Browser Requirements

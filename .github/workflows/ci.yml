@@ -6,10 +6,59 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
+  changes:
+    name: Docs and CI checks
+    runs-on: ubuntu-24.04
+    outputs:
+      app_changed: ${{ steps.paths.outputs.app_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Classify changed paths
+        id: paths
+        run: node scripts/ci-changes.mjs
+        env:
+          CI_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          CI_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify change classification
+        run: node --test scripts/ci-changes.test.mjs
+
+      - name: Check changed docs and CI formatting
+        env:
+          FORMAT_FILES: ${{ steps.paths.outputs.format_files }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import { spawnSync } from 'node:child_process';
+          const files = JSON.parse(process.env.FORMAT_FILES);
+          if (!files.length) process.exit(0);
+          const config = JSON.parse(fs.readFileSync('.prettierrc', 'utf8'));
+          // Markdown/YAML/CI scripts do not need the application's Tailwind plugin.
+          delete config.plugins;
+          const configPath = path.join(process.env.RUNNER_TEMP, 'prettier-docs.json');
+          fs.writeFileSync(configPath, JSON.stringify(config));
+          const result = spawnSync('npx', ['--yes', 'prettier@3.6.2', '--config', configPath, '--check', ...files], { stdio: 'inherit' });
+          if (result.error) throw result.error;
+          process.exit(result.status ?? 1);
+          NODE
+
   lint-and-test:
     name: Lint, Type Check & Test
-    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.app_changed == 'true'
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -76,7 +125,9 @@ jobs:
 
   smoke-tests:
     name: Smoke Tests (UI Only)
-    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.app_changed == 'true'
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -117,7 +168,9 @@ jobs:
 
   e2e-tests:
     name: E2E Tests (Shard ${{ matrix.shard }}/3)
-    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.app_changed == 'true'
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
