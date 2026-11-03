@@ -8,6 +8,20 @@ Make someone sound naughty 😈 or make your content more Ad-friendly.
 
 **The current in-browser implementation works for clips of length 10 minutes or less.**
 
+## Browser project and hosted Studio
+
+This Apache-2.0 repository contains the browser implementation. Its transcription and media editing
+run locally in the browser. You can run this code yourself using the instructions below.
+
+The hosted product at [bleepthat.sh](https://bleepthat.sh/) also offers
+[Bleep Studio](https://bleepthat.sh/studio), an account-based workflow with cloud processing and saved
+projects. Studio is maintained separately; this repository does not contain its hosted implementation.
+The browser project's local-processing privacy statements and clip limit do not describe Studio.
+
+To try the browser workflow, open the [interactive bleep tool](https://bleepthat.sh/bleep). The hosted
+site checks device capabilities and may direct unsupported devices to Studio. See the
+[current plans](https://bleepthat.sh/premium) for hosted Studio pricing and limits.
+
 ---
 
 ## How it works
@@ -70,8 +84,8 @@ Use Bleep at [https://bleepthat.sh/bleep](https://bleepthat.sh/bleep), or run it
 
 ### Prerequisites
 
-- Node.js 18+
-- npm or yarn
+- Node.js 20 or newer
+- npm (the repository includes `package-lock.json`)
 
 ### Installation
 
@@ -85,27 +99,33 @@ Use Bleep at [https://bleepthat.sh/bleep](https://bleepthat.sh/bleep), or run it
 2. Install dependencies:
 
    ```bash
-   npm install
+   npm ci
    ```
 
 3. Start the development server:
 
    ```bash
-   npm run dev
+   npm run dev:local
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+4. Open [http://localhost:3004](http://localhost:3004) in your browser.
+
+`dev:local` starts Next.js directly. The separate `npm run dev` command uses Doppler and requires a
+configured Doppler CLI; it is not needed for the direct local command above. Both development scripts
+use port 3004.
 
 ---
 
 ## Available Scripts
 
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm test            # Run Playwright tests
-npm run test:ui     # Run tests with UI
+npm run dev:local     # Start the local development server on port 3004
+npm run build         # Build for production
+npm run start         # Start the production server
+npm test              # Run unit tests with Vitest
+npm run test:unit:ui   # Open the Vitest UI
+npm run test:e2e       # Run Playwright end-to-end tests
+npm run test:e2e:ui    # Open the Playwright UI
 ```
 
 ---
